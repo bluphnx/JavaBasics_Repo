@@ -1,0 +1,816 @@
+================================================================================
+            NEGATIVE SCENARIOS - TOPIC 1 AND TOPIC 2
+            INVALID CODE EXAMPLES AND HOW TO FIX THEM
+================================================================================
+
+
+================================================================================
+                    TOPIC 1: NEGATIVE SCENARIOS
+================================================================================
+
+
+--------------------------------------------------------------------------------
+ERROR 1: CLASS NAME DOES NOT MATCH FILENAME
+--------------------------------------------------------------------------------
+
+INVALID CODE:
+-------------
+// Filename: HelloWorld.java
+
+public class Hello {    // Class name is "Hello" but file is "HelloWorld.java"
+    public static void main(String[] args) {
+        System.out.println("Hello");
+    }
+}
+
+ERROR MESSAGE:
+--------------
+error: class Hello is public, should be declared in a file named Hello.java
+
+FIX:
+----
+// Filename: HelloWorld.java
+
+public class HelloWorld {    // Class name matches filename
+    public static void main(String[] args) {
+        System.out.println("Hello");
+    }
+}
+
+RULE:
+-----
+Public class name MUST match the filename
+
+File: MyProgram.java  -->  class MyProgram { }   VALID
+File: MyProgram.java  -->  class Myprogram { }   INVALID
+File: MyProgram.java  -->  class Test { }        INVALID
+
+
+--------------------------------------------------------------------------------
+ERROR 2: MISSING SEMICOLON
+--------------------------------------------------------------------------------
+
+INVALID CODE:
+-------------
+public class Test {
+    public static void main(String[] args) {
+        System.out.println("Hello")    // Missing semicolon
+    }
+}
+
+ERROR MESSAGE:
+--------------
+error: ';' expected
+        System.out.println("Hello")
+                                   ^
+
+FIX:
+----
+public class Test {
+    public static void main(String[] args) {
+        System.out.println("Hello");    // Semicolon added
+    }
+}
+
+RULE:
+-----
+Every statement in Java MUST end with semicolon ;
+
+
+--------------------------------------------------------------------------------
+ERROR 3: MISSING CURLY BRACES
+--------------------------------------------------------------------------------
+
+INVALID CODE:
+-------------
+public class Test {
+    public static void main(String[] args) {
+        System.out.println("Hello");
+    }
+// Missing closing brace for class
+
+ERROR MESSAGE:
+--------------
+error: reached end of file while parsing
+}
+ ^
+
+FIX:
+----
+public class Test {
+    public static void main(String[] args) {
+        System.out.println("Hello");
+    }
+}    // Closing brace added
+
+RULE:
+-----
+Every opening brace { must have a closing brace }
+
+class Test {
+    void method() {
+        // code
+    }  <-- closes method
+}  <-- closes class
+
+
+--------------------------------------------------------------------------------
+ERROR 4: WRONG MAIN METHOD SIGNATURE
+--------------------------------------------------------------------------------
+
+INVALID CODE 1 - Spelling mistake:
+----------------------------------
+public class Test {
+    public static void Main(String[] args) {    // Capital 'M'
+        System.out.println("Hello");
+    }
+}
+
+ERROR MESSAGE:
+--------------
+Error: Main method not found in class Test
+
+
+INVALID CODE 2 - Missing static:
+--------------------------------
+public class Test {
+    public void main(String[] args) {    // Missing 'static'
+        System.out.println("Hello");
+    }
+}
+
+ERROR MESSAGE:
+--------------
+Error: Main method is not static in class Test
+
+
+INVALID CODE 3 - Wrong parameter:
+---------------------------------
+public class Test {
+    public static void main() {    // Missing String[] args
+        System.out.println("Hello");
+    }
+}
+
+ERROR MESSAGE:
+--------------
+Error: Main method not found in class Test
+
+
+FIX:
+----
+public class Test {
+    public static void main(String[] args) {    // Correct signature
+        System.out.println("Hello");
+    }
+}
+
+RULE:
+-----
+Main method signature must be EXACTLY:
+
+public static void main(String[] args)
+  |      |     |    |        |
+  |      |     |    |        +-- Parameter
+  |      |     |    +-- Method name (lowercase)
+  |      |     +-- Return type
+  |      +-- No object needed
+  +-- Accessible everywhere
+
+
+--------------------------------------------------------------------------------
+ERROR 5: CASE SENSITIVITY ISSUES
+--------------------------------------------------------------------------------
+
+INVALID CODE:
+-------------
+public class Test {
+    public static void main(String[] args) {
+        system.out.println("Hello");    // 'system' lowercase
+        System.Out.Println("Hello");    // 'Out' and 'Println' wrong case
+    }
+}
+
+ERROR MESSAGE:
+--------------
+error: cannot find symbol
+        system.out.println("Hello");
+        ^
+  symbol: variable system
+
+FIX:
+----
+public class Test {
+    public static void main(String[] args) {
+        System.out.println("Hello");    // Correct case
+    }
+}
+
+RULE:
+-----
+Java is CASE SENSITIVE
+
+System  is not equal to  system  is not equal to  SYSTEM
+println is not equal to  Println is not equal to  PRINTLN
+String  is not equal to  string  is not equal to  STRING
+
+
+--------------------------------------------------------------------------------
+ERROR 6: MISSING QUOTES IN PRINT STATEMENT
+--------------------------------------------------------------------------------
+
+INVALID CODE:
+-------------
+public class Test {
+    public static void main(String[] args) {
+        System.out.println(Hello World);    // Missing quotes
+    }
+}
+
+ERROR MESSAGE:
+--------------
+error: ')' expected
+        System.out.println(Hello World);
+                                ^
+
+FIX:
+----
+public class Test {
+    public static void main(String[] args) {
+        System.out.println("Hello World");    // Quotes added
+    }
+}
+
+
+--------------------------------------------------------------------------------
+ERROR 7: USING SINGLE QUOTES FOR STRING
+--------------------------------------------------------------------------------
+
+INVALID CODE:
+-------------
+public class Test {
+    public static void main(String[] args) {
+        System.out.println('Hello World');    // Single quotes
+    }
+}
+
+ERROR MESSAGE:
+--------------
+error: unclosed character literal
+        System.out.println('Hello World');
+                           ^
+
+FIX:
+----
+public class Test {
+    public static void main(String[] args) {
+        System.out.println("Hello World");    // Double quotes for String
+    }
+}
+
+
+================================================================================
+                    TOPIC 2: NEGATIVE SCENARIOS
+================================================================================
+
+
+--------------------------------------------------------------------------------
+ERROR 1: VARIABLE NAME STARTING WITH NUMBER
+--------------------------------------------------------------------------------
+
+INVALID CODE:
+-------------
+public class Test {
+    public static void main(String[] args) {
+        int 1stNumber = 10;    // Starts with number
+        int 123abc = 20;       // Starts with number
+    }
+}
+
+ERROR MESSAGE:
+--------------
+error: illegal start of expression
+        int 1stNumber = 10;
+            ^
+
+FIX:
+----
+public class Test {
+    public static void main(String[] args) {
+        int firstNumber = 10;    // Start with letter
+        int number1st = 10;      // Number in middle/end is OK
+        int _1stNumber = 10;     // Start with underscore is OK
+    }
+}
+
+
+--------------------------------------------------------------------------------
+ERROR 2: VARIABLE NAME WITH SPACE
+--------------------------------------------------------------------------------
+
+INVALID CODE:
+-------------
+public class Test {
+    public static void main(String[] args) {
+        int my number = 10;         // Space in variable name
+        String user name = "John";  // Space in variable name
+    }
+}
+
+ERROR MESSAGE:
+--------------
+error: ';' expected
+        int my number = 10;
+              ^
+
+FIX:
+----
+public class Test {
+    public static void main(String[] args) {
+        int myNumber = 10;        // Use camelCase
+        int my_number = 10;       // Use underscore
+        String userName = "John"; // Use camelCase
+    }
+}
+
+
+--------------------------------------------------------------------------------
+ERROR 3: VARIABLE NAME WITH HYPHEN
+--------------------------------------------------------------------------------
+
+INVALID CODE:
+-------------
+public class Test {
+    public static void main(String[] args) {
+        int my-number = 10;    // Hyphen not allowed
+    }
+}
+
+ERROR MESSAGE:
+--------------
+error: ';' expected
+        int my-number = 10;
+              ^
+
+FIX:
+----
+public class Test {
+    public static void main(String[] args) {
+        int myNumber = 10;     // Use camelCase
+        int my_number = 10;    // Use underscore instead
+    }
+}
+
+
+--------------------------------------------------------------------------------
+ERROR 4: USING RESERVED KEYWORDS AS VARIABLE NAME
+--------------------------------------------------------------------------------
+
+INVALID CODE:
+-------------
+public class Test {
+    public static void main(String[] args) {
+        int class = 10;       // 'class' is reserved
+        int public = 20;      // 'public' is reserved
+        int static = 30;      // 'static' is reserved
+        int int = 40;         // 'int' is reserved
+        String new = "test";  // 'new' is reserved
+    }
+}
+
+ERROR MESSAGE:
+--------------
+error: not a statement
+        int class = 10;
+            ^
+
+FIX:
+----
+public class Test {
+    public static void main(String[] args) {
+        int classCount = 10;       // Add meaningful suffix
+        int publicValue = 20;      // Add meaningful suffix
+        int staticNumber = 30;     // Add meaningful suffix
+        int intValue = 40;         // Add meaningful suffix
+        String newString = "test"; // Add meaningful suffix
+    }
+}
+
+COMMON RESERVED KEYWORDS (Cannot use as variable names):
+--------------------------------------------------------
+abstract   assert     boolean    break      byte
+case       catch      char       class      const
+continue   default    do         double     else
+enum       extends    final      finally    float
+for        goto       if         implements import
+instanceof int        interface  long       native
+new        package    private    protected  public
+return     short      static     strictfp   super
+switch     synchronized this     throw      throws
+transient  try        void       volatile   while
+
+
+--------------------------------------------------------------------------------
+ERROR 5: DATA TYPE RANGE OVERFLOW
+--------------------------------------------------------------------------------
+
+INVALID CODE:
+-------------
+public class Test {
+    public static void main(String[] args) {
+        byte b = 200;           // byte range: -128 to 127
+        short s = 40000;        // short range: -32768 to 32767
+    }
+}
+
+ERROR MESSAGE:
+--------------
+error: incompatible types: possible lossy conversion from int to byte
+        byte b = 200;
+                 ^
+
+FIX:
+----
+public class Test {
+    public static void main(String[] args) {
+        // Option 1: Use value within range
+        byte b = 100;           // Within byte range
+        short s = 30000;        // Within short range
+        
+        // Option 2: Use larger data type
+        short b2 = 200;         // short can hold 200
+        int s2 = 40000;         // int can hold 40000
+    }
+}
+
+DATA TYPE RANGES:
+-----------------
+Type       Range                      Example Invalid Value
+----       -----                      ---------------------
+byte       -128 to 127                byte b = 300;    INVALID
+short      -32768 to 32767            short s = 50000; INVALID
+int        -2.1 Billion to 2.1 Billion   int i = 9999999999; INVALID
+
+
+--------------------------------------------------------------------------------
+ERROR 6: MISSING 'L' FOR LONG VALUE
+--------------------------------------------------------------------------------
+
+INVALID CODE:
+-------------
+public class Test {
+    public static void main(String[] args) {
+        long bigNumber = 9999999999;    // Missing L suffix
+    }
+}
+
+ERROR MESSAGE:
+--------------
+error: integer number too large
+        long bigNumber = 9999999999;
+                         ^
+
+FIX:
+----
+public class Test {
+    public static void main(String[] args) {
+        long bigNumber = 9999999999L;    // Added L suffix
+        long anotherWay = 9999999999l;   // lowercase l works but not recommended
+    }
+}
+
+RULE:
+-----
+For long values exceeding int range:
+Always add 'L' at the end (uppercase recommended)
+
+long x = 9999999999L;    VALID (Good practice)
+long x = 9999999999l;    VALID (Works but confusing - looks like 1)
+long x = 9999999999;     INVALID (Error)
+
+
+--------------------------------------------------------------------------------
+ERROR 7: MISSING 'f' FOR FLOAT VALUE
+--------------------------------------------------------------------------------
+
+INVALID CODE:
+-------------
+public class Test {
+    public static void main(String[] args) {
+        float price = 99.99;    // Missing f suffix
+    }
+}
+
+ERROR MESSAGE:
+--------------
+error: incompatible types: possible lossy conversion from double to float
+        float price = 99.99;
+                      ^
+
+WHY THIS HAPPENS:
+-----------------
+By default, decimal numbers are treated as DOUBLE
+Double is 8 bytes, Float is 4 bytes
+Java will not automatically fit larger into smaller
+
+FIX:
+----
+public class Test {
+    public static void main(String[] args) {
+        // Option 1: Add f suffix
+        float price = 99.99f;    // Added f suffix
+        
+        // Option 2: Use double instead
+        double price2 = 99.99;   // No suffix needed for double
+    }
+}
+
+
+--------------------------------------------------------------------------------
+ERROR 8: WRONG QUOTES FOR CHAR AND STRING
+--------------------------------------------------------------------------------
+
+INVALID CODE:
+-------------
+public class Test {
+    public static void main(String[] args) {
+        char grade = "A";         // Double quotes for char
+        String name = 'John';     // Single quotes for String
+        char letter = 'AB';       // Multiple characters in char
+    }
+}
+
+ERROR MESSAGES:
+---------------
+error: incompatible types: String cannot be converted to char
+        char grade = "A";
+                     ^
+
+error: unclosed character literal
+        String name = 'John';
+                      ^
+
+error: unclosed character literal
+        char letter = 'AB';
+                      ^
+
+FIX:
+----
+public class Test {
+    public static void main(String[] args) {
+        char grade = 'A';         // Single quotes for char
+        String name = "John";     // Double quotes for String
+        String letters = "AB";    // Multiple chars need String
+    }
+}
+
+QUOTES RULE:
+------------
+char   -->  Single quotes  -->  'A'   (ONE character only)
+String -->  Double quotes  -->  "ABC" (Any length)
+
+char c = 'A';      VALID
+char c = "A";      INVALID
+char c = 'AB';     INVALID
+
+String s = "A";    VALID
+String s = "ABC";  VALID
+String s = 'A';    INVALID
+
+
+--------------------------------------------------------------------------------
+ERROR 9: USING VARIABLE WITHOUT INITIALIZATION
+--------------------------------------------------------------------------------
+
+INVALID CODE:
+-------------
+public class Test {
+    public static void main(String[] args) {
+        int number;
+        System.out.println(number);    // Variable not initialized
+    }
+}
+
+ERROR MESSAGE:
+--------------
+error: variable number might not have been initialized
+        System.out.println(number);
+                           ^
+
+FIX:
+----
+public class Test {
+    public static void main(String[] args) {
+        // Option 1: Initialize when declaring
+        int number = 0;
+        System.out.println(number);    // Works
+        
+        // Option 2: Initialize before using
+        int anotherNumber;
+        anotherNumber = 10;
+        System.out.println(anotherNumber);    // Works
+    }
+}
+
+
+--------------------------------------------------------------------------------
+ERROR 10: TYPE MISMATCH
+--------------------------------------------------------------------------------
+
+INVALID CODE:
+-------------
+public class Test {
+    public static void main(String[] args) {
+        int number = "Hello";        // String to int
+        String name = 100;           // int to String
+        boolean flag = "true";       // String to boolean
+        char letter = "A";           // String to char
+    }
+}
+
+ERROR MESSAGE:
+--------------
+error: incompatible types: String cannot be converted to int
+        int number = "Hello";
+                     ^
+
+FIX:
+----
+public class Test {
+    public static void main(String[] args) {
+        int number = 100;            // int value
+        String name = "Hello";       // String value
+        boolean flag = true;         // boolean value (no quotes)
+        char letter = 'A';           // char value (single quotes)
+    }
+}
+
+
+--------------------------------------------------------------------------------
+ERROR 11: DUPLICATE VARIABLE NAMES
+--------------------------------------------------------------------------------
+
+INVALID CODE:
+-------------
+public class Test {
+    public static void main(String[] args) {
+        int age = 25;
+        int age = 30;    // Variable 'age' already defined
+    }
+}
+
+ERROR MESSAGE:
+--------------
+error: variable age is already defined in method main(String[])
+        int age = 30;
+            ^
+
+FIX:
+----
+public class Test {
+    public static void main(String[] args) {
+        // Option 1: Use different name
+        int age = 25;
+        int newAge = 30;    // Different variable name
+        
+        // Option 2: Reassign value to existing variable
+        int age2 = 25;
+        age2 = 30;          // Reassigning (no 'int' keyword)
+    }
+}
+
+RULE:
+-----
+VARIABLE DECLARATION VS REASSIGNMENT
+
+int age = 25;     // Declaration + Initialization
+int age = 30;     // INVALID - Error! Already declared
+
+int age = 25;     // Declaration + Initialization
+age = 30;         // VALID - Reassignment (no datatype)
+
+
+--------------------------------------------------------------------------------
+ERROR 12: ASSIGNING INCOMPATIBLE TYPES
+--------------------------------------------------------------------------------
+
+INVALID CODE:
+-------------
+public class Test {
+    public static void main(String[] args) {
+        int number = 10.5;       // double to int
+        byte b = 200;            // out of range
+        float f = 10.5;          // missing f
+    }
+}
+
+FIX:
+----
+public class Test {
+    public static void main(String[] args) {
+        // Option 1: Use correct data type
+        double number = 10.5;    // VALID
+        short b = 200;           // VALID
+        float f = 10.5f;         // VALID
+        
+        // Option 2: Use casting (we will learn later)
+        int number2 = (int) 10.5;    // VALID - Explicit casting (loses decimal)
+    }
+}
+
+
+================================================================================
+                    QUICK REFERENCE SUMMARY
+================================================================================
+
+TOPIC 1 ERRORS:
+---------------
+1. Class name does not match filename
+   INVALID: File: Test.java, Class: Hello
+   VALID:   File: Test.java, Class: Test
+
+2. Missing semicolon
+   INVALID: System.out.println("Hi")
+   VALID:   System.out.println("Hi");
+
+3. Missing curly braces
+   INVALID: public class Test { ...  (no closing brace)
+   VALID:   public class Test { ... }
+
+4. Wrong main method signature
+   INVALID: public static void Main(String[] args)  // Capital M
+   INVALID: public void main(String[] args)         // Missing static
+   INVALID: public static void main()               // Missing parameter
+   VALID:   public static void main(String[] args)
+
+5. Case sensitivity
+   INVALID: system.out.println()
+   VALID:   System.out.println()
+
+6. Missing quotes in print
+   INVALID: System.out.println(Hello);
+   VALID:   System.out.println("Hello");
+
+7. Single quotes for String
+   INVALID: System.out.println('Hello');
+   VALID:   System.out.println("Hello");
+
+
+TOPIC 2 ERRORS:
+---------------
+1. Variable starts with number
+   INVALID: int 1stNum = 10;
+   VALID:   int firstNum = 10;
+
+2. Variable with space
+   INVALID: int my num = 10;
+   VALID:   int myNum = 10;
+
+3. Variable with hyphen
+   INVALID: int my-num = 10;
+   VALID:   int myNum = 10;
+
+4. Reserved keyword as variable
+   INVALID: int class = 10;
+   VALID:   int classCount = 10;
+
+5. Data type range overflow
+   INVALID: byte b = 200;      // Range: -128 to 127
+   VALID:   short b = 200;
+
+6. Missing L for long
+   INVALID: long x = 9999999999;
+   VALID:   long x = 9999999999L;
+
+7. Missing f for float
+   INVALID: float f = 10.5;
+   VALID:   float f = 10.5f;
+
+8. Wrong quotes for char/String
+   INVALID: char c = "A";      // Should be single quotes
+   INVALID: String s = 'Hi';   // Should be double quotes
+   VALID:   char c = 'A';
+   VALID:   String s = "Hi";
+
+9. Uninitialized variable
+   INVALID: int x; System.out.println(x);
+   VALID:   int x = 0; System.out.println(x);
+
+10. Type mismatch
+    INVALID: int x = "Hello";
+    VALID:   String x = "Hello";
+
+11. Duplicate variable
+    INVALID: int age = 25; int age = 30;
+    VALID:   int age = 25; age = 30;
+
+
+================================================================================
+                    END OF NEGATIVE SCENARIOS
+================================================================================
+
+You can now copy the above content and paste it directly into a .txt file.
+
+Going forward, I will provide all responses in plain text format without emojis or special formatting symbols.
+
+Let me know when you are ready for Topic 3: Operators in Java.

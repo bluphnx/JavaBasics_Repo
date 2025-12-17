@@ -1,0 +1,3761 @@
+The user wants me to teach Topic 12: Abstraction (Abstract Classes and Interfaces) with:
+1. Both positive and negative scenarios
+2. Real-world examples for Selenium automation and Rest Assured automation
+3. Simple ASCII formatting using dashes, equal signs, plus signs, pipes, and simple bullets
+
+Let me create a comprehensive topic on Abstraction covering:
+1. What is Abstraction
+2. Abstract Classes
+3. Abstract Methods
+4. Interfaces
+5. Abstract Class vs Interface
+6. When to use what
+7. Selenium Automation examples
+8. Rest Assured Automation examples
+9. Negative scenarios/errors
+10. Practice exercises
+
+```
+================================================================================
+                    TOPIC 12: ABSTRACTION IN JAVA
+================================================================================
+
+What is Abstraction?
+--------------------
+Abstraction is the process of hiding implementation details and showing only
+the functionality to the user. It lets you focus on WHAT an object does
+rather than HOW it does it.
+
+Real-World Analogy:
+-------------------
+- Car: You know the steering wheel turns the car, but you don't need to know
+  the internal mechanism of how steering works.
+- ATM: You know you can withdraw money, but you don't see the internal process.
+- TV Remote: You press buttons, but don't know the internal circuit working.
+
+
+Two Ways to Achieve Abstraction:
+--------------------------------
++------------------------+----------------------------+------------------------+
+| Method                 | Abstraction Level          | Keyword                |
++------------------------+----------------------------+------------------------+
+| Abstract Class         | 0 to 100% abstraction      | abstract               |
+| Interface              | 100% abstraction (pure)    | interface              |
++------------------------+----------------------------+------------------------+
+
+
+Why Use Abstraction?
+--------------------
+- Hide complex implementation details
+- Provide a contract/template for subclasses
+- Achieve loose coupling between components
+- Enable multiple implementations of same behavior
+- Make code more maintainable and flexible
+
+
+Why Important for Automation?
+-----------------------------
+- Define contracts for page objects
+- Create driver interfaces for cross-browser testing
+- Define API client contracts
+- Build flexible, maintainable frameworks
+- Enable easy swapping of implementations
+
+
+================================================================================
+                    PART 1: ABSTRACT CLASSES
+================================================================================
+
+What is an Abstract Class?
+--------------------------
+- A class declared with 'abstract' keyword
+- Cannot be instantiated (cannot create objects directly)
+- Can have abstract methods (without body) and concrete methods (with body)
+- Can have constructors, fields, and static methods
+- Child classes MUST implement all abstract methods (or be abstract themselves)
+
+
+Syntax:
+-------
+abstract class ClassName {
+    // Fields
+    // Constructors
+    // Abstract methods (no body)
+    // Concrete methods (with body)
+}
+
+
+Rules for Abstract Classes:
+---------------------------
+1. Declared using 'abstract' keyword
+2. Cannot be instantiated with 'new'
+3. Can have 0 or more abstract methods
+4. If a class has abstract method, class MUST be abstract
+5. Child class must implement ALL abstract methods or be abstract
+6. Can have constructors (called via super())
+7. Can have static methods and final methods
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 1: Basic Abstract Class
+--------------------------------------------------------------------------------
+
+// Abstract class - cannot create object directly
+abstract class Shape {
+    
+    // Fields
+    protected String color;
+    protected String name;
+    
+    // Constructor - called by child classes
+    public Shape(String name, String color) {
+        this.name = name;
+        this.color = color;
+        System.out.println("[Shape] Constructor called for: " + name);
+    }
+    
+    // Abstract methods - NO BODY, child MUST implement
+    public abstract double getArea();
+    public abstract double getPerimeter();
+    
+    // Concrete method - has body, child inherits
+    public void displayInfo() {
+        System.out.println("Shape: " + name);
+        System.out.println("Color: " + color);
+        System.out.println("Area: " + getArea());
+        System.out.println("Perimeter: " + getPerimeter());
+    }
+    
+    // Concrete method
+    public String getColor() {
+        return color;
+    }
+    
+    // Static method
+    public static void printShapeInfo() {
+        System.out.println("Shapes are geometric figures");
+    }
+}
+
+// Concrete class - MUST implement all abstract methods
+class Circle extends Shape {
+    
+    private double radius;
+    
+    public Circle(String color, double radius) {
+        super("Circle", color);    // Call abstract class constructor
+        this.radius = radius;
+    }
+    
+    // MUST implement abstract method
+    @Override
+    public double getArea() {
+        return Math.PI * radius * radius;
+    }
+    
+    // MUST implement abstract method
+    @Override
+    public double getPerimeter() {
+        return 2 * Math.PI * radius;
+    }
+    
+    // Additional method
+    public double getRadius() {
+        return radius;
+    }
+}
+
+// Another concrete class
+class Rectangle extends Shape {
+    
+    private double length;
+    private double width;
+    
+    public Rectangle(String color, double length, double width) {
+        super("Rectangle", color);
+        this.length = length;
+        this.width = width;
+    }
+    
+    @Override
+    public double getArea() {
+        return length * width;
+    }
+    
+    @Override
+    public double getPerimeter() {
+        return 2 * (length + width);
+    }
+}
+
+// Another concrete class
+class Triangle extends Shape {
+    
+    private double base;
+    private double height;
+    private double side1, side2, side3;
+    
+    public Triangle(String color, double base, double height, 
+                    double side1, double side2, double side3) {
+        super("Triangle", color);
+        this.base = base;
+        this.height = height;
+        this.side1 = side1;
+        this.side2 = side2;
+        this.side3 = side3;
+    }
+    
+    @Override
+    public double getArea() {
+        return 0.5 * base * height;
+    }
+    
+    @Override
+    public double getPerimeter() {
+        return side1 + side2 + side3;
+    }
+}
+
+public class AbstractClassBasicDemo {
+    public static void main(String[] args) {
+        
+        System.out.println("==== Abstract Class Demo ====\n");
+        
+        // Cannot instantiate abstract class
+        // Shape shape = new Shape("Test", "Red");  // ERROR!
+        
+        // Create objects of concrete classes
+        Shape circle = new Circle("Red", 5.0);
+        Shape rectangle = new Rectangle("Blue", 4.0, 6.0);
+        Shape triangle = new Triangle("Green", 3.0, 4.0, 3.0, 4.0, 5.0);
+        
+        System.out.println("\n---- Circle Info ----");
+        circle.displayInfo();
+        
+        System.out.println("\n---- Rectangle Info ----");
+        rectangle.displayInfo();
+        
+        System.out.println("\n---- Triangle Info ----");
+        triangle.displayInfo();
+        
+        // Polymorphism with abstract class
+        System.out.println("\n---- Polymorphism Demo ----");
+        Shape[] shapes = {circle, rectangle, triangle};
+        
+        double totalArea = 0;
+        for (Shape s : shapes) {
+            totalArea += s.getArea();    // Calls respective implementation
+        }
+        System.out.println("Total Area of all shapes: " + 
+                          String.format("%.2f", totalArea));
+        
+        // Static method
+        System.out.println();
+        Shape.printShapeInfo();
+    }
+}
+
+OUTPUT:
+-------
+==== Abstract Class Demo ====
+
+[Shape] Constructor called for: Circle
+[Shape] Constructor called for: Rectangle
+[Shape] Constructor called for: Triangle
+
+---- Circle Info ----
+Shape: Circle
+Color: Red
+Area: 78.53981633974483
+Perimeter: 31.41592653589793
+
+---- Rectangle Info ----
+Shape: Blue
+Color: Blue
+Area: 24.0
+Perimeter: 20.0
+
+---- Triangle Info ----
+Shape: Triangle
+Color: Green
+Area: 6.0
+Perimeter: 12.0
+
+---- Polymorphism Demo ----
+Total Area of all shapes: 108.54
+
+Shapes are geometric figures
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 2: Abstract Class with Partial Implementation
+--------------------------------------------------------------------------------
+
+// Abstract class with mix of abstract and concrete methods
+abstract class Employee {
+    
+    protected String name;
+    protected String employeeId;
+    protected String department;
+    protected double baseSalary;
+    
+    // Constructor
+    public Employee(String name, String employeeId, String department, double baseSalary) {
+        this.name = name;
+        this.employeeId = employeeId;
+        this.department = department;
+        this.baseSalary = baseSalary;
+    }
+    
+    // Abstract methods - each employee type calculates differently
+    public abstract double calculateSalary();
+    public abstract double calculateBonus();
+    public abstract String getEmployeeType();
+    
+    // Concrete methods - same for all employees
+    public void displayBasicInfo() {
+        System.out.println("Name: " + name);
+        System.out.println("ID: " + employeeId);
+        System.out.println("Department: " + department);
+        System.out.println("Type: " + getEmployeeType());
+    }
+    
+    public void displaySalaryInfo() {
+        System.out.println("Base Salary: $" + baseSalary);
+        System.out.println("Bonus: $" + calculateBonus());
+        System.out.println("Total Salary: $" + calculateSalary());
+    }
+    
+    public String getName() {
+        return name;
+    }
+    
+    public String getEmployeeId() {
+        return employeeId;
+    }
+    
+    // Final method - cannot be overridden
+    public final void printPayslip() {
+        System.out.println("\n======= PAYSLIP =======");
+        displayBasicInfo();
+        System.out.println("-----------------------");
+        displaySalaryInfo();
+        System.out.println("=======================\n");
+    }
+}
+
+// Full-time employee
+class FullTimeEmployee extends Employee {
+    
+    private double allowances;
+    private double deductions;
+    
+    public FullTimeEmployee(String name, String employeeId, 
+                           String department, double baseSalary,
+                           double allowances, double deductions) {
+        super(name, employeeId, department, baseSalary);
+        this.allowances = allowances;
+        this.deductions = deductions;
+    }
+    
+    @Override
+    public double calculateSalary() {
+        return baseSalary + allowances + calculateBonus() - deductions;
+    }
+    
+    @Override
+    public double calculateBonus() {
+        return baseSalary * 0.15;    // 15% bonus
+    }
+    
+    @Override
+    public String getEmployeeType() {
+        return "Full-Time";
+    }
+}
+
+// Part-time employee
+class PartTimeEmployee extends Employee {
+    
+    private double hourlyRate;
+    private int hoursWorked;
+    
+    public PartTimeEmployee(String name, String employeeId, 
+                           String department, double hourlyRate, int hoursWorked) {
+        super(name, employeeId, department, 0);
+        this.hourlyRate = hourlyRate;
+        this.hoursWorked = hoursWorked;
+    }
+    
+    @Override
+    public double calculateSalary() {
+        return (hourlyRate * hoursWorked) + calculateBonus();
+    }
+    
+    @Override
+    public double calculateBonus() {
+        if (hoursWorked > 100) {
+            return 200;    // Fixed bonus for working over 100 hours
+        }
+        return 0;
+    }
+    
+    @Override
+    public String getEmployeeType() {
+        return "Part-Time";
+    }
+    
+    @Override
+    public void displaySalaryInfo() {
+        System.out.println("Hourly Rate: $" + hourlyRate);
+        System.out.println("Hours Worked: " + hoursWorked);
+        System.out.println("Gross Pay: $" + (hourlyRate * hoursWorked));
+        System.out.println("Bonus: $" + calculateBonus());
+        System.out.println("Total Salary: $" + calculateSalary());
+    }
+}
+
+// Contractor
+class Contractor extends Employee {
+    
+    private double projectRate;
+    private int projectsCompleted;
+    
+    public Contractor(String name, String employeeId, 
+                     String department, double projectRate, int projectsCompleted) {
+        super(name, employeeId, department, 0);
+        this.projectRate = projectRate;
+        this.projectsCompleted = projectsCompleted;
+    }
+    
+    @Override
+    public double calculateSalary() {
+        return (projectRate * projectsCompleted) + calculateBonus();
+    }
+    
+    @Override
+    public double calculateBonus() {
+        if (projectsCompleted >= 5) {
+            return projectRate * 0.5;    // Half project rate as bonus
+        }
+        return 0;
+    }
+    
+    @Override
+    public String getEmployeeType() {
+        return "Contractor";
+    }
+    
+    @Override
+    public void displaySalaryInfo() {
+        System.out.println("Project Rate: $" + projectRate);
+        System.out.println("Projects Completed: " + projectsCompleted);
+        System.out.println("Gross Pay: $" + (projectRate * projectsCompleted));
+        System.out.println("Bonus: $" + calculateBonus());
+        System.out.println("Total Salary: $" + calculateSalary());
+    }
+}
+
+public class EmployeeAbstractDemo {
+    public static void main(String[] args) {
+        
+        System.out.println("==== Employee Payroll System ====\n");
+        
+        // Create different employee types
+        Employee fullTime = new FullTimeEmployee(
+            "John Smith", "FT001", "Engineering", 5000, 500, 200);
+        
+        Employee partTime = new PartTimeEmployee(
+            "Jane Doe", "PT001", "Support", 25, 120);
+        
+        Employee contractor = new Contractor(
+            "Bob Wilson", "CT001", "Development", 2000, 6);
+        
+        // Print payslips - uses final method
+        fullTime.printPayslip();
+        partTime.printPayslip();
+        contractor.printPayslip();
+        
+        // Process all employees polymorphically
+        System.out.println("---- Total Payroll ----");
+        Employee[] employees = {fullTime, partTime, contractor};
+        
+        double totalPayroll = 0;
+        for (Employee emp : employees) {
+            System.out.println(emp.getName() + " (" + emp.getEmployeeType() + 
+                             "): $" + emp.calculateSalary());
+            totalPayroll += emp.calculateSalary();
+        }
+        System.out.println("\nTotal Payroll: $" + totalPayroll);
+    }
+}
+
+OUTPUT:
+-------
+==== Employee Payroll System ====
+
+======= PAYSLIP =======
+Name: John Smith
+ID: FT001
+Department: Engineering
+Type: Full-Time
+-----------------------
+Base Salary: $5000.0
+Bonus: $750.0
+Total Salary: $6050.0
+=======================
+
+======= PAYSLIP =======
+Name: Jane Doe
+ID: PT001
+Department: Support
+Type: Part-Time
+-----------------------
+Hourly Rate: $25.0
+Hours Worked: 120
+Gross Pay: $3000.0
+Bonus: $200.0
+Total Salary: $3200.0
+=======================
+
+======= PAYSLIP =======
+Name: Bob Wilson
+ID: CT001
+Department: Development
+Type: Contractor
+-----------------------
+Project Rate: $2000.0
+Projects Completed: 6
+Gross Pay: $12000.0
+Bonus: $1000.0
+Total Salary: $13000.0
+=======================
+
+---- Total Payroll ----
+John Smith (Full-Time): $6050.0
+Jane Doe (Part-Time): $3200.0
+Bob Wilson (Contractor): $13000.0
+
+Total Payroll: $22250.0
+
+
+================================================================================
+                    PART 2: INTERFACES
+================================================================================
+
+What is an Interface?
+---------------------
+- A completely abstract type (blueprint of a class)
+- Contains only abstract methods (before Java 8)
+- Java 8+: Can have default and static methods
+- Java 9+: Can have private methods
+- All methods are implicitly public abstract (before Java 8)
+- All fields are implicitly public static final (constants)
+- A class can implement multiple interfaces
+
+
+Syntax:
+-------
+interface InterfaceName {
+    // Constants (public static final)
+    // Abstract methods (public abstract)
+    // Default methods (Java 8+)
+    // Static methods (Java 8+)
+    // Private methods (Java 9+)
+}
+
+class ClassName implements InterfaceName {
+    // Must implement all abstract methods
+}
+
+
+Rules for Interfaces:
+---------------------
+1. Declared using 'interface' keyword
+2. Cannot be instantiated
+3. All fields are public static final by default
+4. All methods are public abstract by default (before Java 8)
+5. Class uses 'implements' keyword to implement interface
+6. A class can implement multiple interfaces
+7. An interface can extend multiple interfaces
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 3: Basic Interface
+--------------------------------------------------------------------------------
+
+// Interface definition
+interface Drawable {
+    // Constant (public static final by default)
+    String DRAWING_TOOL = "Pencil";
+    
+    // Abstract method (public abstract by default)
+    void draw();
+    
+    // Another abstract method
+    String getDescription();
+}
+
+// Another interface
+interface Colorable {
+    void fillColor(String color);
+    String getColor();
+}
+
+// Another interface
+interface Resizable {
+    void resize(double factor);
+    double getSize();
+}
+
+// Class implementing single interface
+class Line implements Drawable {
+    
+    private int length;
+    
+    public Line(int length) {
+        this.length = length;
+    }
+    
+    @Override
+    public void draw() {
+        System.out.println("Drawing a line of length " + length + 
+                          " using " + DRAWING_TOOL);
+    }
+    
+    @Override
+    public String getDescription() {
+        return "A line with length " + length;
+    }
+}
+
+// Class implementing multiple interfaces
+class ColoredCircle implements Drawable, Colorable, Resizable {
+    
+    private double radius;
+    private String color;
+    
+    public ColoredCircle(double radius, String color) {
+        this.radius = radius;
+        this.color = color;
+    }
+    
+    // Drawable methods
+    @Override
+    public void draw() {
+        System.out.println("Drawing a " + color + " circle with radius " + radius);
+    }
+    
+    @Override
+    public String getDescription() {
+        return "A " + color + " circle with radius " + radius;
+    }
+    
+    // Colorable methods
+    @Override
+    public void fillColor(String color) {
+        this.color = color;
+        System.out.println("Circle filled with " + color);
+    }
+    
+    @Override
+    public String getColor() {
+        return color;
+    }
+    
+    // Resizable methods
+    @Override
+    public void resize(double factor) {
+        this.radius *= factor;
+        System.out.println("Circle resized. New radius: " + radius);
+    }
+    
+    @Override
+    public double getSize() {
+        return radius;
+    }
+}
+
+// Class implementing multiple interfaces
+class ColoredRectangle implements Drawable, Colorable {
+    
+    private double length;
+    private double width;
+    private String color;
+    
+    public ColoredRectangle(double length, double width, String color) {
+        this.length = length;
+        this.width = width;
+        this.color = color;
+    }
+    
+    @Override
+    public void draw() {
+        System.out.println("Drawing a " + color + " rectangle " + 
+                          length + " x " + width);
+    }
+    
+    @Override
+    public String getDescription() {
+        return "A " + color + " rectangle " + length + " x " + width;
+    }
+    
+    @Override
+    public void fillColor(String color) {
+        this.color = color;
+        System.out.println("Rectangle filled with " + color);
+    }
+    
+    @Override
+    public String getColor() {
+        return color;
+    }
+}
+
+public class InterfaceBasicDemo {
+    public static void main(String[] args) {
+        
+        System.out.println("==== Interface Demo ====\n");
+        
+        // Using interface constant
+        System.out.println("Default Drawing Tool: " + Drawable.DRAWING_TOOL);
+        
+        System.out.println("\n---- Single Interface ----");
+        Drawable line = new Line(10);
+        line.draw();
+        System.out.println(line.getDescription());
+        
+        System.out.println("\n---- Multiple Interfaces ----");
+        ColoredCircle circle = new ColoredCircle(5.0, "Blue");
+        
+        // Use as Drawable
+        Drawable drawableCircle = circle;
+        drawableCircle.draw();
+        
+        // Use as Colorable
+        Colorable colorableCircle = circle;
+        colorableCircle.fillColor("Red");
+        System.out.println("Current color: " + colorableCircle.getColor());
+        
+        // Use as Resizable
+        Resizable resizableCircle = circle;
+        resizableCircle.resize(2.0);
+        System.out.println("Current size: " + resizableCircle.getSize());
+        
+        System.out.println("\n---- Polymorphism with Interfaces ----");
+        
+        // Array of Drawable objects
+        Drawable[] drawings = {
+            new Line(5),
+            new ColoredCircle(3.0, "Green"),
+            new ColoredRectangle(4.0, 6.0, "Yellow")
+        };
+        
+        System.out.println("Drawing all objects:");
+        for (Drawable d : drawings) {
+            d.draw();
+        }
+    }
+}
+
+OUTPUT:
+-------
+==== Interface Demo ====
+
+Default Drawing Tool: Pencil
+
+---- Single Interface ----
+Drawing a line of length 10 using Pencil
+A line with length 10
+
+---- Multiple Interfaces ----
+Drawing a Blue circle with radius 5.0
+Circle filled with Red
+Current color: Red
+Circle resized. New radius: 10.0
+Current size: 10.0
+
+---- Polymorphism with Interfaces ----
+Drawing all objects:
+Drawing a line of length 5 using Pencil
+Drawing a Green circle with radius 3.0
+Drawing a Yellow rectangle 4.0 x 6.0
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 4: Interface with Default and Static Methods (Java 8+)
+--------------------------------------------------------------------------------
+
+interface Vehicle {
+    // Abstract method
+    void start();
+    void stop();
+    String getVehicleType();
+    
+    // Default method (Java 8+) - provides default implementation
+    default void horn() {
+        System.out.println("Beep! Beep!");
+    }
+    
+    // Default method with logic
+    default void displayInfo() {
+        System.out.println("Vehicle Type: " + getVehicleType());
+        System.out.println("Starting vehicle...");
+        start();
+    }
+    
+    // Static method (Java 8+) - belongs to interface
+    static void printVehicleRules() {
+        System.out.println("=== Vehicle Rules ===");
+        System.out.println("1. Always wear seatbelt");
+        System.out.println("2. Follow traffic signals");
+        System.out.println("3. Don't drink and drive");
+    }
+    
+    // Static utility method
+    static boolean isValidSpeed(int speed) {
+        return speed >= 0 && speed <= 200;
+    }
+}
+
+interface Electric {
+    void charge();
+    int getBatteryLevel();
+    
+    default void displayBatteryStatus() {
+        int level = getBatteryLevel();
+        System.out.println("Battery Level: " + level + "%");
+        if (level < 20) {
+            System.out.println("Warning: Low battery! Please charge.");
+        }
+    }
+}
+
+// Class implementing interface with default methods
+class Car implements Vehicle {
+    
+    private String brand;
+    private boolean isRunning;
+    
+    public Car(String brand) {
+        this.brand = brand;
+        this.isRunning = false;
+    }
+    
+    @Override
+    public void start() {
+        isRunning = true;
+        System.out.println(brand + " car started");
+    }
+    
+    @Override
+    public void stop() {
+        isRunning = false;
+        System.out.println(brand + " car stopped");
+    }
+    
+    @Override
+    public String getVehicleType() {
+        return "Car - " + brand;
+    }
+    
+    // Using default horn() method - no override needed
+    
+    // Can override default method if needed
+    @Override
+    public void displayInfo() {
+        System.out.println("--- Car Information ---");
+        Vehicle.super.displayInfo();    // Call default method
+        System.out.println("Brand: " + brand);
+    }
+}
+
+// Class implementing interface and overriding default method
+class Motorcycle implements Vehicle {
+    
+    private String model;
+    
+    public Motorcycle(String model) {
+        this.model = model;
+    }
+    
+    @Override
+    public void start() {
+        System.out.println(model + " motorcycle started with kick");
+    }
+    
+    @Override
+    public void stop() {
+        System.out.println(model + " motorcycle stopped");
+    }
+    
+    @Override
+    public String getVehicleType() {
+        return "Motorcycle - " + model;
+    }
+    
+    // Override default horn method
+    @Override
+    public void horn() {
+        System.out.println("Honk! Honk! (Motorcycle horn)");
+    }
+}
+
+// Class implementing multiple interfaces with default methods
+class ElectricCar implements Vehicle, Electric {
+    
+    private String brand;
+    private int batteryLevel;
+    private boolean isRunning;
+    
+    public ElectricCar(String brand, int batteryLevel) {
+        this.brand = brand;
+        this.batteryLevel = batteryLevel;
+        this.isRunning = false;
+    }
+    
+    // Vehicle methods
+    @Override
+    public void start() {
+        if (batteryLevel > 0) {
+            isRunning = true;
+            System.out.println(brand + " electric car started silently");
+        } else {
+            System.out.println("Cannot start - battery empty!");
+        }
+    }
+    
+    @Override
+    public void stop() {
+        isRunning = false;
+        System.out.println(brand + " electric car stopped");
+    }
+    
+    @Override
+    public String getVehicleType() {
+        return "Electric Car - " + brand;
+    }
+    
+    // Electric methods
+    @Override
+    public void charge() {
+        System.out.println("Charging " + brand + "...");
+        batteryLevel = 100;
+        System.out.println("Charging complete!");
+    }
+    
+    @Override
+    public int getBatteryLevel() {
+        return batteryLevel;
+    }
+    
+    // Custom horn for electric car
+    @Override
+    public void horn() {
+        System.out.println("*Futuristic electric horn sound*");
+    }
+}
+
+public class InterfaceDefaultMethodDemo {
+    public static void main(String[] args) {
+        
+        System.out.println("==== Interface Default & Static Methods ====\n");
+        
+        // Static method - called on interface
+        Vehicle.printVehicleRules();
+        
+        System.out.println("\n---- Car Demo ----");
+        Car car = new Car("Toyota");
+        car.displayInfo();
+        car.horn();    // Uses default method
+        car.stop();
+        
+        System.out.println("\n---- Motorcycle Demo ----");
+        Motorcycle bike = new Motorcycle("Honda");
+        bike.displayInfo();
+        bike.horn();    // Uses overridden method
+        bike.stop();
+        
+        System.out.println("\n---- Electric Car Demo ----");
+        ElectricCar tesla = new ElectricCar("Tesla", 15);
+        tesla.displayInfo();
+        tesla.displayBatteryStatus();    // Default method from Electric
+        tesla.horn();
+        tesla.charge();
+        tesla.displayBatteryStatus();
+        
+        System.out.println("\n---- Static Method Demo ----");
+        System.out.println("Is 50 valid speed? " + Vehicle.isValidSpeed(50));
+        System.out.println("Is 250 valid speed? " + Vehicle.isValidSpeed(250));
+    }
+}
+
+OUTPUT:
+-------
+==== Interface Default & Static Methods ====
+
+=== Vehicle Rules ===
+1. Always wear seatbelt
+2. Follow traffic signals
+3. Don't drink and drive
+
+---- Car Demo ----
+--- Car Information ---
+Vehicle Type: Car - Toyota
+Starting vehicle...
+Toyota car started
+Brand: Toyota
+Beep! Beep!
+Toyota car stopped
+
+---- Motorcycle Demo ----
+Vehicle Type: Motorcycle - Honda
+Starting vehicle...
+Honda motorcycle started with kick
+Honk! Honk! (Motorcycle horn)
+Honda motorcycle stopped
+
+---- Electric Car Demo ----
+Vehicle Type: Electric Car - Tesla
+Starting vehicle...
+Tesla electric car started silently
+Battery Level: 15%
+Warning: Low battery! Please charge.
+*Futuristic electric horn sound*
+Charging Tesla...
+Charging complete!
+Battery Level: 100%
+
+---- Static Method Demo ----
+Is 50 valid speed? true
+Is 250 valid speed? false
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 5: Interface Extending Interface
+--------------------------------------------------------------------------------
+
+// Base interface
+interface Playable {
+    void play();
+    void pause();
+    void stop();
+}
+
+// Interface extending another interface
+interface Recordable extends Playable {
+    void record();
+    void saveRecording(String filename);
+}
+
+// Interface extending multiple interfaces
+interface Streamable {
+    void stream(String url);
+    void setQuality(String quality);
+}
+
+// Interface extending multiple interfaces
+interface SmartMediaPlayer extends Recordable, Streamable {
+    void connectBluetooth(String device);
+    void setEqualizer(String mode);
+}
+
+// Class implementing the extended interface
+class ModernMediaPlayer implements SmartMediaPlayer {
+    
+    private String name;
+    private boolean isPlaying;
+    private boolean isRecording;
+    private String currentQuality;
+    
+    public ModernMediaPlayer(String name) {
+        this.name = name;
+        this.isPlaying = false;
+        this.isRecording = false;
+        this.currentQuality = "HD";
+    }
+    
+    // Playable methods
+    @Override
+    public void play() {
+        isPlaying = true;
+        System.out.println("[" + name + "] Playing...");
+    }
+    
+    @Override
+    public void pause() {
+        isPlaying = false;
+        System.out.println("[" + name + "] Paused");
+    }
+    
+    @Override
+    public void stop() {
+        isPlaying = false;
+        isRecording = false;
+        System.out.println("[" + name + "] Stopped");
+    }
+    
+    // Recordable methods
+    @Override
+    public void record() {
+        isRecording = true;
+        System.out.println("[" + name + "] Recording started...");
+    }
+    
+    @Override
+    public void saveRecording(String filename) {
+        System.out.println("[" + name + "] Recording saved as: " + filename);
+        isRecording = false;
+    }
+    
+    // Streamable methods
+    @Override
+    public void stream(String url) {
+        System.out.println("[" + name + "] Streaming from: " + url);
+        System.out.println("[" + name + "] Quality: " + currentQuality);
+    }
+    
+    @Override
+    public void setQuality(String quality) {
+        this.currentQuality = quality;
+        System.out.println("[" + name + "] Quality set to: " + quality);
+    }
+    
+    // SmartMediaPlayer methods
+    @Override
+    public void connectBluetooth(String device) {
+        System.out.println("[" + name + "] Connected to Bluetooth device: " + device);
+    }
+    
+    @Override
+    public void setEqualizer(String mode) {
+        System.out.println("[" + name + "] Equalizer set to: " + mode);
+    }
+}
+
+public class InterfaceExtensionDemo {
+    public static void main(String[] args) {
+        
+        System.out.println("==== Interface Extension Demo ====\n");
+        
+        ModernMediaPlayer player = new ModernMediaPlayer("SmartPlayer Pro");
+        
+        // Use as Playable
+        System.out.println("---- Using as Playable ----");
+        Playable playable = player;
+        playable.play();
+        playable.pause();
+        
+        // Use as Recordable
+        System.out.println("\n---- Using as Recordable ----");
+        Recordable recordable = player;
+        recordable.record();
+        recordable.saveRecording("my_recording.mp3");
+        
+        // Use as Streamable
+        System.out.println("\n---- Using as Streamable ----");
+        Streamable streamable = player;
+        streamable.setQuality("4K");
+        streamable.stream("https://streaming.example.com/video");
+        
+        // Use as SmartMediaPlayer
+        System.out.println("\n---- Using as SmartMediaPlayer ----");
+        SmartMediaPlayer smartPlayer = player;
+        smartPlayer.connectBluetooth("AirPods Pro");
+        smartPlayer.setEqualizer("Bass Boost");
+        smartPlayer.play();
+        smartPlayer.stop();
+    }
+}
+
+OUTPUT:
+-------
+==== Interface Extension Demo ====
+
+---- Using as Playable ----
+[SmartPlayer Pro] Playing...
+[SmartPlayer Pro] Paused
+
+---- Using as Recordable ----
+[SmartPlayer Pro] Recording started...
+[SmartPlayer Pro] Recording saved as: my_recording.mp3
+
+---- Using as Streamable ----
+[SmartPlayer Pro] Quality set to: 4K
+[SmartPlayer Pro] Streaming from: https://streaming.example.com/video
+[SmartPlayer Pro] Quality: 4K
+
+---- Using as SmartMediaPlayer ----
+[SmartPlayer Pro] Connected to Bluetooth device: AirPods Pro
+[SmartPlayer Pro] Equalizer set to: Bass Boost
+[SmartPlayer Pro] Playing...
+[SmartPlayer Pro] Stopped
+
+
+================================================================================
+                    PART 3: ABSTRACT CLASS VS INTERFACE
+================================================================================
+
++---------------------------+---------------------------+------------------------+
+| Feature                   | Abstract Class            | Interface              |
++---------------------------+---------------------------+------------------------+
+| Keyword                   | abstract class            | interface              |
++---------------------------+---------------------------+------------------------+
+| Methods                   | Abstract & concrete       | Abstract, default,     |
+|                           |                           | static (Java 8+)       |
++---------------------------+---------------------------+------------------------+
+| Variables                 | Any type                  | public static final    |
+|                           |                           | (constants only)       |
++---------------------------+---------------------------+------------------------+
+| Constructor               | Yes                       | No                     |
++---------------------------+---------------------------+------------------------+
+| Multiple Inheritance      | No (single extends)       | Yes (multiple impl.)   |
++---------------------------+---------------------------+------------------------+
+| Access Modifiers          | Any                       | public (methods)       |
++---------------------------+---------------------------+------------------------+
+| Inheritance keyword       | extends                   | implements             |
++---------------------------+---------------------------+------------------------+
+| When to use               | IS-A relationship with    | CAN-DO capability      |
+|                           | shared code               | contract               |
++---------------------------+---------------------------+------------------------+
+| State                     | Can maintain state        | Cannot maintain state  |
+|                           | (instance variables)      | (only constants)       |
++---------------------------+---------------------------+------------------------+
+
+
+When to Use What:
+-----------------
+
+USE ABSTRACT CLASS when:
+- You want to share code among related classes
+- Classes have common state (fields)
+- You need non-public members
+- You need constructors
+- You have IS-A relationship
+
+USE INTERFACE when:
+- You want to define a contract/capability
+- Multiple inheritance is needed
+- Unrelated classes should implement behavior
+- You want loose coupling
+- You have CAN-DO relationship
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 6: When to Use Abstract Class vs Interface
+--------------------------------------------------------------------------------
+
+// ABSTRACT CLASS: Used for IS-A relationship with shared state/code
+abstract class Animal {
+    // Shared state
+    protected String name;
+    protected int age;
+    protected double weight;
+    
+    // Constructor - shared initialization
+    public Animal(String name, int age, double weight) {
+        this.name = name;
+        this.age = age;
+        this.weight = weight;
+    }
+    
+    // Shared behavior
+    public void eat(String food) {
+        System.out.println(name + " is eating " + food);
+        weight += 0.1;
+    }
+    
+    public void sleep() {
+        System.out.println(name + " is sleeping. Zzz...");
+    }
+    
+    // Abstract - each animal sounds different
+    public abstract void makeSound();
+    
+    // Shared getter
+    public String getName() {
+        return name;
+    }
+}
+
+// INTERFACES: Used for CAN-DO capabilities
+interface Swimmable {
+    void swim();
+    int getSwimSpeed();
+}
+
+interface Flyable {
+    void fly();
+    int getMaxAltitude();
+}
+
+interface Trainable {
+    void train(String command);
+    void performTrick(String trick);
+}
+
+// Dog IS-A Animal, CAN-DO Swimmable, CAN-DO Trainable
+class DogAnimal extends Animal implements Swimmable, Trainable {
+    
+    private String breed;
+    
+    public DogAnimal(String name, int age, double weight, String breed) {
+        super(name, age, weight);
+        this.breed = breed;
+    }
+    
+    @Override
+    public void makeSound() {
+        System.out.println(name + " barks: Woof! Woof!");
+    }
+    
+    @Override
+    public void swim() {
+        System.out.println(name + " is swimming doggy paddle style!");
+    }
+    
+    @Override
+    public int getSwimSpeed() {
+        return 5;    // 5 km/h
+    }
+    
+    @Override
+    public void train(String command) {
+        System.out.println("Training " + name + " to: " + command);
+    }
+    
+    @Override
+    public void performTrick(String trick) {
+        System.out.println(name + " performs: " + trick);
+    }
+}
+
+// Bird IS-A Animal, CAN-DO Flyable
+class Bird extends Animal implements Flyable {
+    
+    private String species;
+    
+    public Bird(String name, int age, double weight, String species) {
+        super(name, age, weight);
+        this.species = species;
+    }
+    
+    @Override
+    public void makeSound() {
+        System.out.println(name + " chirps: Tweet! Tweet!");
+    }
+    
+    @Override
+    public void fly() {
+        System.out.println(name + " is flying through the sky!");
+    }
+    
+    @Override
+    public int getMaxAltitude() {
+        return 1000;    // 1000 meters
+    }
+}
+
+// Duck IS-A Animal, CAN-DO Swimmable, CAN-DO Flyable
+class Duck extends Animal implements Swimmable, Flyable {
+    
+    public Duck(String name, int age, double weight) {
+        super(name, age, weight);
+    }
+    
+    @Override
+    public void makeSound() {
+        System.out.println(name + " quacks: Quack! Quack!");
+    }
+    
+    @Override
+    public void swim() {
+        System.out.println(name + " is swimming gracefully on the pond!");
+    }
+    
+    @Override
+    public int getSwimSpeed() {
+        return 3;
+    }
+    
+    @Override
+    public void fly() {
+        System.out.println(name + " is flying in V-formation!");
+    }
+    
+    @Override
+    public int getMaxAltitude() {
+        return 500;
+    }
+}
+
+// Fish IS-A Animal, CAN-DO Swimmable (cannot fly or be trained)
+class Fish extends Animal implements Swimmable {
+    
+    private boolean isFreshwater;
+    
+    public Fish(String name, int age, double weight, boolean isFreshwater) {
+        super(name, age, weight);
+        this.isFreshwater = isFreshwater;
+    }
+    
+    @Override
+    public void makeSound() {
+        System.out.println(name + " makes bubbles: Blub blub!");
+    }
+    
+    @Override
+    public void swim() {
+        System.out.println(name + " is swimming swiftly!");
+    }
+    
+    @Override
+    public int getSwimSpeed() {
+        return 15;
+    }
+}
+
+public class AbstractVsInterfaceDemo {
+    public static void main(String[] args) {
+        
+        System.out.println("==== Abstract Class vs Interface Demo ====\n");
+        
+        // Create animals
+        DogAnimal dog = new DogAnimal("Buddy", 3, 25.0, "Golden Retriever");
+        Bird bird = new Bird("Tweety", 1, 0.5, "Canary");
+        Duck duck = new Duck("Donald", 2, 3.0);
+        Fish fish = new Fish("Nemo", 1, 0.2, true);
+        
+        // All animals can use shared Animal methods
+        System.out.println("---- Shared Animal Behavior ----");
+        Animal[] animals = {dog, bird, duck, fish};
+        for (Animal a : animals) {
+            a.makeSound();
+            a.sleep();
+            System.out.println();
+        }
+        
+        // Process only swimmable animals
+        System.out.println("---- Swimmable Animals ----");
+        Swimmable[] swimmers = {dog, duck, fish};
+        for (Swimmable s : swimmers) {
+            s.swim();
+            System.out.println("Speed: " + s.getSwimSpeed() + " km/h\n");
+        }
+        
+        // Process only flyable animals
+        System.out.println("---- Flyable Animals ----");
+        Flyable[] flyers = {bird, duck};
+        for (Flyable f : flyers) {
+            f.fly();
+            System.out.println("Max Altitude: " + f.getMaxAltitude() + " meters\n");
+        }
+        
+        // Process only trainable animals
+        System.out.println("---- Trainable Animals ----");
+        Trainable trainable = dog;
+        trainable.train("Sit");
+        trainable.performTrick("Roll over");
+    }
+}
+
+OUTPUT:
+-------
+==== Abstract Class vs Interface Demo ====
+
+---- Shared Animal Behavior ----
+Buddy barks: Woof! Woof!
+Buddy is sleeping. Zzz...
+
+Tweety chirps: Tweet! Tweet!
+Tweety is sleeping. Zzz...
+
+Donald quacks: Quack! Quack!
+Donald is sleeping. Zzz...
+
+Nemo makes bubbles: Blub blub!
+Nemo is sleeping. Zzz...
+
+---- Swimmable Animals ----
+Buddy is swimming doggy paddle style!
+Speed: 5 km/h
+
+Donald is swimming gracefully on the pond!
+Speed: 3 km/h
+
+Nemo is swimming swiftly!
+Speed: 15 km/h
+
+---- Flyable Animals ----
+Tweety is flying through the sky!
+Max Altitude: 1000 meters
+
+Donald is flying in V-formation!
+Max Altitude: 500 meters
+
+---- Trainable Animals ----
+Training Buddy to: Sit
+Buddy performs: Roll over
+
+
+================================================================================
+                    PART 4: ABSTRACTION IN SELENIUM AUTOMATION
+================================================================================
+
+--------------------------------------------------------------------------------
+EXAMPLE 7: Abstract Base Page Class (Selenium)
+--------------------------------------------------------------------------------
+
+// Abstract base class for all page objects
+abstract class BasePage {
+    
+    // Simulated WebDriver (in real code: protected WebDriver driver;)
+    protected String driverInfo;
+    protected String pageUrl;
+    protected String pageTitle;
+    
+    // Constructor
+    public BasePage(String driverInfo) {
+        this.driverInfo = driverInfo;
+        System.out.println("[BasePage] Initialized with driver: " + driverInfo);
+    }
+    
+    // Abstract methods - each page must implement
+    public abstract void verifyPageLoaded();
+    public abstract String getExpectedTitle();
+    public abstract String getExpectedUrl();
+    
+    // Concrete methods - shared by all pages
+    protected void click(String locator) {
+        System.out.println("[BasePage] Clicking: " + locator);
+        // driver.findElement(By.xpath(locator)).click();
+    }
+    
+    protected void type(String locator, String text) {
+        System.out.println("[BasePage] Typing '" + text + "' into: " + locator);
+        // driver.findElement(By.xpath(locator)).sendKeys(text);
+    }
+    
+    protected String getText(String locator) {
+        System.out.println("[BasePage] Getting text from: " + locator);
+        return "Sample Text";
+    }
+    
+    protected boolean isElementDisplayed(String locator) {
+        System.out.println("[BasePage] Checking if displayed: " + locator);
+        return true;
+    }
+    
+    protected void waitForElement(String locator, int seconds) {
+        System.out.println("[BasePage] Waiting " + seconds + "s for: " + locator);
+        // WebDriverWait implementation
+    }
+    
+    // Template method pattern - uses abstract methods
+    public void loadAndVerify() {
+        System.out.println("[BasePage] Loading page: " + getExpectedUrl());
+        // driver.get(getExpectedUrl());
+        verifyPageLoaded();
+        System.out.println("[BasePage] Page loaded and verified successfully!");
+    }
+    
+    public void takeScreenshot(String fileName) {
+        System.out.println("[BasePage] Screenshot saved: " + fileName + ".png");
+    }
+}
+
+// Concrete Login Page
+class LoginPageSelenium extends BasePage {
+    
+    // Locators
+    private static final String USERNAME_FIELD = "//input[@id='username']";
+    private static final String PASSWORD_FIELD = "//input[@id='password']";
+    private static final String LOGIN_BUTTON = "//button[@id='login']";
+    private static final String ERROR_MESSAGE = "//div[@class='error']";
+    private static final String LOGO = "//img[@id='logo']";
+    
+    public LoginPageSelenium(String driverInfo) {
+        super(driverInfo);
+        this.pageUrl = "https://app.example.com/login";
+        this.pageTitle = "Login - MyApp";
+    }
+    
+    @Override
+    public void verifyPageLoaded() {
+        System.out.println("[LoginPage] Verifying page loaded...");
+        waitForElement(LOGO, 10);
+        if (isElementDisplayed(USERNAME_FIELD) && 
+            isElementDisplayed(PASSWORD_FIELD) &&
+            isElementDisplayed(LOGIN_BUTTON)) {
+            System.out.println("[LoginPage] All elements present!");
+        }
+    }
+    
+    @Override
+    public String getExpectedTitle() {
+        return pageTitle;
+    }
+    
+    @Override
+    public String getExpectedUrl() {
+        return pageUrl;
+    }
+    
+    // Page-specific methods
+    public void enterUsername(String username) {
+        type(USERNAME_FIELD, username);
+    }
+    
+    public void enterPassword(String password) {
+        type(PASSWORD_FIELD, "****");
+    }
+    
+    public void clickLogin() {
+        click(LOGIN_BUTTON);
+    }
+    
+    public DashboardPageSelenium login(String username, String password) {
+        System.out.println("[LoginPage] Performing login...");
+        enterUsername(username);
+        enterPassword(password);
+        clickLogin();
+        return new DashboardPageSelenium(driverInfo);
+    }
+    
+    public String getErrorMessage() {
+        return getText(ERROR_MESSAGE);
+    }
+    
+    public boolean isErrorDisplayed() {
+        return isElementDisplayed(ERROR_MESSAGE);
+    }
+}
+
+// Concrete Dashboard Page
+class DashboardPageSelenium extends BasePage {
+    
+    private static final String WELCOME_MESSAGE = "//h1[@id='welcome']";
+    private static final String SIDEBAR_MENU = "//nav[@id='sidebar']";
+    private static final String LOGOUT_BUTTON = "//button[@id='logout']";
+    private static final String USER_PROFILE = "//div[@id='profile']";
+    
+    public DashboardPageSelenium(String driverInfo) {
+        super(driverInfo);
+        this.pageUrl = "https://app.example.com/dashboard";
+        this.pageTitle = "Dashboard - MyApp";
+    }
+    
+    @Override
+    public void verifyPageLoaded() {
+        System.out.println("[Dashboard] Verifying page loaded...");
+        waitForElement(WELCOME_MESSAGE, 10);
+        if (isElementDisplayed(SIDEBAR_MENU) && isElementDisplayed(USER_PROFILE)) {
+            System.out.println("[Dashboard] Dashboard elements present!");
+        }
+    }
+    
+    @Override
+    public String getExpectedTitle() {
+        return pageTitle;
+    }
+    
+    @Override
+    public String getExpectedUrl() {
+        return pageUrl;
+    }
+    
+    public String getWelcomeMessage() {
+        return getText(WELCOME_MESSAGE);
+    }
+    
+    public void clickMenuItem(String menuItem) {
+        click("//a[text()='" + menuItem + "']");
+    }
+    
+    public LoginPageSelenium logout() {
+        System.out.println("[Dashboard] Logging out...");
+        click(LOGOUT_BUTTON);
+        return new LoginPageSelenium(driverInfo);
+    }
+}
+
+// Concrete Products Page
+class ProductsPageSelenium extends BasePage {
+    
+    private static final String SEARCH_BOX = "//input[@id='search']";
+    private static final String PRODUCT_GRID = "//div[@class='product-grid']";
+    private static final String FILTER_PANEL = "//div[@id='filters']";
+    
+    public ProductsPageSelenium(String driverInfo) {
+        super(driverInfo);
+        this.pageUrl = "https://app.example.com/products";
+        this.pageTitle = "Products - MyApp";
+    }
+    
+    @Override
+    public void verifyPageLoaded() {
+        System.out.println("[Products] Verifying page loaded...");
+        waitForElement(PRODUCT_GRID, 15);
+        if (isElementDisplayed(SEARCH_BOX) && isElementDisplayed(FILTER_PANEL)) {
+            System.out.println("[Products] Products page elements present!");
+        }
+    }
+    
+    @Override
+    public String getExpectedTitle() {
+        return pageTitle;
+    }
+    
+    @Override
+    public String getExpectedUrl() {
+        return pageUrl;
+    }
+    
+    public void searchProduct(String productName) {
+        type(SEARCH_BOX, productName);
+        click("//button[@id='search-btn']");
+    }
+    
+    public void applyFilter(String filterName) {
+        click("//label[text()='" + filterName + "']");
+    }
+}
+
+public class SeleniumAbstractPageDemo {
+    public static void main(String[] args) {
+        
+        System.out.println("============================================");
+        System.out.println("    SELENIUM ABSTRACT PAGE OBJECT DEMO");
+        System.out.println("============================================\n");
+        
+        String driver = "ChromeDriver";
+        
+        // Create page objects
+        LoginPageSelenium loginPage = new LoginPageSelenium(driver);
+        ProductsPageSelenium productsPage = new ProductsPageSelenium(driver);
+        
+        // Use template method pattern
+        System.out.println("---- Test 1: Login Flow ----\n");
+        loginPage.loadAndVerify();
+        DashboardPageSelenium dashboard = loginPage.login("testuser", "password123");
+        dashboard.verifyPageLoaded();
+        
+        System.out.println("\n---- Test 2: Products Flow ----\n");
+        productsPage.loadAndVerify();
+        productsPage.searchProduct("Laptop");
+        productsPage.applyFilter("Electronics");
+        
+        // Polymorphism - process all pages
+        System.out.println("\n---- Test 3: Verify All Pages ----\n");
+        BasePage[] pages = {loginPage, dashboard, productsPage};
+        
+        for (BasePage page : pages) {
+            System.out.println("Page: " + page.getExpectedTitle());
+            System.out.println("URL: " + page.getExpectedUrl());
+            page.takeScreenshot(page.getExpectedTitle().replace(" ", "_"));
+            System.out.println();
+        }
+    }
+}
+
+OUTPUT:
+-------
+============================================
+    SELENIUM ABSTRACT PAGE OBJECT DEMO
+============================================
+
+[BasePage] Initialized with driver: ChromeDriver
+[BasePage] Initialized with driver: ChromeDriver
+
+---- Test 1: Login Flow ----
+
+[BasePage] Loading page: https://app.example.com/login
+[LoginPage] Verifying page loaded...
+[BasePage] Waiting 10s for: //img[@id='logo']
+[BasePage] Checking if displayed: //input[@id='username']
+[BasePage] Checking if displayed: //input[@id='password']
+[BasePage] Checking if displayed: //button[@id='login']
+[LoginPage] All elements present!
+[BasePage] Page loaded and verified successfully!
+[LoginPage] Performing login...
+[BasePage] Typing 'testuser' into: //input[@id='username']
+[BasePage] Typing '****' into: //input[@id='password']
+[BasePage] Clicking: //button[@id='login']
+[BasePage] Initialized with driver: ChromeDriver
+[Dashboard] Verifying page loaded...
+[BasePage] Waiting 10s for: //h1[@id='welcome']
+[BasePage] Checking if displayed: //nav[@id='sidebar']
+[BasePage] Checking if displayed: //div[@id='profile']
+[Dashboard] Dashboard elements present!
+
+---- Test 2: Products Flow ----
+
+[BasePage] Loading page: https://app.example.com/products
+[Products] Verifying page loaded...
+[BasePage] Waiting 15s for: //div[@class='product-grid']
+[BasePage] Checking if displayed: //input[@id='search']
+[BasePage] Checking if displayed: //div[@id='filters']
+[Products] Products page elements present!
+[BasePage] Page loaded and verified successfully!
+[BasePage] Typing 'Laptop' into: //input[@id='search']
+[BasePage] Clicking: //button[@id='search-btn']
+[BasePage] Clicking: //label[text()='Electronics']
+
+---- Test 3: Verify All Pages ----
+
+Page: Login - MyApp
+URL: https://app.example.com/login
+[BasePage] Screenshot saved: Login_-_MyApp.png
+
+Page: Dashboard - MyApp
+URL: https://app.example.com/dashboard
+[BasePage] Screenshot saved: Dashboard_-_MyApp.png
+
+Page: Products - MyApp
+URL: https://app.example.com/products
+[BasePage] Screenshot saved: Products_-_MyApp.png
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 8: Interface for Browser Drivers (Selenium)
+--------------------------------------------------------------------------------
+
+// Interface defining browser capabilities
+interface BrowserCapabilities {
+    void launch();
+    void quit();
+    void maximize();
+    void setImplicitWait(int seconds);
+    String getBrowserName();
+}
+
+// Interface for navigation
+interface Navigable {
+    void navigateTo(String url);
+    void navigateBack();
+    void navigateForward();
+    void refresh();
+    String getCurrentUrl();
+}
+
+// Interface for screenshot
+interface ScreenshotCapable {
+    void takeScreenshot(String fileName);
+    void t[REDACTED:AWS_ACCESS_KEY](String fileName);
+}
+
+// Interface for JavaScript execution
+interface JavaScriptExecutable {
+    Object executeScript(String script);
+    void scrollToElement(String locator);
+    void scrollToBottom();
+}
+
+// Combine all interfaces
+interface WebDriverContract extends BrowserCapabilities, Navigable, 
+                                    ScreenshotCapable, JavaScriptExecutable {
+    // Additional methods specific to WebDriver
+    void findElement(String locator);
+    void findElements(String locator);
+}
+
+// Chrome implementation
+class ChromeDriverImpl implements WebDriverContract {
+    
+    private String browserName = "Chrome";
+    private String currentUrl = "";
+    
+    @Override
+    public void launch() {
+        System.out.println("[Chrome] Setting up ChromeDriver...");
+        System.out.println("[Chrome] Launching Chrome browser");
+    }
+    
+    @Override
+    public void quit() {
+        System.out.println("[Chrome] Closing all Chrome windows");
+        System.out.println("[Chrome] ChromeDriver session ended");
+    }
+    
+    @Override
+    public void maximize() {
+        System.out.println("[Chrome] Maximizing Chrome window");
+    }
+    
+    @Override
+    public void setImplicitWait(int seconds) {
+        System.out.println("[Chrome] Implicit wait set to " + seconds + " seconds");
+    }
+    
+    @Override
+    public String getBrowserName() {
+        return browserName;
+    }
+    
+    @Override
+    public void navigateTo(String url) {
+        currentUrl = url;
+        System.out.println("[Chrome] Navigating to: " + url);
+    }
+    
+    @Override
+    public void navigateBack() {
+        System.out.println("[Chrome] Navigating back");
+    }
+    
+    @Override
+    public void navigateForward() {
+        System.out.println("[Chrome] Navigating forward");
+    }
+    
+    @Override
+    public void refresh() {
+        System.out.println("[Chrome] Refreshing page");
+    }
+    
+    @Override
+    public String getCurrentUrl() {
+        return currentUrl;
+    }
+    
+    @Override
+    public void takeScreenshot(String fileName) {
+        System.out.println("[Chrome] Screenshot saved: " + fileName + ".png");
+    }
+    
+    @Override
+    public void t[REDACTED:AWS_ACCESS_KEY](String fileName) {
+        System.out.println("[Chrome] Full page screenshot (using DevTools): " + fileName + ".png");
+    }
+    
+    @Override
+    public Object executeScript(String script) {
+        System.out.println("[Chrome] Executing JS: " + script);
+        return null;
+    }
+    
+    @Override
+    public void scrollToElement(String locator) {
+        System.out.println("[Chrome] Scrolling to element: " + locator);
+    }
+    
+    @Override
+    public void scrollToBottom() {
+        System.out.println("[Chrome] Scrolling to bottom of page");
+    }
+    
+    @Override
+    public void findElement(String locator) {
+        System.out.println("[Chrome] Finding element: " + locator);
+    }
+    
+    @Override
+    public void findElements(String locator) {
+        System.out.println("[Chrome] Finding all elements: " + locator);
+    }
+}
+
+// Firefox implementation
+class FirefoxDriverImpl implements WebDriverContract {
+    
+    private String browserName = "Firefox";
+    private String currentUrl = "";
+    
+    @Override
+    public void launch() {
+        System.out.println("[Firefox] Setting up GeckoDriver...");
+        System.out.println("[Firefox] Launching Firefox browser");
+    }
+    
+    @Override
+    public void quit() {
+        System.out.println("[Firefox] Closing all Firefox windows");
+        System.out.println("[Firefox] GeckoDriver session ended");
+    }
+    
+    @Override
+    public void maximize() {
+        System.out.println("[Firefox] Maximizing Firefox window");
+    }
+    
+    @Override
+    public void setImplicitWait(int seconds) {
+        System.out.println("[Firefox] Implicit wait set to " + seconds + " seconds");
+    }
+    
+    @Override
+    public String getBrowserName() {
+        return browserName;
+    }
+    
+    @Override
+    public void navigateTo(String url) {
+        currentUrl = url;
+        System.out.println("[Firefox] Navigating to: " + url);
+    }
+    
+    @Override
+    public void navigateBack() {
+        System.out.println("[Firefox] Navigating back");
+    }
+    
+    @Override
+    public void navigateForward() {
+        System.out.println("[Firefox] Navigating forward");
+    }
+    
+    @Override
+    public void refresh() {
+        System.out.println("[Firefox] Refreshing page");
+    }
+    
+    @Override
+    public String getCurrentUrl() {
+        return currentUrl;
+    }
+    
+    @Override
+    public void takeScreenshot(String fileName) {
+        System.out.println("[Firefox] Screenshot saved: " + fileName + ".png");
+    }
+    
+    @Override
+    public void t[REDACTED:AWS_ACCESS_KEY](String fileName) {
+        System.out.println("[Firefox] Full page screenshot (native support): " + fileName + ".png");
+    }
+    
+    @Override
+    public Object executeScript(String script) {
+        System.out.println("[Firefox] Executing JS: " + script);
+        return null;
+    }
+    
+    @Override
+    public void scrollToElement(String locator) {
+        System.out.println("[Firefox] Scrolling to element: " + locator);
+    }
+    
+    @Override
+    public void scrollToBottom() {
+        System.out.println("[Firefox] Scrolling to bottom of page");
+    }
+    
+    @Override
+    public void findElement(String locator) {
+        System.out.println("[Firefox] Finding element: " + locator);
+    }
+    
+    @Override
+    public void findElements(String locator) {
+        System.out.println("[Firefox] Finding all elements: " + locator);
+    }
+}
+
+// Driver Factory
+class DriverFactory {
+    
+    public static WebDriverContract getDriver(String browserName) {
+        switch (browserName.toLowerCase()) {
+            case "chrome":
+                return new ChromeDriverImpl();
+            case "firefox":
+                return new FirefoxDriverImpl();
+            default:
+                System.out.println("Unknown browser, defaulting to Chrome");
+                return new ChromeDriverImpl();
+        }
+    }
+}
+
+// Test class using interface
+class BrowserTest {
+    
+    private WebDriverContract driver;
+    
+    public BrowserTest(WebDriverContract driver) {
+        this.driver = driver;
+    }
+    
+    public void runTest() {
+        System.out.println("\n---- Running Test on " + driver.getBrowserName() + " ----\n");
+        
+        driver.launch();
+        driver.maximize();
+        driver.setImplicitWait(10);
+        
+        driver.navigateTo("https://example.com");
+        driver.findElement("//input[@id='search']");
+        driver.scrollToBottom();
+        driver.takeScreenshot("test_result_" + driver.getBrowserName());
+        
+        driver.quit();
+        
+        System.out.println("\nTest completed on " + driver.getBrowserName() + "!\n");
+    }
+}
+
+public class SeleniumInterfaceDemo {
+    public static void main(String[] args) {
+        
+        System.out.println("============================================");
+        System.out.println("    SELENIUM INTERFACE DEMO");
+        System.out.println("============================================");
+        
+        // Run same test on different browsers
+        String[] browsers = {"chrome", "firefox"};
+        
+        for (String browser : browsers) {
+            WebDriverContract driver = DriverFactory.getDriver(browser);
+            BrowserTest test = new BrowserTest(driver);
+            test.runTest();
+        }
+        
+        // Use specific capability interface
+        System.out.println("---- Using Specific Interface ----\n");
+        ScreenshotCapable screenshotCapable = new ChromeDriverImpl();
+        screenshotCapable.takeScreenshot("specific_test");
+        screenshotCapable.t[REDACTED:AWS_ACCESS_KEY]("full_page_test");
+    }
+}
+
+OUTPUT:
+-------
+============================================
+    SELENIUM INTERFACE DEMO
+============================================
+
+---- Running Test on Chrome ----
+
+[Chrome] Setting up ChromeDriver...
+[Chrome] Launching Chrome browser
+[Chrome] Maximizing Chrome window
+[Chrome] Implicit wait set to 10 seconds
+[Chrome] Navigating to: https://example.com
+[Chrome] Finding element: //input[@id='search']
+[Chrome] Scrolling to bottom of page
+[Chrome] Screenshot saved: test_result_Chrome.png
+[Chrome] Closing all Chrome windows
+[Chrome] ChromeDriver session ended
+
+Test completed on Chrome!
+
+
+---- Running Test on Firefox ----
+
+[Firefox] Setting up GeckoDriver...
+[Firefox] Launching Firefox browser
+[Firefox] Maximizing Firefox window
+[Firefox] Implicit wait set to 10 seconds
+[Firefox] Navigating to: https://example.com
+[Firefox] Finding element: //input[@id='search']
+[Firefox] Scrolling to bottom of page
+[Firefox] Screenshot saved: test_result_Firefox.png
+[Firefox] Closing all Firefox windows
+[Firefox] GeckoDriver session ended
+
+Test completed on Firefox!
+
+---- Using Specific Interface ----
+
+[Chrome] Screenshot saved: specific_test.png
+[Chrome] Full page screenshot (using DevTools): full_page_test.png
+
+
+================================================================================
+                    PART 5: ABSTRACTION IN REST ASSURED AUTOMATION
+================================================================================
+
+--------------------------------------------------------------------------------
+EXAMPLE 9: Abstract Base API Class (Rest Assured)
+--------------------------------------------------------------------------------
+
+// Abstract base class for API tests
+abstract class BaseApiClient {
+    
+    protected String baseUri;
+    protected String basePath;
+    protected int defaultTimeout;
+    protected String contentType;
+    
+    // Constructor
+    public BaseApiClient(String baseUri) {
+        this.baseUri = baseUri;
+        this.contentType = "application/json";
+        this.defaultTimeout = 30;
+        System.out.println("[BaseApiClient] Initialized with URI: " + baseUri);
+    }
+    
+    // Abstract methods - each API client must implement
+    public abstract String getResourcePath();
+    public abstract void validateResponseSchema(String response);
+    
+    // Concrete methods - shared HTTP operations
+    protected String sendGet(String endpoint) {
+        String fullUrl = baseUri + endpoint;
+        System.out.println("[GET] " + fullUrl);
+        System.out.println("[Headers] Content-Type: " + contentType);
+        return "{\"status\": \"success\"}";
+    }
+    
+    protected String sendPost(String endpoint, String body) {
+        String fullUrl = baseUri + endpoint;
+        System.out.println("[POST] " + fullUrl);
+        System.out.println("[Headers] Content-Type: " + contentType);
+        System.out.println("[Body] " + body);
+        return "{\"status\": \"created\", \"id\": 123}";
+    }
+    
+    protected String sendPut(String endpoint, String body) {
+        String fullUrl = baseUri + endpoint;
+        System.out.println("[PUT] " + fullUrl);
+        System.out.println("[Body] " + body);
+        return "{\"status\": \"updated\"}";
+    }
+    
+    protected String sendDelete(String endpoint) {
+        String fullUrl = baseUri + endpoint;
+        System.out.println("[DELETE] " + fullUrl);
+        return "{\"status\": \"deleted\"}";
+    }
+    
+    // Concrete validation methods
+    protected void validateStatusCode(int actual, int expected) {
+        if (actual == expected) {
+            System.out.println("[PASS] Status code: " + actual);
+        } else {
+            System.out.println("[FAIL] Expected: " + expected + ", Actual: " + actual);
+        }
+    }
+    
+    protected void validateResponseTime(long actual, long maxAllowed) {
+        if (actual <= maxAllowed) {
+            System.out.println("[PASS] Response time: " + actual + "ms");
+        } else {
+            System.out.println("[FAIL] Response time " + actual + "ms exceeded " + maxAllowed + "ms");
+        }
+    }
+    
+    protected void logResponse(String response) {
+        System.out.println("[Response] " + response);
+    }
+    
+    // Template method
+    public void healthCheck() {
+        System.out.println("\n---- Health Check: " + getResourcePath() + " ----");
+        String response = sendGet(getResourcePath() + "/health");
+        logResponse(response);
+        validateStatusCode(200, 200);
+    }
+}
+
+// User API Client
+class UserApiClient extends BaseApiClient {
+    
+    public UserApiClient(String baseUri) {
+        super(baseUri);
+        this.basePath = "/users";
+    }
+    
+    @Override
+    public String getResourcePath() {
+        return basePath;
+    }
+    
+    @Override
+    public void validateResponseSchema(String response) {
+        System.out.println("[UserAPI] Validating user schema...");
+        System.out.println("[UserAPI] Checking required fields: id, name, email");
+        System.out.println("[UserAPI] Schema validation passed!");
+    }
+    
+    // User-specific methods
+    public String getAllUsers() {
+        System.out.println("\n---- Get All Users ----");
+        String response = sendGet(basePath);
+        logResponse(response);
+        validateResponseSchema(response);
+        return response;
+    }
+    
+    public String getUserById(int id) {
+        System.out.println("\n---- Get User By ID: " + id + " ----");
+        String response = sendGet(basePath + "/" + id);
+        logResponse(response);
+        return response;
+    }
+    
+    public String createUser(String name, String email) {
+        System.out.println("\n---- Create User ----");
+        String body = "{\"name\": \"" + name + "\", \"email\": \"" + email + "\"}";
+        String response = sendPost(basePath, body);
+        logResponse(response);
+        validateStatusCode(201, 201);
+        return response;
+    }
+    
+    public String updateUser(int id, String name, String email) {
+        System.out.println("\n---- Update User: " + id + " ----");
+        String body = "{\"name\": \"" + name + "\", \"email\": \"" + email + "\"}";
+        String response = sendPut(basePath + "/" + id, body);
+        logResponse(response);
+        return response;
+    }
+    
+    public String deleteUser(int id) {
+        System.out.println("\n---- Delete User: " + id + " ----");
+        String response = sendDelete(basePath + "/" + id);
+        logResponse(response);
+        return response;
+    }
+}
+
+// Product API Client
+class ProductApiClient extends BaseApiClient {
+    
+    public ProductApiClient(String baseUri) {
+        super(baseUri);
+        this.basePath = "/products";
+    }
+    
+    @Override
+    public String getResourcePath() {
+        return basePath;
+    }
+    
+    @Override
+    public void validateResponseSchema(String response) {
+        System.out.println("[ProductAPI] Validating product schema...");
+        System.out.println("[ProductAPI] Checking required fields: id, name, price, category");
+        System.out.println("[ProductAPI] Schema validation passed!");
+    }
+    
+    public String getAllProducts() {
+        System.out.println("\n---- Get All Products ----");
+        String response = sendGet(basePath);
+        logResponse(response);
+        validateResponseSchema(response);
+        return response;
+    }
+    
+    public String getProductById(int id) {
+        System.out.println("\n---- Get Product By ID: " + id + " ----");
+        String response = sendGet(basePath + "/" + id);
+        logResponse(response);
+        return response;
+    }
+    
+    public String createProduct(String name, double price, String category) {
+        System.out.println("\n---- Create Product ----");
+        String body = "{\"name\": \"" + name + "\", \"price\": " + price + 
+                      ", \"category\": \"" + category + "\"}";
+        String response = sendPost(basePath, body);
+        logResponse(response);
+        return response;
+    }
+    
+    public String searchProducts(String keyword) {
+        System.out.println("\n---- Search Products: " + keyword + " ----");
+        String response = sendGet(basePath + "/search?q=" + keyword);
+        logResponse(response);
+        return response;
+    }
+}
+
+// Order API Client
+class OrderApiClient extends BaseApiClient {
+    
+    public OrderApiClient(String baseUri) {
+        super(baseUri);
+        this.basePath = "/orders";
+    }
+    
+    @Override
+    public String getResourcePath() {
+        return basePath;
+    }
+    
+    @Override
+    public void validateResponseSchema(String response) {
+        System.out.println("[OrderAPI] Validating order schema...");
+        System.out.println("[OrderAPI] Checking required fields: id, userId, products, total, status");
+        System.out.println("[OrderAPI] Schema validation passed!");
+    }
+    
+    public String createOrder(int userId, String products) {
+        System.out.println("\n---- Create Order ----");
+        String body = "{\"userId\": " + userId + ", \"products\": " + products + "}";
+        String response = sendPost(basePath, body);
+        logResponse(response);
+        return response;
+    }
+    
+    public String getOrderStatus(int orderId) {
+        System.out.println("\n---- Get Order Status: " + orderId + " ----");
+        String response = sendGet(basePath + "/" + orderId + "/status");
+        logResponse(response);
+        return response;
+    }
+    
+    public String cancelOrder(int orderId) {
+        System.out.println("\n---- Cancel Order: " + orderId + " ----");
+        String body = "{\"status\": \"cancelled\"}";
+        String response = sendPut(basePath + "/" + orderId + "/cancel", body);
+        logResponse(response);
+        return response;
+    }
+}
+
+public class RestAssuredAbstractDemo {
+    public static void main(String[] args) {
+        
+        System.out.println("================================================");
+        System.out.println("    REST ASSURED ABSTRACT API CLIENT DEMO");
+        System.out.println("================================================\n");
+        
+        String baseUri = "https://api.example.com";
+        
+        // Create API clients
+        UserApiClient userApi = new UserApiClient(baseUri);
+        ProductApiClient productApi = new ProductApiClient(baseUri);
+        OrderApiClient orderApi = new OrderApiClient(baseUri);
+        
+        // Test User API
+        System.out.println("======== USER API TESTS ========");
+        userApi.healthCheck();
+        userApi.getAllUsers();
+        userApi.createUser("John Doe", "john@example.com");
+        userApi.getUserById(1);
+        userApi.updateUser(1, "John Updated", "john.updated@example.com");
+        userApi.deleteUser(1);
+        
+        // Test Product API
+        System.out.println("\n======== PRODUCT API TESTS ========");
+        productApi.healthCheck();
+        productApi.getAllProducts();
+        productApi.createProduct("Laptop", 999.99, "Electronics");
+        productApi.searchProducts("laptop");
+        
+        // Test Order API
+        System.out.println("\n======== ORDER API TESTS ========");
+        orderApi.healthCheck();
+        orderApi.createOrder(1, "[{\"productId\": 1, \"quantity\": 2}]");
+        orderApi.getOrderStatus(100);
+        orderApi.cancelOrder(100);
+        
+        // Polymorphism - process all API clients
+        System.out.println("\n======== HEALTH CHECK ALL APIS ========");
+        BaseApiClient[] apiClients = {userApi, productApi, orderApi};
+        
+        for (BaseApiClient client : apiClients) {
+            client.healthCheck();
+        }
+    }
+}
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 10: Interface for API Operations (Rest Assured)
+--------------------------------------------------------------------------------
+
+// Interface for CRUD operations
+interface CrudOperations {
+    String create(String requestBody);
+    String read(int id);
+    String readAll();
+    String update(int id, String requestBody);
+    String delete(int id);
+}
+
+// Interface for authentication
+interface Authenticatable {
+    void setAuthToken(String token);
+    void setBasicAuth(String username, String password);
+    void setApiKey(String apiKey);
+    String getAuthHeader();
+}
+
+// Interface for response validation
+interface ResponseValidator {
+    void validateStatusCode(int expected);
+    void validateResponseBody(String jsonPath, String expectedValue);
+    void validateResponseTime(long maxMilliseconds);
+    void validateSchema(String schemaPath);
+}
+
+// Interface for request configuration
+interface RequestConfigurable {
+    void setHeader(String name, String value);
+    void setQueryParam(String name, String value);
+    void setContentType(String contentType);
+    void setTimeout(int milliseconds);
+}
+
+// Combined interface for full API client
+interface ApiClient extends CrudOperations, Authenticatable, 
+                           ResponseValidator, RequestConfigurable {
+    String getBaseUrl();
+    String getEndpoint();
+}
+
+// Implementation of API Client
+class RestApiClient implements ApiClient {
+    
+    private String baseUrl;
+    private String endpoint;
+    private String authToken;
+    private String contentType;
+    private int timeout;
+    private int lastStatusCode;
+    private long lastResponseTime;
+    private String lastResponse;
+    
+    public RestApiClient(String baseUrl, String endpoint) {
+        this.baseUrl = baseUrl;
+        this.endpoint = endpoint;
+        this.contentType = "application/json";
+        this.timeout = 30000;
+    }
+    
+    // CrudOperations implementation
+    @Override
+    public String create(String requestBody) {
+        System.out.println("[CREATE] POST " + baseUrl + endpoint);
+        System.out.println("[Body] " + requestBody);
+        lastStatusCode = 201;
+        lastResponseTime = 150;
+        lastResponse = "{\"id\": 1, \"status\": \"created\"}";
+        System.out.println("[Response] " + lastResponse);
+        return lastResponse;
+    }
+    
+    @Override
+    public String read(int id) {
+        System.out.println("[READ] GET " + baseUrl + endpoint + "/" + id);
+        lastStatusCode = 200;
+        lastResponseTime = 100;
+        lastResponse = "{\"id\": " + id + ", \"data\": \"sample\"}";
+        System.out.println("[Response] " + lastResponse);
+        return lastResponse;
+    }
+    
+    @Override
+    public String readAll() {
+        System.out.println("[READ ALL] GET " + baseUrl + endpoint);
+        lastStatusCode = 200;
+        lastResponseTime = 200;
+        lastResponse = "[{\"id\": 1}, {\"id\": 2}]";
+        System.out.println("[Response] " + lastResponse);
+        return lastResponse;
+    }
+    
+    @Override
+    public String update(int id, String requestBody) {
+        System.out.println("[UPDATE] PUT " + baseUrl + endpoint + "/" + id);
+        System.out.println("[Body] " + requestBody);
+        lastStatusCode = 200;
+        lastResponseTime = 120;
+        lastResponse = "{\"id\": " + id + ", \"status\": \"updated\"}";
+        System.out.println("[Response] " + lastResponse);
+        return lastResponse;
+    }
+    
+    @Override
+    public String delete(int id) {
+        System.out.println("[DELETE] DELETE " + baseUrl + endpoint + "/" + id);
+        lastStatusCode = 204;
+        lastResponseTime = 80;
+        lastResponse = "";
+        System.out.println("[Response] No content (204)");
+        return lastResponse;
+    }
+    
+    // Authenticatable implementation
+    @Override
+    public void setAuthToken(String token) {
+        this.authToken = "Bearer " + token;
+        System.out.println("[Auth] Token set: Bearer ****
+        
+        
+--- ai stopped ---
+
+--------------------------------------------------------------------------------
+EXAMPLE 10: Interface for API Operations (Rest Assured) - CONTINUED
+--------------------------------------------------------------------------------
+
+    // Authenticatable implementation
+    @Override
+    public void setAuthToken(String token) {
+        this.authToken = "Bearer " + token;
+        System.out.println("[Auth] Token set: Bearer ****");
+    }
+    
+    @Override
+    public void setBasicAuth(String username, String password) {
+        this.authToken = "Basic " + username + ":****";
+        System.out.println("[Auth] Basic auth set for user: " + username);
+    }
+    
+    @Override
+    public void setApiKey(String apiKey) {
+        this.authToken = "ApiKey " + apiKey.substring(0, 4) + "****";
+        System.out.println("[Auth] API Key set: " + apiKey.substring(0, 4) + "****");
+    }
+    
+    @Override
+    public String getAuthHeader() {
+        return authToken;
+    }
+    
+    // ResponseValidator implementation
+    @Override
+    public void validateStatusCode(int expected) {
+        if (lastStatusCode == expected) {
+            System.out.println("[PASS] Status code: " + lastStatusCode + " (expected: " + expected + ")");
+        } else {
+            System.out.println("[FAIL] Status code: " + lastStatusCode + " (expected: " + expected + ")");
+        }
+    }
+    
+    @Override
+    public void validateResponseBody(String jsonPath, String expectedValue) {
+        System.out.println("[Validate] Checking jsonPath: " + jsonPath);
+        System.out.println("[PASS] Value at " + jsonPath + " matches expected: " + expectedValue);
+    }
+    
+    @Override
+    public void validateResponseTime(long maxMilliseconds) {
+        if (lastResponseTime <= maxMilliseconds) {
+            System.out.println("[PASS] Response time: " + lastResponseTime + "ms (max: " + maxMilliseconds + "ms)");
+        } else {
+            System.out.println("[FAIL] Response time: " + lastResponseTime + "ms exceeded max: " + maxMilliseconds + "ms");
+        }
+    }
+    
+    @Override
+    public void validateSchema(String schemaPath) {
+        System.out.println("[Validate] Validating against schema: " + schemaPath);
+        System.out.println("[PASS] Response matches schema");
+    }
+    
+    // RequestConfigurable implementation
+    @Override
+    public void setHeader(String name, String value) {
+        System.out.println("[Config] Header set: " + name + " = " + value);
+    }
+    
+    @Override
+    public void setQueryParam(String name, String value) {
+        System.out.println("[Config] Query param set: " + name + " = " + value);
+    }
+    
+    @Override
+    public void setContentType(String contentType) {
+        this.contentType = contentType;
+        System.out.println("[Config] Content-Type set: " + contentType);
+    }
+    
+    @Override
+    public void setTimeout(int milliseconds) {
+        this.timeout = milliseconds;
+        System.out.println("[Config] Timeout set: " + milliseconds + "ms");
+    }
+    
+    // ApiClient specific methods
+    @Override
+    public String getBaseUrl() {
+        return baseUrl;
+    }
+    
+    @Override
+    public String getEndpoint() {
+        return endpoint;
+    }
+}
+
+// Specialized User API Client using composition
+class UserRestClient {
+    
+    private ApiClient apiClient;
+    
+    public UserRestClient(String baseUrl) {
+        this.apiClient = new RestApiClient(baseUrl, "/users");
+    }
+    
+    public void authenticate(String token) {
+        apiClient.setAuthToken(token);
+    }
+    
+    public String createUser(String name, String email) {
+        System.out.println("\n---- Creating User ----");
+        String body = "{\"name\": \"" + name + "\", \"email\": \"" + email + "\"}";
+        String response = apiClient.create(body);
+        apiClient.validateStatusCode(201);
+        apiClient.validateResponseTime(500);
+        return response;
+    }
+    
+    public String getUser(int id) {
+        System.out.println("\n---- Getting User: " + id + " ----");
+        String response = apiClient.read(id);
+        apiClient.validateStatusCode(200);
+        apiClient.validateResponseBody("$.id", String.valueOf(id));
+        return response;
+    }
+    
+    public String getAllUsers() {
+        System.out.println("\n---- Getting All Users ----");
+        String response = apiClient.readAll();
+        apiClient.validateStatusCode(200);
+        apiClient.validateSchema("schemas/users-list.json");
+        return response;
+    }
+    
+    public String updateUser(int id, String name, String email) {
+        System.out.println("\n---- Updating User: " + id + " ----");
+        String body = "{\"name\": \"" + name + "\", \"email\": \"" + email + "\"}";
+        String response = apiClient.update(id, body);
+        apiClient.validateStatusCode(200);
+        return response;
+    }
+    
+    public void deleteUser(int id) {
+        System.out.println("\n---- Deleting User: " + id + " ----");
+        apiClient.delete(id);
+        apiClient.validateStatusCode(204);
+    }
+}
+
+// Specialized Product API Client
+class ProductRestClient {
+    
+    private ApiClient apiClient;
+    
+    public ProductRestClient(String baseUrl) {
+        this.apiClient = new RestApiClient(baseUrl, "/products");
+    }
+    
+    public void configureClient() {
+        apiClient.setContentType("application/json");
+        apiClient.setTimeout(60000);
+        apiClient.setHeader("Accept", "application/json");
+    }
+    
+    public String createProduct(String name, double price) {
+        System.out.println("\n---- Creating Product ----");
+        String body = "{\"name\": \"" + name + "\", \"price\": " + price + "}";
+        String response = apiClient.create(body);
+        apiClient.validateStatusCode(201);
+        return response;
+    }
+    
+    public String getProduct(int id) {
+        System.out.println("\n---- Getting Product: " + id + " ----");
+        String response = apiClient.read(id);
+        apiClient.validateStatusCode(200);
+        return response;
+    }
+    
+    public String searchProducts(String keyword) {
+        System.out.println("\n---- Searching Products: " + keyword + " ----");
+        apiClient.setQueryParam("search", keyword);
+        String response = apiClient.readAll();
+        apiClient.validateStatusCode(200);
+        return response;
+    }
+}
+
+public class RestAssuredInterfaceDemo {
+    public static void main(String[] args) {
+        
+        System.out.println("================================================");
+        System.out.println("    REST ASSURED INTERFACE DEMO");
+        System.out.println("================================================");
+        
+        String baseUrl = "https://api.example.com";
+        
+        // User API Tests
+        System.out.println("\n======== USER API TESTS ========");
+        UserRestClient userClient = new UserRestClient(baseUrl);
+        userClient.authenticate("abc123xyz789token");
+        userClient.createUser("John Doe", "john@example.com");
+        userClient.getUser(1);
+        userClient.getAllUsers();
+        userClient.updateUser(1, "John Updated", "john.new@example.com");
+        userClient.deleteUser(1);
+        
+        // Product API Tests
+        System.out.println("\n======== PRODUCT API TESTS ========");
+        ProductRestClient productClient = new ProductRestClient(baseUrl);
+        productClient.configureClient();
+        productClient.createProduct("Laptop", 999.99);
+        productClient.getProduct(1);
+        productClient.searchProducts("electronics");
+        
+        // Using interfaces directly for flexibility
+        System.out.println("\n======== USING INTERFACES DIRECTLY ========");
+        
+        // Use as CrudOperations only
+        CrudOperations crudOps = new RestApiClient(baseUrl, "/orders");
+        System.out.println("\n---- CRUD Operations ----");
+        crudOps.create("{\"orderId\": 100}");
+        crudOps.read(100);
+        
+        // Use as Authenticatable only
+        Authenticatable auth = new RestApiClient(baseUrl, "/secure");
+        System.out.println("\n---- Authentication ----");
+        auth.setAuthToken("mySecretToken123");
+        auth.setBasicAuth("admin", "password");
+        auth.setApiKey("APIKEY12345678");
+        
+        // Use as ResponseValidator only
+        RestApiClient client = new RestApiClient(baseUrl, "/test");
+        client.create("{\"test\": true}");
+        ResponseValidator validator = client;
+        System.out.println("\n---- Response Validation ----");
+        validator.validateStatusCode(201);
+        validator.validateResponseTime(500);
+        validator.validateSchema("schemas/test.json");
+    }
+}
+
+OUTPUT:
+-------
+================================================
+    REST ASSURED INTERFACE DEMO
+================================================
+
+======== USER API TESTS ========
+[Auth] Token set: Bearer ****
+
+---- Creating User ----
+[CREATE] POST https://api.example.com/users
+[Body] {"name": "John Doe", "email": "john@example.com"}
+[Response] {"id": 1, "status": "created"}
+[PASS] Status code: 201 (expected: 201)
+[PASS] Response time: 150ms (max: 500ms)
+
+---- Getting User: 1 ----
+[READ] GET https://api.example.com/users/1
+[Response] {"id": 1, "data": "sample"}
+[PASS] Status code: 200 (expected: 200)
+[Validate] Checking jsonPath: $.id
+[PASS] Value at $.id matches expected: 1
+
+---- Getting All Users ----
+[READ ALL] GET https://api.example.com/users
+[Response] [{"id": 1}, {"id": 2}]
+[PASS] Status code: 200 (expected: 200)
+[Validate] Validating against schema: schemas/users-list.json
+[PASS] Response matches schema
+
+---- Updating User: 1 ----
+[UPDATE] PUT https://api.example.com/users/1
+[Body] {"name": "John Updated", "email": "john.new@example.com"}
+[Response] {"id": 1, "status": "updated"}
+[PASS] Status code: 200 (expected: 200)
+
+---- Deleting User: 1 ----
+[DELETE] DELETE https://api.example.com/users/1
+[Response] No content (204)
+[PASS] Status code: 204 (expected: 204)
+
+======== PRODUCT API TESTS ========
+[Config] Content-Type set: application/json
+[Config] Timeout set: 60000ms
+[Config] Header set: Accept = application/json
+
+---- Creating Product ----
+[CREATE] POST https://api.example.com/products
+[Body] {"name": "Laptop", "price": 999.99}
+[Response] {"id": 1, "status": "created"}
+[PASS] Status code: 201 (expected: 201)
+
+---- Getting Product: 1 ----
+[READ] GET https://api.example.com/products/1
+[Response] {"id": 1, "data": "sample"}
+[PASS] Status code: 200 (expected: 200)
+
+---- Searching Products: electronics ----
+[Config] Query param set: search = electronics
+[READ ALL] GET https://api.example.com/products
+[Response] [{"id": 1}, {"id": 2}]
+[PASS] Status code: 200 (expected: 200)
+
+======== USING INTERFACES DIRECTLY ========
+
+---- CRUD Operations ----
+[CREATE] POST https://api.example.com/orders
+[Body] {"orderId": 100}
+[Response] {"id": 1, "status": "created"}
+[READ] GET https://api.example.com/orders/100
+[Response] {"id": 100, "data": "sample"}
+
+---- Authentication ----
+[Auth] Token set: Bearer ****
+[Auth] Basic auth set for user: admin
+[Auth] API Key set: APIK****
+
+---- Response Validation ----
+[PASS] Status code: 201 (expected: 201)
+[PASS] Response time: 150ms (max: 500ms)
+[Validate] Validating against schema: schemas/test.json
+[PASS] Response matches schema
+
+
+================================================================================
+                    NEGATIVE SCENARIOS - ABSTRACTION
+================================================================================
+
+
+--------------------------------------------------------------------------------
+ERROR 1: Cannot Instantiate Abstract Class
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE:
+-----------------
+abstract class Animal {
+    public abstract void makeSound();
+    
+    public void sleep() {
+        System.out.println("Sleeping...");
+    }
+}
+
+public class AbstractInstantiationError {
+    public static void main(String[] args) {
+        Animal animal = new Animal();    // ERROR!
+    }
+}
+
+ERROR MESSAGE:
+--------------
+error: Animal is abstract; cannot be instantiated
+        Animal animal = new Animal();
+                        ^
+
+FIX:
+----
+abstract class Animal {
+    public abstract void makeSound();
+    
+    public void sleep() {
+        System.out.println("Sleeping...");
+    }
+}
+
+class Dog extends Animal {
+    @Override
+    public void makeSound() {
+        System.out.println("Woof!");
+    }
+}
+
+public class AbstractInstantiationFixed {
+    public static void main(String[] args) {
+        // Option 1: Create instance of concrete subclass
+        Animal animal = new Dog();
+        animal.makeSound();
+        
+        // Option 2: Anonymous class (creates concrete implementation inline)
+        Animal anotherAnimal = new Animal() {
+            @Override
+            public void makeSound() {
+                System.out.println("Some sound!");
+            }
+        };
+        anotherAnimal.makeSound();
+    }
+}
+
+
+--------------------------------------------------------------------------------
+ERROR 2: Not Implementing All Abstract Methods
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE:
+-----------------
+abstract class Shape {
+    public abstract double getArea();
+    public abstract double getPerimeter();
+    public abstract String getShapeName();
+}
+
+class Circle extends Shape {
+    private double radius;
+    
+    public Circle(double radius) {
+        this.radius = radius;
+    }
+    
+    @Override
+    public double getArea() {
+        return Math.PI * radius * radius;
+    }
+    
+    // Missing getPerimeter() and getShapeName() implementations!
+}
+
+ERROR MESSAGE:
+--------------
+error: Circle is not abstract and does not override abstract method getPerimeter() in Shape
+class Circle extends Shape {
+^
+
+FIX:
+----
+abstract class Shape {
+    public abstract double getArea();
+    public abstract double getPerimeter();
+    public abstract String getShapeName();
+}
+
+// Option 1: Implement ALL abstract methods
+class Circle extends Shape {
+    private double radius;
+    
+    public Circle(double radius) {
+        this.radius = radius;
+    }
+    
+    @Override
+    public double getArea() {
+        return Math.PI * radius * radius;
+    }
+    
+    @Override
+    public double getPerimeter() {
+        return 2 * Math.PI * radius;
+    }
+    
+    @Override
+    public String getShapeName() {
+        return "Circle";
+    }
+}
+
+// Option 2: Make the class abstract (if you want to defer implementation)
+abstract class PartialCircle extends Shape {
+    protected double radius;
+    
+    public PartialCircle(double radius) {
+        this.radius = radius;
+    }
+    
+    @Override
+    public double getArea() {
+        return Math.PI * radius * radius;
+    }
+    
+    // Other methods still abstract - subclasses must implement
+}
+
+
+--------------------------------------------------------------------------------
+ERROR 3: Cannot Instantiate Interface
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE:
+-----------------
+interface Drawable {
+    void draw();
+}
+
+public class InterfaceInstantiationError {
+    public static void main(String[] args) {
+        Drawable drawable = new Drawable();    // ERROR!
+    }
+}
+
+ERROR MESSAGE:
+--------------
+error: Drawable is abstract; cannot be instantiated
+        Drawable drawable = new Drawable();
+                            ^
+
+FIX:
+----
+interface Drawable {
+    void draw();
+}
+
+class Circle implements Drawable {
+    @Override
+    public void draw() {
+        System.out.println("Drawing a circle");
+    }
+}
+
+public class InterfaceInstantiationFixed {
+    public static void main(String[] args) {
+        // Option 1: Create instance of implementing class
+        Drawable drawable = new Circle();
+        drawable.draw();
+        
+        // Option 2: Anonymous class implementation
+        Drawable anotherDrawable = new Drawable() {
+            @Override
+            public void draw() {
+                System.out.println("Drawing something");
+            }
+        };
+        anotherDrawable.draw();
+        
+        // Option 3: Lambda expression (for functional interface with single method)
+        Drawable lambdaDrawable = () -> System.out.println("Drawing with lambda");
+        lambdaDrawable.draw();
+    }
+}
+
+
+--------------------------------------------------------------------------------
+ERROR 4: Interface Methods Must Be Public (When Implementing)
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE:
+-----------------
+interface Printable {
+    void print();    // implicitly public
+}
+
+class Document implements Printable {
+    // Trying to reduce visibility - ERROR!
+    @Override
+    void print() {    // default (package-private) access
+        System.out.println("Printing document");
+    }
+}
+
+ERROR MESSAGE:
+--------------
+error: print() in Document cannot implement print() in Printable
+    void print() {
+         ^
+  attempting to assign weaker access privileges; was public
+
+FIX:
+----
+interface Printable {
+    void print();    // implicitly public abstract
+}
+
+class Document implements Printable {
+    @Override
+    public void print() {    // Must be public
+        System.out.println("Printing document");
+    }
+}
+
+
+--------------------------------------------------------------------------------
+ERROR 5: Interface Variables Are Final - Cannot Modify
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE:
+-----------------
+interface Configuration {
+    String APP_NAME = "MyApp";    // implicitly public static final
+    int MAX_USERS = 100;          // implicitly public static final
+}
+
+class App implements Configuration {
+    public void changeConfig() {
+        APP_NAME = "NewApp";    // ERROR! Cannot assign to final variable
+        MAX_USERS = 200;        // ERROR! Cannot assign to final variable
+    }
+}
+
+ERROR MESSAGE:
+--------------
+error: cannot assign a value to final variable APP_NAME
+        APP_NAME = "NewApp";
+        ^
+
+FIX:
+----
+interface Configuration {
+    // These are constants - use them as such
+    String DEFAULT_APP_NAME = "MyApp";
+    int DEFAULT_MAX_USERS = 100;
+}
+
+class App implements Configuration {
+    // Use instance variables for changeable values
+    private String appName;
+    private int maxUsers;
+    
+    public App() {
+        // Initialize with defaults from interface
+        this.appName = DEFAULT_APP_NAME;
+        this.maxUsers = DEFAULT_MAX_USERS;
+    }
+    
+    public void changeConfig(String newName, int newMaxUsers) {
+        this.appName = newName;        // OK - changing instance variable
+        this.maxUsers = newMaxUsers;   // OK - changing instance variable
+    }
+    
+    public void displayConfig() {
+        System.out.println("App Name: " + appName);
+        System.out.println("Max Users: " + maxUsers);
+        System.out.println("Default App Name: " + DEFAULT_APP_NAME);  // Still accessible
+    }
+}
+
+
+--------------------------------------------------------------------------------
+ERROR 6: Abstract Method Cannot Have Body
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE:
+-----------------
+abstract class Animal {
+    // Abstract method with body - ERROR!
+    public abstract void makeSound() {
+        System.out.println("Some sound");
+    }
+}
+
+ERROR MESSAGE:
+--------------
+error: abstract methods cannot have a body
+    public abstract void makeSound() {
+                                     ^
+
+FIX:
+----
+abstract class Animal {
+    // Option 1: Abstract method (no body)
+    public abstract void makeSound();
+    
+    // Option 2: Concrete method (with body, no 'abstract' keyword)
+    public void sleep() {
+        System.out.println("Sleeping...");
+    }
+    
+    // Option 3: Default implementation that can be overridden
+    public void eat() {
+        System.out.println("Eating...");
+    }
+}
+
+class Dog extends Animal {
+    @Override
+    public void makeSound() {
+        System.out.println("Woof!");
+    }
+    
+    // Can optionally override eat()
+    @Override
+    public void eat() {
+        System.out.println("Dog eating kibble");
+    }
+}
+
+
+--------------------------------------------------------------------------------
+ERROR 7: Diamond Problem - Conflicting Default Methods
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE:
+-----------------
+interface InterfaceA {
+    default void display() {
+        System.out.println("Display from A");
+    }
+}
+
+interface InterfaceB {
+    default void display() {
+        System.out.println("Display from B");
+    }
+}
+
+// Class implements both interfaces with same default method - ERROR!
+class MyClass implements InterfaceA, InterfaceB {
+    // Which display() should be used? Ambiguous!
+}
+
+ERROR MESSAGE:
+--------------
+error: class MyClass inherits unrelated defaults for display() from types InterfaceA and InterfaceB
+class MyClass implements InterfaceA, InterfaceB {
+^
+
+FIX:
+----
+interface InterfaceA {
+    default void display() {
+        System.out.println("Display from A");
+    }
+}
+
+interface InterfaceB {
+    default void display() {
+        System.out.println("Display from B");
+    }
+}
+
+class MyClass implements InterfaceA, InterfaceB {
+    // Must override to resolve conflict
+    @Override
+    public void display() {
+        // Option 1: Provide own implementation
+        System.out.println("Display from MyClass");
+        
+        // Option 2: Call specific interface's method
+        // InterfaceA.super.display();
+        
+        // Option 3: Call both
+        // InterfaceA.super.display();
+        // InterfaceB.super.display();
+    }
+}
+
+public class DiamondProblemFixed {
+    public static void main(String[] args) {
+        MyClass obj = new MyClass();
+        obj.display();
+    }
+}
+
+
+--------------------------------------------------------------------------------
+ERROR 8: Cannot Use 'abstract' with 'final'
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE:
+-----------------
+// abstract and final together - ERROR!
+abstract final class MyClass {
+    public abstract void doSomething();
+}
+
+// abstract and final method - ERROR!
+abstract class AnotherClass {
+    public abstract final void doSomething();
+}
+
+ERROR MESSAGE:
+--------------
+error: illegal combination of modifiers: abstract and final
+abstract final class MyClass {
+              ^
+
+EXPLANATION:
+------------
+- 'abstract' means: must be extended/overridden
+- 'final' means: cannot be extended/overridden
+- These are contradictory!
+
+FIX:
+----
+// Use either abstract OR final, not both
+
+// Abstract class - can be extended
+abstract class AbstractClass {
+    public abstract void doSomething();
+}
+
+// Final class - cannot be extended
+final class FinalClass {
+    public void doSomething() {
+        System.out.println("Doing something");
+    }
+}
+
+// Abstract class with final method
+abstract class MixedClass {
+    // Abstract method - must be overridden
+    public abstract void mustOverride();
+    
+    // Final method - cannot be overridden
+    public final void cannotOverride() {
+        System.out.println("This implementation is final");
+    }
+}
+
+
+--------------------------------------------------------------------------------
+ERROR 9: Cannot Use 'abstract' with 'static'
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE:
+-----------------
+abstract class MyClass {
+    // abstract and static together - ERROR!
+    public abstract static void doSomething();
+}
+
+ERROR MESSAGE:
+--------------
+error: illegal combination of modifiers: abstract and static
+    public abstract static void doSomething();
+                           ^
+
+EXPLANATION:
+------------
+- 'abstract' means: must be overridden by subclass
+- 'static' means: belongs to class, not instance, cannot be overridden
+- These are contradictory!
+
+FIX:
+----
+abstract class MyClass {
+    // Abstract method (instance method - can be overridden)
+    public abstract void abstractMethod();
+    
+    // Static method (class method - cannot be overridden, but can have body)
+    public static void staticMethod() {
+        System.out.println("Static method in abstract class");
+    }
+}
+
+class ConcreteClass extends MyClass {
+    @Override
+    public void abstractMethod() {
+        System.out.println("Implemented abstract method");
+    }
+    
+    // This HIDES parent's static method, doesn't override
+    public static void staticMethod() {
+        System.out.println("Static method in concrete class");
+    }
+}
+
+
+--------------------------------------------------------------------------------
+ERROR 10: Cannot Use 'abstract' with 'private'
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE:
+-----------------
+abstract class MyClass {
+    // abstract and private together - ERROR!
+    private abstract void doSomething();
+}
+
+ERROR MESSAGE:
+--------------
+error: illegal combination of modifiers: abstract and private
+    private abstract void doSomething();
+                     ^
+
+EXPLANATION:
+------------
+- 'abstract' means: must be overridden by subclass
+- 'private' means: not visible to subclasses
+- Subclass cannot override what it cannot see!
+
+FIX:
+----
+abstract class MyClass {
+    // Abstract method - must be at least protected (or public/default)
+    protected abstract void doSomething();
+    
+    // Private helper method - not abstract, has implementation
+    private void privateHelper() {
+        System.out.println("Private helper method");
+    }
+    
+    // Public method that uses private helper
+    public void publicMethod() {
+        privateHelper();
+        doSomething();    // Calls overridden method
+    }
+}
+
+class ConcreteClass extends MyClass {
+    @Override
+    protected void doSomething() {
+        System.out.println("Implemented doSomething");
+    }
+}
+
+
+--------------------------------------------------------------------------------
+ERROR 11: Interface Cannot Extend Class
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE:
+-----------------
+class MyClass {
+    public void doSomething() {
+        System.out.println("Doing something");
+    }
+}
+
+// Interface cannot extend a class - ERROR!
+interface MyInterface extends MyClass {
+    void anotherMethod();
+}
+
+ERROR MESSAGE:
+--------------
+error: interface expected here
+interface MyInterface extends MyClass {
+                              ^
+
+FIX:
+----
+// Interfaces can only extend other interfaces
+interface BaseInterface {
+    void baseMethod();
+}
+
+interface MyInterface extends BaseInterface {
+    void anotherMethod();
+}
+
+// Classes can extend classes and implement interfaces
+class MyClass {
+    public void doSomething() {
+        System.out.println("Doing something");
+    }
+}
+
+class MySubClass extends MyClass implements MyInterface {
+    @Override
+    public void baseMethod() {
+        System.out.println("Base method");
+    }
+    
+    @Override
+    public void anotherMethod() {
+        System.out.println("Another method");
+    }
+}
+
+
+--------------------------------------------------------------------------------
+ERROR 12: Using 'implements' Instead of 'extends' for Abstract Class
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE:
+-----------------
+abstract class Animal {
+    public abstract void makeSound();
+}
+
+// Using implements for abstract class - ERROR!
+class Dog implements Animal {
+    @Override
+    public void makeSound() {
+        System.out.println("Woof!");
+    }
+}
+
+ERROR MESSAGE:
+--------------
+error: class expected here
+class Dog implements Animal {
+                     ^
+
+FIX:
+----
+abstract class Animal {
+    public abstract void makeSound();
+}
+
+// Use 'extends' for abstract class (it's still a class!)
+class Dog extends Animal {
+    @Override
+    public void makeSound() {
+        System.out.println("Woof!");
+    }
+}
+
+// Use 'implements' only for interfaces
+interface Runnable {
+    void run();
+}
+
+class Cat extends Animal implements Runnable {
+    @Override
+    public void makeSound() {
+        System.out.println("Meow!");
+    }
+    
+    @Override
+    public void run() {
+        System.out.println("Cat is running");
+    }
+}
+
+
+================================================================================
+                    ABSTRACTION - QUICK REFERENCE
+================================================================================
+
+ABSTRACT CLASS:
+---------------
++--------------------------------+----------------------------------------------+
+| Feature                        | Description                                  |
++--------------------------------+----------------------------------------------+
+| Keyword                        | abstract class ClassName                     |
+| Instantiation                  | Cannot create objects directly               |
+| Methods                        | Can have abstract and concrete methods       |
+| Variables                      | Any type (instance, static, final, etc.)     |
+| Constructors                   | Yes (called via super())                     |
+| Inheritance                    | Single (extends one class only)              |
+| Access modifiers               | Any (public, protected, private, default)    |
+| When to use                    | IS-A relationship with shared code           |
++--------------------------------+----------------------------------------------+
+
+
+INTERFACE:
+----------
++--------------------------------+----------------------------------------------+
+| Feature                        | Description                                  |
++--------------------------------+----------------------------------------------+
+| Keyword                        | interface InterfaceName                      |
+| Instantiation                  | Cannot create objects directly               |
+| Methods                        | abstract, default (Java 8+), static (Java 8+)|
+| Variables                      | public static final only (constants)         |
+| Constructors                   | No                                           |
+| Inheritance                    | Multiple (implements many interfaces)        |
+| Access modifiers               | public only for methods (before Java 9)      |
+| When to use                    | CAN-DO capability/contract                   |
++--------------------------------+----------------------------------------------+
+
+
+SYNTAX COMPARISON:
+------------------
++--------------------------------+----------------------------------------------+
+| Abstract Class                 | Interface                                    |
++--------------------------------+----------------------------------------------+
+| abstract class Animal { }      | interface Drawable { }                       |
+| class Dog extends Animal { }   | class Circle implements Drawable { }         |
+| public abstract void sound();  | void draw(); (implicitly public abstract)    |
+| protected int age;             | int MAX = 100; (implicitly public static final)|
+| public Animal() { }            | No constructors                              |
++--------------------------------+----------------------------------------------+
+
+
+WHEN TO USE:
+------------
+USE ABSTRACT CLASS:
+- When you want to share code among closely related classes
+- When you need to declare non-public members
+- When you need to define instance variables
+- When you have IS-A relationship
+
+USE INTERFACE:
+- When unrelated classes need to implement a behavior
+- When you need multiple inheritance of type
+- When you want to specify behavior contract only
+- When you have CAN-DO relationship
+
+
+AUTOMATION USE CASES:
+---------------------
++--------------------------------+----------------------------------------------+
+| Use Case                       | Abstract Class or Interface                  |
++--------------------------------+----------------------------------------------+
+| Base Page Object               | Abstract Class (shared fields, methods)      |
+| Browser Driver Contract        | Interface (multiple implementations)         |
+| Base Test Class                | Abstract Class (setup, teardown)             |
+| API Client Contract            | Interface (REST, GraphQL implementations)    |
+| Report Generator               | Interface (HTML, PDF, Excel reports)         |
+| Data Provider                  | Interface (Excel, JSON, DB providers)        |
+| Waits/Synchronization          | Abstract Class (shared wait logic)           |
+| Logging                        | Interface (multiple logging frameworks)      |
++--------------------------------+----------------------------------------------+
+
+
+================================================================================
+                    PRACTICE EXERCISES - ABSTRACTION
+================================================================================
+
+EXERCISE 1: Payment System
+--------------------------
+Create:
+- Abstract class: Payment (amount, processPayment(), validatePayment())
+- Concrete classes: CreditCardPayment, PayPalPayment, BankTransfer
+- Each has different processing logic
+
+EXERCISE 2: Notification System
+-------------------------------
+Create:
+- Interface: Notifiable (send(), getRecipient(), getMessage())
+- Implementations: EmailNotification, SMSNotification, PushNotification
+- Each has different sending mechanism
+
+EXERCISE 3: Test Framework Base
+-------------------------------
+Create:
+- Abstract class: BaseTest (driver, setUp(), tearDown(), abstract getTestName())
+- Interface: Reportable (generateReport(), getTestStatus())
+- Concrete class: LoginTest extends BaseTest implements Reportable
+
+EXERCISE 4: API Client Framework
+--------------------------------
+Create:
+- Interface: HttpClient (get(), post(), put(), delete())
+- Interface: Authenticatable (setToken(), setBasicAuth())
+- Abstract class: BaseApiClient implements HttpClient, Authenticatable
+- Concrete classes: UserApiClient, ProductApiClient
+
+EXERCISE 5: Data Provider System
+--------------------------------
+Create:
+- Interface: DataProvider (getData(), getRowCount())
+- Implementations: ExcelDataProvider, JsonDataProvider, DatabaseDataProvider
+- Factory class: DataProviderFactory
+
+
+================================================================================
+                    SUMMARY - ABSTRACTION
+================================================================================
+
+KEY TAKEAWAYS:
+--------------
+1. Abstraction hides implementation details, shows only functionality
+2. Abstract classes provide partial abstraction (0-100%)
+3. Interfaces provide complete abstraction (100%)
+4. Abstract classes can have constructors, interfaces cannot
+5. A class can extend one abstract class but implement multiple interfaces
+6. Use abstract class for IS-A with shared code
+7. Use interface for CAN-DO capability contracts
+8. Java 8+ interfaces can have default and static methods
+9. Interface variables are implicitly public static final
+10. Abstract methods cannot be private, final, or static
+
+
+ABSTRACTION IN AUTOMATION FRAMEWORKS:
+-------------------------------------
+SELENIUM:
+- Abstract BasePage class for common page operations
+- Interface for different browser drivers
+- Abstract BaseTest class for test setup/teardown
+- Interface for different wait strategies
+
+REST ASSURED:
+- Interface for CRUD operations
+- Abstract BaseApiClient for common API methods
+- Interface for different authentication mechanisms
+- Interface for response validation strategies
+
+
+================================================================================
+                    WHAT'S NEXT?
+================================================================================
+
+We've covered:
+- Topic 10: Inheritance
+- Topic 11: Polymorphism
+- Topic 12: Abstraction (Abstract Classes and Interfaces)
+
+Next topic:
+-> Topic 13: Encapsulation
+
+Shall I continue with Encapsulation?
+
+Would you like me to continue with Topic 13: Encapsulation? This will cover:
+
+    Access modifiers (private, protected, public, default)
+    Getters and Setters
+    Data hiding
+    Benefits of encapsulation
+    Use in Selenium and Rest Assured automation
+
+

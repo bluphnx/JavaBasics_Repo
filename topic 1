@@ -1,0 +1,65 @@
+TOPIC 1: Introduction to Java & Your First Program
+
+================================================================================
+                    TOPIC 1: INTRODUCTION TO JAVA & FIRST PROGRAM
+================================================================================
+
+WHAT IS JAVA?
+-------------
+- Platform Independent: Write once, run anywhere
+- Object-Oriented: Everything revolves around "objects"
+- Most widely used in automation testing (Selenium, Rest Assured, Appium)
+
+
+JDK, JRE, JVM HIERARCHY
+-----------------------
+┌─────────────────────────────────────────┐
+│                JDK                      │
+│  (Java Development Kit)                 │
+│  - Used to DEVELOP & RUN Java programs  │
+│                                         │
+│   ┌─────────────────────────────────┐   │
+│   │            JRE                  │   │
+│   │   (Java Runtime Environment)    │   │
+│   │   - Used to RUN Java programs   │   │
+│   │                                 │   │
+│   │   ┌─────────────────────────┐   │   │
+│   │   │         JVM             │   │   │
+│   │   │ (Java Virtual Machine)  │   │   │
+│   │   │ - Executes Java code    │   │   │
+│   │   └─────────────────────────┘   │   │
+│   └─────────────────────────────────┘   │
+└─────────────────────────────────────────┘
+
+Component       Purpose
+---------       -------
+JDK             For developers - includes compiler + JRE
+JRE             For running Java programs
+JVM             Actually executes your code
+
+
+PROGRAM STRUCTURE
+-----------------
+public class ClassName {
+    public static void main(String[] args) {
+        // Your code here
+    }
+}
+
+Keyword         Meaning
+-------         -------
+public          Accessible from anywhere
+class           Blueprint/template
+static          Can run without creating an object
+void            Returns nothing
+main            Entry point - JVM looks for this
+String[] args   Command line arguments
+
+
+PRINT STATEMENTS
+----------------
+System.out.println()  - Prints and moves to next line
+System.out.print()    - Prints and stays on same line
+
+
+================================================================================

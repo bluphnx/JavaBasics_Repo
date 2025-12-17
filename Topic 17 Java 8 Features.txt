@@ -1,0 +1,4018 @@
+Let me create a comprehensive lesson on Java 8 Features with all these requirements.
+
+This is a detailed topic so I'll structure it well with:
+1. Lambda Expressions - syntax, examples, positive/negative scenarios
+2. Functional Interfaces - predefined interfaces, custom interfaces
+3. Stream API - various operations, filtering, mapping, collecting
+4. Method References - different types
+5. Optional class - avoiding null pointer exceptions
+
+For each, I'll show:
+- Concept explanation
+- Syntax
+- Positive examples (correct usage)
+- Negative examples (common mistakes/what not to do)
+- Selenium automation usage
+- REST Assured automation usage
+
+Let me make this comprehensive and practical.
+
+==========================================
+TOPIC 17: JAVA 8 FEATURES - COMPLETE GUIDE
+==========================================
+Essential for Modern Automation Testing
+
+====================================================================
+                    JAVA 8 FEATURES - COMPLETE GUIDE
+====================================================================
+
+Java 8 introduced revolutionary features that make code:
+- More concise and readable
+- More functional in approach
+- Easier to work with collections
+- Essential for modern Selenium & REST Assured frameworks
+
+====================================================================
+                    SECTION 1: LAMBDA EXPRESSIONS
+====================================================================
+
+WHAT IS LAMBDA?
+---------------
+- Anonymous function (function without a name)
+- Shorter way to write code
+- Replaces verbose anonymous inner classes
+
+SYNTAX:
+-------
+(parameters) -> expression
+(parameters) -> { statements; }
+
+EVOLUTION OF CODE:
+------------------
+
+Traditional Way (Before Java 8):
+--------------------------------
+Runnable r = new Runnable() {
+    @Override
+    public void run() {
+        System.out.println("Running...");
+    }
+};
+
+Lambda Way (Java 8):
+--------------------
+Runnable r = () -> System.out.println("Running...");
+
+--------------------------------------------------------------------
+                    LAMBDA EXAMPLES - BASICS
+--------------------------------------------------------------------
+
+public class LambdaBasics {
+    public static void main(String[] args) {
+        
+        // ============================================
+        // EXAMPLE 1: No Parameters
+        // ============================================
+        
+        // Old way - Anonymous inner class
+        Runnable oldWay = new Runnable() {
+            @Override
+            public void run() {
+                System.out.println("Old way of running thread");
+            }
+        };
+        
+        // Lambda way - Clean and simple
+        Runnable newWay = () -> System.out.println("Lambda way!");
+        
+        // Execute both
+        oldWay.run();  // Output: Old way of running thread
+        newWay.run();  // Output: Lambda way!
+        
+        
+        // ============================================
+        // EXAMPLE 2: Single Parameter
+        // ============================================
+        
+        // Parentheses optional for single parameter
+        java.util.function.Consumer<String> printer1 = (message) -> System.out.println(message);
+        java.util.function.Consumer<String> printer2 = message -> System.out.println(message);
+        
+        printer1.accept("Hello with parentheses");
+        printer2.accept("Hello without parentheses");
+        
+        
+        // ============================================
+        // EXAMPLE 3: Multiple Parameters
+        // ============================================
+        
+        // Parentheses required for multiple parameters
+        java.util.function.BiFunction<Integer, Integer, Integer> add = (a, b) -> a + b;
+        java.util.function.BiFunction<Integer, Integer, Integer> multiply = (a, b) -> a * b;
+        
+        System.out.println("5 + 3 = " + add.apply(5, 3));      // Output: 8
+        System.out.println("5 * 3 = " + multiply.apply(5, 3)); // Output: 15
+        
+        
+        // ============================================
+        // EXAMPLE 4: Multiple Statements (Need curly braces)
+        // ============================================
+        
+        java.util.function.Consumer<String> complexPrinter = (message) -> {
+            String upper = message.toUpperCase();
+            String decorated = "*** " + upper + " ***";
+            System.out.println(decorated);
+        };
+        
+        complexPrinter.accept("hello"); // Output: *** HELLO ***
+        
+        
+        // ============================================
+        // EXAMPLE 5: With Return Statement
+        // ============================================
+        
+        // Single expression - no return keyword needed
+        java.util.function.Function<Integer, Integer> square1 = x -> x * x;
+        
+        // Multiple statements - return keyword required
+        java.util.function.Function<Integer, Integer> square2 = x -> {
+            int result = x * x;
+            return result;
+        };
+        
+        System.out.println("Square of 5: " + square1.apply(5)); // Output: 25
+        System.out.println("Square of 6: " + square2.apply(6)); // Output: 36
+    }
+}
+
+--------------------------------------------------------------------
+                    LAMBDA WITH COLLECTIONS
+--------------------------------------------------------------------
+
+import java.util.*;
+
+public class LambdaWithCollections {
+    public static void main(String[] args) {
+        
+        List<String> browsers = Arrays.asList("Chrome", "Firefox", "Safari", "Edge", "Opera");
+        
+        // ============================================
+        // ITERATING - Old vs New
+        // ============================================
+        
+        System.out.println("=== Old Way - Enhanced For Loop ===");
+        for (String browser : browsers) {
+            System.out.println(browser);
+        }
+        
+        System.out.println("\n=== Lambda Way - forEach ===");
+        browsers.forEach(browser -> System.out.println(browser));
+        
+        System.out.println("\n=== Method Reference Way ===");
+        browsers.forEach(System.out::println);
+        
+        
+        // ============================================
+        // SORTING - Old vs New
+        // ============================================
+        
+        List<String> names = new ArrayList<>(Arrays.asList("John", "Alice", "Bob", "David"));
+        
+        // Old way - Comparator anonymous class
+        Collections.sort(names, new Comparator<String>() {
+            @Override
+            public int compare(String s1, String s2) {
+                return s1.compareTo(s2);
+            }
+        });
+        System.out.println("Sorted (old way): " + names);
+        
+        // Lambda way
+        List<String> names2 = new ArrayList<>(Arrays.asList("John", "Alice", "Bob", "David"));
+        names2.sort((s1, s2) -> s1.compareTo(s2));
+        System.out.println("Sorted (lambda): " + names2);
+        
+        // Even shorter with method reference
+        List<String> names3 = new ArrayList<>(Arrays.asList("John", "Alice", "Bob", "David"));
+        names3.sort(String::compareTo);
+        System.out.println("Sorted (method ref): " + names3);
+        
+        
+        // ============================================
+        // SORTING BY LENGTH
+        // ============================================
+        
+        List<String> words = new ArrayList<>(Arrays.asList("Selenium", "Java", "TestNG", "Automation"));
+        
+        // Sort by length - ascending
+        words.sort((w1, w2) -> w1.length() - w2.length());
+        System.out.println("By length (asc): " + words);
+        // Output: [Java, TestNG, Selenium, Automation]
+        
+        // Sort by length - descending
+        words.sort((w1, w2) -> w2.length() - w1.length());
+        System.out.println("By length (desc): " + words);
+        // Output: [Automation, Selenium, TestNG, Java]
+        
+        
+        // ============================================
+        // REMOVING ELEMENTS WITH CONDITION
+        // ============================================
+        
+        List<Integer> numbers = new ArrayList<>(Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10));
+        
+        // Remove all even numbers
+        numbers.removeIf(n -> n % 2 == 0);
+        System.out.println("After removing evens: " + numbers);
+        // Output: [1, 3, 5, 7, 9]
+        
+        
+        // ============================================
+        // REPLACING ELEMENTS
+        // ============================================
+        
+        List<String> items = new ArrayList<>(Arrays.asList("apple", "banana", "cherry"));
+        
+        // Convert all to uppercase
+        items.replaceAll(item -> item.toUpperCase());
+        System.out.println("Uppercase: " + items);
+        // Output: [APPLE, BANANA, CHERRY]
+    }
+}
+
+--------------------------------------------------------------------
+            POSITIVE AND NEGATIVE SCENARIOS - LAMBDA
+--------------------------------------------------------------------
+
+import java.util.*;
+
+public class LambdaPositiveNegative {
+    public static void main(String[] args) {
+        
+        // ============================================================
+        //                    POSITIVE SCENARIOS
+        // ============================================================
+        
+        System.out.println("====== POSITIVE SCENARIOS ======\n");
+        
+        // -----------------------------------------
+        // POSITIVE 1: Clean, Concise Code
+        // -----------------------------------------
+        List<Integer> numbers = Arrays.asList(1, 2, 3, 4, 5);
+        
+        // Clean filtering
+        numbers.stream()
+               .filter(n -> n > 2)
+               .forEach(n -> System.out.println("Greater than 2: " + n));
+        
+        
+        // -----------------------------------------
+        // POSITIVE 2: Thread Creation Made Easy
+        // -----------------------------------------
+        Thread thread = new Thread(() -> {
+            for (int i = 0; i < 3; i++) {
+                System.out.println("Thread running: " + i);
+            }
+        });
+        thread.start();
+        
+        
+        // -----------------------------------------
+        // POSITIVE 3: Event Handling Style
+        // -----------------------------------------
+        // Similar to how Selenium handles waits
+        java.util.function.Predicate<String> isNotEmpty = s -> s != null && !s.isEmpty();
+        System.out.println("Is 'Hello' not empty? " + isNotEmpty.test("Hello")); // true
+        System.out.println("Is '' not empty? " + isNotEmpty.test(""));           // false
+        
+        
+        // -----------------------------------------
+        // POSITIVE 4: Custom Sorting Easily
+        // -----------------------------------------
+        List<String> testCases = new ArrayList<>(Arrays.asList(
+            "TC001_Login", "TC010_Logout", "TC002_Search"
+        ));
+        
+        // Sort by test case number
+        testCases.sort((tc1, tc2) -> {
+            int num1 = Integer.parseInt(tc1.substring(2, 5));
+            int num2 = Integer.parseInt(tc2.substring(2, 5));
+            return num1 - num2;
+        });
+        System.out.println("Sorted test cases: " + testCases);
+        // Output: [TC001_Login, TC002_Search, TC010_Logout]
+        
+        
+        // ============================================================
+        //                    NEGATIVE SCENARIOS
+        // ============================================================
+        
+        System.out.println("\n====== NEGATIVE SCENARIOS ======\n");
+        
+        // -----------------------------------------
+        // NEGATIVE 1: Cannot Modify Local Variables
+        // -----------------------------------------
+        int counter = 0;
+        
+        // This will NOT compile!
+        // numbers.forEach(n -> counter++);  // ERROR: Variable must be final or effectively final
+        
+        // SOLUTION: Use array or AtomicInteger
+        int[] counterArray = {0};
+        numbers.forEach(n -> counterArray[0]++);
+        System.out.println("Counter using array: " + counterArray[0]);
+        
+        // Better solution with AtomicInteger
+        java.util.concurrent.atomic.AtomicInteger atomicCounter = 
+            new java.util.concurrent.atomic.AtomicInteger(0);
+        numbers.forEach(n -> atomicCounter.incrementAndGet());
+        System.out.println("Counter using AtomicInteger: " + atomicCounter.get());
+        
+        
+        // -----------------------------------------
+        // NEGATIVE 2: Cannot Use break/continue
+        // -----------------------------------------
+        System.out.println("\nTrying to skip element 3:");
+        
+        // This will NOT compile!
+        // numbers.forEach(n -> {
+        //     if (n == 3) continue;  // ERROR: continue outside of loop
+        //     System.out.println(n);
+        // });
+        
+        // SOLUTION: Use return instead (acts like continue in forEach)
+        numbers.forEach(n -> {
+            if (n == 3) return;  // Skips this iteration only
+            System.out.println("Number: " + n);
+        });
+        
+        
+        // -----------------------------------------
+        // NEGATIVE 3: Exception Handling is Tricky
+        // -----------------------------------------
+        List<String> values = Arrays.asList("1", "2", "abc", "4");
+        
+        // This will throw exception and stop
+        // values.forEach(v -> System.out.println(Integer.parseInt(v)));
+        
+        // SOLUTION: Handle exception inside lambda
+        System.out.println("\nParsing with exception handling:");
+        values.forEach(v -> {
+            try {
+                System.out.println("Parsed: " + Integer.parseInt(v));
+            } catch (NumberFormatException e) {
+                System.out.println("Cannot parse: " + v + " - Skipping");
+            }
+        });
+        
+        
+        // -----------------------------------------
+        // NEGATIVE 4: Checked Exceptions Not Allowed
+        // -----------------------------------------
+        // This will NOT compile!
+        // List<String> files = Arrays.asList("file1.txt", "file2.txt");
+        // files.forEach(f -> {
+        //     new java.io.FileInputStream(f);  // ERROR: Unhandled exception
+        // });
+        
+        // SOLUTION: Wrap in try-catch or create wrapper method
+        
+        
+        // -----------------------------------------
+        // NEGATIVE 5: Debugging is Harder
+        // -----------------------------------------
+        // Hard to set breakpoints in one-line lambdas
+        // SOLUTION: Convert to multi-line for debugging
+        
+        // Hard to debug:
+        numbers.forEach(n -> System.out.println(n * 2));
+        
+        // Easier to debug:
+        numbers.forEach(n -> {
+            int doubled = n * 2;      // Can set breakpoint here
+            System.out.println(doubled);
+        });
+        
+        
+        // -----------------------------------------
+        // NEGATIVE 6: this Keyword Behavior
+        // -----------------------------------------
+        // In lambda, 'this' refers to enclosing class, not the lambda itself
+        // This is different from anonymous inner classes
+    }
+}
+
+LAMBDA ISSUES AND SOLUTIONS TABLE:
++------------------+--------------------------------+--------------------------------+
+| Scenario         | Problem                        | Solution                       |
++------------------+--------------------------------+--------------------------------+
+| Modify variable  | Must be final/effectively      | Use array or AtomicInteger     |
+|                  | final                          |                                |
++------------------+--------------------------------+--------------------------------+
+| break/continue   | Not allowed in lambda          | Use return (acts as continue)  |
+|                  |                                | Or use traditional loop        |
++------------------+--------------------------------+--------------------------------+
+| Checked          | Not allowed directly           | Wrap in try-catch or create    |
+| exceptions       |                                | wrapper functional interface   |
++------------------+--------------------------------+--------------------------------+
+| Debugging        | Hard to debug one-liners       | Convert to multi-line block    |
++------------------+--------------------------------+--------------------------------+
+
+
+====================================================================
+                    SECTION 2: FUNCTIONAL INTERFACES
+====================================================================
+
+WHAT IS A FUNCTIONAL INTERFACE?
+-------------------------------
+- Interface with exactly ONE abstract method
+- Can have multiple default/static methods
+- Annotated with @FunctionalInterface (optional but recommended)
+- Lambda expressions work ONLY with functional interfaces
+
+--------------------------------------------------------------------
+                    BUILT-IN FUNCTIONAL INTERFACES
+--------------------------------------------------------------------
+
++----------------+----------------+----------------+----------------------+
+| Interface      | Input          | Output         | Method               |
++----------------+----------------+----------------+----------------------+
+| Predicate<T>   | T              | boolean        | test(T t)            |
++----------------+----------------+----------------+----------------------+
+| Function<T,R>  | T              | R              | apply(T t)           |
++----------------+----------------+----------------+----------------------+
+| Consumer<T>    | T              | void           | accept(T t)          |
++----------------+----------------+----------------+----------------------+
+| Supplier<T>    | None           | T              | get()                |
++----------------+----------------+----------------+----------------------+
+| BiPredicate    | T, U           | boolean        | test(T t, U u)       |
++----------------+----------------+----------------+----------------------+
+| BiFunction     | T, U           | R              | apply(T t, U u)      |
++----------------+----------------+----------------+----------------------+
+| BiConsumer     | T, U           | void           | accept(T t, U u)     |
++----------------+----------------+----------------+----------------------+
+
+import java.util.function.*;
+import java.util.*;
+
+public class FunctionalInterfacesDemo {
+    public static void main(String[] args) {
+        
+        // ============================================
+        // 1. PREDICATE - Takes input, returns boolean
+        // ============================================
+        System.out.println("=== PREDICATE ===");
+        
+        // Check if string is empty
+        Predicate<String> isEmpty = s -> s == null || s.isEmpty();
+        System.out.println("Is '' empty? " + isEmpty.test(""));         // true
+        System.out.println("Is 'Hello' empty? " + isEmpty.test("Hello")); // false
+        
+        // Check if number is positive
+        Predicate<Integer> isPositive = n -> n > 0;
+        System.out.println("Is 5 positive? " + isPositive.test(5));     // true
+        System.out.println("Is -3 positive? " + isPositive.test(-3));   // false
+        
+        // Combining predicates
+        Predicate<Integer> isEven = n -> n % 2 == 0;
+        Predicate<Integer> isPositiveAndEven = isPositive.and(isEven);
+        Predicate<Integer> isPositiveOrEven = isPositive.or(isEven);
+        Predicate<Integer> isNotPositive = isPositive.negate();
+        
+        System.out.println("Is 4 positive AND even? " + isPositiveAndEven.test(4));  // true
+        System.out.println("Is -4 positive OR even? " + isPositiveOrEven.test(-4));  // true
+        System.out.println("Is 5 NOT positive? " + isNotPositive.test(5));           // false
+        
+        
+        // ============================================
+        // 2. FUNCTION - Takes input, returns output
+        // ============================================
+        System.out.println("\n=== FUNCTION ===");
+        
+        // Convert string to length
+        Function<String, Integer> getLength = s -> s.length();
+        System.out.println("Length of 'Selenium': " + getLength.apply("Selenium")); // 8
+        
+        // Convert string to uppercase
+        Function<String, String> toUpper = s -> s.toUpperCase();
+        System.out.println("Uppercase: " + toUpper.apply("hello")); // HELLO
+        
+        // Chaining functions
+        Function<String, String> addPrefix = s -> "TEST_" + s;
+        Function<String, String> combined = toUpper.andThen(addPrefix);
+        System.out.println("Combined: " + combined.apply("login")); // TEST_LOGIN
+        
+        // compose - applies argument function first
+        Function<String, String> composed = addPrefix.compose(toUpper);
+        System.out.println("Composed: " + composed.apply("login")); // TEST_LOGIN
+        
+        
+        // ============================================
+        // 3. CONSUMER - Takes input, returns nothing
+        // ============================================
+        System.out.println("\n=== CONSUMER ===");
+        
+        // Print consumer
+        Consumer<String> printer = s -> System.out.println("Printing: " + s);
+        printer.accept("Hello Consumer!");
+        
+        // Consumer chain
+        Consumer<String> upperPrinter = s -> System.out.println("Upper: " + s.toUpperCase());
+        Consumer<String> lowerPrinter = s -> System.out.println("Lower: " + s.toLowerCase());
+        Consumer<String> bothPrinter = upperPrinter.andThen(lowerPrinter);
+        
+        bothPrinter.accept("HeLLo");
+        // Output:
+        // Upper: HELLO
+        // Lower: hello
+        
+        
+        // ============================================
+        // 4. SUPPLIER - Takes nothing, returns output
+        // ============================================
+        System.out.println("\n=== SUPPLIER ===");
+        
+        // Random number supplier
+        Supplier<Double> randomSupplier = () -> Math.random();
+        System.out.println("Random 1: " + randomSupplier.get());
+        System.out.println("Random 2: " + randomSupplier.get());
+        
+        // Current time supplier
+        Supplier<String> timeSupplier = () -> java.time.LocalDateTime.now().toString();
+        System.out.println("Current time: " + timeSupplier.get());
+        
+        // Default value supplier
+        Supplier<List<String>> emptyListSupplier = () -> new ArrayList<>();
+        List<String> newList = emptyListSupplier.get();
+        System.out.println("New empty list: " + newList);
+        
+        
+        // ============================================
+        // 5. BI-VARIANTS (Two inputs)
+        // ============================================
+        System.out.println("\n=== BI-VARIANTS ===");
+        
+        // BiPredicate
+        BiPredicate<String, Integer> checkLength = (s, len) -> s.length() == len;
+        System.out.println("'Hello' has length 5? " + checkLength.test("Hello", 5)); // true
+        
+        // BiFunction
+        BiFunction<String, String, String> concat = (s1, s2) -> s1 + " " + s2;
+        System.out.println("Concat: " + concat.apply("Hello", "World")); // Hello World
+        
+        // BiConsumer
+        BiConsumer<String, Integer> printNTimes = (s, n) -> {
+            for (int i = 0; i < n; i++) {
+                System.out.println(s);
+            }
+        };
+        printNTimes.accept("Hi!", 3);
+        
+        
+        // ============================================
+        // 6. UNARY AND BINARY OPERATORS
+        // ============================================
+        System.out.println("\n=== OPERATORS ===");
+        
+        // UnaryOperator<T> - same input and output type
+        UnaryOperator<Integer> square = n -> n * n;
+        System.out.println("Square of 5: " + square.apply(5)); // 25
+        
+        // BinaryOperator<T> - two inputs same type, output same type
+        BinaryOperator<Integer> max = (a, b) -> a > b ? a : b;
+        System.out.println("Max of 10, 20: " + max.apply(10, 20)); // 20
+    }
+}
+
+--------------------------------------------------------------------
+                    CUSTOM FUNCTIONAL INTERFACES
+--------------------------------------------------------------------
+
+// ============================================
+// CREATING CUSTOM FUNCTIONAL INTERFACES
+// ============================================
+
+// Custom interface for test validation
+@FunctionalInterface
+interface TestValidator {
+    boolean validate(String testName, String status);
+    
+    // Can have default methods
+    default void log(String message) {
+        System.out.println("[LOG] " + message);
+    }
+    
+    // Can have static methods
+    static void info() {
+        System.out.println("This is a test validator interface");
+    }
+}
+
+// Custom interface for three inputs
+@FunctionalInterface
+interface TriFunction<T, U, V, R> {
+    R apply(T t, U u, V v);
+}
+
+// Custom interface for test reporting
+@FunctionalInterface
+interface TestReporter {
+    void report(String testName, String status, long duration);
+}
+
+public class CustomFunctionalInterfaces {
+    public static void main(String[] args) {
+        
+        // Using TestValidator
+        TestValidator passValidator = (name, status) -> status.equalsIgnoreCase("PASS");
+        
+        System.out.println("Login test passed? " + passValidator.validate("Login", "PASS"));   // true
+        System.out.println("Login test passed? " + passValidator.validate("Login", "FAIL"));   // false
+        
+        passValidator.log("Validation complete");
+        TestValidator.info();
+        
+        
+        // Using TriFunction
+        TriFunction<String, Integer, Boolean, String> testInfo = 
+            (name, priority, enabled) -> 
+                String.format("Test: %s, Priority: %d, Enabled: %b", name, priority, enabled);
+        
+        System.out.println(testInfo.apply("LoginTest", 1, true));
+        // Output: Test: LoginTest, Priority: 1, Enabled: true
+        
+        
+        // Using TestReporter
+        TestReporter reporter = (name, status, duration) -> 
+            System.out.printf("Test: %s | Status: %s | Duration: %dms%n", name, status, duration);
+        
+        reporter.report("LoginTest", "PASS", 1500);
+        reporter.report("SearchTest", "FAIL", 3200);
+    }
+}
+
+--------------------------------------------------------------------
+            POSITIVE AND NEGATIVE SCENARIOS - FUNCTIONAL INTERFACES
+--------------------------------------------------------------------
+
+import java.util.function.*;
+
+public class FunctionalInterfaceScenarios {
+    public static void main(String[] args) {
+        
+        // ============================================================
+        //                    POSITIVE SCENARIOS
+        // ============================================================
+        
+        System.out.println("====== POSITIVE SCENARIOS ======\n");
+        
+        // -----------------------------------------
+        // POSITIVE 1: Reusable Validation Logic
+        // -----------------------------------------
+        Predicate<String> isValidEmail = email -> 
+            email != null && email.contains("@") && email.contains(".");
+        
+        Predicate<String> isValidPassword = pwd -> 
+            pwd != null && pwd.length() >= 8;
+        
+        // Reuse across application
+        System.out.println("Valid email? " + isValidEmail.test("test@gmail.com")); // true
+        System.out.println("Valid email? " + isValidEmail.test("invalid"));         // false
+        System.out.println("Valid password? " + isValidPassword.test("password123")); // true
+        System.out.println("Valid password? " + isValidPassword.test("pass"));        // false
+        
+        
+        // -----------------------------------------
+        // POSITIVE 2: Composable Functions
+        // -----------------------------------------
+        Function<String, String> trim = String::trim;
+        Function<String, String> lower = String::toLowerCase;
+        Function<String, String> removeSpaces = s -> s.replace(" ", "");
+        
+        // Compose for data cleaning
+        Function<String, String> cleanData = trim.andThen(lower).andThen(removeSpaces);
+        
+        System.out.println("Cleaned: " + cleanData.apply("  Hello World  ")); // helloworld
+        
+        
+        // -----------------------------------------
+        // POSITIVE 3: Strategy Pattern Simplified
+        // -----------------------------------------
+        BiFunction<Integer, Integer, Integer> add = (a, b) -> a + b;
+        BiFunction<Integer, Integer, Integer> subtract = (a, b) -> a - b;
+        BiFunction<Integer, Integer, Integer> multiply = (a, b) -> a * b;
+        
+        System.out.println("Add: " + calculate(10, 5, add));        // 15
+        System.out.println("Subtract: " + calculate(10, 5, subtract)); // 5
+        System.out.println("Multiply: " + calculate(10, 5, multiply)); // 50
+        
+        
+        // ============================================================
+        //                    NEGATIVE SCENARIOS
+        // ============================================================
+        
+        System.out.println("\n====== NEGATIVE SCENARIOS ======\n");
+        
+        // -----------------------------------------
+        // NEGATIVE 1: More Than One Abstract Method
+        // -----------------------------------------
+        // This will NOT compile as functional interface:
+        // @FunctionalInterface
+        // interface Invalid {
+        //     void method1();
+        //     void method2();  // ERROR: Second abstract method
+        // }
+        
+        
+        // -----------------------------------------
+        // NEGATIVE 2: Null Safety Issues
+        // -----------------------------------------
+        Function<String, Integer> getLength = s -> s.length();
+        
+        // This will throw NullPointerException!
+        // System.out.println(getLength.apply(null));
+        
+        // SOLUTION: Add null check
+        Function<String, Integer> safeLengthGetter = s -> s == null ? 0 : s.length();
+        System.out.println("Null length: " + safeLengthGetter.apply(null)); // 0
+        System.out.println("Hello length: " + safeLengthGetter.apply("Hello")); // 5
+        
+        
+        // -----------------------------------------
+        // NEGATIVE 3: Type Mismatch
+        // -----------------------------------------
+        // Function<String, Integer> wrong = s -> s.toUpperCase(); // ERROR: Type mismatch
+        
+        // Correct:
+        Function<String, String> correct = s -> s.toUpperCase();
+        
+        
+        // -----------------------------------------
+        // NEGATIVE 4: Cannot Use with Non-Functional Interfaces
+        // -----------------------------------------
+        // Comparator has two abstract methods (compare and equals)
+        // But equals is from Object, so it's still functional!
+        java.util.Comparator<String> comp = (s1, s2) -> s1.length() - s2.length();
+        System.out.println("Compare 'abc' vs 'ab': " + comp.compare("abc", "ab")); // 1
+    }
+    
+    // Helper method for strategy pattern
+    public static int calculate(int a, int b, BiFunction<Integer, Integer, Integer> operation) {
+        return operation.apply(a, b);
+    }
+}
+
+
+====================================================================
+                    SECTION 3: STREAM API
+====================================================================
+
+WHAT IS STREAM?
+---------------
+- Sequence of elements supporting sequential and parallel operations
+- NOT a data structure - it doesn't store data
+- Lazy evaluation - intermediate operations are not executed until terminal operation
+- Can be used only ONCE
+
+STREAM OPERATIONS:
+------------------
++------------------+------------------+------------------+
+| Type             | Examples         | Returns          |
++------------------+------------------+------------------+
+| Intermediate     | filter, map,     | Stream           |
+| (Lazy)           | sorted, distinct |                  |
++------------------+------------------+------------------+
+| Terminal         | collect, forEach | Result/void      |
+| (Triggers exec)  | count, reduce    |                  |
++------------------+------------------+------------------+
+
+--------------------------------------------------------------------
+                    CREATING STREAMS
+--------------------------------------------------------------------
+
+import java.util.*;
+import java.util.stream.*;
+
+public class CreatingStreams {
+    public static void main(String[] args) {
+        
+        // ============================================
+        // 1. From Collection
+        // ============================================
+        List<String> list = Arrays.asList("a", "b", "c");
+        Stream<String> streamFromList = list.stream();
+        
+        Set<Integer> set = new HashSet<>(Arrays.asList(1, 2, 3));
+        Stream<Integer> streamFromSet = set.stream();
+        
+        
+        // ============================================
+        // 2. From Array
+        // ============================================
+        String[] array = {"x", "y", "z"};
+        Stream<String> streamFromArray = Arrays.stream(array);
+        
+        
+        // ============================================
+        // 3. Using Stream.of()
+        // ============================================
+        Stream<String> streamOf = Stream.of("one", "two", "three");
+        
+        
+        // ============================================
+        // 4. Using Stream.generate() - Infinite Stream
+        // ============================================
+        Stream<Double> randoms = Stream.generate(Math::random).limit(5);
+        randoms.forEach(System.out::println);
+        
+        
+        // ============================================
+        // 5. Using Stream.iterate() - Infinite Stream
+        // ============================================
+        Stream<Integer> evenNumbers = Stream.iterate(0, n -> n + 2).limit(5);
+        evenNumbers.forEach(System.out::println); // 0, 2, 4, 6, 8
+        
+        
+        // ============================================
+        // 6. From String (IntStream)
+        // ============================================
+        String str = "Hello";
+        IntStream charStream = str.chars();
+        charStream.forEach(c -> System.out.print((char) c + " ")); // H e l l o
+        System.out.println();
+        
+        
+        // ============================================
+        // 7. Primitive Streams
+        // ============================================
+        IntStream intStream = IntStream.range(1, 5);      // 1, 2, 3, 4
+        IntStream intStreamClosed = IntStream.rangeClosed(1, 5); // 1, 2, 3, 4, 5
+        
+        LongStream longStream = LongStream.of(1L, 2L, 3L);
+        DoubleStream doubleStream = DoubleStream.of(1.1, 2.2, 3.3);
+    }
+}
+
+--------------------------------------------------------------------
+                    INTERMEDIATE OPERATIONS
+--------------------------------------------------------------------
+
+import java.util.*;
+import java.util.stream.*;
+
+public class IntermediateOperations {
+    public static void main(String[] args) {
+        
+        List<String> browsers = Arrays.asList("Chrome", "Firefox", "Safari", "Edge", "Opera", "Chrome");
+        List<Integer> numbers = Arrays.asList(5, 2, 8, 1, 9, 3, 7, 4, 6);
+        
+        // ============================================
+        // 1. FILTER - Keep elements matching condition
+        // ============================================
+        System.out.println("=== FILTER ===");
+        
+        // Filter browsers starting with 'C'
+        browsers.stream()
+                .filter(b -> b.startsWith("C"))
+                .forEach(System.out::println);
+        // Output: Chrome, Chrome
+        
+        // Filter numbers greater than 5
+        System.out.println("\nNumbers > 5:");
+        numbers.stream()
+               .filter(n -> n > 5)
+               .forEach(n -> System.out.print(n + " "));
+        // Output: 8 9 7 6
+        
+        
+        // ============================================
+        // 2. MAP - Transform each element
+        // ============================================
+        System.out.println("\n\n=== MAP ===");
+        
+        // Convert to uppercase
+        browsers.stream()
+                .map(String::toUpperCase)
+                .forEach(System.out::println);
+        
+        // Get lengths
+        System.out.println("\nBrowser name lengths:");
+        browsers.stream()
+                .map(String::length)
+                .forEach(System.out::println);
+        
+        // Square numbers
+        System.out.println("\nSquared numbers:");
+        numbers.stream()
+               .map(n -> n * n)
+               .forEach(n -> System.out.print(n + " "));
+        // Output: 25 4 64 1 81 9 49 16 36
+        
+        
+        // ============================================
+        // 3. FLATMAP - Flatten nested structures
+        // ============================================
+        System.out.println("\n\n=== FLATMAP ===");
+        
+        List<List<String>> nestedList = Arrays.asList(
+            Arrays.asList("Chrome", "Firefox"),
+            Arrays.asList("Safari", "Edge"),
+            Arrays.asList("Opera")
+        );
+        
+        // Flatten to single list
+        nestedList.stream()
+                  .flatMap(List::stream)
+                  .forEach(System.out::println);
+        
+        // Split words into characters
+        System.out.println("\nCharacters:");
+        Stream.of("Hello", "World")
+              .flatMap(s -> Arrays.stream(s.split("")))
+              .forEach(System.out::print);
+        // Output: HelloWorld
+        
+        
+        // ============================================
+        // 4. DISTINCT - Remove duplicates
+        // ============================================
+        System.out.println("\n\n=== DISTINCT ===");
+        
+        browsers.stream()
+                .distinct()
+                .forEach(System.out::println);
+        // Chrome appears only once now
+        
+        
+        // ============================================
+        // 5. SORTED - Sort elements
+        // ============================================
+        System.out.println("\n=== SORTED ===");
+        
+        // Natural sorting
+        System.out.println("Natural sort:");
+        numbers.stream()
+               .sorted()
+               .forEach(n -> System.out.print(n + " "));
+        // Output: 1 2 3 4 5 6 7 8 9
+        
+        // Reverse sorting
+        System.out.println("\n\nReverse sort:");
+        numbers.stream()
+               .sorted(Comparator.reverseOrder())
+               .forEach(n -> System.out.print(n + " "));
+        // Output: 9 8 7 6 5 4 3 2 1
+        
+        // Custom sorting - by length
+        System.out.println("\n\nSort by length:");
+        browsers.stream()
+                .distinct()
+                .sorted((b1, b2) -> b1.length() - b2.length())
+                .forEach(System.out::println);
+        
+        
+        // ============================================
+        // 6. LIMIT - Take first n elements
+        // ============================================
+        System.out.println("\n=== LIMIT ===");
+        
+        numbers.stream()
+               .limit(3)
+               .forEach(n -> System.out.print(n + " "));
+        // Output: 5 2 8
+        
+        
+        // ============================================
+        // 7. SKIP - Skip first n elements
+        // ============================================
+        System.out.println("\n\n=== SKIP ===");
+        
+        numbers.stream()
+               .skip(3)
+               .forEach(n -> System.out.print(n + " "));
+        // Output: 1 9 3 7 4 6
+        
+        
+        // ============================================
+        // 8. PEEK - Debug/look at elements (doesn't modify)
+        // ============================================
+        System.out.println("\n\n=== PEEK ===");
+        
+        numbers.stream()
+               .filter(n -> n > 5)
+               .peek(n -> System.out.println("After filter: " + n))
+               .map(n -> n * 2)
+               .peek(n -> System.out.println("After map: " + n))
+               .collect(Collectors.toList());
+    }
+}
+
+--------------------------------------------------------------------
+                    TERMINAL OPERATIONS
+--------------------------------------------------------------------
+
+import java.util.*;
+import java.util.stream.*;
+
+public class TerminalOperations {
+    public static void main(String[] args) {
+        
+        List<Integer> numbers = Arrays.asList(5, 2, 8, 1, 9, 3, 7, 4, 6);
+        List<String> browsers = Arrays.asList("Chrome", "Firefox", "Safari", "Edge", "Opera");
+        
+        // ============================================
+        // 1. COLLECT - Collect to collection
+        // ============================================
+        System.out.println("=== COLLECT ===");
+        
+        // Collect to List
+        List<Integer> evenNumbers = numbers.stream()
+                                           .filter(n -> n % 2 == 0)
+                                           .collect(Collectors.toList());
+        System.out.println("Even numbers: " + evenNumbers);
+        
+        // Collect to Set
+        Set<Integer> numberSet = numbers.stream()
+                                        .collect(Collectors.toSet());
+        System.out.println("As Set: " + numberSet);
+        
+        // Collect to specific collection
+        LinkedList<String> browserLinkedList = browsers.stream()
+                .collect(Collectors.toCollection(LinkedList::new));
+        System.out.println("LinkedList: " + browserLinkedList);
+        
+        // Collect to Map
+        Map<String, Integer> browserLengths = browsers.stream()
+                .collect(Collectors.toMap(
+                    b -> b,           // key
+                    b -> b.length()   // value
+                ));
+        System.out.println("Browser lengths: " + browserLengths);
+        
+        
+        // ============================================
+        // 2. JOINING - Combine strings
+        // ============================================
+        System.out.println("\n=== JOINING ===");
+        
+        String joined = browsers.stream()
+                               .collect(Collectors.joining());
+        System.out.println("Joined: " + joined);
+        // Output: ChromeFirefoxSafariEdgeOpera
+        
+        String joinedWithDelimiter = browsers.stream()
+                                             .collect(Collectors.joining(", "));
+        System.out.println("With delimiter: " + joinedWithDelimiter);
+        // Output: Chrome, Firefox, Safari, Edge, Opera
+        
+        String joinedWithPrefixSuffix = browsers.stream()
+                .collect(Collectors.joining(", ", "[", "]"));
+        System.out.println("With prefix/suffix: " + joinedWithPrefixSuffix);
+        // Output: [Chrome, Firefox, Safari, Edge, Opera]
+        
+        
+        // ============================================
+        // 3. COUNT - Count elements
+        // ============================================
+        System.out.println("\n=== COUNT ===");
+        
+        long count = numbers.stream()
+                           .filter(n -> n > 5)
+                           .count();
+        System.out.println("Numbers > 5: " + count); // 4
+        
+        
+        // ============================================
+        // 4. MIN / MAX - Find minimum/maximum
+        // ============================================
+        System.out.println("\n=== MIN / MAX ===");
+        
+        Optional<Integer> min = numbers.stream()
+                                       .min(Comparator.naturalOrder());
+        Optional<Integer> max = numbers.stream()
+                                       .max(Comparator.naturalOrder());
+        
+        System.out.println("Min: " + min.orElse(0)); // 1
+        System.out.println("Max: " + max.orElse(0)); // 9
+        
+        // Shortest/Longest browser name
+        Optional<String> shortest = browsers.stream()
+                                           .min(Comparator.comparingInt(String::length));
+        Optional<String> longest = browsers.stream()
+                                          .max(Comparator.comparingInt(String::length));
+        
+        System.out.println("Shortest: " + shortest.orElse("N/A")); // Edge
+        System.out.println("Longest: " + longest.orElse("N/A"));   // Firefox
+        
+        
+        // ============================================
+        // 5. REDUCE - Combine all elements
+        // ============================================
+        System.out.println("\n=== REDUCE ===");
+        
+        // Sum all numbers
+        int sum = numbers.stream()
+                        .reduce(0, (a, b) -> a + b);
+        System.out.println("Sum: " + sum); // 45
+        
+        // Using Integer::sum
+        int sum2 = numbers.stream()
+                         .reduce(0, Integer::sum);
+        System.out.println("Sum (method ref): " + sum2);
+        
+        // Product of all numbers
+        int product = numbers.stream()
+                            .reduce(1, (a, b) -> a * b);
+        System.out.println("Product: " + product);
+        
+        // Concatenate all browsers
+        String allBrowsers = browsers.stream()
+                                    .reduce("", (a, b) -> a + b);
+        System.out.println("Concatenated: " + allBrowsers);
+        
+        
+        // ============================================
+        // 6. FINDFIRST / FINDANY
+        // ============================================
+        System.out.println("\n=== FINDFIRST / FINDANY ===");
+        
+        Optional<Integer> first = numbers.stream()
+                                        .filter(n -> n > 5)
+                                        .findFirst();
+        System.out.println("First > 5: " + first.orElse(0)); // 8
+        
+        Optional<String> anyBrowser = browsers.stream()
+                                             .filter(b -> b.length() > 5)
+                                             .findAny();
+        System.out.println("Any browser length > 5: " + anyBrowser.orElse("None"));
+        
+        
+        // ============================================
+        // 7. ANYMATCH / ALLMATCH / NONEMATCH
+        // ============================================
+        System.out.println("\n=== MATCH OPERATIONS ===");
+        
+        // anyMatch - true if any element matches
+        boolean anyGreaterThan5 = numbers.stream()
+                                        .anyMatch(n -> n > 5);
+        System.out.println("Any > 5? " + anyGreaterThan5); // true
+        
+        // allMatch - true if all elements match
+        boolean allPositive = numbers.stream()
+                                    .allMatch(n -> n > 0);
+        System.out.println("All positive? " + allPositive); // true
+        
+        // noneMatch - true if no element matches
+        boolean noneNegative = numbers.stream()
+                                     .noneMatch(n -> n < 0);
+        System.out.println("None negative? " + noneNegative); // true
+        
+        
+        // ============================================
+        // 8. FOREACH - Iterate over elements
+        // ============================================
+        System.out.println("\n=== FOREACH ===");
+        
+        numbers.stream()
+               .filter(n -> n % 2 == 0)
+               .forEach(n -> System.out.print(n + " "));
+        // Output: 2 8 4 6
+        
+        
+        // ============================================
+        // 9. TOARRAY - Convert to array
+        // ============================================
+        System.out.println("\n\n=== TOARRAY ===");
+        
+        Integer[] numArray = numbers.stream()
+                                   .filter(n -> n > 5)
+                                   .toArray(Integer[]::new);
+        System.out.println("Array: " + Arrays.toString(numArray));
+        // Output: [8, 9, 7, 6]
+    }
+}
+
+--------------------------------------------------------------------
+                    COLLECTORS - ADVANCED
+--------------------------------------------------------------------
+
+import java.util.*;
+import java.util.stream.*;
+
+public class AdvancedCollectors {
+    public static void main(String[] args) {
+        
+        List<Employee> employees = Arrays.asList(
+            new Employee("John", "IT", 50000),
+            new Employee("Jane", "HR", 45000),
+            new Employee("Bob", "IT", 60000),
+            new Employee("Alice", "HR", 55000),
+            new Employee("Tom", "Finance", 52000)
+        );
+        
+        // ============================================
+        // 1. GROUPINGBY - Group by property
+        // ============================================
+        System.out.println("=== GROUPINGBY ===");
+        
+        // Group by department
+        Map<String, List<Employee>> byDept = employees.stream()
+                .collect(Collectors.groupingBy(Employee::getDepartment));
+        
+        byDept.forEach((dept, emps) -> {
+            System.out.println(dept + ": " + emps);
+        });
+        
+        // Group and count
+        Map<String, Long> countByDept = employees.stream()
+                .collect(Collectors.groupingBy(
+                    Employee::getDepartment,
+                    Collectors.counting()
+                ));
+        System.out.println("\nCount by dept: " + countByDept);
+        
+        // Group and get average salary
+        Map<String, Double> avgSalaryByDept = employees.stream()
+                .collect(Collectors.groupingBy(
+                    Employee::getDepartment,
+                    Collectors.averagingDouble(Employee::getSalary)
+                ));
+        System.out.println("Avg salary by dept: " + avgSalaryByDept);
+        
+        
+        // ============================================
+        // 2. PARTITIONINGBY - Split into two groups
+        // ============================================
+        System.out.println("\n=== PARTITIONINGBY ===");
+        
+        // Partition by salary > 50000
+        Map<Boolean, List<Employee>> partitioned = employees.stream()
+                .collect(Collectors.partitioningBy(e -> e.getSalary() > 50000));
+        
+        System.out.println("Salary > 50000: " + partitioned.get(true));
+        System.out.println("Salary <= 50000: " + partitioned.get(false));
+        
+        
+        // ============================================
+        // 3. SUMMARIZING - Get statistics
+        // ============================================
+        System.out.println("\n=== SUMMARIZING ===");
+        
+        DoubleSummaryStatistics stats = employees.stream()
+                .collect(Collectors.summarizingDouble(Employee::getSalary));
+        
+        System.out.println("Count: " + stats.getCount());
+        System.out.println("Sum: " + stats.getSum());
+        System.out.println("Min: " + stats.getMin());
+        System.out.println("Max: " + stats.getMax());
+        System.out.println("Average: " + stats.getAverage());
+        
+        
+        // ============================================
+        // 4. MAPPING - Transform then collect
+        // ============================================
+        System.out.println("\n=== MAPPING ===");
+        
+        // Get names by department
+        Map<String, List<String>> namesByDept = employees.stream()
+                .collect(Collectors.groupingBy(
+                    Employee::getDepartment,
+                    Collectors.mapping(Employee::getName, Collectors.toList())
+                ));
+        System.out.println("Names by dept: " + namesByDept);
+    }
+}
+
+class Employee {
+    private String name;
+    private String department;
+    private double salary;
+    
+    public Employee(String name, String department, double salary) {
+        this.name = name;
+        this.department = department;
+        this.salary = salary;
+    }
+    
+    public String getName() { return name; }
+    public String getDepartment() { return department; }
+    public double getSalary() { return salary; }
+    
+    @Override
+    public String toString() {
+        return name + "(" + department + ", $" + salary + ")";
+    }
+}
+
+--------------------------------------------------------------------
+            POSITIVE AND NEGATIVE SCENARIOS - STREAM API
+--------------------------------------------------------------------
+
+import java.util.*;
+import java.util.stream.*;
+
+public class StreamPositiveNegative {
+    public static void main(String[] args) {
+        
+        // ============================================================
+        //                    POSITIVE SCENARIOS
+        // ============================================================
+        
+        System.out.println("====== POSITIVE SCENARIOS ======\n");
+        
+        // -----------------------------------------
+        // POSITIVE 1: Chain Multiple Operations Cleanly
+        // -----------------------------------------
+        List<String> testResults = Arrays.asList(
+            "PASS: LoginTest",
+            "FAIL: SearchTest",
+            "PASS: CheckoutTest",
+            "FAIL: PaymentTest",
+            "PASS: LogoutTest"
+        );
+        
+        // Get only failed tests, extract test name, sort
+        List<String> failedTests = testResults.stream()
+                .filter(r -> r.startsWith("FAIL"))
+                .map(r -> r.substring(6))
+                .sorted()
+                .collect(Collectors.toList());
+        
+        System.out.println("Failed tests: " + failedTests);
+        // Output: [PaymentTest, SearchTest]
+        
+        
+        // -----------------------------------------
+        // POSITIVE 2: Parallel Processing
+        // -----------------------------------------
+        List<Integer> largeList = IntStream.rangeClosed(1, 1000000)
+                                           .boxed()
+                                           .collect(Collectors.toList());
+        
+        long startSequential = System.currentTimeMillis();
+        long sumSequential = largeList.stream()
+                                      .mapToLong(Integer::longValue)
+                                      .sum();
+        long endSequential = System.currentTimeMillis();
+        
+        long startParallel = System.currentTimeMillis();
+        long sumParallel = largeList.parallelStream()
+                                    .mapToLong(Integer::longValue)
+                                    .sum();
+        long endParallel = System.currentTimeMillis();
+        
+        System.out.println("\nSequential time: " + (endSequential - startSequential) + "ms");
+        System.out.println("Parallel time: " + (endParallel - startParallel) + "ms");
+        
+        
+        // -----------------------------------------
+        // POSITIVE 3: Complex Data Transformation
+        // -----------------------------------------
+        List<String> apiResponses = Arrays.asList(
+            "200:OK:LoginAPI",
+            "404:Not Found:SearchAPI",
+            "500:Server Error:PaymentAPI",
+            "200:OK:ProfileAPI"
+        );
+        
+        Map<String, List<String>> byStatus = apiResponses.stream()
+                .map(r -> r.split(":"))
+                .collect(Collectors.groupingBy(
+                    arr -> arr[0],
+                    Collectors.mapping(arr -> arr[2], Collectors.toList())
+                ));
+        
+        System.out.println("\nAPIs by status code: " + byStatus);
+        // Output: {200=[LoginAPI, ProfileAPI], 404=[SearchAPI], 500=[PaymentAPI]}
+        
+        
+        // ============================================================
+        //                    NEGATIVE SCENARIOS
+        // ============================================================
+        
+        System.out.println("\n====== NEGATIVE SCENARIOS ======\n");
+        
+        // -----------------------------------------
+        // NEGATIVE 1: Stream Can Only Be Used ONCE
+        // -----------------------------------------
+        Stream<String> stream = Stream.of("a", "b", "c");
+        stream.forEach(System.out::println); // Works fine
+        
+        // This will throw IllegalStateException!
+        // stream.forEach(System.out::println); // ERROR: stream has already been operated upon
+        
+        // SOLUTION: Create new stream each time
+        List<String> list = Arrays.asList("a", "b", "c");
+        list.stream().forEach(System.out::println); // First use
+        list.stream().forEach(System.out::println); // Second use - OK!
+        
+        
+        // -----------------------------------------
+        // NEGATIVE 2: Modifying Source During Stream
+        // -----------------------------------------
+        List<String> mutableList = new ArrayList<>(Arrays.asList("a", "b", "c"));
+        
+        // This may throw ConcurrentModificationException!
+        // mutableList.stream().forEach(item -> {
+        //     if (item.equals("b")) {
+        //         mutableList.remove(item);  // DON'T DO THIS!
+        //     }
+        // });
+        
+        // SOLUTION: Collect items to remove, then remove
+        List<String> toRemove = mutableList.stream()
+                .filter(item -> item.equals("b"))
+                .collect(Collectors.toList());
+        mutableList.removeAll(toRemove);
+        System.out.println("After removal: " + mutableList);
+        
+        
+        // -----------------------------------------
+        // NEGATIVE 3: Infinite Streams Without Limit
+        // -----------------------------------------
+        // This will run forever!
+        // Stream.iterate(0, n -> n + 1).forEach(System.out::println);
+        
+        // SOLUTION: Always use limit() with infinite streams
+        Stream.iterate(0, n -> n + 1)
+              .limit(5)
+              .forEach(n -> System.out.print(n + " "));
+        System.out.println();
+        
+        
+        // -----------------------------------------
+        // NEGATIVE 4: Forgetting Terminal Operation
+        // -----------------------------------------
+        List<Integer> numbers = Arrays.asList(1, 2, 3, 4, 5);
+        
+        // This does NOTHING! No terminal operation
+        numbers.stream()
+               .filter(n -> {
+                   System.out.println("Filtering: " + n);
+                   return n > 2;
+               })
+               .map(n -> {
+                   System.out.println("Mapping: " + n);
+                   return n * 2;
+               });
+        // Nothing printed because stream is lazy!
+        
+        System.out.println("\nWith terminal operation:");
+        numbers.stream()
+               .filter(n -> {
+                   System.out.println("Filtering: " + n);
+                   return n > 2;
+               })
+               .map(n -> {
+                   System.out.println("Mapping: " + n);
+                   return n * 2;
+               })
+               .collect(Collectors.toList()); // Terminal operation triggers execution
+        
+        
+        // -----------------------------------------
+        // NEGATIVE 5: Order Matters in Chaining
+        // -----------------------------------------
+        System.out.println("\n--- Filter THEN Limit (Efficient) ---");
+        numbers.stream()
+               .peek(n -> System.out.println("Before filter: " + n))
+               .filter(n -> n > 2)
+               .peek(n -> System.out.println("After filter: " + n))
+               .limit(2)
+               .collect(Collectors.toList());
+        // Processes: 1, 2, 3, 4 then stops (short-circuits)
+        
+        System.out.println("\n--- Limit THEN Filter (Less Efficient) ---");
+        numbers.stream()
+               .peek(n -> System.out.println("Before limit: " + n))
+               .limit(4)
+               .peek(n -> System.out.println("After limit: " + n))
+               .filter(n -> n > 2)
+               .collect(Collectors.toList());
+        // Must process all 4 elements from limit
+        
+        
+        // -----------------------------------------
+        // NEGATIVE 6: Null Values in Stream
+        // -----------------------------------------
+        List<String> withNulls = Arrays.asList("a", null, "b", null, "c");
+        
+        // This will throw NullPointerException!
+        // withNulls.stream()
+        //          .map(String::toUpperCase)  // NPE on null
+        //          .collect(Collectors.toList());
+        
+        // SOLUTION: Filter nulls first
+        List<String> safeResult = withNulls.stream()
+                .filter(Objects::nonNull)
+                .map(String::toUpperCase)
+                .collect(Collectors.toList());
+        System.out.println("\nSafe result: " + safeResult);
+    }
+}
+
+STREAM ISSUES AND SOLUTIONS TABLE:
++---------------------+--------------------------------+--------------------------------+
+| Scenario            | Problem                        | Solution                       |
++---------------------+--------------------------------+--------------------------------+
+| Reuse stream        | IllegalStateException          | Create new stream from source  |
++---------------------+--------------------------------+--------------------------------+
+| Modify source       | ConcurrentModificationException| Collect then modify separately |
++---------------------+--------------------------------+--------------------------------+
+| Infinite stream     | Runs forever                   | Use limit()                    |
++---------------------+--------------------------------+--------------------------------+
+| No terminal op      | Nothing executes               | Add collect/forEach/count etc  |
++---------------------+--------------------------------+--------------------------------+
+| Wrong order         | Inefficient processing         | Filter before limit            |
++---------------------+--------------------------------+--------------------------------+
+| Null values         | NullPointerException           | Filter nulls first             |
++---------------------+--------------------------------+--------------------------------+
+
+
+====================================================================
+                    SECTION 4: METHOD REFERENCES
+====================================================================
+
+WHAT IS METHOD REFERENCE?
+-------------------------
+- Shorthand for lambda expressions
+- When lambda just calls an existing method
+- Uses :: operator
+
+TYPES OF METHOD REFERENCES:
+---------------------------
++----------------------------+------------------------+----------------------+
+| Type                       | Syntax                 | Lambda Equivalent    |
++----------------------------+------------------------+----------------------+
+| Static method              | ClassName::staticMethod| x -> Class.method(x) |
++----------------------------+------------------------+----------------------+
+| Instance method (object)   | object::instanceMethod | x -> obj.method(x)   |
++----------------------------+------------------------+----------------------+
+| Instance method (class)    | ClassName::method      | x -> x.method()      |
++----------------------------+------------------------+----------------------+
+| Constructor                | ClassName::new         | x -> new ClassName(x)|
++----------------------------+------------------------+----------------------+
+
+import java.util.*;
+import java.util.function.*;
+
+public class MethodReferencesDemo {
+    public static void main(String[] args) {
+        
+        List<String> names = Arrays.asList("John", "Alice", "Bob", "David");
+        List<Integer> numbers = Arrays.asList(1, 2, 3, 4, 5);
+        
+        // ============================================
+        // 1. STATIC METHOD REFERENCE
+        // ============================================
+        System.out.println("=== STATIC METHOD REFERENCE ===");
+        
+        // Lambda way
+        numbers.stream()
+               .map(n -> String.valueOf(n))
+               .forEach(s -> System.out.println(s));
+        
+        // Method reference way
+        System.out.println("\nUsing method reference:");
+        numbers.stream()
+               .map(String::valueOf)        // Static method of String
+               .forEach(System.out::println);
+        
+        // Math static methods
+        List<Double> doubles = Arrays.asList(1.5, 2.7, 3.2, 4.9);
+        doubles.stream()
+               .map(Math::round)            // Static method of Math
+               .forEach(System.out::println);
+        
+        
+        // ============================================
+        // 2. INSTANCE METHOD OF PARTICULAR OBJECT
+        // ============================================
+        System.out.println("\n=== INSTANCE METHOD OF OBJECT ===");
+        
+        // Create a printer object
+        Printer printer = new Printer();
+        
+        // Lambda way
+        names.forEach(name -> printer.print(name));
+        
+        // Method reference way
+        System.out.println("\nUsing method reference:");
+        names.forEach(printer::print);
+        
+        // StringBuilder example
+        StringBuilder sb = new StringBuilder();
+        names.forEach(sb::append);
+        System.out.println("Concatenated: " + sb.toString());
+        
+        
+        // ============================================
+        // 3. INSTANCE METHOD OF ARBITRARY OBJECT
+        // ============================================
+        System.out.println("\n=== INSTANCE METHOD OF CLASS ===");
+        
+        // Lambda way
+        names.stream()
+             .map(name -> name.toUpperCase())
+             .forEach(System.out::println);
+        
+        // Method reference way
+        System.out.println("\nUsing method reference:");
+        names.stream()
+             .map(String::toUpperCase)      // Instance method called on each element
+             .forEach(System.out::println);
+        
+        // Sorting using method reference
+        List<String> sortedNames = new ArrayList<>(names);
+        sortedNames.sort(String::compareToIgnoreCase);
+        System.out.println("Sorted: " + sortedNames);
+        
+        
+        // ============================================
+        // 4. CONSTRUCTOR REFERENCE
+        // ============================================
+        System.out.println("\n=== CONSTRUCTOR REFERENCE ===");
+        
+        // Lambda way
+        Supplier<List<String>> listSupplier1 = () -> new ArrayList<>();
+        List<String> list1 = listSupplier1.get();
+        
+        // Constructor reference way
+        Supplier<List<String>> listSupplier2 = ArrayList::new;
+        List<String> list2 = listSupplier2.get();
+        
+        // Function with constructor
+        Function<String, Person> personCreator = Person::new;
+        Person person = personCreator.apply("John");
+        System.out.println("Created: " + person.getName());
+        
+        // Creating objects from stream
+        List<String> personNames = Arrays.asList("Alice", "Bob", "Charlie");
+        List<Person> people = personNames.stream()
+                                         .map(Person::new)
+                                         .collect(java.util.stream.Collectors.toList());
+        people.forEach(p -> System.out.println(p.getName()));
+        
+        
+        // ============================================
+        // 5. ARRAY CONSTRUCTOR REFERENCE
+        // ============================================
+        System.out.println("\n=== ARRAY CONSTRUCTOR REFERENCE ===");
+        
+        // Lambda way
+        String[] array1 = names.stream()
+                               .toArray(size -> new String[size]);
+        
+        // Array constructor reference
+        String[] array2 = names.stream()
+                               .toArray(String[]::new);
+        
+        System.out.println("Array: " + Arrays.toString(array2));
+    }
+}
+
+class Printer {
+    public void print(String message) {
+        System.out.println("[PRINT] " + message);
+    }
+}
+
+class Person {
+    private String name;
+    
+    public Person(String name) {
+        this.name = name;
+    }
+    
+    public String getName() {
+        return name;
+    }
+}
+
+--------------------------------------------------------------------
+            POSITIVE AND NEGATIVE SCENARIOS - METHOD REFERENCES
+--------------------------------------------------------------------
+
+import java.util.*;
+import java.util.function.*;
+
+public class MethodReferenceScenarios {
+    public static void main(String[] args) {
+        
+        // ============================================================
+        //                    POSITIVE SCENARIOS
+        // ============================================================
+        
+        System.out.println("====== POSITIVE SCENARIOS ======\n");
+        
+        // -----------------------------------------
+        // POSITIVE 1: Cleaner Code
+        // -----------------------------------------
+        List<String> browsers = Arrays.asList("Chrome", "Firefox", "Safari");
+        
+        // Lambda
+        browsers.forEach(b -> System.out.println(b));
+        
+        // Method reference - cleaner
+        browsers.forEach(System.out::println);
+        
+        
+        // -----------------------------------------
+        // POSITIVE 2: Works Well with Stream API
+        // -----------------------------------------
+        List<String> names = Arrays.asList("john", "alice", "bob");
+        
+        List<String> upperNames = names.stream()
+                .map(String::toUpperCase)
+                .sorted(String::compareTo)
+                .collect(java.util.stream.Collectors.toList());
+        System.out.println("Upper names: " + upperNames);
+        
+        
+        // -----------------------------------------
+        // POSITIVE 3: Constructor References for Object Creation
+        // -----------------------------------------
+        List<String> data = Arrays.asList("A", "B", "C");
+        String[] array = data.stream().toArray(String[]::new);
+        System.out.println("Array: " + Arrays.toString(array));
+        
+        
+        // ============================================================
+        //                    NEGATIVE SCENARIOS
+        // ============================================================
+        
+        System.out.println("\n====== NEGATIVE SCENARIOS ======\n");
+        
+        // -----------------------------------------
+        // NEGATIVE 1: Cannot Use When Parameters Don't Match
+        // -----------------------------------------
+        List<Integer> numbers = Arrays.asList(1, 2, 3, 4, 5);
+        
+        // This works - parameters match
+        numbers.forEach(System.out::println);
+        
+        // This does NOT work - need to add prefix
+        // numbers.forEach(System.out::println("Number: " + ???));  // Can't do this
+        
+        // SOLUTION: Use lambda when transformation needed
+        numbers.forEach(n -> System.out.println("Number: " + n));
+        
+        
+        // -----------------------------------------
+        // NEGATIVE 2: Cannot Use for Multiple Method Calls
+        // -----------------------------------------
+        // Can't do this with method reference
+        // names.forEach(name -> {
+        //     name.toUpperCase();
+        //     name.trim();
+        // });
+        
+        // Method reference only calls ONE method
+        
+        
+        // -----------------------------------------
+        // NEGATIVE 3: Confusion with Overloaded Methods
+        // -----------------------------------------
+        // When class has overloaded methods, can be confusing
+        // Integer::parseInt - which version?
+        
+        Function<String, Integer> parser = Integer::parseInt;  // Takes String
+        System.out.println("Parsed: " + parser.apply("42"));
+        
+        
+        // -----------------------------------------
+        // NEGATIVE 4: Less Readable for Complex Logic
+        // -----------------------------------------
+        // Lambda is better for complex conditions
+        numbers.stream()
+               .filter(n -> n > 2 && n < 5)  // Can't use method reference here
+               .forEach(System.out::println);
+    }
+}
+
+
+====================================================================
+                    SECTION 5: OPTIONAL CLASS
+====================================================================
+
+WHAT IS OPTIONAL?
+-----------------
+- Container object that may or may not contain a value
+- Used to avoid NullPointerException
+- Forces you to handle absence of value explicitly
+
+import java.util.*;
+
+public class OptionalDemo {
+    public static void main(String[] args) {
+        
+        // ============================================
+        // 1. CREATING OPTIONAL
+        // ============================================
+        System.out.println("=== CREATING OPTIONAL ===");
+        
+        // Empty Optional
+        Optional<String> empty = Optional.empty();
+        System.out.println("Empty: " + empty);
+        System.out.println("Is present: " + empty.isPresent());
+        System.out.println("Is empty: " + empty.isEmpty()); // Java 11+
+        
+        // Optional with value
+        Optional<String> withValue = Optional.of("Hello");
+        System.out.println("\nWith value: " + withValue);
+        System.out.println("Is present: " + withValue.isPresent());
+        
+        // Optional that might be null
+        String nullableString = null;
+        // Optional<String> wrong = Optional.of(nullableString); // NPE!
+        Optional<String> safe = Optional.ofNullable(nullableString);
+        System.out.println("\nNullable (null): " + safe);
+        
+        String notNullString = "World";
+        Optional<String> safe2 = Optional.ofNullable(notNullString);
+        System.out.println("Nullable (not null): " + safe2);
+        
+        
+        // ============================================
+        // 2. GETTING VALUE FROM OPTIONAL
+        // ============================================
+        System.out.println("\n=== GETTING VALUE ===");
+        
+        Optional<String> opt = Optional.of("Test");
+        
+        // get() - throws exception if empty
+        String value = opt.get();
+        System.out.println("get(): " + value);
+        
+        // orElse() - returns default if empty
+        Optional<String> emptyOpt = Optional.empty();
+        String result1 = emptyOpt.orElse("Default Value");
+        System.out.println("orElse(): " + result1);
+        
+        // orElseGet() - calls supplier if empty (lazy evaluation)
+        String result2 = emptyOpt.orElseGet(() -> {
+            System.out.println("Computing default...");
+            return "Computed Default";
+        });
+        System.out.println("orElseGet(): " + result2);
+        
+        // orElseThrow() - throws exception if empty
+        try {
+            String result3 = emptyOpt.orElseThrow(() -> new RuntimeException("Value not found!"));
+        } catch (RuntimeException e) {
+            System.out.println("orElseThrow(): " + e.getMessage());
+        }
+        
+        
+        // ============================================
+        // 3. CONDITIONAL ACTIONS
+        // ============================================
+        System.out.println("\n=== CONDITIONAL ACTIONS ===");
+        
+        Optional<String> browser = Optional.of("Chrome");
+        Optional<String> noBrowser = Optional.empty();
+        
+        // ifPresent - execute action if value exists
+        browser.ifPresent(b -> System.out.println("Browser is: " + b));
+        noBrowser.ifPresent(b -> System.out.println("This won't print"));
+        
+        // ifPresentOrElse (Java 9+)
+        browser.ifPresentOrElse(
+            b -> System.out.println("Found: " + b),
+            () -> System.out.println("Not found")
+        );
+        
+        noBrowser.ifPresentOrElse(
+            b -> System.out.println("Found: " + b),
+            () -> System.out.println("Browser not found")
+        );
+        
+        
+        // ============================================
+        // 4. TRANSFORMING OPTIONAL
+        // ============================================
+        System.out.println("\n=== TRANSFORMING OPTIONAL ===");
+        
+        Optional<String> name = Optional.of("john");
+        
+        // map() - transform value
+        Optional<String> upperName = name.map(String::toUpperCase);
+        System.out.println("Mapped: " + upperName.orElse("N/A"));
+        
+        Optional<Integer> length = name.map(String::length);
+        System.out.println("Length: " + length.orElse(0));
+        
+        // flatMap() - when transformation returns Optional
+        Optional<String> flatMapped = name.flatMap(n -> Optional.of(n.toUpperCase()));
+        System.out.println("FlatMapped: " + flatMapped.orElse("N/A"));
+        
+        
+        // ============================================
+        // 5. FILTERING OPTIONAL
+        // ============================================
+        System.out.println("\n=== FILTERING OPTIONAL ===");
+        
+        Optional<Integer> number = Optional.of(10);
+        
+        Optional<Integer> filtered = number.filter(n -> n > 5);
+        System.out.println("Filter > 5: " + filtered.orElse(0)); // 10
+        
+        Optional<Integer> filteredOut = number.filter(n -> n > 15);
+        System.out.println("Filter > 15: " + filteredOut.orElse(0)); // 0
+        
+        
+        // ============================================
+        // 6. CHAINING OPTIONAL OPERATIONS
+        // ============================================
+        System.out.println("\n=== CHAINING ===");
+        
+        Optional<String> email = Optional.of("  TEST@GMAIL.COM  ");
+        
+        String cleanEmail = email
+            .map(String::trim)
+            .map(String::toLowerCase)
+            .filter(e -> e.contains("@"))
+            .orElse("invalid");
+        
+        System.out.println("Clean email: " + cleanEmail);
+        
+        
+        // ============================================
+        // 7. OPTIONAL WITH STREAMS
+        // ============================================
+        System.out.println("\n=== OPTIONAL WITH STREAMS ===");
+        
+        List<String> browsers = Arrays.asList("Chrome", "Firefox", "Safari");
+        
+        Optional<String> firstWithF = browsers.stream()
+                .filter(b -> b.startsWith("F"))
+                .findFirst();
+        
+        System.out.println("First with F: " + firstWithF.orElse("Not found"));
+        
+        // Convert Optional to Stream (Java 9+)
+        firstWithF.stream()
+                  .map(String::toUpperCase)
+                  .forEach(System.out::println);
+    }
+}
+
+--------------------------------------------------------------------
+            POSITIVE AND NEGATIVE SCENARIOS - OPTIONAL
+--------------------------------------------------------------------
+
+import java.util.*;
+
+public class OptionalPositiveNegative {
+    public static void main(String[] args) {
+        
+        // ============================================================
+        //                    POSITIVE SCENARIOS
+        // ============================================================
+        
+        System.out.println("====== POSITIVE SCENARIOS ======\n");
+        
+        // -----------------------------------------
+        // POSITIVE 1: Avoid NullPointerException
+        // -----------------------------------------
+        
+        // Old way - prone to NPE
+        String oldWay = null;
+        // System.out.println(oldWay.length()); // NPE!
+        
+        // Optional way - safe
+        Optional<String> safeWay = Optional.ofNullable(null);
+        int length = safeWay.map(String::length).orElse(0);
+        System.out.println("Safe length: " + length);
+        
+        
+        // -----------------------------------------
+        // POSITIVE 2: Clear API Design
+        // -----------------------------------------
+        
+        // Method signature tells you value might be absent
+        Optional<User> user = findUserById("123");
+        
+        user.ifPresentOrElse(
+            u -> System.out.println("Found user: " + u.getName()),
+            () -> System.out.println("User not found")
+        );
+        
+        
+        // -----------------------------------------
+        // POSITIVE 3: Chaining Without Null Checks
+        // -----------------------------------------
+        
+        // Old way - multiple null checks
+        User userObj = new User("John", new Address("New York"));
+        String city1 = null;
+        if (userObj != null && userObj.getAddress() != null) {
+            city1 = userObj.getAddress().getCity();
+        }
+        
+        // Optional way - clean chaining
+        String city2 = Optional.ofNullable(userObj)
+                .map(User::getAddress)
+                .map(Address::getCity)
+                .orElse("Unknown");
+        System.out.println("City: " + city2);
+        
+        
+        // -----------------------------------------
+        // POSITIVE 4: Default Values Made Easy
+        // -----------------------------------------
+        
+        Optional<String> config = Optional.empty();
+        
+        // Simple default
+        String value = config.orElse("default_value");
+        
+        // Computed default (only computed if needed)
+        String computed = config.orElseGet(() -> computeExpensiveDefault());
+        
+        System.out.println("Config value: " + computed);
+        
+        
+        // ============================================================
+        //                    NEGATIVE SCENARIOS
+        // ============================================================
+        
+        System.out.println("\n====== NEGATIVE SCENARIOS ======\n");
+        
+        // -----------------------------------------
+        // NEGATIVE 1: Don't Use get() Without Check
+        // -----------------------------------------
+        
+        Optional<String> empty = Optional.empty();
+        
+        // BAD - throws NoSuchElementException
+        // String bad = empty.get();
+        
+        // GOOD - check first or use orElse
+        if (empty.isPresent()) {
+            System.out.println(empty.get());
+        }
+        // OR
+        System.out.println(empty.orElse("Default"));
+        
+        
+        // -----------------------------------------
+        // NEGATIVE 2: Don't Use Optional.of() with Nullable
+        // -----------------------------------------
+        
+        String mayBeNull = null;
+        
+        // BAD - throws NullPointerException
+        // Optional<String> bad = Optional.of(mayBeNull);
+        
+        // GOOD - use ofNullable
+        Optional<String> good = Optional.ofNullable(mayBeNull);
+        System.out.println("Safe optional: " + good);
+        
+        
+        // -----------------------------------------
+        // NEGATIVE 3: Don't Use Optional as Method Parameter
+        // -----------------------------------------
+        
+        // BAD - Optional as parameter
+        // public void process(Optional<String> value) { }
+        
+        // GOOD - Use overloaded methods or nullable parameter
+        // public void process(String value) { }
+        // public void process() { }  // overload for no value
+        
+        
+        // -----------------------------------------
+        // NEGATIVE 4: Don't Use Optional for Collections
+        // -----------------------------------------
+        
+        // BAD - Optional of List
+        // Optional<List<String>> badList = Optional.of(Arrays.asList("a", "b"));
+        
+        // GOOD - Return empty collection instead
+        List<String> goodList = Collections.emptyList();
+        System.out.println("Empty list: " + goodList);
+        
+        
+        // -----------------------------------------
+        // NEGATIVE 5: orElse vs orElseGet Performance
+        // -----------------------------------------
+        
+        Optional<String> present = Optional.of("Value");
+        
+        // orElse - ALWAYS evaluates the default
+        String result1 = present.orElse(computeExpensiveDefault());
+        // computeExpensiveDefault() is called even though value exists!
+        
+        // orElseGet - evaluates ONLY if empty
+        String result2 = present.orElseGet(() -> computeExpensiveDefault());
+        // Lambda not called because value exists
+        
+        System.out.println("Result: " + result2);
+        
+        
+        // -----------------------------------------
+        // NEGATIVE 6: Don't Use Optional in Class Fields
+        // -----------------------------------------
+        
+        // BAD - Optional as field (not serializable, memory overhead)
+        // class BadClass {
+        //     private Optional<String> name;
+        // }
+        
+        // GOOD - Use null with proper null handling
+        // class GoodClass {
+        //     private String name;  // Can be null
+        //     public Optional<String> getName() {
+        //         return Optional.ofNullable(name);
+        //     }
+        // }
+    }
+    
+    // Helper methods
+    public static Optional<User> findUserById(String id) {
+        // Simulating database lookup
+        if ("123".equals(id)) {
+            return Optional.of(new User("John
+            
+            
+--- ai stopped ---
+
+Yes, I apologize for stopping abruptly. Let me continue from where I left off:
+
+--------------------------------------------------------------------
+            CONTINUING - OPTIONAL SCENARIOS (Helper Classes)
+--------------------------------------------------------------------
+
+    // Helper methods
+    public static Optional<User> findUserById(String id) {
+        // Simulating database lookup
+        if ("123".equals(id)) {
+            return Optional.of(new User("John", new Address("New York")));
+        }
+        return Optional.empty();
+    }
+    
+    public static String computeExpensiveDefault() {
+        System.out.println("Computing expensive default...");
+        return "Expensive Default Value";
+    }
+}
+
+// Helper classes for Optional examples
+class User {
+    private String name;
+    private Address address;
+    
+    public User(String name, Address address) {
+        this.name = name;
+        this.address = address;
+    }
+    
+    public String getName() { return name; }
+    public Address getAddress() { return address; }
+}
+
+class Address {
+    private String city;
+    
+    public Address(String city) {
+        this.city = city;
+    }
+    
+    public String getCity() { return city; }
+}
+
+OPTIONAL ISSUES AND SOLUTIONS TABLE:
++------------------------+--------------------------------+--------------------------------+
+| Scenario               | Problem                        | Solution                       |
++------------------------+--------------------------------+--------------------------------+
+| Using get() directly   | NoSuchElementException         | Use orElse/orElseGet/isPresent |
++------------------------+--------------------------------+--------------------------------+
+| Optional.of(null)      | NullPointerException           | Use Optional.ofNullable()      |
++------------------------+--------------------------------+--------------------------------+
+| Optional as parameter  | Poor API design                | Use overloaded methods         |
++------------------------+--------------------------------+--------------------------------+
+| Optional for List      | Unnecessary complexity         | Return empty collection        |
++------------------------+--------------------------------+--------------------------------+
+| orElse with expensive  | Always evaluates               | Use orElseGet with Supplier    |
+| computation            |                                |                                |
++------------------------+--------------------------------+--------------------------------+
+| Optional as field      | Not serializable, overhead     | Use null with getter returning |
+|                        |                                | Optional                       |
++------------------------+--------------------------------+--------------------------------+
+
+
+====================================================================
+====================================================================
+        SECTION 6: JAVA 8 FEATURES IN SELENIUM AUTOMATION
+====================================================================
+====================================================================
+
+This section shows practical usage of Java 8 features in real
+Selenium WebDriver automation scenarios.
+
+--------------------------------------------------------------------
+                    LAMBDA IN SELENIUM
+--------------------------------------------------------------------
+
+import org.openqa.selenium.*;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.support.ui.*;
+import java.time.Duration;
+import java.util.*;
+import java.util.stream.*;
+
+public class LambdaInSelenium {
+    
+    static WebDriver driver;
+    
+    public static void main(String[] args) {
+        
+        driver = new ChromeDriver();
+        driver.manage().window().maximize();
+        driver.get("https://example.com");
+        
+        // ============================================
+        // 1. EXPLICIT WAIT WITH LAMBDA
+        // ============================================
+        System.out.println("=== EXPLICIT WAIT WITH LAMBDA ===");
+        
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        
+        // OLD WAY - Anonymous inner class
+        WebElement element1 = wait.until(new ExpectedCondition<WebElement>() {
+            @Override
+            public WebElement apply(WebDriver driver) {
+                return driver.findElement(By.id("username"));
+            }
+        });
+        
+        // LAMBDA WAY - Clean and simple
+        WebElement element2 = wait.until(driver -> driver.findElement(By.id("username")));
+        
+        // Custom wait condition with lambda
+        WebElement visibleElement = wait.until(driver -> {
+            WebElement elem = driver.findElement(By.id("submitBtn"));
+            return elem.isDisplayed() ? elem : null;
+        });
+        
+        // Wait for element to have specific text
+        Boolean hasText = wait.until(driver -> 
+            driver.findElement(By.id("message")).getText().contains("Success")
+        );
+        
+        // Wait for element count
+        Boolean hasMultipleElements = wait.until(driver -> 
+            driver.findElements(By.className("item")).size() > 5
+        );
+        
+        
+        // ============================================
+        // 2. FLUENT WAIT WITH LAMBDA
+        // ============================================
+        System.out.println("\n=== FLUENT WAIT WITH LAMBDA ===");
+        
+        Wait<WebDriver> fluentWait = new FluentWait<>(driver)
+            .withTimeout(Duration.ofSeconds(30))
+            .pollingEvery(Duration.ofSeconds(2))
+            .ignoring(NoSuchElementException.class)
+            .ignoring(StaleElementReferenceException.class);
+        
+        // Using lambda for custom condition
+        WebElement fluentElement = fluentWait.until(driver -> {
+            WebElement elem = driver.findElement(By.id("dynamicElement"));
+            if (elem.isDisplayed() && elem.isEnabled()) {
+                return elem;
+            }
+            return null;
+        });
+        
+        
+        // ============================================
+        // 3. ITERATING WEB ELEMENTS WITH LAMBDA
+        // ============================================
+        System.out.println("\n=== ITERATING WEB ELEMENTS ===");
+        
+        List<WebElement> links = driver.findElements(By.tagName("a"));
+        
+        // OLD WAY
+        for (WebElement link : links) {
+            System.out.println(link.getText());
+        }
+        
+        // LAMBDA WAY
+        links.forEach(link -> System.out.println(link.getText()));
+        
+        // Method reference
+        links.forEach(link -> System.out.println(link.getAttribute("href")));
+        
+        // Click all checkboxes
+        List<WebElement> checkboxes = driver.findElements(By.cssSelector("input[type='checkbox']"));
+        checkboxes.forEach(WebElement::click);
+        
+        
+        // ============================================
+        // 4. FILTERING ELEMENTS WITH LAMBDA
+        // ============================================
+        System.out.println("\n=== FILTERING ELEMENTS ===");
+        
+        List<WebElement> allButtons = driver.findElements(By.tagName("button"));
+        
+        // Filter only enabled buttons
+        allButtons.stream()
+                  .filter(WebElement::isEnabled)
+                  .forEach(WebElement::click);
+        
+        // Filter by text content
+        allButtons.stream()
+                  .filter(btn -> btn.getText().equalsIgnoreCase("Submit"))
+                  .findFirst()
+                  .ifPresent(WebElement::click);
+        
+        // Filter visible elements only
+        List<WebElement> visibleButtons = allButtons.stream()
+                .filter(WebElement::isDisplayed)
+                .collect(Collectors.toList());
+        
+        
+        // ============================================
+        // 5. JAVASCRIPT EXECUTOR WITH LAMBDA
+        // ============================================
+        System.out.println("\n=== JAVASCRIPT EXECUTOR ===");
+        
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+        
+        // Execute script on multiple elements
+        List<WebElement> elements = driver.findElements(By.className("highlight"));
+        elements.forEach(elem -> 
+            js.executeScript("arguments[0].style.border='2px solid red'", elem)
+        );
+        
+        driver.quit();
+    }
+}
+
+--------------------------------------------------------------------
+                    STREAM API IN SELENIUM
+--------------------------------------------------------------------
+
+import org.openqa.selenium.*;
+import org.openqa.selenium.chrome.ChromeDriver;
+import java.util.*;
+import java.util.stream.*;
+
+public class StreamApiInSelenium {
+    
+    static WebDriver driver;
+    
+    public static void main(String[] args) {
+        
+        driver = new ChromeDriver();
+        driver.get("https://example-ecommerce.com");
+        
+        // ============================================
+        // 1. EXTRACT DATA FROM TABLE
+        // ============================================
+        System.out.println("=== EXTRACT TABLE DATA ===");
+        
+        // Get all rows from table
+        List<WebElement> rows = driver.findElements(By.cssSelector("table#products tbody tr"));
+        
+        // Extract product names
+        List<String> productNames = rows.stream()
+                .map(row -> row.findElement(By.cssSelector("td.product-name")))
+                .map(WebElement::getText)
+                .collect(Collectors.toList());
+        
+        System.out.println("Products: " + productNames);
+        
+        // Extract and filter prices
+        List<Double> highPrices = rows.stream()
+                .map(row -> row.findElement(By.cssSelector("td.price")).getText())
+                .map(price -> price.replace("$", "").replace(",", ""))
+                .map(Double::parseDouble)
+                .filter(price -> price > 100)
+                .sorted()
+                .collect(Collectors.toList());
+        
+        System.out.println("High prices: " + highPrices);
+        
+        
+        // ============================================
+        // 2. DROPDOWN HANDLING
+        // ============================================
+        System.out.println("\n=== DROPDOWN HANDLING ===");
+        
+        WebElement dropdown = driver.findElement(By.id("country"));
+        List<WebElement> options = dropdown.findElements(By.tagName("option"));
+        
+        // Get all option texts
+        List<String> optionTexts = options.stream()
+                .map(WebElement::getText)
+                .collect(Collectors.toList());
+        System.out.println("All options: " + optionTexts);
+        
+        // Find option containing specific text
+        options.stream()
+               .filter(opt -> opt.getText().contains("United"))
+               .findFirst()
+               .ifPresent(WebElement::click);
+        
+        // Get values of all selected options
+        List<String> selectedValues = options.stream()
+                .filter(WebElement::isSelected)
+                .map(opt -> opt.getAttribute("value"))
+                .collect(Collectors.toList());
+        
+        
+        // ============================================
+        // 3. LINK VALIDATION
+        // ============================================
+        System.out.println("\n=== LINK VALIDATION ===");
+        
+        List<WebElement> allLinks = driver.findElements(By.tagName("a"));
+        
+        // Get all href attributes (excluding null/empty)
+        List<String> hrefs = allLinks.stream()
+                .map(link -> link.getAttribute("href"))
+                .filter(Objects::nonNull)
+                .filter(href -> !href.isEmpty())
+                .filter(href -> href.startsWith("http"))
+                .distinct()
+                .collect(Collectors.toList());
+        
+        System.out.println("Found " + hrefs.size() + " unique links");
+        
+        // Count links by domain
+        Map<String, Long> linksByDomain = hrefs.stream()
+                .map(href -> {
+                    try {
+                        return new java.net.URL(href).getHost();
+                    } catch (Exception e) {
+                        return "invalid";
+                    }
+                })
+                .collect(Collectors.groupingBy(
+                    domain -> domain,
+                    Collectors.counting()
+                ));
+        
+        System.out.println("Links by domain: " + linksByDomain);
+        
+        
+        // ============================================
+        // 4. FORM VALIDATION
+        // ============================================
+        System.out.println("\n=== FORM VALIDATION ===");
+        
+        List<WebElement> inputFields = driver.findElements(By.tagName("input"));
+        
+        // Find all required fields that are empty
+        List<WebElement> emptyRequiredFields = inputFields.stream()
+                .filter(input -> input.getAttribute("required") != null)
+                .filter(input -> input.getAttribute("value").isEmpty())
+                .collect(Collectors.toList());
+        
+        System.out.println("Empty required fields: " + emptyRequiredFields.size());
+        
+        // Check if all required fields are filled
+        boolean allFilled = inputFields.stream()
+                .filter(input -> input.getAttribute("required") != null)
+                .allMatch(input -> !input.getAttribute("value").isEmpty());
+        
+        System.out.println("All required fields filled: " + allFilled);
+        
+        // Get field names that have validation errors
+        List<String> errorFields = inputFields.stream()
+                .filter(input -> input.getAttribute("class").contains("error"))
+                .map(input -> input.getAttribute("name"))
+                .collect(Collectors.toList());
+        
+        
+        // ============================================
+        // 5. CHECKBOX AND RADIO BUTTON HANDLING
+        // ============================================
+        System.out.println("\n=== CHECKBOX/RADIO HANDLING ===");
+        
+        List<WebElement> checkboxes = driver.findElements(
+            By.cssSelector("input[type='checkbox']")
+        );
+        
+        // Select all unchecked checkboxes
+        checkboxes.stream()
+                  .filter(cb -> !cb.isSelected())
+                  .forEach(WebElement::click);
+        
+        // Get values of all selected checkboxes
+        List<String> selectedValues2 = checkboxes.stream()
+                .filter(WebElement::isSelected)
+                .map(cb -> cb.getAttribute("value"))
+                .collect(Collectors.toList());
+        
+        // Count selected vs unselected
+        Map<Boolean, Long> selectionCount = checkboxes.stream()
+                .collect(Collectors.partitioningBy(
+                    WebElement::isSelected,
+                    Collectors.counting()
+                ));
+        
+        System.out.println("Selected: " + selectionCount.get(true));
+        System.out.println("Unselected: " + selectionCount.get(false));
+        
+        
+        // ============================================
+        // 6. SORTING AND VERIFICATION
+        // ============================================
+        System.out.println("\n=== SORTING VERIFICATION ===");
+        
+        // Get product names from list
+        List<WebElement> productElements = driver.findElements(By.cssSelector(".product-name"));
+        
+        List<String> displayedNames = productElements.stream()
+                .map(WebElement::getText)
+                .collect(Collectors.toList());
+        
+        // Check if already sorted
+        List<String> sortedNames = displayedNames.stream()
+                .sorted()
+                .collect(Collectors.toList());
+        
+        boolean isSorted = displayedNames.equals(sortedNames);
+        System.out.println("Is list sorted: " + isSorted);
+        
+        // Check descending sort
+        List<String> descendingNames = displayedNames.stream()
+                .sorted(Comparator.reverseOrder())
+                .collect(Collectors.toList());
+        
+        boolean isDescending = displayedNames.equals(descendingNames);
+        System.out.println("Is list descending: " + isDescending);
+        
+        
+        // ============================================
+        // 7. DATA-DRIVEN TESTING SUPPORT
+        // ============================================
+        System.out.println("\n=== DATA-DRIVEN SUPPORT ===");
+        
+        // Simulating test data
+        List<Map<String, String>> testData = Arrays.asList(
+            Map.of("username", "user1", "password", "pass1", "expected", "success"),
+            Map.of("username", "user2", "password", "pass2", "expected", "failure"),
+            Map.of("username", "user3", "password", "pass3", "expected", "success")
+        );
+        
+        // Filter only success scenarios
+        List<Map<String, String>> successCases = testData.stream()
+                .filter(data -> data.get("expected").equals("success"))
+                .collect(Collectors.toList());
+        
+        // Transform to test input format
+        List<Object[]> testNGData = testData.stream()
+                .map(data -> new Object[]{
+                    data.get("username"), 
+                    data.get("password"), 
+                    data.get("expected")
+                })
+                .collect(Collectors.toList());
+        
+        driver.quit();
+    }
+}
+
+--------------------------------------------------------------------
+                    OPTIONAL IN SELENIUM
+--------------------------------------------------------------------
+
+import org.openqa.selenium.*;
+import org.openqa.selenium.chrome.ChromeDriver;
+import java.util.*;
+
+public class OptionalInSelenium {
+    
+    static WebDriver driver;
+    
+    public static void main(String[] args) {
+        
+        driver = new ChromeDriver();
+        driver.get("https://example.com");
+        
+        // ============================================
+        // 1. SAFE ELEMENT FINDING
+        // ============================================
+        System.out.println("=== SAFE ELEMENT FINDING ===");
+        
+        // OLD WAY - Risky, may throw exception
+        // WebElement element = driver.findElement(By.id("mayNotExist"));
+        
+        // OPTIONAL WAY - Safe
+        Optional<WebElement> safeElement = findElementSafely(By.id("mayNotExist"));
+        
+        safeElement.ifPresent(elem -> {
+            elem.click();
+            System.out.println("Element clicked!");
+        });
+        
+        // With default action if not found
+        safeElement.ifPresentOrElse(
+            elem -> elem.sendKeys("Hello"),
+            () -> System.out.println("Element not found, skipping...")
+        );
+        
+        
+        // ============================================
+        // 2. SAFE TEXT EXTRACTION
+        // ============================================
+        System.out.println("\n=== SAFE TEXT EXTRACTION ===");
+        
+        String text = findElementSafely(By.id("message"))
+                .map(WebElement::getText)
+                .map(String::trim)
+                .filter(t -> !t.isEmpty())
+                .orElse("No message available");
+        
+        System.out.println("Message: " + text);
+        
+        
+        // ============================================
+        // 3. SAFE ATTRIBUTE EXTRACTION
+        // ============================================
+        System.out.println("\n=== SAFE ATTRIBUTE EXTRACTION ===");
+        
+        String href = findElementSafely(By.linkText("Click Here"))
+                .map(elem -> elem.getAttribute("href"))
+                .filter(Objects::nonNull)
+                .orElse("Link not found");
+        
+        System.out.println("Link URL: " + href);
+        
+        // Get value with validation
+        String inputValue = findElementSafely(By.id("email"))
+                .map(elem -> elem.getAttribute("value"))
+                .filter(val -> val != null && val.contains("@"))
+                .orElse("Invalid or no email");
+        
+        
+        // ============================================
+        // 4. CONDITIONAL OPERATIONS
+        // ============================================
+        System.out.println("\n=== CONDITIONAL OPERATIONS ===");
+        
+        // Click only if element exists and is enabled
+        findElementSafely(By.id("submitBtn"))
+                .filter(WebElement::isDisplayed)
+                .filter(WebElement::isEnabled)
+                .ifPresent(WebElement::click);
+        
+        // Enter text only if field exists and is empty
+        findElementSafely(By.id("username"))
+                .filter(WebElement::isDisplayed)
+                .filter(elem -> elem.getAttribute("value").isEmpty())
+                .ifPresent(elem -> elem.sendKeys("testuser"));
+        
+        
+        // ============================================
+        // 5. CHAINING ELEMENT OPERATIONS
+        // ============================================
+        System.out.println("\n=== CHAINING OPERATIONS ===");
+        
+        // Find parent, then child safely
+        Optional<String> nestedText = findElementSafely(By.id("container"))
+                .flatMap(parent -> findChildElementSafely(parent, By.className("content")))
+                .map(WebElement::getText);
+        
+        nestedText.ifPresent(t -> System.out.println("Nested text: " + t));
+        
+        
+        // ============================================
+        // 6. ERROR MESSAGE EXTRACTION
+        // ============================================
+        System.out.println("\n=== ERROR MESSAGE EXTRACTION ===");
+        
+        // Check for error message
+        Optional<String> errorMessage = findElementSafely(By.cssSelector(".error-message"))
+                .map(WebElement::getText)
+                .filter(msg -> !msg.isEmpty());
+        
+        if (errorMessage.isPresent()) {
+            System.out.println("Error found: " + errorMessage.get());
+            // Take screenshot, log error, etc.
+        } else {
+            System.out.println("No errors on page");
+        }
+        
+        
+        // ============================================
+        // 7. POPUP/MODAL HANDLING
+        // ============================================
+        System.out.println("\n=== POPUP HANDLING ===");
+        
+        // Handle optional popup
+        findElementSafely(By.id("popup-close-btn"))
+                .filter(WebElement::isDisplayed)
+                .ifPresent(btn -> {
+                    System.out.println("Popup detected, closing...");
+                    btn.click();
+                });
+        
+        // Handle optional alert
+        Optional<Alert> alert = getAlertSafely();
+        alert.ifPresent(a -> {
+            System.out.println("Alert text: " + a.getText());
+            a.accept();
+        });
+        
+        driver.quit();
+    }
+    
+    // Helper method - Find element safely
+    public static Optional<WebElement> findElementSafely(By locator) {
+        try {
+            WebElement element = driver.findElement(locator);
+            return Optional.of(element);
+        } catch (NoSuchElementException e) {
+            return Optional.empty();
+        }
+    }
+    
+    // Helper method - Find child element safely
+    public static Optional<WebElement> findChildElementSafely(WebElement parent, By locator) {
+        try {
+            WebElement element = parent.findElement(locator);
+            return Optional.of(element);
+        } catch (NoSuchElementException e) {
+            return Optional.empty();
+        }
+    }
+    
+    // Helper method - Get alert safely
+    public static Optional<Alert> getAlertSafely() {
+        try {
+            Alert alert = driver.switchTo().alert();
+            return Optional.of(alert);
+        } catch (NoAlertPresentException e) {
+            return Optional.empty();
+        }
+    }
+}
+
+--------------------------------------------------------------------
+                    FUNCTIONAL INTERFACES IN SELENIUM
+--------------------------------------------------------------------
+
+import org.openqa.selenium.*;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.support.ui.*;
+import java.time.Duration;
+import java.util.*;
+import java.util.function.*;
+
+public class FunctionalInterfacesInSelenium {
+    
+    static WebDriver driver;
+    
+    public static void main(String[] args) {
+        
+        driver = new ChromeDriver();
+        driver.get("https://example.com");
+        
+        // ============================================
+        // 1. PREDICATE - Element Conditions
+        // ============================================
+        System.out.println("=== PREDICATE FOR CONDITIONS ===");
+        
+        // Reusable predicates for element states
+        Predicate<WebElement> isVisible = WebElement::isDisplayed;
+        Predicate<WebElement> isEnabled = WebElement::isEnabled;
+        Predicate<WebElement> isSelected = WebElement::isSelected;
+        Predicate<WebElement> isEmpty = elem -> elem.getText().isEmpty();
+        Predicate<WebElement> hasText = elem -> !elem.getText().isEmpty();
+        
+        // Combined predicates
+        Predicate<WebElement> isClickable = isVisible.and(isEnabled);
+        Predicate<WebElement> isVisibleWithText = isVisible.and(hasText);
+        
+        // Usage
+        WebElement button = driver.findElement(By.id("submitBtn"));
+        
+        if (isClickable.test(button)) {
+            button.click();
+            System.out.println("Button clicked!");
+        }
+        
+        // Filter elements using predicate
+        List<WebElement> allButtons = driver.findElements(By.tagName("button"));
+        
+        long clickableCount = allButtons.stream()
+                .filter(isClickable)
+                .count();
+        System.out.println("Clickable buttons: " + clickableCount);
+        
+        
+        // ============================================
+        // 2. FUNCTION - Element Transformations
+        // ============================================
+        System.out.println("\n=== FUNCTION FOR TRANSFORMATIONS ===");
+        
+        // Functions to extract data from elements
+        Function<WebElement, String> getText = WebElement::getText;
+        Function<WebElement, String> getValue = elem -> elem.getAttribute("value");
+        Function<WebElement, String> getHref = elem -> elem.getAttribute("href");
+        Function<WebElement, String> getClass = elem -> elem.getAttribute("class");
+        
+        // Chained functions
+        Function<WebElement, String> getCleanText = getText.andThen(String::trim).andThen(String::toLowerCase);
+        
+        // Usage
+        List<WebElement> links = driver.findElements(By.tagName("a"));
+        
+        List<String> linkTexts = links.stream()
+                .map(getCleanText)
+                .filter(text -> !text.isEmpty())
+                .collect(java.util.stream.Collectors.toList());
+        
+        System.out.println("Link texts: " + linkTexts);
+        
+        
+        // ============================================
+        // 3. CONSUMER - Element Actions
+        // ============================================
+        System.out.println("\n=== CONSUMER FOR ACTIONS ===");
+        
+        // Reusable actions
+        Consumer<WebElement> click = WebElement::click;
+        Consumer<WebElement> clear = WebElement::clear;
+        Consumer<WebElement> highlight = elem -> 
+            ((JavascriptExecutor) driver).executeScript(
+                "arguments[0].style.border='3px solid red'", elem
+            );
+        Consumer<WebElement> scrollTo = elem -> 
+            ((JavascriptExecutor) driver).executeScript(
+                "arguments[0].scrollIntoView(true);", elem
+            );
+        
+        // Chained actions
+        Consumer<WebElement> clearAndHighlight = clear.andThen(highlight);
+        Consumer<WebElement> scrollAndClick = scrollTo.andThen(click);
+        
+        // Usage
+        WebElement element = driver.findElement(By.id("inputField"));
+        clearAndHighlight.accept(element);
+        
+        // Apply action to multiple elements
+        List<WebElement> fields = driver.findElements(By.cssSelector("input[type='text']"));
+        fields.forEach(highlight);
+        
+        // Consumer with input
+        Consumer<String> typeInSearchBox = text -> {
+            WebElement searchBox = driver.findElement(By.id("search"));
+            searchBox.clear();
+            searchBox.sendKeys(text);
+        };
+        
+        typeInSearchBox.accept("Selenium WebDriver");
+        
+        
+        // ============================================
+        // 4. SUPPLIER - Element/Data Providers
+        // ============================================
+        System.out.println("\n=== SUPPLIER FOR PROVIDERS ===");
+        
+        // Suppliers for dynamic elements
+        Supplier<WebElement> getSearchBox = () -> driver.findElement(By.id("search"));
+        Supplier<WebElement> getSubmitButton = () -> driver.findElement(By.id("submit"));
+        Supplier<List<WebElement>> getAllLinks = () -> driver.findElements(By.tagName("a"));
+        Supplier<String> getCurrentUrl = driver::getCurrentUrl;
+        Supplier<String> getPageTitle = driver::getTitle;
+        
+        // Usage
+        getSearchBox.get().sendKeys("Test");
+        System.out.println("Current URL: " + getCurrentUrl.get());
+        System.out.println("Page Title: " + getPageTitle.get());
+        
+        // Lazy evaluation - element found only when needed
+        Supplier<WebElement> lazyElement = () -> {
+            System.out.println("Finding element now...");
+            return driver.findElement(By.id("dynamicElement"));
+        };
+        
+        // Element not found yet
+        System.out.println("Element supplier created");
+        // Element found now
+        // WebElement elem = lazyElement.get();
+        
+        
+        // ============================================
+        // 5. BIPREDICATE - Comparison Conditions
+        // ============================================
+        System.out.println("\n=== BIPREDICATE FOR COMPARISONS ===");
+        
+        // Compare two elements
+        BiPredicate<WebElement, WebElement> sameText = 
+            (e1, e2) -> e1.getText().equals(e2.getText());
+        
+        BiPredicate<WebElement, String> hasExactText = 
+            (elem, text) -> elem.getText().equals(text);
+        
+        BiPredicate<WebElement, String> containsText = 
+            (elem, text) -> elem.getText().contains(text);
+        
+        BiPredicate<WebElement, String> hasAttribute = 
+            (elem, attr) -> elem.getAttribute(attr) != null;
+        
+        // Usage
+        WebElement header = driver.findElement(By.tagName("h1"));
+        
+        if (hasExactText.test(header, "Welcome")) {
+            System.out.println("Header is correct!");
+        }
+        
+        if (containsText.test(header, "Welcome")) {
+            System.out.println("Header contains expected text!");
+        }
+        
+        
+        // ============================================
+        // 6. BIFUNCTION - Element Operations with Result
+        // ============================================
+        System.out.println("\n=== BIFUNCTION FOR OPERATIONS ===");
+        
+        // Operations that take element and return result
+        BiFunction<WebElement, String, Boolean> setAttribute = (elem, value) -> {
+            try {
+                ((JavascriptExecutor) driver).executeScript(
+                    "arguments[0].setAttribute('data-test', arguments[1])", elem, value
+                );
+                return true;
+            } catch (Exception e) {
+                return false;
+            }
+        };
+        
+        BiFunction<WebElement, String, String> getAttributeOrDefault = 
+            (elem, defaultVal) -> {
+                String value = elem.getAttribute("value");
+                return value != null ? value : defaultVal;
+            };
+        
+        // Usage
+        WebElement input = driver.findElement(By.id("email"));
+        String value = getAttributeOrDefault.apply(input, "no-value");
+        System.out.println("Input value: " + value);
+        
+        
+        // ============================================
+        // 7. CUSTOM FUNCTIONAL INTERFACE FOR SELENIUM
+        // ============================================
+        System.out.println("\n=== CUSTOM FUNCTIONAL INTERFACES ===");
+        
+        // See below for custom interface definitions
+        
+        driver.quit();
+    }
+}
+
+// Custom functional interfaces for Selenium
+@FunctionalInterface
+interface ElementAction {
+    void perform(WebElement element);
+    
+    default ElementAction andThen(ElementAction after) {
+        return element -> {
+            this.perform(element);
+            after.perform(element);
+        };
+    }
+}
+
+@FunctionalInterface
+interface ElementCondition {
+    boolean check(WebElement element);
+    
+    default ElementCondition and(ElementCondition other) {
+        return element -> this.check(element) && other.check(element);
+    }
+    
+    default ElementCondition or(ElementCondition other) {
+        return element -> this.check(element) || other.check(element);
+    }
+}
+
+@FunctionalInterface
+interface PageAction<T> {
+    T execute(WebDriver driver);
+}
+
+// Usage of custom interfaces
+class CustomInterfaceUsage {
+    
+    static WebDriver driver;
+    
+    public static void demonstrateCustomInterfaces() {
+        
+        // Using ElementAction
+        ElementAction clear = WebElement::clear;
+        ElementAction type = elem -> elem.sendKeys("test@email.com");
+        ElementAction submit = elem -> elem.submit();
+        
+        ElementAction fillAndSubmit = clear.andThen(type).andThen(submit);
+        
+        WebElement emailField = driver.findElement(By.id("email"));
+        fillAndSubmit.perform(emailField);
+        
+        // Using ElementCondition
+        ElementCondition isDisplayed = WebElement::isDisplayed;
+        ElementCondition isEnabled = WebElement::isEnabled;
+        ElementCondition hasNoError = elem -> !elem.getAttribute("class").contains("error");
+        
+        ElementCondition isReady = isDisplayed.and(isEnabled).and(hasNoError);
+        
+        WebElement button = driver.findElement(By.id("submit"));
+        if (isReady.check(button)) {
+            button.click();
+        }
+        
+        // Using PageAction
+        PageAction<String> getTitle = WebDriver::getTitle;
+        PageAction<List<WebElement>> getAllButtons = d -> d.findElements(By.tagName("button"));
+        
+        String title = getTitle.execute(driver);
+        List<WebElement> buttons = getAllButtons.execute(driver);
+    }
+}
+
+
+====================================================================
+====================================================================
+        SECTION 7: JAVA 8 FEATURES IN REST ASSURED AUTOMATION
+====================================================================
+====================================================================
+
+This section shows practical usage of Java 8 features in REST Assured
+API automation scenarios.
+
+--------------------------------------------------------------------
+                    LAMBDA IN REST ASSURED
+--------------------------------------------------------------------
+
+import io.restassured.RestAssured;
+import io.restassured.response.Response;
+import io.restassured.specification.RequestSpecification;
+import static io.restassured.RestAssured.*;
+import static org.hamcrest.Matchers.*;
+import java.util.*;
+import java.util.function.*;
+
+public class LambdaInRestAssured {
+    
+    public static void main(String[] args) {
+        
+        RestAssured.baseURI = "https://api.example.com";
+        
+        // ============================================
+        // 1. RESPONSE VALIDATION WITH LAMBDA
+        // ============================================
+        System.out.println("=== RESPONSE VALIDATION ===");
+        
+        Response response = given()
+            .header("Content-Type", "application/json")
+        .when()
+            .get("/users")
+        .then()
+            .statusCode(200)
+            .extract().response();
+        
+        // Validate using lambda
+        List<Map<String, Object>> users = response.jsonPath().getList("$");
+        
+        // Check if any user is admin
+        boolean hasAdmin = users.stream()
+                .anyMatch(user -> "admin".equals(user.get("role")));
+        System.out.println("Has admin: " + hasAdmin);
+        
+        // Check if all users have email
+        boolean allHaveEmail = users.stream()
+                .allMatch(user -> user.get("email") != null);
+        System.out.println("All have email: " + allHaveEmail);
+        
+        
+        // ============================================
+        // 2. DYNAMIC REQUEST BUILDING
+        // ============================================
+        System.out.println("\n=== DYNAMIC REQUEST BUILDING ===");
+        
+        // Using Consumer to configure request
+        Consumer<RequestSpecification> addAuthHeader = spec -> 
+            spec.header("Authorization", "Bearer " + getToken());
+        
+        Consumer<RequestSpecification> addContentType = spec -> 
+            spec.header("Content-Type", "application/json");
+        
+        Consumer<RequestSpecification> addCommonHeaders = 
+            addAuthHeader.andThen(addContentType);
+        
+        // Usage
+        RequestSpecification request = given();
+        addCommonHeaders.accept(request);
+        
+        Response resp = request.when().get("/protected-resource");
+        
+        
+        // ============================================
+        // 3. RESPONSE EXTRACTION WITH LAMBDA
+        // ============================================
+        System.out.println("\n=== RESPONSE EXTRACTION ===");
+        
+        // Extract specific fields using lambda
+        Function<Response, String> extractMessage = r -> r.jsonPath().getString("message");
+        Function<Response, Integer> extractStatusCode = Response::getStatusCode;
+        Function<Response, List<String>> extractNames = r -> r.jsonPath().getList("data.name");
+        
+        Response apiResponse = given().get("/api/data");
+        
+        String message = extractMessage.apply(apiResponse);
+        Integer status = extractStatusCode.apply(apiResponse);
+        List<String> names = extractNames.apply(apiResponse);
+        
+        System.out.println("Message: " + message);
+        System.out.println("Status: " + status);
+        System.out.println("Names: " + names);
+        
+        
+        // ============================================
+        // 4. RETRY LOGIC WITH LAMBDA
+        // ============================================
+        System.out.println("\n=== RETRY LOGIC ===");
+        
+        Supplier<Response> apiCall = () -> given().get("/flaky-endpoint");
+        
+        Predicate<Response> isSuccess = r -> r.getStatusCode() == 200;
+        
+        Response finalResponse = retryUntil(apiCall, isSuccess, 3);
+        System.out.println("Final status: " + finalResponse.getStatusCode());
+    }
+    
+    // Helper method for retry
+    public static Response retryUntil(Supplier<Response> call, Predicate<Response> condition, int maxRetries) {
+        Response response = null;
+        for (int i = 0; i < maxRetries; i++) {
+            response = call.get();
+            if (condition.test(response)) {
+                return response;
+            }
+            System.out.println("Retry " + (i + 1) + " failed, trying again...");
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }
+        return response;
+    }
+    
+    public static String getToken() {
+        return "dummy-token-12345";
+    }
+}
+
+--------------------------------------------------------------------
+                    STREAM API IN REST ASSURED
+--------------------------------------------------------------------
+
+import io.restassured.RestAssured;
+import io.restassured.response.Response;
+import static io.restassured.RestAssured.*;
+import java.util.*;
+import java.util.stream.*;
+
+public class StreamApiInRestAssured {
+    
+    public static void main(String[] args) {
+        
+        RestAssured.baseURI = "https://jsonplaceholder.typicode.com";
+        
+        // ============================================
+        // 1. FILTERING API RESPONSE DATA
+        // ============================================
+        System.out.println("=== FILTERING RESPONSE DATA ===");
+        
+        Response response = given().get("/users");
+        List<Map<String, Object>> users = response.jsonPath().getList("$");
+        
+        // Filter users from specific company
+        List<String> companyUsers = users.stream()
+                .filter(user -> {
+                    Map<String, Object> company = (Map<String, Object>) user.get("company");
+                    return company != null && company.get("name").toString().contains("LLC");
+                })
+                .map(user -> user.get("name").toString())
+                .collect(Collectors.toList());
+        
+        System.out.println("Users from LLC companies: " + companyUsers);
+        
+        // Filter by city
+        List<Map<String, Object>> cityUsers = users.stream()
+                .filter(user -> {
+                    Map<String, Object> address = (Map<String, Object>) user.get("address");
+                    return "Gwenborough".equals(address.get("city"));
+                })
+                .collect(Collectors.toList());
+        
+        System.out.println("Users from Gwenborough: " + cityUsers.size());
+        
+        
+        // ============================================
+        // 2. TRANSFORMING API DATA
+        // ============================================
+        System.out.println("\n=== TRANSFORMING DATA ===");
+        
+        // Extract only required fields
+        List<Map<String, String>> simplifiedUsers = users.stream()
+                .map(user -> {
+                    Map<String, String> simple = new HashMap<>();
+                    simple.put("name", user.get("name").toString());
+                    simple.put("email", user.get("email").toString());
+                    simple.put("phone", user.get("phone").toString());
+                    return simple;
+                })
+                .collect(Collectors.toList());
+        
+        simplifiedUsers.forEach(System.out::println);
+        
+        // Create email to name mapping
+        Map<String, String> emailToName = users.stream()
+                .collect(Collectors.toMap(
+                    user -> user.get("email").toString(),
+                    user -> user.get("name").toString()
+                ));
+        
+        System.out.println("Email to Name map: " + emailToName);
+        
+        
+        // ============================================
+        // 3. AGGREGATING API DATA
+        // ============================================
+        System.out.println("\n=== AGGREGATING DATA ===");
+        
+        Response postsResponse = given().get("/posts");
+        List<Map<String, Object>> posts = postsResponse.jsonPath().getList("$");
+        
+        // Count posts per user
+        Map<Integer, Long> postsPerUser = posts.stream()
+                .collect(Collectors.groupingBy(
+                    post -> (Integer) post.get("userId"),
+                    Collectors.counting()
+                ));
+        
+        System.out.println("Posts per user: " + postsPerUser);
+        
+        // Get average title length
+        double avgTitleLength = posts.stream()
+                .map(post -> post.get("title").toString())
+                .mapToInt(String::length)
+                .average()
+                .orElse(0);
+        
+        System.out.println("Average title length: " + avgTitleLength);
+        
+        // Group posts by user and get titles
+        Map<Integer, List<String>> titlesByUser = posts.stream()
+                .collect(Collectors.groupingBy(
+                    post -> (Integer) post.get("userId"),
+                    Collectors.mapping(
+                        post -> post.get("title").toString(),
+                        Collectors.toList()
+                    )
+                ));
+        
+        
+        // ============================================
+        // 4. VALIDATING ARRAY RESPONSES
+        // ============================================
+        System.out.println("\n=== VALIDATING ARRAYS ===");
+        
+        Response commentsResponse = given().get("/comments");
+        List<Map<String, Object>> comments = commentsResponse.jsonPath().getList("$");
+        
+        // Validate all comments have valid email format
+        boolean allValidEmails = comments.stream()
+                .map(comment -> comment.get("email").toString())
+                .allMatch(email -> email.contains("@") && email.contains("."));
+        
+        System.out.println("All emails valid: " + allValidEmails);
+        
+        // Find comments with specific word in body
+        List<Map<String, Object>> matchingComments = comments.stream()
+                .filter(comment -> comment.get("body").toString().toLowerCase().contains("error"))
+                .limit(5)
+                .collect(Collectors.toList());
+        
+        System.out.println("Comments with 'error': " + matchingComments.size());
+        
+        // Verify no duplicate IDs
+        long uniqueIds = comments.stream()
+                .map(comment -> comment.get("id"))
+                .distinct()
+                .count();
+        
+        boolean noDuplicates = uniqueIds == comments.size();
+        System.out.println("No duplicate IDs: " + noDuplicates);
+        
+        
+        // ============================================
+        // 5. PARALLEL API CALLS PROCESSING
+        // ============================================
+        System.out.println("\n=== PARALLEL PROCESSING ===");
+        
+        // Get user IDs
+        List<Integer> userIds = users.stream()
+                .map(user -> (Integer) user.get("id"))
+                .collect(Collectors.toList());
+        
+        // Fetch posts for each user in parallel
+        List<Response> userPosts = userIds.parallelStream()
+                .map(userId -> given().get("/posts?userId=" + userId))
+                .collect(Collectors.toList());
+        
+        // Count total posts across all users
+        long totalPosts = userPosts.stream()
+                .mapToLong(r -> r.jsonPath().getList("$").size())
+                .sum();
+        
+        System.out.println("Total posts: " + totalPosts);
+        
+        
+        // ============================================
+        // 6. SORTING API DATA
+        // ============================================
+        System.out.println("\n=== SORTING DATA ===");
+        
+        // Sort users by name
+        List<String> sortedNames = users.stream()
+                .map(user -> user.get("name").toString())
+                .sorted()
+                .collect(Collectors.toList());
+        
+        System.out.println("Sorted names: " + sortedNames);
+        
+        // Sort posts by title length descending
+        List<String> longTitles = posts.stream()
+                .map(post -> post.get("title").toString())
+                .sorted((t1, t2) -> t2.length() - t1.length())
+                .limit(5)
+                .collect(Collectors.toList());
+        
+        System.out.println("Longest titles: " + longTitles);
+        
+        
+        // ============================================
+        // 7. STATISTICAL ANALYSIS
+        // ============================================
+        System.out.println("\n=== STATISTICAL ANALYSIS ===");
+        
+        IntSummaryStatistics titleStats = posts.stream()
+                .map(post -> post.get("title").toString())
+                .mapToInt(String::length)
+                .summaryStatistics();
+        
+        System.out.println("Title Length Statistics:");
+        System.out.println("  Count: " + titleStats.getCount());
+        System.out.println("  Min: " + titleStats.getMin());
+        System.out.println("  Max: " + titleStats.getMax());
+        System.out.println("  Average: " + titleStats.getAverage());
+        System.out.println("  Sum: " + titleStats.getSum());
+    }
+}
+
+--------------------------------------------------------------------
+                    OPTIONAL IN REST ASSURED
+--------------------------------------------------------------------
+
+import io.restassured.RestAssured;
+import io.restassured.response.Response;
+import io.restassured.path.json.JsonPath;
+import static io.restassured.RestAssured.*;
+import java.util.*;
+
+public class OptionalInRestAssured {
+    
+    public static void main(String[] args) {
+        
+        RestAssured.baseURI = "https://api.example.com";
+        
+        // ============================================
+        // 1. SAFE JSON PATH EXTRACTION
+        // ============================================
+        System.out.println("=== SAFE JSON PATH EXTRACTION ===");
+        
+        Response response = given().get("/user/1");
+        JsonPath jsonPath = response.jsonPath();
+        
+        // OLD WAY - May return null
+        // String address = jsonPath.getString("address.street"); // Might be null
+        
+        // OPTIONAL WAY - Safe
+        String street = Optional.ofNullable(jsonPath.getString("address.street"))
+                .orElse("Address not available");
+        System.out.println("Street: " + street);
+        
+        // Nested extraction with Optional
+        String city = Optional.ofNullable(jsonPath.getMap("address"))
+                .map(addr -> (String) addr.get("city"))
+                .orElse("City not found");
+        System.out.println("City: " + city);
+        
+        
+        // ============================================
+        // 2. SAFE LIST EXTRACTION
+        // ============================================
+        System.out.println("\n=== SAFE LIST EXTRACTION ===");
+        
+        // Get list safely
+        List<String> tags = Optional.ofNullable(jsonPath.getList("tags", String.class))
+                .orElse(Collections.emptyList());
+        System.out.println("Tags: " + tags);
+        
+        // Get first item from list safely
+        String firstTag = Optional.ofNullable(jsonPath.getList("tags", String.class))
+                .filter(list -> !list.isEmpty())
+                .map(list -> list.get(0))
+                .orElse("No tags");
+        System.out.println("First tag: " + firstTag);
+        
+        
+        // ============================================
+        // 3. CONDITIONAL PROCESSING
+        // ============================================
+        System.out.println("\n=== CONDITIONAL PROCESSING ===");
+        
+        // Process data only if present
+        Optional.ofNullable(jsonPath.getString("email"))
+                .filter(email -> email.contains("@"))
+                .ifPresent(email -> System.out.println("Valid email: " + email));
+        
+        // Chain multiple extractions
+        String formattedName = Optional.ofNullable(jsonPath.getString("firstName"))
+                .flatMap(first -> Optional.ofNullable(jsonPath.getString("lastName"))
+                        .map(last -> first + " " + last))
+                .orElse("Name not available");
+        System.out.println("Full name: " + formattedName);
+        
+        
+        // ============================================
+        // 4. ERROR HANDLING
+        // ============================================
+        System.out.println("\n=== ERROR HANDLING ===");
+        
+        // Extract error message if present
+        Optional<String> errorMessage = Optional.ofNullable(jsonPath.getString("error.message"));
+        
+        errorMessage.ifPresentOrElse(
+            error -> System.out.println("Error occurred: " + error),
+            () -> System.out.println("No errors in response")
+        );
+        
+        // Get error code with default
+        int errorCode = Optional.ofNullable(jsonPath.getInt("error.code"))
+                .orElse(0);
+        System.out.println("Error code: " + errorCode);
+        
+        
+        // ============================================
+        // 5. API RESPONSE WRAPPER WITH OPTIONAL
+        // ============================================
+        System.out.println("\n=== API RESPONSE WRAPPER ===");
+        
+        // See ApiResponse class below
+        ApiResponse apiResponse = new ApiResponse(response);
+        
+        apiResponse.getData("user.name")
+                   .ifPresent(name -> System.out.println("User name: " + name));
+        
+        String userName = apiResponse.getDataOrDefault("user.name", "Guest");
+        System.out.println("User: " + userName);
+        
+        List<String> roles = apiResponse.getListOrEmpty("user.roles");
+        System.out.println("Roles: " + roles);
+    }
+}
+
+// Utility class for safe API response handling
+class ApiResponse {
+    private final Response response;
+    private final JsonPath jsonPath;
+    
+    public ApiResponse(Response response) {
+        this.response = response;
+        this.jsonPath = response.jsonPath();
+    }
+    
+    public Optional<String> getData(String path) {
+        return Optional.ofNullable(jsonPath.getString(path));
+    }
+    
+    public String getDataOrDefault(String path, String defaultValue) {
+        return getData(path).orElse(defaultValue);
+    }
+    
+    public <T> Optional<T> getObject(String path, Class<T> type) {
+        try {
+            return Optional.ofNullable(jsonPath.getObject(path, type));
+        } catch (Exception e) {
+            return Optional.empty();
+        }
+    }
+    
+    public <T> List<T> getListOrEmpty(String path) {
+        try {
+            List<T> list = jsonPath.getList(path);
+            return list != null ? list : Collections.emptyList();
+        } catch (Exception e) {
+            return Collections.emptyList();
+        }
+    }
+    
+    public Optional<String> getErrorMessage() {
+        return Optional.ofNullable(jsonPath.getString("error.message"));
+    }
+    
+    public boolean isSuccess() {
+        return response.getStatusCode() >= 200 && response.getStatusCode() < 300;
+    }
+}
+
+--------------------------------------------------------------------
+                    FUNCTIONAL INTERFACES IN REST ASSURED
+--------------------------------------------------------------------
+
+import io.restassured.RestAssured;
+import io.restassured.response.Response;
+import io.restassured.specification.RequestSpecification;
+import static io.restassured.RestAssured.*;
+import java.util.*;
+import java.util.function.*;
+
+public class FunctionalInterfacesInRestAssured {
+    
+    public static void main(String[] args) {
+        
+        RestAssured.baseURI = "https://api.example.com";
+        
+        // ============================================
+        // 1. PREDICATE - Response Validation
+        // ============================================
+        System.out.println("=== PREDICATE FOR VALIDATION ===");
+        
+        // Reusable validation predicates
+        Predicate<Response> isSuccess = r -> r.getStatusCode() >= 200 && r.getStatusCode() < 300;
+        Predicate<Response> isClientError = r -> r.getStatusCode() >= 400 && r.getStatusCode() < 500;
+        Predicate<Response> isServerError = r -> r.getStatusCode() >= 500;
+        Predicate<Response> hasBody = r -> r.getBody().asString().length() > 0;
+        Predicate<Response> isJson = r -> r.getContentType().contains("application/json");
+        
+        // Combined predicates
+        Predicate<Response> isValidJsonResponse = isSuccess.and(hasBody).and(isJson);
+        
+        Response response = given().get("/api/data");
+        
+        if (isValidJsonResponse.test(response)) {
+            System.out.println("Valid JSON response received");
+        } else if (isClientError.test(response)) {
+            System.out.println("Client error occurred");
+        } else if (isServerError.test(response)) {
+            System.out.println("Server error occurred");
+        }
+        
+        
+        // ============================================
+        // 2. FUNCTION - Data Extraction
+        // ============================================
+        System.out.println("\n=== FUNCTION FOR EXTRACTION ===");
+        
+        // Reusable extractors
+        Function<Response, String> extractMessage = r -> r.jsonPath().getString("message");
+        Function<Response, Integer> extractStatus = Response::getStatusCode;
+        Function<Response, Map<String, Object>> extractData = r -> r.jsonPath().getMap("data");
+        Function<Response, List<String>> extractErrors = r -> r.jsonPath().getList("errors");
+        
+        // Chained extractors
+        Function<Response, String> extractUpperMessage = extractMessage.andThen(String::toUpperCase);
+        
+        String message = extractUpperMessage.apply(response);
+        System.out.println("Message: " + message);
+        
+        
+        // ============================================
+        // 3. CONSUMER - Request Configuration
+        // ============================================
+        System.out.println("\n=== CONSUMER FOR CONFIGURATION ===");
+        
+        // Reusable request configurators
+        Consumer<RequestSpecification> withAuth = spec -> 
+            spec.header("Authorization", "Bearer token123");
+        
+        Consumer<RequestSpecification> withJsonContent = spec -> 
+            spec.contentType("application/json");
+        
+        Consumer<RequestSpecification> withLogging = spec -> 
+            spec.log().all();
+        
+        Consumer<RequestSpecification> withCommonHeaders = spec -> {
+            spec.header("X-Request-ID", UUID.randomUUID().toString());
+            spec.header("X-Client-Version", "1.0.0");
+        };
+        
+        // Combined configurators
+        Consumer<RequestSpecification> fullConfig = 
+            withAuth.andThen(withJsonContent).andThen(withCommonHeaders);
+        
+        // Usage
+        RequestSpecification request = given();
+        fullConfig.accept(request);
+        Response resp = request.get("/protected-endpoint");
+        
+        
+        // ============================================
+        // 4. SUPPLIER - Dynamic Data Generation
+        // ============================================
+        System.out.println("\n=== SUPPLIER FOR DATA GENERATION ===");
+        
+        // Data suppliers
+        Supplier<String> uniqueEmail = () -> "user" + System.currentTimeMillis() + "@test.com";
+        Supplier<String> randomUsername = () -> "user_" + UUID.randomUUID().toString().substring(0, 8);
+        Supplier<Map<String, Object>> testUserData = () -> {
+            Map<String, Object> user = new HashMap<>();
+            user.put("email", uniqueEmail.get());
+            user.put("username", randomUsername.get());
+            user.put("password", "[REDACTED:PASSWORD]");
+            return user;
+        };
+        
+        // Usage
+        Response createResponse = given()
+            .contentType("application/json")
+            .body(testUserData.get())
+        .when()
+            .post("/users");
+        
+        System.out.println("Created user with status: " + createResponse.getStatusCode());
+        
+        
+        // ============================================
+        // 5. BIFUNCTION - Response Processing
+        // ============================================
+        System.out.println("\n=== BIFUNCTION FOR PROCESSING ===");
+        
+        // Response processors with configuration
+        BiFunction<Response, String, String> extractField = 
+            (r, field) -> r.jsonPath().getString(field);
+        
+        BiFunction<Response, String, List<Object>> extractList = 
+            (r, path) -> r.jsonPath().getList(path);
+        
+        BiFunction<Response, Integer, Boolean> hasStatusCode = 
+            (r, code) -> r.getStatusCode() == code;
+        
+        // Usage
+        String name = extractField.apply(response, "data.name");
+        List<Object> items = extractList.apply(response, "data.items");
+        boolean isOk = hasStatusCode.apply(response, 200);
+        
+        System.out.println("Name: " + name);
+        System.out.println("Items count: " + items.size());
+        System.out.println("Is OK: " + isOk);
+        
+        
+        // ============================================
+        // 6. CUSTOM API TEST INTERFACES
+        // ============================================
+        System.out.println("\n=== CUSTOM INTERFACES ===");
+        
+        // See custom interfaces below
+    }
+}
+
+// Custom functional interfaces for REST Assured
+@FunctionalInterface
+interface ApiValidator {
+    boolean validate(Response response);
+    
+    default ApiValidator and(ApiValidator other) {
+        return response -> this.validate(response) && other.validate(response);
+    }
+    
+    default ApiValidator or(ApiValidator other) {
+        return response -> this.validate(response) || other.validate(response);
+    }
+}
+
+@FunctionalInterface
+interface RequestBuilder {
+    RequestSpecification build(RequestSpecification spec);
+    
+    default RequestBuilder andThen(RequestBuilder after) {
+        return spec -> after.build(this.build(spec));
+    }
+}
+
+@FunctionalInterface
+interface ResponseExtractor<T> {
+    T extract(Response response);
+}
+
+// Usage of custom interfaces
+class CustomApiInterfaces {
+    
+    public static void demonstrateCustomInterfaces() {
+        
+        // ApiValidator usage
+        ApiValidator statusOk = r -> r.getStatusCode() == 200;
+        ApiValidator hasData = r -> r.jsonPath().get("data") != null;
+        ApiValidator noErrors = r -> r.jsonPath().getList("errors") == null 
+                                   || r.jsonPath().getList("errors").isEmpty();
+        
+        ApiValidator fullValidation = statusOk.and(hasData).and(noErrors);
+        
+        Response response = given().get("/api/test");
+        
+        if (fullValidation.validate(response)) {
+            System.out.println("Response is valid!");
+        }
+        
+        // RequestBuilder usage
+        RequestBuilder withAuth = spec -> spec.header("Authorization", "Bearer token");
+        RequestBuilder withJson = spec -> spec.contentType("application/json");
+        RequestBuilder withTimeout = spec -> spec.config(
+            io.restassured.config.RestAssuredConfig.config()
+                .httpClient(io.restassured.config.HttpClientConfig.httpClientConfig()
+                    .setParam("http.connection.timeout", 5000))
+        );
+        
+        RequestBuilder fullBuilder = withAuth.andThen(withJson);
+        
+        Response resp = fullBuilder.build(given()).get("/api/protected");
+        
+        // ResponseExtractor usage
+        ResponseExtractor<String> messageExtractor = r -> r.jsonPath().getString("message");
+        ResponseExtractor<Integer> countExtractor = r -> r.jsonPath().getInt("data.count");
+        ResponseExtractor<List<String>> namesExtractor = r -> r.jsonPath().getList("data.names");
+        
+        String message = messageExtractor.extract(response);
+        Integer count = countExtractor.extract(response);
+        List<String> names = namesExtractor.extract(response);
+    }
+}
+
+
+====================================================================
+                    COMPLETE UTILITY CLASS
+====================================================================
+
+This utility class combines all Java 8 features for both Selenium
+and REST Assured automation.
+
+--------------------------------------------------------------------
+
+import java.util.*;
+import java.util.function.*;
+import java.util.stream.*;
+
+// ============================================
+// GENERIC TEST UTILITIES WITH JAVA 8 FEATURES
+// ============================================
+
+public class TestUtilities {
+    
+    // -----------------------------------------
+    // PREDICATE UTILITIES
+    // -----------------------------------------
+    
+    public static <T> Predicate<T> not(Predicate<T> predicate) {
+        return predicate.negate();
+    }
+    
+    public static <T> Predicate<T> allOf(Predicate<T>... predicates) {
+        return Arrays.stream(predicates)
+                     .reduce(t -> true, Predicate::and);
+    }
+    
+    public static <T> Predicate<T> anyOf(Predicate<T>... predicates) {
+        return Arrays.stream(predicates)
+                     .reduce(t -> false, Predicate::or);
+    }
+    
+    // -----------------------------------------
+    // RETRY UTILITIES
+    // -----------------------------------------
+    
+    public static <T> Optional<T> retry(Supplier<T> action, Predicate<T> successCondition, 
+                                        int maxAttempts, long delayMs) {
+        for (int i = 0; i < maxAttempts; i++) {
+            try {
+                T result = action.get();
+                if (successCondition.test(result)) {
+                    return Optional.of(result);
+                }
+            } catch (Exception e) {
+                System.out.println("Attempt " + (i + 1) + " failed: " + e.getMessage());
+            }
+            
+            if (i < maxAttempts - 1) {
+                try {
+                    Thread.sleep(delayMs);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    break;
+                }
+            }
+        }
+        return Optional.empty();
+    }
+    
+    public static <T> T retryOrThrow(Supplier<T> action, Predicate<T> successCondition,
+                                     int maxAttempts, long delayMs, String errorMessage) {
+        return retry(action, successCondition, maxAttempts, delayMs)
+                .orElseThrow(() -> new RuntimeException(errorMessage));
+    }
+    
+    // -----------------------------------------
+    // COLLECTION UTILITIES
+    // -----------------------------------------
+    
+    public static <T, R> List<R> transform(List<T> list, Function<T, R> transformer) {
+        return list.stream()
+                   .map(transformer)
+                   .collect(Collectors.toList());
+    }
+    
+    public static <T> List<T> filter(List<T> list, Predicate<T> condition) {
+        return list.stream()
+                   .filter(condition)
+                   .collect(Collectors.toList());
+    }
+    
+    public static <T, K> Map<K, List<T>> groupBy(List<T> list, Function<T, K> classifier) {
+        return list.stream()
+                   .collect(Collectors.groupingBy(classifier));
+    }
+    
+    public static <T> Optional<T> findFirst(List<T> list, Predicate<T> condition) {
+        return list.stream()
+                   .filter(condition)
+                   .findFirst();
+    }
+    
+    // -----------------------------------------
+    // STRING UTILITIES
+    // -----------------------------------------
+    
+    public static Function<String, String> cleanString() {
+        return ((Function<String, String>) String::trim)
+                .andThen(String::toLowerCase)
+                .andThen(s -> s.replaceAll("\\s+", " "));
+    }
+    
+    public static Predicate<String> matchesPattern(String regex) {
+        return s -> s != null && s.matches(regex);
+    }
+    
+    public static Predicate<String> isValidEmail() {
+        return matchesPattern("^[A-Za-z0-9+_.-]+@(.+)$");
+    }
+    
+    // -----------------------------------------
+    // SAFE EXTRACTION UTILITIES
+    // -----------------------------------------
+    
+    public static <T> T getOrDefault(Supplier<T> supplier, T defaultValue) {
+        try {
+            T value = supplier.get();
+            return value != null ? value : defaultValue;
+        } catch (Exception e) {
+            return defaultValue;
+        }
+    }
+    
+    public static <T> Optional<T> safeGet(Supplier<T> supplier) {
+        try {
+            return Optional.ofNullable(supplier.get());
+        } catch (Exception e) {
+            return Optional.empty();
+        }
+    }
+    
+    // -----------------------------------------
+    // TIMING UTILITIES
+    // -----------------------------------------
+    
+    public static <T> T measureTime(Supplier<T> action, Consumer<Long> timeConsumer) {
+        long start = System.currentTimeMillis();
+        T result = action.get();
+        long duration = System.currentTimeMillis() - start;
+        timeConsumer.accept(duration);
+        return result;
+    }
+    
+    public static void measureTime(Runnable action, Consumer<Long> timeConsumer) {
+        long start = System.currentTimeMillis();
+        action.run();
+        long duration = System.currentTimeMillis() - start;
+        timeConsumer.accept(duration);
+    }
+    
+    // -----------------------------------------
+    // DEMO USAGE
+    // -----------------------------------------
+    
+    public static void main(String[] args) {
+        
+        // Predicate utilities
+        Predicate<String> notEmpty = not(String::isEmpty);
+        Predicate<Integer> between1And10 = allOf(n -> n >= 1, n -> n <= 10);
+        
+        System.out.println("notEmpty test: " + notEmpty.test("hello")); // true
+        System.out.println("between1And10 test: " + between1And10.test(5)); // true
+        
+        // Retry utility
+        Optional<String> result = retry(
+            () -> Math.random() > 0.7 ? "Success" : null,
+            Objects::nonNull,
+            5,
+            100
+        );
+        result.ifPresent(r -> System.out.println("Retry result: " + r));
+        
+        // Collection utilities
+        List<String> names = Arrays.asList("John", "Jane", "Bob", "Alice");
+        List<String> upperNames = transform(names, String::toUpperCase);
+        System.out.println("Upper names: " + upperNames);
+        
+        List<String> shortNames = filter(names, n -> n.length() <= 3);
+        System.out.println("Short names: " + shortNames);
+        
+        // Timing utility
+        String timedResult = measureTime(
+            () -> {
+                try { Thread.sleep(100); } catch (Exception e) {}
+                return "Done";
+            },
+            duration -> System.out.println("Took " + duration + "ms")
+        );
+        
+        // Safe extraction
+        String value = getOrDefault(() -> null, "default");
+        System.out.println("Safe value: " + value);
+    }
+}
+
+
+====================================================================
+                    SUMMARY - JAVA 8 FEATURES
+====================================================================
+
++---------------------+------------------------+------------------------+
+| Feature             | Selenium Usage         | REST Assured Usage     |
++---------------------+------------------------+------------------------+
+| Lambda              | - Explicit waits       | - Response validation  |
+| Expressions         | - Element iteration    | - Request building     |
+|                     | - Custom conditions    | - Data transformation  |
++---------------------+------------------------+------------------------+
+| Functional          | - Element predicates   | - API validators       |
+| Interfaces          | - Action consumers     | - Request builders     |
+|                     | - Element suppliers    | - Data extractors      |
++---------------------+------------------------+------------------------+
+| Stream API          | - Filter elements      | - Filter response data |
+|                     | - Transform data       | - Aggregate results    |
+|                     | - Collect results      | - Parallel processing  |
++---------------------+------------------------+------------------------+
+| Method              | - WebElement::click    | - Response::getStatus  |
+| References          | - System.out::println  | - String::toUpperCase  |
+|                     | - Element::getText     | - List::stream         |
++---------------------+------------------------+------------------------+
+| Optional            | - Safe element finding | - Safe JSON extraction |
+|                     | - Null-safe operations | - Error handling       |
+|                     | - Default values       | - Conditional logic    |
++---------------------+------------------------+------------------------+
+
+KEY TAKEAWAYS:
+--------------
+1. Lambda makes code concise and readable
+2. Functional interfaces enable reusable validation/action logic
+3. Stream API simplifies collection processing
+4. Method references reduce boilerplate code
+5. Optional prevents NullPointerException
+
+BEST PRACTICES:
+---------------
+1. Use lambda for simple, one-line operations
+2. Create reusable Predicates for common validations
+3. Chain Consumers for complex actions
+4. Use Suppliers for lazy evaluation
+5. Always use Optional for potentially null values
+6. Prefer method references when possible
+7. Use parallel streams for large data processing
+8. Filter before other operations for efficiency
+
+====================================================================
+                    END OF TOPIC 17: JAVA 8 FEATURES
+====================================================================

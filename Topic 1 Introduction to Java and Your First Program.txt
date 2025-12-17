@@ -1,0 +1,246 @@
+Welcome to Core Java for Automation Testing! 🎉
+
+I'm excited to teach you Java step by step. Let's begin with the very first topic.
+
+📘 Topic 1: Introduction to Java & Your First Program
+
+What is Java?
+
+Java is a programming language that is:
+
+    Platform Independent - Write once, run anywhere
+    Object-Oriented - Everything revolves around "objects"
+    Most widely used in automation testing (Selenium, Rest Assured, Appium)
+
+Understanding JDK, JRE, JVM
+
+┌─────────────────────────────────────────┐
+│                JDK                      │
+│  (Java Development Kit)                 │
+│  - Used to DEVELOP & RUN Java programs  │
+│                                         │
+│   ┌─────────────────────────────────┐   │
+│   │            JRE                  │   │
+│   │   (Java Runtime Environment)    │   │
+│   │   - Used to RUN Java programs   │   │
+│   │                                 │   │
+│   │   ┌─────────────────────────┐   │   │
+│   │   │         JVM             │   │   │
+│   │   │ (Java Virtual Machine)  │   │   │
+│   │   │ - Executes Java code    │   │   │
+│   │   └─────────────────────────┘   │   │
+│   └─────────────────────────────────┘   │
+└─────────────────────────────────────────┘
+
+Simple Explanation:
+
+Component
+	
+
+Purpose
+
+JDK
+	
+
+For developers - includes compiler + JRE
+
+JRE
+	
+
+For running Java programs
+
+JVM
+	
+
+Actually executes your code
+
+Your First Java Program
+
+public class HelloWorld {
+    public static void main(String[] args) {
+        System.out.println("Hello, I am learning Java for Automation!");
+    }
+}
+
+Output:
+
+Hello, I am learning Java for Automation!
+
+Let's Break Down Each Part
+
+public class HelloWorld {
+
+Keyword
+	
+
+Meaning
+
+public
+	
+
+Accessible from anywhere
+
+class
+	
+
+Blueprint/template (everything in Java is inside a class)
+
+HelloWorld
+	
+
+Name of the class (must match filename: HelloWorld.java)
+
+public static void main(String[] args) {
+
+This is the main method - the entry point of your program.
+
+Keyword
+	
+
+Meaning
+
+public
+	
+
+Accessible from anywhere
+
+static
+	
+
+Can run without creating an object
+
+void
+	
+
+Returns nothing
+
+main
+	
+
+Method name (JVM looks for this)
+
+String[] args
+	
+
+Command line arguments
+
+System.out.println("Hello, I am learning Java for Automation!");
+
+Part
+	
+
+Meaning
+
+System
+	
+
+A built-in class
+
+out
+	
+
+Output stream
+
+println
+	
+
+Print and go to new line
+
+"text"
+	
+
+String (text) to print
+
+Print Statements
+
+public class PrintDemo {
+    public static void main(String[] args) {
+        
+        // println - prints and moves to next line
+        System.out.println("Line 1");
+        System.out.println("Line 2");
+        
+        // print - prints and stays on same line
+        System.out.print("Hello ");
+        System.out.print("World");
+        
+    }
+}
+
+Output:
+
+Line 1
+Line 2
+Hello World
+
+📝 Quick Practice Exercise
+
+Try to understand this code:
+
+public class MyFirstTest {
+    public static void main(String[] args) {
+        System.out.println("Starting Automation Test");
+        System.out.println("Opening Browser...");
+        System.out.println("Test Completed!");
+    }
+}
+
+Questions for you:
+
+    What is the class name?
+    How many print statements are there?
+    What will be the output?
+
+✅ Topic 1 Summary
+
+Concept
+	
+
+What You Learned
+
+Java
+	
+
+Platform-independent, OOP language
+
+JDK
+	
+
+Development kit (what you install)
+
+JVM
+	
+
+Executes your code
+
+class
+	
+
+Container for your code
+
+main method
+	
+
+Entry point of program
+
+System.out.println()
+	
+
+Prints output
+
+🎯 What's Next?
+
+Topic 2: Variables and Data Types
+
+    How to store data in Java
+    Different types of data (numbers, text, etc.)
+    Naming rules
+
+Ready for Topic 2?
+
+Please reply with:
+
+    ✅ "Next" - if you understood Topic 1 and want to continue
+    ❓ Any questions - if you need clarification on anything
+
+Take your time! 😊

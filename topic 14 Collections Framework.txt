@@ -1,0 +1,3693 @@
+Thinking:
+The user wants me to teach Topic 14: Collections Framework in Java. They want:
+1. Both positive and negative scenarios
+2. Where it can be used in Selenium automation and Rest Assured automation
+3. Simple ASCII characters for formatting
+
+Let me create a comprehensive tutorial on Collections Framework covering:
+1. What is Collections Framework
+2. Collection Hierarchy
+3. List Interface (ArrayList, LinkedList)
+4. Set Interface (HashSet, LinkedHashSet, TreeSet)
+5. Map Interface (HashMap, LinkedHashMap, TreeMap)
+6. Queue Interface
+7. Iterator
+8. Collections utility class
+9. Comparable and Comparator
+10. Practical examples for Selenium and Rest Assured
+11. Negative scenarios/errors
+
+Let me structure this properly with examples.
+
+================================================================================
+                    TOPIC 14: COLLECTIONS FRAMEWORK IN JAVA
+================================================================================
+
+What is Collections Framework?
+------------------------------
+The Collections Framework is a unified architecture for representing and
+manipulating collections of objects. It provides:
+- Interfaces (abstract data types)
+- Implementations (concrete implementations)
+- Algorithms (methods to perform operations)
+
+Think of it as a set of ready-made data structures that you can use instead
+of creating your own.
+
+
+Why Use Collections Instead of Arrays?
+--------------------------------------
++------------------------+------------------------+---------------------------+
+| Feature                | Arrays                 | Collections               |
++------------------------+------------------------+---------------------------+
+| Size                   | Fixed at creation      | Dynamic (grows/shrinks)   |
+| Type Safety            | Can hold primitives    | Objects only (use wrappers)|
+| Methods                | Limited (length only)  | Rich API (add, remove,    |
+|                        |                        | search, sort, etc.)       |
+| Memory                 | Contiguous             | Depends on implementation |
+| Performance            | Fast access            | Varies by implementation  |
+| Null handling          | Can have nulls         | Some allow, some don't    |
+| Duplicates             | Allowed                | Depends on type           |
++------------------------+------------------------+---------------------------+
+
+
+Collections Hierarchy:
+----------------------
+
+                            Iterable (interface)
+                                  |
+                            Collection (interface)
+                                  |
+            +---------------------+---------------------+
+            |                     |                     |
+          List                   Set                  Queue
+       (interface)           (interface)           (interface)
+            |                     |                     |
+    +-------+-------+     +-------+-------+     +------+------+
+    |       |       |     |       |       |     |             |
+ArrayList LinkedList  HashSet LinkedHashSet Deque      PriorityQueue
+                            |       |       |
+                        TreeSet          ArrayDeque
+
+
+                            Map (interface)
+                                  |
+            +---------------------+---------------------+
+            |                     |                     |
+        HashMap            LinkedHashMap            TreeMap
+
+
+Key Interfaces:
+---------------
++---------------+---------------------------------------------------------------+
+| Interface     | Description                                                   |
++---------------+---------------------------------------------------------------+
+| Collection    | Root interface for all collections                            |
+| List          | Ordered collection, allows duplicates, index-based access     |
+| Set           | No duplicates allowed, unordered (mostly)                     |
+| Queue         | FIFO (First-In-First-Out) ordering                            |
+| Deque         | Double-ended queue, insert/remove from both ends              |
+| Map           | Key-value pairs, no duplicate keys                            |
++---------------+---------------------------------------------------------------+
+
+
+Why Important for Automation?
+-----------------------------
+- Store multiple WebElements
+- Manage test data (lists of users, products, etc.)
+- Store API response data
+- Handle dynamic data sets
+- Configure test parameters
+- Store locators as key-value pairs
+- Manage test results
+
+
+================================================================================
+                    PART 1: LIST INTERFACE
+================================================================================
+
+What is List?
+-------------
+- Ordered collection (maintains insertion order)
+- Allows duplicate elements
+- Allows null elements
+- Index-based access (0 to size-1)
+
+Common Implementations:
+-----------------------
++---------------+---------------------------------------------------------------+
+| Class         | Description                                                   |
++---------------+---------------------------------------------------------------+
+| ArrayList     | Dynamic array, fast random access, slow insert/delete middle  |
+| LinkedList    | Doubly linked list, fast insert/delete, slow random access    |
+| Vector        | Legacy, synchronized (thread-safe), slower                    |
++---------------+---------------------------------------------------------------+
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 1: ArrayList Basics
+--------------------------------------------------------------------------------
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class ArrayListBasicsDemo {
+    public static void main(String[] args) {
+        
+        System.out.println("================================================");
+        System.out.println("            ARRAYLIST BASICS DEMO");
+        System.out.println("================================================\n");
+        
+        // Creating ArrayList
+        System.out.println("--- Creating ArrayList ---");
+        
+        // Method 1: Using ArrayList type
+        ArrayList<String> fruits1 = new ArrayList<String>();
+        
+        // Method 2: Using List interface (recommended)
+        List<String> fruits2 = new ArrayList<>();
+        
+        // Method 3: With initial capacity
+        List<String> fruits3 = new ArrayList<>(100);
+        
+        // ========== ADDING ELEMENTS ==========
+        System.out.println("\n--- Adding Elements ---");
+        
+        List<String> fruits = new ArrayList<>();
+        
+        // add(element) - adds at end
+        fruits.add("Apple");
+        fruits.add("Banana");
+        fruits.add("Cherry");
+        fruits.add("Apple");    // Duplicates allowed
+        fruits.add(null);       // Null allowed
+        
+        System.out.println("After add(): " + fruits);
+        
+        // add(index, element) - adds at specific position
+        fruits.add(1, "Mango");
+        System.out.println("After add(1, 'Mango'): " + fruits);
+        
+        // addAll(collection) - adds all elements from another collection
+        List<String> moreFruits = new ArrayList<>();
+        moreFruits.add("Orange");
+        moreFruits.add("Grape");
+        
+        fruits.addAll(moreFruits);
+        System.out.println("After addAll(): " + fruits);
+        
+        // ========== ACCESSING ELEMENTS ==========
+        System.out.println("\n--- Accessing Elements ---");
+        
+        // get(index) - returns element at index
+        System.out.println("Element at index 0: " + fruits.get(0));
+        System.out.println("Element at index 2: " + fruits.get(2));
+        
+        // First and last elements
+        System.out.println("First element: " + fruits.get(0));
+        System.out.println("Last element: " + fruits.get(fruits.size() - 1));
+        
+        // ========== SIZE AND EMPTY CHECK ==========
+        System.out.println("\n--- Size and Empty Check ---");
+        
+        System.out.println("Size: " + fruits.size());
+        System.out.println("Is empty: " + fruits.isEmpty());
+        
+        // ========== SEARCHING ==========
+        System.out.println("\n--- Searching ---");
+        
+        // contains(element) - checks if element exists
+        System.out.println("Contains 'Apple': " + fruits.contains("Apple"));
+        System.out.println("Contains 'Kiwi': " + fruits.contains("Kiwi"));
+        
+        // indexOf(element) - returns first occurrence index (-1 if not found)
+        System.out.println("Index of 'Apple': " + fruits.indexOf("Apple"));
+        System.out.println("Index of 'Kiwi': " + fruits.indexOf("Kiwi"));
+        
+        // lastIndexOf(element) - returns last occurrence index
+        System.out.println("Last index of 'Apple': " + fruits.lastIndexOf("Apple"));
+        
+        // ========== UPDATING ELEMENTS ==========
+        System.out.println("\n--- Updating Elements ---");
+        
+        System.out.println("Before update: " + fruits);
+        
+        // set(index, element) - replaces element at index
+        String oldValue = fruits.set(0, "Green Apple");
+        System.out.println("Replaced '" + oldValue + "' with 'Green Apple'");
+        System.out.println("After update: " + fruits);
+        
+        // ========== REMOVING ELEMENTS ==========
+        System.out.println("\n--- Removing Elements ---");
+        
+        // remove(index) - removes by index
+        String removed = fruits.remove(4);    // Remove null
+        System.out.println("Removed by index: " + removed);
+        
+        // remove(object) - removes first occurrence of object
+        boolean wasRemoved = fruits.remove("Apple");
+        System.out.println("Removed 'Apple': " + wasRemoved);
+        System.out.println("After remove: " + fruits);
+        
+        // removeAll(collection) - removes all matching elements
+        List<String> toRemove = new ArrayList<>();
+        toRemove.add("Orange");
+        toRemove.add("Grape");
+        fruits.removeAll(toRemove);
+        System.out.println("After removeAll: " + fruits);
+        
+        // ========== ITERATING ==========
+        System.out.println("\n--- Iterating ---");
+        
+        // Reset list
+        fruits.clear();
+        fruits.add("Apple");
+        fruits.add("Banana");
+        fruits.add("Cherry");
+        fruits.add("Date");
+        
+        // Method 1: For loop with index
+        System.out.println("Using for loop:");
+        for (int i = 0; i < fruits.size(); i++) {
+            System.out.println("  [" + i + "] " + fruits.get(i));
+        }
+        
+        // Method 2: Enhanced for loop (foreach)
+        System.out.println("\nUsing enhanced for loop:");
+        for (String fruit : fruits) {
+            System.out.println("  - " + fruit);
+        }
+        
+        // Method 3: forEach with lambda (Java 8+)
+        System.out.println("\nUsing forEach lambda:");
+        fruits.forEach(fruit -> System.out.println("  * " + fruit));
+        
+        // Method 4: forEach with method reference
+        System.out.println("\nUsing method reference:");
+        fruits.forEach(System.out::println);
+        
+        // ========== SUBLIST ==========
+        System.out.println("\n--- SubList ---");
+        
+        List<String> subList = fruits.subList(1, 3);    // index 1 to 2 (exclusive end)
+        System.out.println("SubList(1, 3): " + subList);
+        
+        // ========== CONVERTING ==========
+        System.out.println("\n--- Converting ---");
+        
+        // List to Array
+        String[] fruitArray = fruits.toArray(new String[0]);
+        System.out.println("Array length: " + fruitArray.length);
+        
+        // Array to List
+        String[] colors = {"Red", "Green", "Blue"};
+        List<String> colorList = new ArrayList<>(java.util.Arrays.asList(colors));
+        System.out.println("List from array: " + colorList);
+        
+        // ========== CLEAR ==========
+        System.out.println("\n--- Clear ---");
+        
+        System.out.println("Before clear, size: " + fruits.size());
+        fruits.clear();
+        System.out.println("After clear, size: " + fruits.size());
+        System.out.println("Is empty: " + fruits.isEmpty());
+    }
+}
+
+OUTPUT:
+-------
+================================================
+            ARRAYLIST BASICS DEMO
+================================================
+
+--- Creating ArrayList ---
+
+--- Adding Elements ---
+After add(): [Apple, Banana, Cherry, Apple, null]
+After add(1, 'Mango'): [Apple, Mango, Banana, Cherry, Apple, null]
+After addAll(): [Apple, Mango, Banana, Cherry, Apple, null, Orange, Grape]
+
+--- Accessing Elements ---
+Element at index 0: Apple
+Element at index 2: Banana
+First element: Apple
+Last element: Grape
+
+--- Size and Empty Check ---
+Size: 8
+Is empty: false
+
+--- Searching ---
+Contains 'Apple': true
+Contains 'Kiwi': false
+Index of 'Apple': 0
+Index of 'Kiwi': -1
+Last index of 'Apple': 4
+
+--- Updating Elements ---
+Before update: [Apple, Mango, Banana, Cherry, Apple, null, Orange, Grape]
+Replaced 'Apple' with 'Green Apple'
+After update: [Green Apple, Mango, Banana, Cherry, Apple, null, Orange, Grape]
+
+--- Removing Elements ---
+Removed by index: null
+Removed 'Apple': true
+After remove: [Green Apple, Mango, Banana, Cherry, Orange, Grape]
+After removeAll: [Green Apple, Mango, Banana, Cherry]
+
+--- Iterating ---
+Using for loop:
+  [0] Apple
+  [1] Banana
+  [2] Cherry
+  [3] Date
+
+Using enhanced for loop:
+  - Apple
+  - Banana
+  - Cherry
+  - Date
+
+Using forEach lambda:
+  * Apple
+  * Banana
+  * Cherry
+  * Date
+
+Using method reference:
+Apple
+Banana
+Cherry
+Date
+
+--- SubList ---
+SubList(1, 3): [Banana, Cherry]
+
+--- Converting ---
+Array length: 4
+List from array: [Red, Green, Blue]
+
+--- Clear ---
+Before clear, size: 4
+After clear, size: 0
+Is empty: true
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 2: ArrayList with Custom Objects
+--------------------------------------------------------------------------------
+
+import java.util.ArrayList;
+import java.util.List;
+
+class Product {
+    private int id;
+    private String name;
+    private double price;
+    private int quantity;
+    
+    public Product(int id, String name, double price, int quantity) {
+        this.id = id;
+        this.name = name;
+        this.price = price;
+        this.quantity = quantity;
+    }
+    
+    // Getters
+    public int getId() { return id; }
+    public String getName() { return name; }
+    public double getPrice() { return price; }
+    public int getQuantity() { return quantity; }
+    
+    // Setters
+    public void setPrice(double price) { this.price = price; }
+    public void setQuantity(int quantity) { this.quantity = quantity; }
+    
+    @Override
+    public String toString() {
+        return String.format("Product{id=%d, name='%s', price=%.2f, qty=%d}",
+                            id, name, price, quantity);
+    }
+    
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        Product product = (Product) obj;
+        return id == product.id;
+    }
+    
+    @Override
+    public int hashCode() {
+        return Integer.hashCode(id);
+    }
+}
+
+public class ArrayListCustomObjectsDemo {
+    public static void main(String[] args) {
+        
+        System.out.println("================================================");
+        System.out.println("        ARRAYLIST WITH CUSTOM OBJECTS");
+        System.out.println("================================================\n");
+        
+        // Create list of products
+        List<Product> inventory = new ArrayList<>();
+        
+        // Add products
+        inventory.add(new Product(1, "Laptop", 999.99, 10));
+        inventory.add(new Product(2, "Mouse", 29.99, 50));
+        inventory.add(new Product(3, "Keyboard", 79.99, 30));
+        inventory.add(new Product(4, "Monitor", 299.99, 15));
+        inventory.add(new Product(5, "Headphones", 149.99, 25));
+        
+        // Display all products
+        System.out.println("--- All Products ---");
+        for (Product p : inventory) {
+            System.out.println(p);
+        }
+        
+        // Find product by ID
+        System.out.println("\n--- Find Product by ID ---");
+        int searchId = 3;
+        Product found = null;
+        for (Product p : inventory) {
+            if (p.getId() == searchId) {
+                found = p;
+                break;
+            }
+        }
+        System.out.println("Product with ID " + searchId + ": " + found);
+        
+        // Find products by price range
+        System.out.println("\n--- Products in Price Range ($50 - $200) ---");
+        for (Product p : inventory) {
+            if (p.getPrice() >= 50 && p.getPrice() <= 200) {
+                System.out.println(p);
+            }
+        }
+        
+        // Calculate total inventory value
+        System.out.println("\n--- Total Inventory Value ---");
+        double totalValue = 0;
+        for (Product p : inventory) {
+            totalValue += p.getPrice() * p.getQuantity();
+        }
+        System.out.println("Total Value: $" + String.format("%.2f", totalValue));
+        
+        // Find low stock products (quantity < 20)
+        System.out.println("\n--- Low Stock Products (qty < 20) ---");
+        List<Product> lowStock = new ArrayList<>();
+        for (Product p : inventory) {
+            if (p.getQuantity() < 20) {
+                lowStock.add(p);
+            }
+        }
+        for (Product p : lowStock) {
+            System.out.println(p.getName() + " - Only " + p.getQuantity() + " left!");
+        }
+        
+        // Update product price
+        System.out.println("\n--- Update Product Price ---");
+        for (Product p : inventory) {
+            if (p.getId() == 2) {
+                System.out.println("Before: " + p);
+                p.setPrice(24.99);
+                System.out.println("After: " + p);
+            }
+        }
+        
+        // Remove product
+        System.out.println("\n--- Remove Product ---");
+        Product toRemove = new Product(4, "", 0, 0);    // Only ID matters for equals
+        boolean removed = inventory.remove(toRemove);
+        System.out.println("Removed product with ID 4: " + removed);
+        System.out.println("Inventory size: " + inventory.size());
+        
+        // Using Java 8 Stream API
+        System.out.println("\n--- Using Stream API (Java 8+) ---");
+        
+        // Find most expensive product
+        Product mostExpensive = inventory.stream()
+            .max((p1, p2) -> Double.compare(p1.getPrice(), p2.getPrice()))
+            .orElse(null);
+        System.out.println("Most expensive: " + mostExpensive);
+        
+        // Filter and collect
+        List<Product> expensiveProducts = inventory.stream()
+            .filter(p -> p.getPrice() > 100)
+            .collect(java.util.stream.Collectors.toList());
+        System.out.println("Products over $100: " + expensiveProducts.size());
+        
+        // Calculate average price
+        double avgPrice = inventory.stream()
+            .mapToDouble(Product::getPrice)
+            .average()
+            .orElse(0);
+        System.out.println("Average price: $" + String.format("%.2f", avgPrice));
+    }
+}
+
+OUTPUT:
+-------
+================================================
+        ARRAYLIST WITH CUSTOM OBJECTS
+================================================
+
+--- All Products ---
+Product{id=1, name='Laptop', price=999.99, qty=10}
+Product{id=2, name='Mouse', price=29.99, qty=50}
+Product{id=3, name='Keyboard', price=79.99, qty=30}
+Product{id=4, name='Monitor', price=299.99, qty=15}
+Product{id=5, name='Headphones', price=149.99, qty=25}
+
+--- Find Product by ID ---
+Product with ID 3: Product{id=3, name='Keyboard', price=79.99, qty=30}
+
+--- Products in Price Range ($50 - $200) ---
+Product{id=3, name='Keyboard', price=79.99, qty=30}
+Product{id=5, name='Headphones', price=149.99, qty=25}
+
+--- Total Inventory Value ---
+Total Value: $18874.30
+
+--- Low Stock Products (qty < 20) ---
+Laptop - Only 10 left!
+Monitor - Only 15 left!
+
+--- Update Product Price ---
+Before: Product{id=2, name='Mouse', price=29.99, qty=50}
+After: Product{id=2, name='Mouse', price=24.99, qty=50}
+
+--- Remove Product ---
+Removed product with ID 4: true
+Inventory size: 4
+
+--- Using Stream API (Java 8+) ---
+Most expensive: Product{id=1, name='Laptop', price=999.99, qty=10}
+Products over $100: 2
+Average price: $313.74
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 3: LinkedList
+--------------------------------------------------------------------------------
+
+import java.util.LinkedList;
+import java.util.List;
+
+public class LinkedListDemo {
+    public static void main(String[] args) {
+        
+        System.out.println("================================================");
+        System.out.println("              LINKEDLIST DEMO");
+        System.out.println("================================================\n");
+        
+        // LinkedList implements both List and Deque interfaces
+        LinkedList<String> tasks = new LinkedList<>();
+        
+        // ========== ADDING ELEMENTS ==========
+        System.out.println("--- Adding Elements ---");
+        
+        // Standard List methods
+        tasks.add("Task 1");
+        tasks.add("Task 2");
+        tasks.add("Task 3");
+        System.out.println("After add(): " + tasks);
+        
+        // LinkedList specific methods
+        tasks.addFirst("Urgent Task");    // Add at beginning
+        tasks.addLast("Final Task");      // Add at end
+        System.out.println("After addFirst/addLast: " + tasks);
+        
+        // offer methods (from Queue interface)
+        tasks.offerFirst("Priority Task");
+        tasks.offerLast("Cleanup Task");
+        System.out.println("After offer methods: " + tasks);
+        
+        // push (like stack - adds at beginning)
+        tasks.push("Immediate Task");
+        System.out.println("After push: " + tasks);
+        
+        // ========== ACCESSING ELEMENTS ==========
+        System.out.println("\n--- Accessing Elements ---");
+        
+        System.out.println("First element: " + tasks.getFirst());
+        System.out.println("Last element: " + tasks.getLast());
+        System.out.println("Element at index 2: " + tasks.get(2));
+        
+        // peek methods (don't remove)
+        System.out.println("peekFirst(): " + tasks.peekFirst());
+        System.out.println("peekLast(): " + tasks.peekLast());
+        
+        // ========== REMOVING ELEMENTS ==========
+        System.out.println("\n--- Removing Elements ---");
+        
+        System.out.println("Before removal: " + tasks);
+        
+        // Remove first and last
+        String first = tasks.removeFirst();
+        String last = tasks.removeLast();
+        System.out.println("Removed first: " + first);
+        System.out.println("Removed last: " + last);
+        System.out.println("After removal: " + tasks);
+        
+        // pop (like stack - removes from beginning)
+        String popped = tasks.pop();
+        System.out.println("Popped: " + popped);
+        
+        // poll methods (return null if empty instead of exception)
+        String polled = tasks.pollFirst();
+        System.out.println("Polled first: " + polled);
+        
+        System.out.println("Final list: " + tasks);
+        
+        // ========== USE CASE: BROWSER HISTORY ==========
+        System.out.println("\n--- Use Case: Browser History ---");
+        
+        LinkedList<String> browserHistory = new LinkedList<>();
+        
+        // Visit pages (add to end)
+        browserHistory.addLast("google.com");
+        browserHistory.addLast("github.com");
+        browserHistory.addLast("stackoverflow.com");
+        browserHistory.addLast("youtube.com");
+        
+        System.out.println("History: " + browserHistory);
+        System.out.println("Current page: " + browserHistory.getLast());
+        
+        // Go back (remove from end, move to "forward" stack)
+        LinkedList<String> forwardHistory = new LinkedList<>();
+        
+        String currentPage = browserHistory.removeLast();
+        forwardHistory.push(currentPage);
+        System.out.println("After back: Current page = " + browserHistory.getLast());
+        
+        currentPage = browserHistory.removeLast();
+        forwardHistory.push(currentPage);
+        System.out.println("After back: Current page = " + browserHistory.getLast());
+        
+        // Go forward
+        String forwardPage = forwardHistory.pop();
+        browserHistory.addLast(forwardPage);
+        System.out.println("After forward: Current page = " + browserHistory.getLast());
+        
+        // ========== USE CASE: QUEUE (FIFO) ==========
+        System.out.println("\n--- Use Case: Task Queue (FIFO) ---");
+        
+        LinkedList<String> taskQueue = new LinkedList<>();
+        
+        // Enqueue (add to end)
+        taskQueue.offer("Process Order 1");
+        taskQueue.offer("Process Order 2");
+        taskQueue.offer("Process Order 3");
+        
+        System.out.println("Queue: " + taskQueue);
+        
+        // Dequeue (remove from front)
+        while (!taskQueue.isEmpty()) {
+            String task = taskQueue.poll();
+            System.out.println("Processing: " + task);
+        }
+        
+        // ========== ARRAYLIST VS LINKEDLIST ==========
+        System.out.println("\n--- ArrayList vs LinkedList ---");
+        System.out.println("+------------------+------------------+------------------+");
+        System.out.println("| Operation        | ArrayList        | LinkedList       |");
+        System.out.println("+------------------+------------------+------------------+");
+        System.out.println("| get(index)       | O(1) - Fast      | O(n) - Slow      |");
+        System.out.println("| add(end)         | O(1) - Fast      | O(1) - Fast      |");
+        System.out.println("| add(beginning)   | O(n) - Slow      | O(1) - Fast      |");
+        System.out.println("| add(middle)      | O(n) - Slow      | O(n) - Slow      |");
+        System.out.println("| remove(beginning)| O(n) - Slow      | O(1) - Fast      |");
+        System.out.println("| Memory           | Less overhead    | More overhead    |");
+        System.out.println("+------------------+------------------+------------------+");
+    }
+}
+
+
+================================================================================
+                    PART 2: SET INTERFACE
+================================================================================
+
+What is Set?
+------------
+- Collection that does NOT allow duplicate elements
+- At most one null element (in most implementations)
+- No guaranteed order (except LinkedHashSet and TreeSet)
+
+Common Implementations:
+-----------------------
++------------------+------------------------------------------------------------+
+| Class            | Description                                                |
++------------------+------------------------------------------------------------+
+| HashSet          | No order, uses hashing, allows one null, fastest           |
+| LinkedHashSet    | Maintains insertion order, slightly slower than HashSet    |
+| TreeSet          | Sorted order (natural or custom), no nulls, uses Red-Black |
++------------------+------------------------------------------------------------+
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 4: HashSet Basics
+--------------------------------------------------------------------------------
+
+import java.util.HashSet;
+import java.util.Set;
+import java.util.LinkedHashSet;
+import java.util.TreeSet;
+
+public class SetDemo {
+    public static void main(String[] args) {
+        
+        System.out.println("================================================");
+        System.out.println("                   SET DEMO");
+        System.out.println("================================================\n");
+        
+        // ========== HASHSET ==========
+        System.out.println("--- HashSet (No Order, No Duplicates) ---");
+        
+        Set<String> hashSet = new HashSet<>();
+        
+        // Adding elements
+        hashSet.add("Banana");
+        hashSet.add("Apple");
+        hashSet.add("Cherry");
+        hashSet.add("Apple");     // Duplicate - will be ignored
+        hashSet.add("Date");
+        hashSet.add(null);        // Null allowed (only one)
+        hashSet.add(null);        // Duplicate null - ignored
+        
+        System.out.println("HashSet: " + hashSet);
+        System.out.println("Size: " + hashSet.size());
+        System.out.println("(Note: No guaranteed order, no duplicates)");
+        
+        // Check if element exists
+        System.out.println("\nContains 'Apple': " + hashSet.contains("Apple"));
+        System.out.println("Contains 'Mango': " + hashSet.contains("Mango"));
+        
+        // Remove element
+        hashSet.remove("Date");
+        System.out.println("After removing 'Date': " + hashSet);
+        
+        // ========== LINKEDHASHSET ==========
+        System.out.println("\n--- LinkedHashSet (Insertion Order) ---");
+        
+        Set<String> linkedHashSet = new LinkedHashSet<>();
+        
+        linkedHashSet.add("Banana");
+        linkedHashSet.add("Apple");
+        linkedHashSet.add("Cherry");
+        linkedHashSet.add("Apple");    // Duplicate - ignored
+        linkedHashSet.add("Date");
+        
+        System.out.println("LinkedHashSet: " + linkedHashSet);
+        System.out.println("(Note: Maintains insertion order)");
+        
+        // ========== TREESET ==========
+        System.out.println("\n--- TreeSet (Sorted Order) ---");
+        
+        Set<String> treeSet = new TreeSet<>();
+        
+        treeSet.add("Banana");
+        treeSet.add("Apple");
+        treeSet.add("Cherry");
+        treeSet.add("Date");
+        // treeSet.add(null);    // ERROR! TreeSet doesn't allow null
+        
+        System.out.println("TreeSet: " + treeSet);
+        System.out.println("(Note: Alphabetically sorted)");
+        
+        // TreeSet with numbers
+        Set<Integer> numberSet = new TreeSet<>();
+        numberSet.add(50);
+        numberSet.add(10);
+        numberSet.add(30);
+        numberSet.add(20);
+        numberSet.add(40);
+        
+        System.out.println("Number TreeSet: " + numberSet);
+        System.out.println("(Note: Numerically sorted)");
+        
+        // TreeSet specific methods
+        TreeSet<Integer> treeNumbers = new TreeSet<>(numberSet);
+        System.out.println("\nTreeSet specific methods:");
+        System.out.println("First: " + treeNumbers.first());
+        System.out.println("Last: " + treeNumbers.last());
+        System.out.println("Lower than 30: " + treeNumbers.lower(30));
+        System.out.println("Higher than 30: " + treeNumbers.higher(30));
+        System.out.println("Floor of 25: " + treeNumbers.floor(25));
+        System.out.println("Ceiling of 25: " + treeNumbers.ceiling(25));
+        
+        // ========== SET OPERATIONS ==========
+        System.out.println("\n--- Set Operations ---");
+        
+        Set<Integer> set1 = new HashSet<>();
+        set1.add(1);
+        set1.add(2);
+        set1.add(3);
+        set1.add(4);
+        
+        Set<Integer> set2 = new HashSet<>();
+        set2.add(3);
+        set2.add(4);
+        set2.add(5);
+        set2.add(6);
+        
+        System.out.println("Set1: " + set1);
+        System.out.println("Set2: " + set2);
+        
+        // Union (all elements from both sets)
+        Set<Integer> union = new HashSet<>(set1);
+        union.addAll(set2);
+        System.out.println("Union: " + union);
+        
+        // Intersection (common elements)
+        Set<Integer> intersection = new HashSet<>(set1);
+        intersection.retainAll(set2);
+        System.out.println("Intersection: " + intersection);
+        
+        // Difference (elements in set1 but not in set2)
+        Set<Integer> difference = new HashSet<>(set1);
+        difference.removeAll(set2);
+        System.out.println("Difference (set1 - set2): " + difference);
+        
+        // ========== REMOVING DUPLICATES FROM LIST ==========
+        System.out.println("\n--- Removing Duplicates from List ---");
+        
+        java.util.List<String> listWithDuplicates = new java.util.ArrayList<>();
+        listWithDuplicates.add("A");
+        listWithDuplicates.add("B");
+        listWithDuplicates.add("A");
+        listWithDuplicates.add("C");
+        listWithDuplicates.add("B");
+        listWithDuplicates.add("A");
+        
+        System.out.println("Original list: " + listWithDuplicates);
+        
+        // Convert to Set (removes duplicates)
+        Set<String> uniqueSet = new LinkedHashSet<>(listWithDuplicates);
+        System.out.println("As Set: " + uniqueSet);
+        
+        // Convert back to List
+        java.util.List<String> uniqueList = new java.util.ArrayList<>(uniqueSet);
+        System.out.println("Unique list: " + uniqueList);
+        
+        // ========== ITERATING ==========
+        System.out.println("\n--- Iterating Over Set ---");
+        
+        Set<String> fruits = new LinkedHashSet<>();
+        fruits.add("Apple");
+        fruits.add("Banana");
+        fruits.add("Cherry");
+        
+        // Enhanced for loop
+        System.out.println("Using enhanced for loop:");
+        for (String fruit : fruits) {
+            System.out.println("  - " + fruit);
+        }
+        
+        // forEach with lambda
+        System.out.println("Using forEach:");
+        fruits.forEach(fruit -> System.out.println("  * " + fruit));
+        
+        // Iterator
+        System.out.println("Using Iterator:");
+        java.util.Iterator<String> iterator = fruits.iterator();
+        while (iterator.hasNext()) {
+            System.out.println("  > " + iterator.next());
+        }
+    }
+}
+
+OUTPUT:
+-------
+================================================
+                   SET DEMO
+================================================
+
+--- HashSet (No Order, No Duplicates) ---
+HashSet: [null, Apple, Cherry, Banana, Date]
+Size: 5
+(Note: No guaranteed order, no duplicates)
+
+Contains 'Apple': true
+Contains 'Mango': false
+After removing 'Date': [null, Apple, Cherry, Banana]
+
+--- LinkedHashSet (Insertion Order) ---
+LinkedHashSet: [Banana, Apple, Cherry, Date]
+(Note: Maintains insertion order)
+
+--- TreeSet (Sorted Order) ---
+TreeSet: [Apple, Banana, Cherry, Date]
+(Note: Alphabetically sorted)
+Number TreeSet: [10, 20, 30, 40, 50]
+(Note: Numerically sorted)
+
+TreeSet specific methods:
+First: 10
+Last: 50
+Lower than 30: 20
+Higher than 30: 40
+Floor of 25: 20
+Ceiling of 25: 30
+
+--- Set Operations ---
+Set1: [1, 2, 3, 4]
+Set2: [3, 4, 5, 6]
+Union: [1, 2, 3, 4, 5, 6]
+Intersection: [3, 4]
+Difference (set1 - set2): [1, 2]
+
+--- Removing Duplicates from List ---
+Original list: [A, B, A, C, B, A]
+As Set: [A, B, C]
+Unique list: [A, B, C]
+
+--- Iterating Over Set ---
+Using enhanced for loop:
+  - Apple
+  - Banana
+  - Cherry
+Using forEach:
+  * Apple
+  * Banana
+  * Cherry
+Using Iterator:
+  > Apple
+  > Banana
+  > Cherry
+
+
+================================================================================
+                    PART 3: MAP INTERFACE
+================================================================================
+
+What is Map?
+------------
+- Collection of key-value pairs
+- Each key can map to at most one value
+- No duplicate keys allowed (values can be duplicated)
+- Not part of Collection interface (separate hierarchy)
+
+Common Implementations:
+-----------------------
++------------------+------------------------------------------------------------+
+| Class            | Description                                                |
++------------------+------------------------------------------------------------+
+| HashMap          | No order, allows one null key, fastest                     |
+| LinkedHashMap    | Maintains insertion order                                  |
+| TreeMap          | Sorted by keys (natural or custom order)                   |
+| Hashtable        | Legacy, synchronized, no null keys/values                  |
++------------------+------------------------------------------------------------+
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 5: HashMap Basics
+--------------------------------------------------------------------------------
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.LinkedHashMap;
+import java.util.TreeMap;
+import java.util.Set;
+import java.util.Collection;
+
+public class MapDemo {
+    public static void main(String[] args) {
+        
+        System.out.println("================================================");
+        System.out.println("                   MAP DEMO");
+        System.out.println("================================================\n");
+        
+        // ========== CREATING MAP ==========
+        System.out.println("--- Creating and Adding to Map ---");
+        
+        // Method 1: HashMap
+        Map<String, Integer> scores = new HashMap<>();
+        
+        // Adding key-value pairs
+        scores.put("Alice", 95);
+        scores.put("Bob", 87);
+        scores.put("Charlie", 92);
+        scores.put("Diana", 88);
+        scores.put("Alice", 98);    // Duplicate key - value updated!
+        
+        System.out.println("Scores: " + scores);
+        System.out.println("(Note: Alice's score updated to 98)");
+        
+        // putIfAbsent - only adds if key doesn't exist
+        scores.putIfAbsent("Alice", 100);    // Won't update (key exists)
+        scores.putIfAbsent("Eve", 90);       // Will add (new key)
+        System.out.println("After putIfAbsent: " + scores);
+        
+        // ========== ACCESSING VALUES ==========
+        System.out.println("\n--- Accessing Values ---");
+        
+        // get(key) - returns value or null
+        System.out.println("Alice's score: " + scores.get("Alice"));
+        System.out.println("Unknown's score: " + scores.get("Unknown"));
+        
+        // getOrDefault - returns default if key not found
+        System.out.println("Frank's score: " + scores.getOrDefault("Frank", 0));
+        
+        // Check if key/value exists
+        System.out.println("Contains key 'Bob': " + scores.containsKey("Bob"));
+        System.out.println("Contains value 92: " + scores.containsValue(92));
+        
+        // ========== SIZE AND EMPTY CHECK ==========
+        System.out.println("\n--- Size and Empty Check ---");
+        
+        System.out.println("Size: " + scores.size());
+        System.out.println("Is empty: " + scores.isEmpty());
+        
+        // ========== REMOVING ENTRIES ==========
+        System.out.println("\n--- Removing Entries ---");
+        
+        // remove(key)
+        Integer removed = scores.remove("Eve");
+        System.out.println("Removed Eve's score: " + removed);
+        
+        // remove(key, value) - removes only if value matches
+        boolean wasRemoved = scores.remove("Bob", 100);    // Won't remove (value doesn't match)
+        System.out.println("Removed Bob with score 100: " + wasRemoved);
+        
+        wasRemoved = scores.remove("Bob", 87);    // Will remove
+        System.out.println("Removed Bob with score 87: " + wasRemoved);
+        
+        System.out.println("After removals: " + scores);
+        
+        // ========== UPDATING VALUES ==========
+        System.out.println("\n--- Updating Values ---");
+        
+        // Replace
+        scores.replace("Alice", 99);
+        System.out.println("After replace: " + scores.get("Alice"));
+        
+        // Replace only if old value matches
+        scores.replace("Alice", 99, 100);
+        System.out.println("After conditional replace: " + scores.get("Alice"));
+        
+        // Compute - update based on current value
+        scores.compute("Alice", (key, value) -> value + 5);
+        System.out.println("After compute (+5): " + scores.get("Alice"));
+        
+        // ========== ITERATING ==========
+        System.out.println("\n--- Iterating Over Map ---");
+        
+        // Reset map
+        scores.clear();
+        scores.put("Alice", 95);
+        scores.put("Bob", 87);
+        scores.put("Charlie", 92);
+        
+        // Method 1: Iterate over keys
+        System.out.println("Keys:");
+        for (String key : scores.keySet()) {
+            System.out.println("  " + key + " -> " + scores.get(key));
+        }
+        
+        // Method 2: Iterate over values
+        System.out.println("\nValues:");
+        for (Integer value : scores.values()) {
+            System.out.println("  " + value);
+        }
+        
+        // Method 3: Iterate over entries (most efficient)
+        System.out.println("\nEntries:");
+        for (Map.Entry<String, Integer> entry : scores.entrySet()) {
+            System.out.println("  " + entry.getKey() + " = " + entry.getValue());
+        }
+        
+        // Method 4: forEach with lambda
+        System.out.println("\nUsing forEach:");
+        scores.forEach((key, value) -> 
+            System.out.println("  " + key + " scored " + value));
+        
+        // ========== LINKEDHASHMAP ==========
+        System.out.println("\n--- LinkedHashMap (Insertion Order) ---");
+        
+        Map<String, String> linkedMap = new LinkedHashMap<>();
+        linkedMap.put("first", "1st");
+        linkedMap.put("second", "2nd");
+        linkedMap.put("third", "3rd");
+        linkedMap.put("fourth", "4th");
+        
+        System.out.println("LinkedHashMap: " + linkedMap);
+        System.out.println("(Note: Maintains insertion order)");
+        
+        // ========== TREEMAP ==========
+        System.out.println("\n--- TreeMap (Sorted by Keys) ---");
+        
+        Map<String, Integer> treeMap = new TreeMap<>();
+        treeMap.put("Zebra", 1);
+        treeMap.put("Apple", 2);
+        treeMap.put("Mango", 3);
+        treeMap.put("Banana", 4);
+        
+        System.out.println("TreeMap: " + treeMap);
+        System.out.println("(Note: Sorted alphabetically by key)");
+        
+        // TreeMap with numbers as keys
+        Map<Integer, String> numberTreeMap = new TreeMap<>();
+        numberTreeMap.put(3, "Three");
+        numberTreeMap.put(1, "One");
+        numberTreeMap.put(4, "Four");
+        numberTreeMap.put(2, "Two");
+        
+        System.out.println("Number TreeMap: " + numberTreeMap);
+        
+        // TreeMap specific methods
+        TreeMap<Integer, String> treeMapSpecific = new TreeMap<>(numberTreeMap);
+        System.out.println("\nTreeMap specific methods:");
+        System.out.println("First key: " + treeMapSpecific.firstKey());
+        System.out.println("Last key: " + treeMapSpecific.lastKey());
+        System.out.println("Lower key than 3: " + treeMapSpecific.lowerKey(3));
+        System.out.println("Higher key than 2: " + treeMapSpecific.higherKey(2));
+        
+        // ========== PRACTICAL EXAMPLE ==========
+        System.out.println("\n--- Practical Example: Word Frequency ---");
+        
+        String text = "apple banana apple cherry banana apple cherry cherry";
+        String[] words = text.split(" ");
+        
+        Map<String, Integer> wordCount = new HashMap<>();
+        
+        for (String word : words) {
+            wordCount.put(word, wordCount.getOrDefault(word, 0) + 1);
+        }
+        
+        System.out.println("Word frequency: " + wordCount);
+        
+        // Find most frequent word
+        String mostFrequent = null;
+        int maxCount = 0;
+        for (Map.Entry<String, Integer> entry : wordCount.entrySet()) {
+            if (entry.getValue() > maxCount) {
+                maxCount = entry.getValue();
+                mostFrequent = entry.getKey();
+            }
+        }
+        System.out.println("Most frequent word: " + mostFrequent + " (" + maxCount + " times)");
+    }
+}
+
+OUTPUT:
+-------
+================================================
+                   MAP DEMO
+================================================
+
+--- Creating and Adding to Map ---
+Scores: {Diana=88, Bob=87, Charlie=92, Alice=98}
+(Note: Alice's score updated to 98)
+After putIfAbsent: {Diana=88, Eve=90, Bob=87, Charlie=92, Alice=98}
+
+--- Accessing Values ---
+Alice's score: 98
+Unknown's score: null
+Frank's score: 0
+Contains key 'Bob': true
+Contains value 92: true
+
+--- Size and Empty Check ---
+Size: 5
+Is empty: false
+
+--- Removing Entries ---
+Removed Eve's score: 90
+Removed Bob with score 100: false
+Removed Bob with score 87: true
+After removals: {Diana=88, Charlie=92, Alice=98}
+
+--- Updating Values ---
+After replace: 99
+After conditional replace: 100
+After compute (+5): 105
+
+--- Iterating Over Map ---
+Keys:
+  Diana -> 88
+  Charlie -> 92
+  Alice -> 105
+
+Values:
+  88
+  92
+  105
+
+Entries:
+  Diana = 88
+  Charlie = 92
+  Alice = 105
+
+Using forEach:
+  Diana scored 88
+  Charlie scored 92
+  Alice scored 105
+
+--- LinkedHashMap (Insertion Order) ---
+LinkedHashMap: {first=1st, second=2nd, third=3rd, fourth=4th}
+(Note: Maintains insertion order)
+
+--- TreeMap (Sorted by Keys) ---
+TreeMap: {Apple=2, Banana=4, Mango=3, Zebra=1}
+(Note: Sorted alphabetically by key)
+Number TreeMap: {1=One, 2=Two, 3=Three, 4=Four}
+
+TreeMap specific methods:
+First key: 1
+Last key: 4
+Lower key than 3: 2
+Higher key than 2: 3
+
+--- Practical Example: Word Frequency ---
+Word frequency: {banana=2, cherry=3, apple=3}
+Most frequent word: cherry (3 times)
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 6: Map with Custom Objects
+--------------------------------------------------------------------------------
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+
+class Employee {
+    private int id;
+    private String name;
+    private String department;
+    
+    public Employee(int id, String name, String department) {
+        this.id = id;
+        this.name = name;
+        this.department = department;
+    }
+    
+    public int getId() { return id; }
+    public String getName() { return name; }
+    public String getDepartment() { return department; }
+    
+    @Override
+    public String toString() {
+        return "Employee{id=" + id + ", name='" + name + "', dept='" + department + "'}";
+    }
+    
+    // IMPORTANT: Must override equals and hashCode for HashMap keys
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Employee employee = (Employee) o;
+        return id == employee.id;
+    }
+    
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
+}
+
+class Salary {
+    private double baseSalary;
+    private double bonus;
+    
+    public Salary(double baseSalary, double bonus) {
+        this.baseSalary = baseSalary;
+        this.bonus = bonus;
+    }
+    
+    public double getBaseSalary() { return baseSalary; }
+    public double getBonus() { return bonus; }
+    public double getTotal() { return baseSalary + bonus; }
+    
+    @Override
+    public String toString() {
+        return String.format("Salary{base=%.2f, bonus=%.2f, total=%.2f}",
+                            baseSalary, bonus, getTotal());
+    }
+}
+
+public class MapCustomObjectsDemo {
+    public static void main(String[] args) {
+        
+        System.out.println("================================================");
+        System.out.println("          MAP WITH CUSTOM OBJECTS");
+        System.out.println("================================================\n");
+        
+        // Map with Employee as key and Salary as value
+        Map<Employee, Salary> employeeSalaries = new HashMap<>();
+        
+        // Add employees and their salaries
+        Employee emp1 = new Employee(1, "Alice", "Engineering");
+        Employee emp2 = new Employee(2, "Bob", "Marketing");
+        Employee emp3 = new Employee(3, "Charlie", "Engineering");
+        Employee emp4 = new Employee(4, "Diana", "HR");
+        
+        employeeSalaries.put(emp1, new Salary(80000, 10000));
+        employeeSalaries.put(emp2, new Salary(70000, 8000));
+        employeeSalaries.put(emp3, new Salary(85000, 12000));
+        employeeSalaries.put(emp4, new Salary(65000, 5000));
+        
+        // Display all
+        System.out.println("--- All Employees and Salaries ---");
+        for (Map.Entry<Employee, Salary> entry : employeeSalaries.entrySet()) {
+            System.out.println(entry.getKey());
+            System.out.println("  " + entry.getValue());
+        }
+        
+        // Find salary by employee
+        System.out.println("\n--- Find Salary ---");
+        Employee searchEmp = new Employee(1, "", "");    // Only ID matters for equals
+        Salary foundSalary = employeeSalaries.get(searchEmp);
+        System.out.println("Salary for employee ID 1: " + foundSalary);
+        
+        // Calculate total payroll
+        System.out.println("\n--- Total Payroll ---");
+        double totalPayroll = 0;
+        for (Salary salary : employeeSalaries.values()) {
+            totalPayroll += salary.getTotal();
+        }
+        System.out.println("Total payroll: $" + String.format("%.2f", totalPayroll));
+        
+        // Filter by department
+        System.out.println("\n--- Engineering Department ---");
+        for (Map.Entry<Employee, Salary> entry : employeeSalaries.entrySet()) {
+            if (entry.getKey().getDepartment().equals("Engineering")) {
+                System.out.println(entry.getKey().getName() + ": $" + 
+                                  String.format("%.2f", entry.getValue().getTotal()));
+            }
+        }
+        
+        // ========== MAP OF STRING TO LIST ==========
+        System.out.println("\n--- Map of Department to Employees ---");
+        
+        Map<String, java.util.List<String>> deptEmployees = new HashMap<>();
+        
+        // Group employees by department
+        for (Employee emp : employeeSalaries.keySet()) {
+            String dept = emp.getDepartment();
+            deptEmployees.computeIfAbsent(dept, k -> new java.util.ArrayList<>())
+                        .add(emp.getName());
+        }
+        
+        System.out.println("Employees by department:");
+        for (Map.Entry<String, java.util.List<String>> entry : deptEmployees.entrySet()) {
+            System.out.println("  " + entry.getKey() + ": " + entry.getValue());
+        }
+        
+        // ========== NESTED MAP ==========
+        System.out.println("\n--- Nested Map Example ---");
+        
+        Map<String, Map<String, String>> config = new HashMap<>();
+        
+        // Database config
+        Map<String, String> dbConfig = new HashMap<>();
+        dbConfig.put("host", "localhost");
+        dbConfig.put("port", "5432");
+        dbConfig.put("database", "testdb");
+        config.put("database", dbConfig);
+        
+        // API config
+        Map<String, String> apiConfig = new HashMap<>();
+        apiConfig.put("baseUrl", "https://api.example.com");
+        apiConfig.put("timeout", "30");
+        apiConfig.put("version", "v1");
+        config.put("api", apiConfig);
+        
+        // Access nested values
+        System.out.println("Database host: " + config.get("database").get("host"));
+        System.out.println("API base URL: " + config.get("api").get("baseUrl"));
+        
+        // Print all config
+        System.out.println("\nAll configuration:");
+        for (Map.Entry<String, Map<String, String>> section : config.entrySet()) {
+            System.out.println("[" + section.getKey() + "]");
+            for (Map.Entry<String, String> setting : section.getValue().entrySet()) {
+                System.out.println("  " + setting.getKey() + " = " + setting.getValue());
+            }
+        }
+    }
+}
+
+OUTPUT:
+-------
+================================================
+          MAP WITH CUSTOM OBJECTS
+================================================
+
+--- All Employees and Salaries ---
+Employee{id=1, name='Alice', dept='Engineering'}
+  Salary{base=80000.00, bonus=10000.00, total=90000.00}
+Employee{id=2, name='Bob', dept='Marketing'}
+  Salary{base=70000.00, bonus=8000.00, total=78000.00}
+Employee{id=3, name='Charlie', dept='Engineering'}
+  Salary{base=85000.00, bonus=12000.00, total=97000.00}
+Employee{id=4, name='Diana', dept='HR'}
+  Salary{base=65000.00, bonus=5000.00, total=70000.00}
+
+--- Find Salary ---
+Salary for employee ID 1: Salary{base=80000.00, bonus=10000.00, total=90000.00}
+
+--- Total Payroll ---
+Total payroll: $335000.00
+
+--- Engineering Department ---
+Alice: $90000.00
+Charlie: $97000.00
+
+--- Map of Department to Employees ---
+Employees by department:
+  Engineering: [Alice, Charlie]
+  Marketing: [Bob]
+  HR: [Diana]
+
+--- Nested Map Example ---
+Database host: localhost
+API base URL: https://api.example.com
+
+All configuration:
+[database]
+  host = localhost
+  port = 5432
+  database = testdb
+[api]
+  baseUrl = https://api.example.com
+  timeout = 30
+  version = v1
+
+
+================================================================================
+                    PART 4: ITERATOR
+================================================================================
+
+What is Iterator?
+-----------------
+- An object that enables traversing a collection
+- Provides methods to check for next element and retrieve it
+- Allows safe removal of elements during iteration
+
+Iterator Methods:
+-----------------
++------------------+------------------------------------------------------------+
+| Method           | Description                                                |
++------------------+------------------------------------------------------------+
+| hasNext()        | Returns true if more elements exist                        |
+| next()           | Returns next element                                       |
+| remove()         | Removes current element (optional operation)               |
++------------------+------------------------------------------------------------+
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 7: Iterator Usage
+--------------------------------------------------------------------------------
+
+import java.util.*;
+
+public class IteratorDemo {
+    public static void main(String[] args) {
+        
+        System.out.println("================================================");
+        System.out.println("                ITERATOR DEMO");
+        System.out.println("================================================\n");
+        
+        // ========== BASIC ITERATOR ==========
+        System.out.println("--- Basic Iterator Usage ---");
+        
+        List<String> fruits = new ArrayList<>();
+        fruits.add("Apple");
+        fruits.add("Banana");
+        fruits.add("Cherry");
+        fruits.add("Date");
+        
+        System.out.println("Original list: " + fruits);
+        
+        // Get iterator
+        Iterator<String> iterator = fruits.iterator();
+        
+        // Traverse using iterator
+        System.out.println("\nUsing Iterator:");
+        while (iterator.hasNext()) {
+            String fruit = iterator.next();
+            System.out.println("  - " + fruit);
+        }
+        
+        // ========== REMOVING DURING ITERATION ==========
+        System.out.println("\n--- Removing During Iteration ---");
+        
+        List<Integer> numbers = new ArrayList<>();
+        numbers.add(1);
+        numbers.add(2);
+        numbers.add(3);
+        numbers.add(4);
+        numbers.add(5);
+        numbers.add(6);
+        
+        System.out.println("Original: " + numbers);
+        
+        // Remove even numbers using iterator
+        Iterator<Integer> numIterator = numbers.iterator();
+        while (numIterator.hasNext()) {
+            int num = numIterator.next();
+            if (num % 2 == 0) {
+                numIterator.remove();    // Safe removal
+            }
+        }
+        
+        System.out.println("After removing evens: " + numbers);
+        
+        // ========== LISTITERATOR (BIDIRECTIONAL) ==========
+        System.out.println("\n--- ListIterator (Bidirectional) ---");
+        
+        List<String> colors = new ArrayList<>();
+        colors.add("Red");
+        colors.add("Green");
+        colors.add("Blue");
+        
+        ListIterator<String> listIterator = colors.listIterator();
+        
+        // Forward traversal
+        System.out.println("Forward:");
+        while (listIterator.hasNext()) {
+            int index = listIterator.nextIndex();
+            String color = listIterator.next();
+            System.out.println("  [" + index + "] " + color);
+        }
+        
+        // Backward traversal
+        System.out.println("Backward:");
+        while (listIterator.hasPrevious()) {
+            int index = listIterator.previousIndex();
+            String color = listIterator.previous();
+            System.out.println("  [" + index + "] " + color);
+        }
+        
+        // Modify during iteration
+        System.out.println("\nModifying during iteration:");
+        listIterator = colors.listIterator();
+        while (listIterator.hasNext()) {
+            String color = listIterator.next();
+            if (color.equals("Green")) {
+                listIterator.set("Dark Green");    // Replace
+            }
+            if (color.equals("Blue")) {
+                listIterator.add("Yellow");        // Add after current
+            }
+        }
+        System.out.println("Modified list: " + colors);
+        
+        // ========== ITERATOR FOR SET ==========
+        System.out.println("\n--- Iterator for Set ---");
+        
+        Set<String> cities = new LinkedHashSet<>();
+        cities.add("New York");
+        cities.add("London");
+        cities.add("Tokyo");
+        cities.add("Paris");
+        
+        Iterator<String> cityIterator = cities.iterator();
+        while (cityIterator.hasNext()) {
+            System.out.println("  " + cityIterator.next());
+        }
+        
+        // ========== ITERATOR FOR MAP ==========
+        System.out.println("\n--- Iterator for Map ---");
+        
+        Map<String, Integer> scores = new LinkedHashMap<>();
+        scores.put("Alice", 95);
+        scores.put("Bob", 87);
+        scores.put("Charlie", 92);
+        
+        // Iterate over entries
+        Iterator<Map.Entry<String, Integer>> entryIterator = scores.entrySet().iterator();
+        while (entryIterator.hasNext()) {
+            Map.Entry<String, Integer> entry = entryIterator.next();
+            System.out.println("  " + entry.getKey() + " = " + entry.getValue());
+        }
+        
+        // Remove entries during iteration
+        System.out.println("\nRemoving scores below 90:");
+        entryIterator = scores.entrySet().iterator();
+        while (entryIterator.hasNext()) {
+            Map.Entry<String, Integer> entry = entryIterator.next();
+            if (entry.getValue() < 90) {
+                System.out.println("  Removing: " + entry.getKey());
+                entryIterator.remove();
+            }
+        }
+        System.out.println("After removal: " + scores);
+    }
+}
+
+OUTPUT:
+-------
+================================================
+                ITERATOR DEMO
+================================================
+
+--- Basic Iterator Usage ---
+Original list: [Apple, Banana, Cherry, Date]
+
+Using Iterator:
+  - Apple
+  - Banana
+  - Cherry
+  - Date
+
+--- Removing During Iteration ---
+Original: [1, 2, 3, 4, 5, 6]
+After removing evens: [1, 3, 5]
+
+--- ListIterator (Bidirectional) ---
+Forward:
+  [0] Red
+  [1] Green
+  [2] Blue
+Backward:
+  [2] Blue
+  [1] Green
+  [0] Red
+
+Modifying during iteration:
+Modified list: [Red, Dark Green, Blue, Yellow]
+
+--- Iterator for Set ---
+  New York
+  London
+  Tokyo
+  Paris
+
+--- Iterator for Map ---
+  Alice = 95
+  Bob = 87
+  Charlie = 92
+
+Removing scores below 90:
+  Removing: Bob
+After removal: {Alice=95, Charlie=92}
+
+
+================================================================================
+                    PART 5: COLLECTIONS UTILITY CLASS
+================================================================================
+
+The Collections class provides static methods for operating on collections:
+- Sorting
+- Searching
+- Shuffling
+- Reversing
+- Finding min/max
+- Creating unmodifiable/synchronized collections
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 8: Collections Utility Methods
+--------------------------------------------------------------------------------
+
+import java.util.*;
+
+public class CollectionsUtilityDemo {
+    public static void main(String[] args) {
+        
+        System.out.println("================================================");
+        System.out.println("          COLLECTIONS UTILITY DEMO");
+        System.out.println("================================================\n");
+        
+        // ========== SORTING ==========
+        System.out.println("--- Sorting ---");
+        
+        List<Integer> numbers = new ArrayList<>(Arrays.asList(5, 2, 8, 1, 9, 3));
+        System.out.println("Original: " + numbers);
+        
+        // Sort ascending
+        Collections.sort(numbers);
+        System.out.println("Sorted ascending: " + numbers);
+        
+        // Sort descending
+        Collections.sort(numbers, Collections.reverseOrder());
+        System.out.println("Sorted descending: " + numbers);
+        
+        // Sort strings
+        List<String> names = new ArrayList<>(Arrays.asList("Charlie", "Alice", "Bob", "Diana"));
+        Collections.sort(names);
+        System.out.println("Sorted names: " + names);
+        
+        // Case-insensitive sort
+        List<String> mixedCase = new ArrayList<>(Arrays.asList("banana", "Apple", "cherry", "DATE"));
+        Collections.sort(mixedCase, String.CASE_INSENSITIVE_ORDER);
+        System.out.println("Case-insensitive sort: " + mixedCase);
+        
+        // ========== REVERSE ==========
+        System.out.println("\n--- Reverse ---");
+        
+        List<String> letters = new ArrayList<>(Arrays.asList("A", "B", "C", "D", "E"));
+        System.out.println("Original: " + letters);
+        
+        Collections.reverse(letters);
+        System.out.println("Reversed: " + letters);
+        
+        // ========== SHUFFLE ==========
+        System.out.println("\n--- Shuffle ---");
+        
+        List<Integer> deck = new ArrayList<>();
+        for (int i = 1; i <= 10; i++) {
+            deck.add(i);
+        }
+        System.out.println("Original: " + deck);
+        
+        Collections.shuffle(deck);
+        System.out.println("Shuffled: " + deck);
+        
+        Collections.shuffle(deck, new Random(42));    // With seed for reproducibility
+        System.out.println("Shuffled (seeded): " + deck);
+        
+        // ========== MIN AND MAX ==========
+        System.out.println("\n--- Min and Max ---");
+        
+        List<Integer> values = Arrays.asList(45, 12, 78, 23, 56, 89, 34);
+        System.out.println("Values: " + values);
+        System.out.println("Min: " + Collections.min(values));
+        System.out.println("Max: " + Collections.max(values));
+        
+        List<String> words = Arrays.asList("apple", "zebra", "mango", "banana");
+        System.out.println("Words: " + words);
+        System.out.println("Min (alphabetically): " + Collections.min(words));
+        System.out.println("Max (alphabetically): " + Collections.max(words));
+        
+        // ========== FREQUENCY ==========
+        System.out.println("\n--- Frequency ---");
+        
+        List<String> items = Arrays.asList("a", "b", "a", "c", "a", "b", "d");
+        System.out.println("Items: " + items);
+        System.out.println("Frequency of 'a': " + Collections.frequency(items, "a"));
+        System.out.println("Frequency of 'b': " + Collections.frequency(items, "b"));
+        System.out.println("Frequency of 'z': " + Collections.frequency(items, "z"));
+        
+        // ========== BINARY SEARCH ==========
+        System.out.println("\n--- Binary Search (List must be sorted!) ---");
+        
+        List<Integer> sortedList = new ArrayList<>(Arrays.asList(10, 20, 30, 40, 50, 60, 70));
+        System.out.println("Sorted list: " + sortedList);
+        
+        int index = Collections.binarySearch(sortedList, 40);
+        System.out.println("Index of 40: " + index);
+        
+        index = Collections.binarySearch(sortedList, 35);
+        System.out.println("Index of 35 (not found): " + index);
+        System.out.println("(Negative means not found; insertion point = -(index+1))");
+        
+        // ========== FILL AND COPY ==========
+        System.out.println("\n--- Fill and Copy ---");
+        
+        List<String> toFill = new ArrayList<>(Arrays.asList("A", "B", "C", "D"));
+        System.out.println("Before fill: " + toFill);
+        
+        Collections.fill(toFill, "X");
+        System.out.println("After fill: " + toFill);
+        
+        // Copy (destination must be at least as large as source)
+        List<String> source = Arrays.asList("1", "2", "3");
+        List<String> dest = new ArrayList<>(Arrays.asList("A", "B", "C", "D", "E"));
+        
+        Collections.copy(dest, source);
+        System.out.println("After copy: " + dest);
+        
+        // ========== REPLACE ALL ==========
+        System.out.println("\n--- Replace All ---");
+        
+        List<String> data = new ArrayList<>(Arrays.asList("A", "B", "A", "C", "A"));
+        System.out.println("Before: " + data);
+        
+        Collections.replaceAll(data, "A", "Z");
+        System.out.println("After replacing A with Z: " + data);
+        
+        // ========== ROTATE ==========
+        System.out.println("\n--- Rotate ---");
+        
+        List<Integer> toRotate = new ArrayList<>(Arrays.asList(1, 2, 3, 4, 5));
+        System.out.println("Original: " + toRotate);
+        
+        Collections.rotate(toRotate, 2);    // Rotate right by 2
+        System.out.println("Rotated right by 2: " + toRotate);
+        
+        Collections.rotate(toRotate, -1);   // Rotate left by 1
+        System.out.println("Rotated left by 1: " + toRotate);
+        
+        // ========== SWAP ==========
+        System.out.println("\n--- Swap ---");
+        
+        List<String> toSwap = new ArrayList<>(Arrays.asList("A", "B", "C", "D"));
+        System.out.println("Before swap: " + toSwap);
+        
+        Collections.swap(toSwap, 0, 3);
+        System.out.println("After swap(0, 3): " + toSwap);
+        
+        // ========== UNMODIFIABLE COLLECTIONS ==========
+        System.out.println("\n--- Unmodifiable Collections ---");
+        
+        List<String> mutableList = new ArrayList<>(Arrays.asList("A", "B", "C"));
+        List<String> immutableList = Collections.unmodifiableList(mutableList);
+        
+        System.out.println("Immutable list: " + immutableList);
+        
+        try {
+            immutableList.add("D");    // Will throw exception
+        } catch (UnsupportedOperationException e) {
+            System.out.println("Cannot modify! UnsupportedOperationException thrown.");
+        }
+        
+        // ========== SINGLETON ==========
+        System.out.println("\n--- Singleton Collections ---");
+        
+        Set<String> singleSet = Collections.singleton("Only One");
+        List<String> singleList = Collections.singletonList("Only One");
+        Map<String, Integer> singleMap = Collections.singletonMap("key", 100);
+        
+        System.out.println("Singleton set: " + singleSet);
+        System.out.println("Singleton list: " + singleList);
+        System.out.println("Singleton map: " + singleMap);
+        
+        // ========== EMPTY COLLECTIONS ==========
+        System.out.println("\n--- Empty Collections ---");
+        
+        List<String> emptyList = Collections.emptyList();
+        Set<String> emptySet = Collections.emptySet();
+        Map<String, String> emptyMap = Collections.emptyMap();
+        
+        System.out.println("Empty list: " + emptyList + " (size: " + emptyList.size() + ")");
+        System.out.println("Empty set: " + emptySet + " (size: " + emptySet.size() + ")");
+        System.out.println("Empty map: " + emptyMap + " (size: " + emptyMap.size() + ")");
+        
+        // ========== NCOPIES ==========
+        System.out.println("\n--- nCopies ---");
+        
+        List<String> copies = Collections.nCopies(5, "Hello");
+        System.out.println("5 copies: " + copies);
+    }
+}
+
+
+================================================================================
+                    PART 6: COLLECTIONS IN SELENIUM AUTOMATION
+================================================================================
+
+--------------------------------------------------------------------------------
+EXAMPLE 9: Selenium Automation with Collections
+--------------------------------------------------------------------------------
+
+import java.util.*;
+
+// Simulated WebElement class
+class WebElement {
+    private String tagName;
+    private String text;
+    private String id;
+    private boolean displayed;
+    private boolean enabled;
+    private Map<String, String> attributes;
+    
+    public WebElement(String tagName, String text, String id) {
+        this.tagName = tagName;
+        this.text = text;
+        this.id = id;
+        this.displayed = true;
+        this.enabled = true;
+        this.attributes = new HashMap<>();
+    }
+    
+    public String getTagName() { return tagName; }
+    public String getText() { return text; }
+    public String getAttribute(String name) { return attributes.get(name); }
+    public boolean isDisplayed() { return displayed; }
+    public boolean isEnabled() { return enabled; }
+    
+    public void setAttribute(String name, String value) { 
+        attributes.put(name, value); 
+    }
+    public void setDisplayed(boolean displayed) { this.displayed = displayed; }
+    public void setEnabled(boolean enabled) { this.enabled = enabled; }
+    
+    public void click() {
+        System.out.println("Clicked: " + text);
+    }
+    
+    @Override
+    public String toString() {
+        return "<" + tagName + " id='" + id + "'>" + text + "</" + tagName + ">";
+    }
+}
+
+public class SeleniumCollectionsDemo {
+    public static void main(String[] args) {
+        
+        System.out.println("====================================================");
+        System.out.println("        COLLECTIONS IN SELENIUM AUTOMATION");
+        System.out.println("====================================================\n");
+        
+        // ========== LIST OF WEBELEMENTS ==========
+        System.out.println("--- Working with List of WebElements ---");
+        
+        // Simulate finding multiple elements
+        List<WebElement> menuItems = new ArrayList<>();
+        menuItems.add(new WebElement("a", "Home", "menu-home"));
+        menuItems.add(new WebElement("a", "Products", "menu-products"));
+        menuItems.add(new WebElement("a", "Services", "menu-services"));
+        menuItems.add(new WebElement("a", "About", "menu-about"));
+        menuItems.add(new WebElement("a", "Contact", "menu-contact"));
+        
+        // Print all menu items
+        System.out.println("Menu items found: " + menuItems.size());
+        for (int i = 0; i < menuItems.size(); i++) {
+            System.out.println("  [" + i + "] " + menuItems.get(i).getText());
+        }
+        
+        // Click specific menu item by text
+        System.out.println("\nClicking 'Products' menu:");
+        for (WebElement item : menuItems) {
+            if (item.getText().equals("Products")) {
+                item.click();
+                break;
+            }
+        }
+        
+        // Get all menu texts
+        List<String> menuTexts = new ArrayList<>();
+        for (WebElement item : menuItems) {
+            menuTexts.add(item.getText());
+        }
+        System.out.println("All menu texts: " + menuTexts);
+        
+        // ========== FILTERING ELEMENTS ==========
+        System.out.println("\n--- Filtering Elements ---");
+        
+        List<WebElement> buttons = new ArrayList<>();
+        
+        WebElement btn1 = new WebElement("button", "Submit", "btn-submit");
+        btn1.setEnabled(true);
+        buttons.add(btn1);
+        
+        WebElement btn2 = new WebElement("button", "Cancel", "btn-cancel");
+        btn2.setEnabled(true);
+        buttons.add(btn2);
+        
+        WebElement btn3 = new WebElement("button", "Delete", "btn-delete");
+        btn3.setEnabled(false);
+        buttons.add(btn3);
+        
+        WebElement btn4 = new WebElement("button", "Save", "btn-save");
+        btn4.setDisplayed(false);
+        buttons.add(btn4);
+        
+        // Filter enabled buttons
+        List<WebElement> enabledButtons = new ArrayList<>();
+        for (WebElement btn : buttons) {
+            if (btn.isEnabled() && btn.isDisplayed()) {
+                enabledButtons.add(btn);
+            }
+        }
+        System.out.println("Enabled & displayed buttons:");
+        for (WebElement btn : enabledButtons) {
+            System.out.println("  - " + btn.getText());
+        }
+        
+        // ========== MAP FOR LOCATORS ==========
+        System.out.println("\n--- Map for Storing Locators ---");
+        
+        Map<String, String> loginPageLocators = new LinkedHashMap<>();
+        loginPageLocators.put("username", "//input[@id='username']");
+        loginPageLocators.put("password", "//input[@id='password']");
+        loginPageLocators.put("loginButton", "//button[@type='submit']");
+        loginPageLocators.put("forgotPassword", "//a[text()='Forgot Password?']");
+        loginPageLocators.put("rememberMe", "//input[@id='remember']");
+        
+        System.out.println("Login Page Locators:");
+        for (Map.Entry<String, String> entry : loginPageLocators.entrySet()) {
+            System.out.println("  " + entry.getKey() + ": " + entry.getValue());
+        }
+        
+        // Use locator
+        String usernameLocator = loginPageLocators.get("username");
+        System.out.println("\nUsing locator: " + usernameLocator);
+        
+        // ========== MAP FOR TEST DATA ==========
+        System.out.println("\n--- Map for Test Data ---");
+        
+        Map<String, String> validUser = new LinkedHashMap<>();
+        validUser.put("username", "testuser");
+        validUser.put("password", "[REDACTED:PASSWORD]");
+        validUser.put("email", "test@example.com");
+        
+        Map<String, String> invalidUser = new LinkedHashMap<>();
+        invalidUser.put("username", "");
+        invalidUser.put("password", "short");
+        invalidUser.put("email", "invalid-email");
+        
+        System.out.println("Valid User Data: " + validUser);
+        System.out.println("Invalid User Data: " + invalidUser);
+        
+        // ========== LIST OF TEST DATA MAPS ==========
+        System.out.println("\n--- Multiple Test Data Sets ---");
+        
+        List<Map<String, String>> testDataSets = new ArrayList<>();
+        
+        Map<String, String> data1 = new HashMap<>();
+        data1.put("username", "user1");
+        data1.put("password", "pass1");
+        data1.put("expected", "success");
+        testDataSets.add(data1);
+        
+        Map<String, String> data2 = new HashMap<>();
+        data2.put("username", "user2");
+        data2.put("password", "wrongpass");
+        data2.put("expected", "failure");
+        testDataSets.add(data2);
+        
+        Map<String, String> data3 = new HashMap<>();
+        data3.put("username", "");
+        data3.put("password", "pass3");
+        data3.put("expected", "validation_error");
+        testDataSets.add(data3);
+        
+        System.out.println("Running " + testDataSets.size() + " test scenarios:");
+        for (int i = 0; i < testDataSets.size(); i++) {
+            Map<String, String> data = testDataSets.get(i);
+            System.out.println("\nScenario " + (i + 1) + ":");
+            System.out.println("  Username: " + data.get("username"));
+            System.out.println("  Password: " + (data.get("password").isEmpty() ? "[empty]" : "****"));
+            System.out.println("  Expected: " + data.get("expected"));
+        }
+        
+        // ========== SET FOR UNIQUE VALUES ==========
+        System.out.println("\n--- Set for Unique Values ---");
+        
+        // Simulate getting text from multiple elements
+        List<WebElement> productElements = new ArrayList<>();
+        productElements.add(new WebElement("span", "Electronics", "cat-1"));
+        productElements.add(new WebElement("span", "Clothing", "cat-2"));
+        productElements.add(new WebElement("span", "Electronics", "cat-3"));
+        productElements.add(new WebElement("span", "Books", "cat-4"));
+        productElements.add(new WebElement("span", "Clothing", "cat-5"));
+        
+        // Get unique categories
+        Set<String> uniqueCategories = new LinkedHashSet<>();
+        for (WebElement elem : productElements) {
+            uniqueCategories
+            
+--- ai stopped ---
+
+Yes, I apologize! Let me continue from where I stopped:
+
+```
+        // Get unique categories
+        Set<String> uniqueCategories = new LinkedHashSet<>();
+        for (WebElement elem : productElements) {
+            uniqueCategories.add(elem.getText());
+        }
+        
+        System.out.println("All categories (with duplicates): ");
+        for (WebElement elem : productElements) {
+            System.out.print(elem.getText() + ", ");
+        }
+        System.out.println("\nUnique categories: " + uniqueCategories);
+        
+        // ========== DROPDOWN HANDLING ==========
+        System.out.println("\n--- Dropdown Options Handling ---");
+        
+        List<WebElement> dropdownOptions = new ArrayList<>();
+        dropdownOptions.add(new WebElement("option", "Select Country", "opt-0"));
+        dropdownOptions.add(new WebElement("option", "USA", "opt-1"));
+        dropdownOptions.add(new WebElement("option", "Canada", "opt-2"));
+        dropdownOptions.add(new WebElement("option", "UK", "opt-3"));
+        dropdownOptions.add(new WebElement("option", "Australia", "opt-4"));
+        
+        // Get all option texts
+        List<String> optionTexts = new ArrayList<>();
+        for (WebElement option : dropdownOptions) {
+            optionTexts.add(option.getText());
+        }
+        System.out.println("Dropdown options: " + optionTexts);
+        
+        // Select by visible text
+        String selectText = "Canada";
+        for (WebElement option : dropdownOptions) {
+            if (option.getText().equals(selectText)) {
+                option.click();
+                break;
+            }
+        }
+        
+        // Verify option exists
+        boolean optionExists = optionTexts.contains("Germany");
+        System.out.println("'Germany' option exists: " + optionExists);
+        
+        // ========== TABLE DATA HANDLING ==========
+        System.out.println("\n--- Table Data Handling ---");
+        
+        // Simulate table data as List of Maps (each map is a row)
+        List<Map<String, String>> tableData = new ArrayList<>();
+        
+        Map<String, String> row1 = new LinkedHashMap<>();
+        row1.put("Name", "John Doe");
+        row1.put("Email", "john@example.com");
+        row1.put("Status", "Active");
+        tableData.add(row1);
+        
+        Map<String, String> row2 = new LinkedHashMap<>();
+        row2.put("Name", "Jane Smith");
+        row2.put("Email", "jane@example.com");
+        row2.put("Status", "Inactive");
+        tableData.add(row2);
+        
+        Map<String, String> row3 = new LinkedHashMap<>();
+        row3.put("Name", "Bob Wilson");
+        row3.put("Email", "bob@example.com");
+        row3.put("Status", "Active");
+        tableData.add(row3);
+        
+        // Print table
+        System.out.println("Table Data:");
+        System.out.println("+------------------+----------------------+----------+");
+        System.out.println("| Name             | Email                | Status   |");
+        System.out.println("+------------------+----------------------+----------+");
+        for (Map<String, String> row : tableData) {
+            System.out.printf("| %-16s | %-20s | %-8s |%n",
+                row.get("Name"), row.get("Email"), row.get("Status"));
+        }
+        System.out.println("+------------------+----------------------+----------+");
+        
+        // Find row by condition
+        System.out.println("\nFinding active users:");
+        for (Map<String, String> row : tableData) {
+            if (row.get("Status").equals("Active")) {
+                System.out.println("  - " + row.get("Name"));
+            }
+        }
+        
+        // Find row by email
+        String searchEmail = "jane@example.com";
+        System.out.println("\nSearching for: " + searchEmail);
+        for (Map<String, String> row : tableData) {
+            if (row.get("Email").equals(searchEmail)) {
+                System.out.println("  Found: " + row);
+            }
+        }
+        
+        // ========== WINDOW HANDLES ==========
+        System.out.println("\n--- Window Handles (Set) ---");
+        
+        Set<String> windowHandles = new LinkedHashSet<>();
+        windowHandles.add("CDwindow-1234567890");
+        windowHandles.add("CDwindow-0987654321");
+        windowHandles.add("CDwindow-1122334455");
+        
+        String mainWindow = windowHandles.iterator().next();
+        System.out.println("Main window: " + mainWindow);
+        System.out.println("All windows: " + windowHandles);
+        
+        // Switch to new window (last opened)
+        String newWindow = "";
+        for (String handle : windowHandles) {
+            if (!handle.equals(mainWindow)) {
+                newWindow = handle;
+            }
+        }
+        System.out.println("Switching to: " + newWindow);
+    }
+}
+
+OUTPUT:
+-------
+====================================================
+        COLLECTIONS IN SELENIUM AUTOMATION
+====================================================
+
+--- Working with List of WebElements ---
+Menu items found: 5
+  [0] Home
+  [1] Products
+  [2] Services
+  [3] About
+  [4] Contact
+
+Clicking 'Products' menu:
+Clicked: Products
+All menu texts: [Home, Products, Services, About, Contact]
+
+--- Filtering Elements ---
+Enabled & displayed buttons:
+  - Submit
+  - Cancel
+
+--- Map for Storing Locators ---
+Login Page Locators:
+  username: //input[@id='username']
+  password: //input[@id='password']
+  loginButton: //button[@type='submit']
+  forgotPassword: //a[text()='Forgot Password?']
+  rememberMe: //input[@id='remember']
+
+Using locator: //input[@id='username']
+
+--- Map for Test Data ---
+Valid User Data: {username=testuser, password=[REDACTED], email=test@example.com}
+Invalid User Data: {username=, password=short, email=invalid-email}
+
+--- Multiple Test Data Sets ---
+Running 3 test scenarios:
+
+Scenario 1:
+  Username: user1
+  Password: ****
+  Expected: success
+
+Scenario 2:
+  Username: user2
+  Password: ****
+  Expected: failure
+
+Scenario 3:
+  Username: 
+  Password: ****
+  Expected: validation_error
+
+--- Set for Unique Values ---
+All categories (with duplicates): 
+Electronics, Clothing, Electronics, Books, Clothing, 
+Unique categories: [Electronics, Clothing, Books]
+
+--- Dropdown Options Handling ---
+Dropdown options: [Select Country, USA, Canada, UK, Australia]
+Clicked: Canada
+'Germany' option exists: false
+
+--- Table Data Handling ---
+Table Data:
++------------------+----------------------+----------+
+| Name             | Email                | Status   |
++------------------+----------------------+----------+
+| John Doe         | john@example.com     | Active   |
+| Jane Smith       | jane@example.com     | Inactive |
+| Bob Wilson       | bob@example.com      | Active   |
++------------------+----------------------+----------+
+
+Finding active users:
+  - John Doe
+  - Bob Wilson
+
+Searching for: jane@example.com
+  Found: {Name=Jane Smith, Email=jane@example.com, Status=Inactive}
+
+--- Window Handles (Set) ---
+Main window: CDwindow-1234567890
+All windows: [CDwindow-1234567890, CDwindow-0987654321, CDwindow-1122334455]
+Switching to: CDwindow-1122334455
+
+
+================================================================================
+                    PART 7: COLLECTIONS IN REST ASSURED AUTOMATION
+================================================================================
+
+--------------------------------------------------------------------------------
+EXAMPLE 10: REST Assured Automation with Collections
+--------------------------------------------------------------------------------
+
+import java.util.*;
+
+public class RestAssuredCollectionsDemo {
+    public static void main(String[] args) {
+        
+        System.out.println("====================================================");
+        System.out.println("       COLLECTIONS IN REST ASSURED AUTOMATION");
+        System.out.println("====================================================\n");
+        
+        // ========== LIST FOR JSON ARRAY RESPONSE ==========
+        System.out.println("--- Handling JSON Array Response ---");
+        
+        // Simulated API response - List of users
+        List<Map<String, Object>> usersResponse = new ArrayList<>();
+        
+        Map<String, Object> user1 = new LinkedHashMap<>();
+        user1.put("id", 1);
+        user1.put("name", "John Doe");
+        user1.put("email", "john@example.com");
+        user1.put("active", true);
+        usersResponse.add(user1);
+        
+        Map<String, Object> user2 = new LinkedHashMap<>();
+        user2.put("id", 2);
+        user2.put("name", "Jane Smith");
+        user2.put("email", "jane@example.com");
+        user2.put("active", true);
+        usersResponse.add(user2);
+        
+        Map<String, Object> user3 = new LinkedHashMap<>();
+        user3.put("id", 3);
+        user3.put("name", "Bob Wilson");
+        user3.put("email", "bob@example.com");
+        user3.put("active", false);
+        usersResponse.add(user3);
+        
+        // Print response
+        System.out.println("API Response (Users):");
+        System.out.println("[");
+        for (int i = 0; i < usersResponse.size(); i++) {
+            System.out.println("  " + usersResponse.get(i) + 
+                              (i < usersResponse.size() - 1 ? "," : ""));
+        }
+        System.out.println("]");
+        
+        // Extract all names
+        List<String> allNames = new ArrayList<>();
+        for (Map<String, Object> user : usersResponse) {
+            allNames.add((String) user.get("name"));
+        }
+        System.out.println("\nAll user names: " + allNames);
+        
+        // Filter active users
+        List<Map<String, Object>> activeUsers = new ArrayList<>();
+        for (Map<String, Object> user : usersResponse) {
+            if ((Boolean) user.get("active")) {
+                activeUsers.add(user);
+            }
+        }
+        System.out.println("Active users count: " + activeUsers.size());
+        
+        // Find user by ID
+        int searchId = 2;
+        Map<String, Object> foundUser = null;
+        for (Map<String, Object> user : usersResponse) {
+            if ((Integer) user.get("id") == searchId) {
+                foundUser = user;
+                break;
+            }
+        }
+        System.out.println("User with ID " + searchId + ": " + foundUser);
+        
+        // ========== MAP FOR REQUEST BODY ==========
+        System.out.println("\n--- Creating Request Body ---");
+        
+        Map<String, Object> createUserRequest = new LinkedHashMap<>();
+        createUserRequest.put("name", "Alice Brown");
+        createUserRequest.put("email", "alice@example.com");
+        createUserRequest.put("password", "[REDACTED:PASSWORD]");
+        createUserRequest.put("role", "admin");
+        
+        // Nested object
+        Map<String, Object> address = new LinkedHashMap<>();
+        address.put("street", "123 Main St");
+        address.put("city", "New York");
+        address.put("zipCode", "10001");
+        createUserRequest.put("address", address);
+        
+        // Array in request
+        List<String> permissions = Arrays.asList("read", "write", "delete");
+        createUserRequest.put("permissions", permissions);
+        
+        System.out.println("Request Body:");
+        printJson(createUserRequest, 0);
+        
+        // ========== MAP FOR HEADERS ==========
+        System.out.println("\n--- Request Headers ---");
+        
+        Map<String, String> headers = new LinkedHashMap<>();
+        headers.put("Content-Type", "application/json");
+        headers.put("Accept", "application/json");
+        headers.put("Authorization", "Bearer eyJhbGciOiJIUzI1NiIs...");
+        headers.put("X-API-Key", "api-key-12345");
+        headers.put("X-Request-ID", UUID.randomUUID().toString());
+        
+        System.out.println("Headers:");
+        for (Map.Entry<String, String> header : headers.entrySet()) {
+            String value = header.getKey().contains("Authorization") ? 
+                          "Bearer ****" : header.getValue();
+            System.out.println("  " + header.getKey() + ": " + value);
+        }
+        
+        // ========== MAP FOR QUERY PARAMETERS ==========
+        System.out.println("\n--- Query Parameters ---");
+        
+        Map<String, String> queryParams = new LinkedHashMap<>();
+        queryParams.put("page", "1");
+        queryParams.put("limit", "10");
+        queryParams.put("sort", "name");
+        queryParams.put("order", "asc");
+        queryParams.put("status", "active");
+        
+        // Build query string
+        StringBuilder queryString = new StringBuilder();
+        for (Map.Entry<String, String> param : queryParams.entrySet()) {
+            if (queryString.length() > 0) {
+                queryString.append("&");
+            }
+            queryString.append(param.getKey()).append("=").append(param.getValue());
+        }
+        
+        System.out.println("Query Parameters: " + queryParams);
+        System.out.println("Query String: ?" + queryString);
+        
+        // ========== LIST FOR PATH PARAMETERS ==========
+        System.out.println("\n--- Path Parameters ---");
+        
+        Map<String, String> pathParams = new LinkedHashMap<>();
+        pathParams.put("version", "v1");
+        pathParams.put("resource", "users");
+        pathParams.put("id", "123");
+        
+        String urlTemplate = "/api/{version}/{resource}/{id}";
+        String actualUrl = urlTemplate;
+        for (Map.Entry<String, String> param : pathParams.entrySet()) {
+            actualUrl = actualUrl.replace("{" + param.getKey() + "}", param.getValue());
+        }
+        
+        System.out.println("URL Template: " + urlTemplate);
+        System.out.println("Actual URL: " + actualUrl);
+        
+        // ========== NESTED JSON RESPONSE ==========
+        System.out.println("\n--- Handling Nested JSON Response ---");
+        
+        // Simulated nested response
+        Map<String, Object> apiResponse = new LinkedHashMap<>();
+        apiResponse.put("status", "success");
+        apiResponse.put("code", 200);
+        
+        Map<String, Object> data = new LinkedHashMap<>();
+        data.put("totalRecords", 100);
+        data.put("currentPage", 1);
+        data.put("totalPages", 10);
+        
+        List<Map<String, Object>> products = new ArrayList<>();
+        
+        Map<String, Object> product1 = new LinkedHashMap<>();
+        product1.put("id", 101);
+        product1.put("name", "Laptop");
+        product1.put("price", 999.99);
+        product1.put("inStock", true);
+        products.add(product1);
+        
+        Map<String, Object> product2 = new LinkedHashMap<>();
+        product2.put("id", 102);
+        product2.put("name", "Mouse");
+        product2.put("price", 29.99);
+        product2.put("inStock", true);
+        products.add(product2);
+        
+        data.put("products", products);
+        apiResponse.put("data", data);
+        
+        // Access nested values
+        System.out.println("Accessing nested values:");
+        System.out.println("  Status: " + apiResponse.get("status"));
+        
+        @SuppressWarnings("unchecked")
+        Map<String, Object> responseData = (Map<String, Object>) apiResponse.get("data");
+        System.out.println("  Total Records: " + responseData.get("totalRecords"));
+        
+        @SuppressWarnings("unchecked")
+        List<Map<String, Object>> productList = 
+            (List<Map<String, Object>>) responseData.get("products");
+        System.out.println("  Products count: " + productList.size());
+        
+        // Get first product name
+        System.out.println("  First product: " + productList.get(0).get("name"));
+        
+        // Get all product names
+        List<String> productNames = new ArrayList<>();
+        for (Map<String, Object> product : productList) {
+            productNames.add((String) product.get("name"));
+        }
+        System.out.println("  All product names: " + productNames);
+        
+        // ========== VALIDATION HELPERS ==========
+        System.out.println("\n--- Response Validation Helpers ---");
+        
+        // Expected vs Actual comparison
+        Map<String, Object> expectedResponse = new LinkedHashMap<>();
+        expectedResponse.put("status", "success");
+        expectedResponse.put("code", 200);
+        
+        Map<String, Object> actualResponse = new LinkedHashMap<>();
+        actualResponse.put("status", "success");
+        actualResponse.put("code", 200);
+        
+        System.out.println("Expected: " + expectedResponse);
+        System.out.println("Actual: " + actualResponse);
+        System.out.println("Match: " + expectedResponse.equals(actualResponse));
+        
+        // Validate specific fields
+        System.out.println("\nField validations:");
+        validateField("status", "success", actualResponse.get("status"));
+        validateField("code", 200, actualResponse.get("code"));
+        validateField("code", 201, actualResponse.get("code"));
+        
+        // ========== TEST DATA PROVIDER ==========
+        System.out.println("\n--- Test Data Provider ---");
+        
+        List<Map<String, Object>> testCases = new ArrayList<>();
+        
+        // Test case 1: Valid login
+        Map<String, Object> tc1 = new LinkedHashMap<>();
+        tc1.put("testName", "Valid Login");
+        tc1.put("username", "validuser");
+        tc1.put("password", "[REDACTED:PASSWORD]");
+        tc1.put("expectedStatus", 200);
+        tc1.put("expectedMessage", "Login successful");
+        testCases.add(tc1);
+        
+        // Test case 2: Invalid password
+        Map<String, Object> tc2 = new LinkedHashMap<>();
+        tc2.put("testName", "Invalid Password");
+        tc2.put("username", "validuser");
+        tc2.put("password", "wrongpass");
+        tc2.put("expectedStatus", 401);
+        tc2.put("expectedMessage", "Invalid credentials");
+        testCases.add(tc2);
+        
+        // Test case 3: Empty username
+        Map<String, Object> tc3 = new LinkedHashMap<>();
+        tc3.put("testName", "Empty Username");
+        tc3.put("username", "");
+        tc3.put("password", "somepass");
+        tc3.put("expectedStatus", 400);
+        tc3.put("expectedMessage", "Username is required");
+        testCases.add(tc3);
+        
+        // Execute test cases
+        System.out.println("Executing " + testCases.size() + " test cases:\n");
+        
+        for (int i = 0; i < testCases.size(); i++) {
+            Map<String, Object> tc = testCases.get(i);
+            System.out.println("Test " + (i + 1) + ": " + tc.get("testName"));
+            System.out.println("  Request: username=" + tc.get("username") + 
+                              ", password=" + (tc.get("password").toString().isEmpty() ? 
+                              "[empty]" : "****"));
+            System.out.println("  Expected: status=" + tc.get("expectedStatus") + 
+                              ", message=" + tc.get("expectedMessage"));
+            System.out.println("  Result: PASS");
+            System.out.println();
+        }
+        
+        // ========== RESPONSE BODY ASSERTIONS ==========
+        System.out.println("--- Response Body Assertions ---");
+        
+        // Simulate response
+        Map<String, Object> loginResponse = new LinkedHashMap<>();
+        loginResponse.put("success", true);
+        loginResponse.put("token", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...");
+        loginResponse.put("expiresIn", 3600);
+        
+        Map<String, Object> userInfo = new LinkedHashMap<>();
+        userInfo.put("id", 1);
+        userInfo.put("username", "testuser");
+        userInfo.put("roles", Arrays.asList("admin", "user"));
+        loginResponse.put("user", userInfo);
+        
+        // Assertions
+        System.out.println("Assertions:");
+        assertNotNull("success", loginResponse.get("success"));
+        assertTrue("success is true", (Boolean) loginResponse.get("success"));
+        assertNotNull("token", loginResponse.get("token"));
+        assertEquals("expiresIn", 3600, loginResponse.get("expiresIn"));
+        
+        @SuppressWarnings("unchecked")
+        Map<String, Object> user = (Map<String, Object>) loginResponse.get("user");
+        assertEquals("user.username", "testuser", user.get("username"));
+        
+        @SuppressWarnings("unchecked")
+        List<String> roles = (List<String>) user.get("roles");
+        assertTrue("user has admin role", roles.contains("admin"));
+        assertEquals("roles count", 2, roles.size());
+    }
+    
+    // Helper method to print JSON-like structure
+    private static void printJson(Map<String, Object> map, int indent) {
+        String spaces = "  ".repeat(indent);
+        System.out.println(spaces + "{");
+        
+        int count = 0;
+        for (Map.Entry<String, Object> entry : map.entrySet()) {
+            String comma = (++count < map.size()) ? "," : "";
+            Object value = entry.getValue();
+            
+            if (value instanceof Map) {
+                System.out.println(spaces + "  \"" + entry.getKey() + "\": ");
+                printJson((Map<String, Object>) value, indent + 1);
+            } else if (value instanceof List) {
+                System.out.println(spaces + "  \"" + entry.getKey() + "\": " + value + comma);
+            } else if (value instanceof String) {
+                System.out.println(spaces + "  \"" + entry.getKey() + "\": \"" + value + "\"" + comma);
+            } else {
+                System.out.println(spaces + "  \"" + entry.getKey() + "\": " + value + comma);
+            }
+        }
+        System.out.println(spaces + "}");
+    }
+    
+    // Validation helper methods
+    private static void validateField(String fieldName, Object expected, Object actual) {
+        boolean match = expected.equals(actual);
+        System.out.println("  " + fieldName + ": expected=" + expected + 
+                          ", actual=" + actual + " -> " + (match ? "PASS" : "FAIL"));
+    }
+    
+    private static void assertNotNull(String field, Object value) {
+        System.out.println("  assertNotNull(" + field + "): " + 
+                          (value != null ? "PASS" : "FAIL"));
+    }
+    
+    private static void assertTrue(String message, boolean condition) {
+        System.out.println("  assertTrue(" + message + "): " + 
+                          (condition ? "PASS" : "FAIL"));
+    }
+    
+    private static void assertEquals(String field, Object expected, Object actual) {
+        boolean match = expected.equals(actual);
+        System.out.println("  assertEquals(" + field + "): " + 
+                          (match ? "PASS" : "FAIL - expected: " + expected + ", actual: " + actual));
+    }
+}
+
+OUTPUT:
+-------
+====================================================
+       COLLECTIONS IN REST ASSURED AUTOMATION
+====================================================
+
+--- Handling JSON Array Response ---
+API Response (Users):
+[
+  {id=1, name=John Doe, email=john@example.com, active=true},
+  {id=2, name=Jane Smith, email=jane@example.com, active=true},
+  {id=3, name=Bob Wilson, email=bob@example.com, active=false}
+]
+
+All user names: [John Doe, Jane Smith, Bob Wilson]
+Active users count: 2
+User with ID 2: {id=2, name=Jane Smith, email=jane@example.com, active=true}
+
+--- Creating Request Body ---
+Request Body:
+{
+  "name": "Alice Brown",
+  "email": "alice@example.com",
+  "password": "[REDACTED:PASSWORD]",
+  "role": "admin",
+  "address": 
+  {
+    "street": "123 Main St",
+    "city": "New York",
+    "zipCode": "10001"
+  }
+  "permissions": [read, write, delete]
+}
+
+--- Request Headers ---
+Headers:
+  Content-Type: application/json
+  Accept: application/json
+  Authorization: Bearer ****
+  X-API-Key: api-key-12345
+  X-Request-ID: a1b2c3d4-e5f6-7890-abcd-ef1234567890
+
+--- Query Parameters ---
+Query Parameters: {page=1, limit=10, sort=name, order=asc, status=active}
+Query String: ?page=1&limit=10&sort=name&order=asc&status=active
+
+--- Path Parameters ---
+URL Template: /api/{version}/{resource}/{id}
+Actual URL: /api/v1/users/123
+
+--- Handling Nested JSON Response ---
+Accessing nested values:
+  Status: success
+  Total Records: 100
+  Products count: 2
+  First product: Laptop
+  All product names: [Laptop, Mouse]
+
+--- Response Validation Helpers ---
+Expected: {status=success, code=200}
+Actual: {status=success, code=200}
+Match: true
+
+Field validations:
+  status: expected=success, actual=success -> PASS
+  code: expected=200, actual=200 -> PASS
+  code: expected=201, actual=200 -> FAIL
+
+--- Test Data Provider ---
+Executing 3 test cases:
+
+Test 1: Valid Login
+  Request: username=validuser, password=****
+  Expected: status=200, message=Login successful
+  Result: PASS
+
+Test 2: Invalid Password
+  Request: username=validuser, password=****
+  Expected: status=401, message=Invalid credentials
+  Result: PASS
+
+Test 3: Empty Username
+  Request: username=, password=****
+  Expected: status=400, message=Username is required
+  Result: PASS
+
+--- Response Body Assertions ---
+Assertions:
+  assertNotNull(success): PASS
+  assertTrue(success is true): PASS
+  assertNotNull(token): PASS
+  assertEquals(expiresIn): PASS
+  assertEquals(user.username): PASS
+  assertTrue(user has admin role): PASS
+  assertEquals(roles count): PASS
+
+
+================================================================================
+                    NEGATIVE SCENARIOS - COLLECTIONS
+================================================================================
+
+
+--------------------------------------------------------------------------------
+ERROR 1: IndexOutOfBoundsException
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE:
+-----------------
+import java.util.ArrayList;
+import java.util.List;
+
+public class IndexOutOfBoundsError {
+    public static void main(String[] args) {
+        List<String> list = new ArrayList<>();
+        list.add("A");
+        list.add("B");
+        list.add("C");
+        
+        // Accessing invalid index
+        System.out.println(list.get(5));    // ERROR! Index 5 doesn't exist
+        
+        // Accessing negative index
+        System.out.println(list.get(-1));   // ERROR! Negative index
+    }
+}
+
+ERROR MESSAGE:
+--------------
+Exception in thread "main" java.lang.IndexOutOfBoundsException: Index 5 out of bounds for length 3
+    at java.base/java.util.ArrayList.get(ArrayList.java:435)
+
+FIX:
+----
+import java.util.ArrayList;
+import java.util.List;
+
+public class IndexOutOfBoundsFixed {
+    public static void main(String[] args) {
+        List<String> list = new ArrayList<>();
+        list.add("A");
+        list.add("B");
+        list.add("C");
+        
+        System.out.println("List size: " + list.size());
+        
+        // Option 1: Check index before accessing
+        int index = 5;
+        if (index >= 0 && index < list.size()) {
+            System.out.println(list.get(index));
+        } else {
+            System.out.println("Index " + index + " is out of bounds!");
+        }
+        
+        // Option 2: Use try-catch
+        try {
+            System.out.println(list.get(5));
+        } catch (IndexOutOfBoundsException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+        
+        // Option 3: Safe method to get element
+        String element = getElementSafely(list, 5, "default");
+        System.out.println("Element: " + element);
+        
+        // Accessing last element safely
+        if (!list.isEmpty()) {
+            System.out.println("Last element: " + list.get(list.size() - 1));
+        }
+    }
+    
+    public static <T> T getElementSafely(List<T> list, int index, T defaultValue) {
+        if (list != null && index >= 0 && index < list.size()) {
+            return list.get(index);
+        }
+        return defaultValue;
+    }
+}
+
+OUTPUT:
+-------
+List size: 3
+Index 5 is out of bounds!
+Error: Index 5 out of bounds for length 3
+Element: default
+Last element: C
+
+
+--------------------------------------------------------------------------------
+ERROR 2: ConcurrentModificationException
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE:
+-----------------
+import java.util.ArrayList;
+import java.util.List;
+
+public class ConcurrentModificationError {
+    public static void main(String[] args) {
+        List<String> fruits = new ArrayList<>();
+        fruits.add("Apple");
+        fruits.add("Banana");
+        fruits.add("Cherry");
+        fruits.add("Date");
+        
+        // Modifying list while iterating with enhanced for loop
+        for (String fruit : fruits) {
+            if (fruit.startsWith("B")) {
+                fruits.remove(fruit);    // ERROR!
+            }
+        }
+    }
+}
+
+ERROR MESSAGE:
+--------------
+Exception in thread "main" java.util.ConcurrentModificationException
+    at java.base/java.util.ArrayList$Itr.checkForComodification(ArrayList.java:1013)
+
+FIX:
+----
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+public class ConcurrentModificationFixed {
+    public static void main(String[] args) {
+        List<String> fruits = new ArrayList<>();
+        fruits.add("Apple");
+        fruits.add("Banana");
+        fruits.add("Cherry");
+        fruits.add("Date");
+        
+        System.out.println("Original: " + fruits);
+        
+        // Option 1: Use Iterator's remove method
+        System.out.println("\n--- Using Iterator ---");
+        List<String> list1 = new ArrayList<>(fruits);
+        Iterator<String> iterator = list1.iterator();
+        while (iterator.hasNext()) {
+            String fruit = iterator.next();
+            if (fruit.startsWith("B")) {
+                iterator.remove();    // Safe removal
+            }
+        }
+        System.out.println("After removal: " + list1);
+        
+        // Option 2: Collect items to remove, then remove all
+        System.out.println("\n--- Using separate list ---");
+        List<String> list2 = new ArrayList<>(fruits);
+        List<String> toRemove = new ArrayList<>();
+        
+        for (String fruit : list2) {
+            if (fruit.startsWith("B")) {
+                toRemove.add(fruit);
+            }
+        }
+        list2.removeAll(toRemove);
+        System.out.println("After removal: " + list2);
+        
+        // Option 3: Use removeIf (Java 8+)
+        System.out.println("\n--- Using removeIf ---");
+        List<String> list3 = new ArrayList<>(fruits);
+        list3.removeIf(fruit -> fruit.startsWith("B"));
+        System.out.println("After removal: " + list3);
+        
+        // Option 4: Iterate backwards with index
+        System.out.println("\n--- Using backward iteration ---");
+        List<String> list4 = new ArrayList<>(fruits);
+        for (int i = list4.size() - 1; i >= 0; i--) {
+            if (list4.get(i).startsWith("B")) {
+                list4.remove(i);
+            }
+        }
+        System.out.println("After removal: " + list4);
+    }
+}
+
+OUTPUT:
+-------
+Original: [Apple, Banana, Cherry, Date]
+
+--- Using Iterator ---
+After removal: [Apple, Cherry, Date]
+
+--- Using separate list ---
+After removal: [Apple, Cherry, Date]
+
+--- Using removeIf ---
+After removal: [Apple, Cherry, Date]
+
+--- Using backward iteration ---
+After removal: [Apple, Cherry, Date]
+
+
+--------------------------------------------------------------------------------
+ERROR 3: NullPointerException with Collections
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE:
+-----------------
+import java.util.*;
+
+public class NullPointerError {
+    public static void main(String[] args) {
+        // Null list
+        List<String> list = null;
+        System.out.println(list.size());    // ERROR!
+        
+        // Null element in operations
+        List<String> fruits = new ArrayList<>();
+        fruits.add("Apple");
+        fruits.add(null);
+        fruits.add("Cherry");
+        
+        // Sorting with null
+        Collections.sort(fruits);    // ERROR! Can't compare null
+        
+        // TreeSet with null
+        Set<String> treeSet = new TreeSet<>();
+        treeSet.add("Apple");
+        treeSet.add(null);    // ERROR! TreeSet doesn't allow null
+    }
+}
+
+ERROR MESSAGE:
+--------------
+Exception in thread "main" java.lang.NullPointerException
+Exception in thread "main" java.lang.NullPointerException: Cannot invoke method on null
+
+FIX:
+----
+import java.util.*;
+
+public class NullPointerFixed {
+    public static void main(String[] args) {
+        
+        // Option 1: Check for null before using
+        System.out.println("--- Null check before use ---");
+        List<String> list = null;
+        
+        if (list != null) {
+            System.out.println("Size: " + list.size());
+        } else {
+            System.out.println("List is null!");
+        }
+        
+        // Option 2: Initialize with empty collection
+        System.out.println("\n--- Initialize with empty collection ---");
+        List<String> safeList = new ArrayList<>();    // Never null
+        System.out.println("Size: " + safeList.size());
+        
+        // Option 3: Use Optional (Java 8+)
+        System.out.println("\n--- Using Optional ---");
+        List<String> maybeNull = null;
+        int size = Optional.ofNullable(maybeNull)
+                          .map(List::size)
+                          .orElse(0);
+        System.out.println("Size (with Optional): " + size);
+        
+        // Option 4: Handle null elements before sorting
+        System.out.println("\n--- Handling null elements ---");
+        List<String> fruits = new ArrayList<>();
+        fruits.add("Cherry");
+        fruits.add(null);
+        fruits.add("Apple");
+        fruits.add(null);
+        fruits.add("Banana");
+        
+        System.out.println("Before: " + fruits);
+        
+        // Remove nulls before sorting
+        fruits.removeIf(Objects::isNull);
+        Collections.sort(fruits);
+        System.out.println("After removing nulls and sorting: " + fruits);
+        
+        // Option 5: Sort with null-safe comparator
+        System.out.println("\n--- Null-safe comparator ---");
+        List<String> withNulls = new ArrayList<>();
+        withNulls.add("Cherry");
+        withNulls.add(null);
+        withNulls.add("Apple");
+        
+        // Nulls first
+        withNulls.sort(Comparator.nullsFirst(Comparator.naturalOrder()));
+        System.out.println("Nulls first: " + withNulls);
+        
+        // Nulls last
+        withNulls.sort(Comparator.nullsLast(Comparator.naturalOrder()));
+        System.out.println("Nulls last: " + withNulls);
+        
+        // Option 6: Use HashSet instead of TreeSet for nulls
+        System.out.println("\n--- HashSet allows null ---");
+        Set<String> hashSet = new HashSet<>();
+        hashSet.add("Apple");
+        hashSet.add(null);    // OK in HashSet
+        hashSet.add("Cherry");
+        System.out.println("HashSet with null: " + hashSet);
+    }
+}
+
+OUTPUT:
+-------
+--- Null check before use ---
+List is null!
+
+--- Initialize with empty collection ---
+Size: 0
+
+--- Using Optional ---
+Size (with Optional): 0
+
+--- Handling null elements ---
+Before: [Cherry, null, Apple, null, Banana]
+After removing nulls and sorting: [Apple, Banana, Cherry]
+
+--- Null-safe comparator ---
+Nulls first: [null, Apple, Cherry]
+Nulls last: [Apple, Cherry, null]
+
+--- HashSet allows null ---
+HashSet with null: [null, Apple, Cherry]
+
+
+--------------------------------------------------------------------------------
+ERROR 4: UnsupportedOperationException
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE:
+-----------------
+import java.util.*;
+
+public class UnsupportedOperationError {
+    public static void main(String[] args) {
+        // Arrays.asList returns fixed-size list
+        List<String> fixedList = Arrays.asList("A", "B", "C");
+        fixedList.add("D");    // ERROR! Cannot add
+        fixedList.remove(0);   // ERROR! Cannot remove
+        
+        // Collections.unmodifiableList
+        List<String> original = new ArrayList<>(Arrays.asList("X", "Y"));
+        List<String> unmodifiable = Collections.unmodifiableList(original);
+        unmodifiable.add("Z");    // ERROR!
+        
+        // Collections.emptyList
+        List<String> empty = Collections.emptyList();
+        empty.add("A");    // ERROR!
+    }
+}
+
+ERROR MESSAGE:
+--------------
+Exception in thread "main" java.lang.UnsupportedOperationException
+    at java.base/java.util.AbstractList.add(AbstractList.java:153)
+
+FIX:
+----
+import java.util.*;
+
+public class UnsupportedOperationFixed {
+    public static void main(String[] args) {
+        
+        // Option 1: Wrap Arrays.asList with ArrayList
+        System.out.println("--- Wrapping Arrays.asList ---");
+        List<String> mutableList = new ArrayList<>(Arrays.asList("A", "B", "C"));
+        mutableList.add("D");
+        mutableList.remove(0);
+        System.out.println("Modified list: " + mutableList);
+        
+        // Option 2: Create new ArrayList and add elements
+        System.out.println("\n--- Creating new ArrayList ---");
+        List<String> newList = new ArrayList<>();
+        newList.add("X");
+        newList.add("Y");
+        newList.add("Z");
+        System.out.println("New list: " + newList);
+        
+        // Option 3: Check if list is modifiable before modifying
+        System.out.println("\n--- Safe modification ---");
+        List<String> maybeUnmodifiable = Collections.unmodifiableList(
+            new ArrayList<>(Arrays.asList("1", "2", "3"))
+        );
+        
+        try {
+            maybeUnmodifiable.add("4");
+        } catch (UnsupportedOperationException e) {
+            System.out.println("Cannot modify! Creating new list...");
+            List<String> modifiableCopy = new ArrayList<>(maybeUnmodifiable);
+            modifiableCopy.add("4");
+            System.out.println("New modifiable list: " + modifiableCopy);
+        }
+        
+        // Option 4: Use List.of carefully (Java 9+)
+        System.out.println("\n--- Java 9+ List.of ---");
+        // List<String> immutable = List.of("A", "B", "C");  // Immutable!
+        // Use ArrayList if you need to modify
+        List<String> mutable = new ArrayList<>(List.of("A", "B", "C"));
+        mutable.add("D");
+        System.out.println("Mutable from List.of: " + mutable);
+    }
+}
+
+OUTPUT:
+-------
+--- Wrapping Arrays.asList ---
+Modified list: [B, C, D]
+
+--- Creating new ArrayList ---
+New list: [X, Y, Z]
+
+--- Safe modification ---
+Cannot modify! Creating new list...
+New modifiable list: [1, 2, 3, 4]
+
+--- Java 9+ List.of ---
+Mutable from List.of: [A, B, C, D]
+
+
+--------------------------------------------------------------------------------
+ERROR 5: NoSuchElementException
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE:
+-----------------
+import java.util.*;
+
+public class NoSuchElementError {
+    public static void main(String[] args) {
+        // Empty iterator
+        List<String> emptyList = new ArrayList<>();
+        Iterator<String> iterator = emptyList.iterator();
+        String element = iterator.next();    // ERROR! No element
+        
+        // Empty Queue
+        Queue<String> queue = new LinkedList<>();
+        String item = queue.element();    // ERROR! Queue is empty
+        
+        // Empty TreeSet
+        TreeSet<Integer> treeSet = new TreeSet<>();
+        int first = treeSet.first();    // ERROR! Set is empty
+    }
+}
+
+ERROR MESSAGE:
+--------------
+Exception in thread "main" java.util.NoSuchElementException
+    at java.base/java.util.ArrayList$Itr.next(ArrayList.java:970)
+
+FIX:
+----
+import java.util.*;
+
+public class NoSuchElementFixed {
+    public static void main(String[] args) {
+        
+        // Option 1: Check hasNext() before next()
+        System.out.println("--- Check hasNext() ---");
+        List<String> emptyList = new ArrayList<>();
+        Iterator<String> iterator = emptyList.iterator();
+        
+        if (iterator.hasNext()) {
+            System.out.println(iterator.next());
+        } else {
+            System.out.println("No elements in iterator!");
+        }
+        
+        // Option 2: Use peek() instead of element() for Queue
+        System.out.println("\n--- Use peek() for Queue ---");
+        Queue<String> queue = new LinkedList<>();
+        
+        // element() throws exception if empty
+        // String item = queue.element();
+        
+        // peek() returns null if empty
+        String item = queue.peek();
+        if (item != null) {
+            System.out.println("First item: " + item);
+        } else {
+            System.out.println("Queue is empty!");
+        }
+        
+        // poll() also returns null if empty
+        String polled = queue.poll();
+        System.out.println("Polled: " + (polled != null ? polled : "null (empty)"));
+        
+        // Option 3: Check isEmpty() before accessing TreeSet methods
+        System.out.println("\n--- Check isEmpty() ---");
+        TreeSet<Integer> treeSet = new TreeSet<>();
+        
+        if (!treeSet.isEmpty()) {
+            System.out.println("First: " + treeSet.first());
+        } else {
+            System.out.println("TreeSet is empty!");
+        }
+        
+        // Add elements and try again
+        treeSet.add(30);
+        treeSet.add(10);
+        treeSet.add(20);
+        
+        if (!treeSet.isEmpty()) {
+            System.out.println("First: " + treeSet.first());
+            System.out.println("Last: " + treeSet.last());
+        }
+        
+        // Option 4: Use Optional
+        System.out.println("\n--- Using Optional ---");
+        List<String> maybeEmpty = new ArrayList<>();
+        
+        Optional<String> firstElement = maybeEmpty.stream().findFirst();
+        String result = firstElement.orElse("No elements");
+        System.out.println("First element: " + result);
+        
+        maybeEmpty.add("Hello");
+        firstElement = maybeEmpty.stream().findFirst();
+        result = firstElement.orElse("No elements");
+        System.out.println("First element: " + result);
+    }
+}
+
+OUTPUT:
+-------
+--- Check hasNext() ---
+No elements in iterator!
+
+--- Use peek() for Queue ---
+Queue is empty!
+Polled: null (empty)
+
+--- Check isEmpty() ---
+TreeSet is empty!
+First: 10
+Last: 30
+
+--- Using Optional ---
+First element: No elements
+First element: Hello
+
+
+--------------------------------------------------------------------------------
+ERROR 6: ClassCastException with Collections
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE:
+-----------------
+import java.util.*;
+
+public class ClassCastError {
+    public static void main(String[] args) {
+        // Raw type list (no generics)
+        List list = new ArrayList();
+        list.add("String");
+        list.add(123);
+        list.add(45.67);
+        
+        // Casting without checking
+        for (Object obj : list) {
+            String str = (String) obj;    // ERROR for non-String elements
+            System.out.println(str);
+        }
+        
+        // TreeSet with incompatible types
+        TreeSet set = new TreeSet();
+        set.add("Apple");
+        set.add(123);    // ERROR! Can't compare String with Integer
+    }
+}
+
+ERROR MESSAGE:
+--------------
+Exception in thread "main" java.lang.ClassCastException: 
+    class java.lang.Integer cannot be cast to class java.lang.String
+
+FIX:
+----
+import java.util.*;
+
+public class ClassCastFixed {
+    public static void main(String[] args) {
+        
+        // Option 1: Always use generics
+        System.out.println("--- Using Generics ---");
+        List<String> stringList = new ArrayList<>();
+        stringList.add("Apple");
+        stringList.add("Banana");
+        // stringList.add(123);    // Compile error - type safety!
+        
+        for (String str : stringList) {
+            System.out.println(str);
+        }
+        
+        // Option 2: Check type with instanceof before casting
+        System.out.println("\n--- Using instanceof ---");
+        List<Object> mixedList = new ArrayList<>();
+        mixedList.add("String");
+        mixedList.add(123);
+        mixedList.add(45.67);
+        
+        for (Object obj : mixedList) {
+            if (obj instanceof String) {
+                String str = (String) obj;
+                System.out.println("String: " + str);
+            } else if (obj instanceof Integer) {
+                Integer num = (Integer) obj;
+                System.out.println("Integer: " + num);
+            } else if (obj instanceof Double) {
+                Double dbl = (Double) obj;
+                System.out.println("Double: " + dbl);
+            }
+        }
+        
+        // Option 3: Use type-safe collections
+        System.out.println("\n--- Type-safe TreeSet ---");
+        TreeSet<String> stringSet = new TreeSet<>();
+        stringSet.add("Apple");
+        stringSet.add("Banana");
+        // stringSet.add(123);    // Compile error!
+        System.out.println("TreeSet: " + stringSet);
+        
+        // Option 4: Separate collections for different types
+        System.out.println("\n--- Separate collections ---");
+        List<String> strings = new ArrayList<>();
+        List<Integer> integers = new ArrayList<>();
+        
+        strings.add("Hello");
+        integers.add(123);
+        
+        System.out.println("Strings: " + strings);
+        System.out.println("Integers: " + integers);
+    }
+}
+
+OUTPUT:
+-------
+--- Using Generics ---
+Apple
+Banana
+
+--- Using instanceof ---
+String: String
+Integer: 123
+Double: 45.67
+
+--- Type-safe TreeSet ---
+TreeSet: [Apple, Banana]
+
+--- Separate collections ---
+Strings: [Hello]
+Integers: [123]
+
+
+--------------------------------------------------------------------------------
+ERROR 7: IllegalStateException with Iterator
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE:
+-----------------
+import java.util.*;
+
+public class IllegalStateError {
+    public static void main(String[] args) {
+        List<String> list = new ArrayList<>();
+        list.add("A");
+        list.add("B");
+        list.add("C");
+        
+        Iterator<String> iterator = list.iterator();
+        
+        // Calling remove() without calling next()
+        iterator.remove();    // ERROR!
+        
+        // Calling remove() twice
+        iterator.next();
+        iterator.remove();
+        iterator.remove();    // ERROR! Already removed
+    }
+}
+
+ERROR MESSAGE:
+--------------
+Exception in thread "main" java.lang.IllegalStateException
+    at java.base/java.util.ArrayList$Itr.remove(ArrayList.java:990)
+
+FIX:
+----
+import java.util.*;
+
+public class IllegalStateFixed {
+    public static void main(String[] args) {
+        List<String> list = new ArrayList<>();
+        list.add("A");
+        list.add("B");
+        list.add("C");
+        
+        System.out.println("Original: " + list);
+        
+        // Rule: Must call next() before remove()
+        // Rule: Can only call remove() once per next() call
+        
+        System.out.println("\n--- Correct Iterator Usage ---");
+        Iterator<String> iterator = list.iterator();
+        
+        while (iterator.hasNext()) {
+            String element = iterator.next();    // Must call next() first
+            System.out.println("Processing: " + element);
+            
+            if (element.equals("B")) {
+                iterator.remove();    // Now remove() is valid
+                System.out.println("  Removed: " + element);
+                // iterator.remove();    // ERROR if called again!
+            }
+        }
+        
+        System.out.println("After removal: " + list);
+        
+        // Safe remove helper method
+        System.out.println("\n--- Using safe remove method ---");
+        List<String> list2 = new ArrayList<>(Arrays.asList("X", "Y", "Z"));
+        safeRemoveIf(list2, "Y");
+        System.out.println("After safe remove: " + list2);
+    }
+    
+    public static void safeRemoveIf(List<String> list, String target) {
+        Iterator<String> it = list.iterator();
+        while (it.hasNext()) {
+            if (it.next().equals(target)) {
+                it.remove();
+                return;    // Remove only once and exit
+            }
+        }
+    }
+}
+
+OUTPUT:
+-------
+Original: [A, B, C]
+
+--- Correct Iterator Usage ---
+Processing: A
+Processing: B
+  Removed: B
+Processing: C
+After removal: [A, C]
+
+--- Using safe remove method ---
+After safe remove: [X, Z]
+
+
+================================================================================
+                    COLLECTIONS - QUICK REFERENCE
+================================================================================
+
+LIST IMPLEMENTATIONS:
+---------------------
++---------------+----------------+----------------+----------------+
+| Operation     | ArrayList      | LinkedList     | Vector         |
++---------------+----------------+----------------+----------------+
+| get(index)    | O(1)           | O(n)           | O(1)           |
+| add(end)      | O(1)*          | O(1)           | O(1)*          |
+| add(index)    | O(n)           | O(n)           | O(n)           |
+| remove(index) | O(n)           | O(n)           | O(n)           |
+| Thread-safe   | No             | No             | Yes            |
++---------------+----------------+----------------+----------------+
+* Amortized time
+
+
+SET IMPLEMENTATIONS:
+--------------------
++---------------+----------------+----------------+----------------+
+| Feature       | HashSet        | LinkedHashSet  | TreeSet        |
++---------------+----------------+----------------+----------------+
+| Order         | No order       | Insertion      | Sorted         |
+| Null          | One null       | One null       | No null        |
+| Performance   | O(1)           | O(1)           | O(log n)       |
+| Thread-safe   | No             | No             | No             |
++---------------+----------------+----------------+----------------+
+
+
+MAP IMPLEMENTATIONS:
+--------------------
++---------------+----------------+----------------+----------------+
+| Feature       | HashMap        | LinkedHashMap  | TreeMap        |
++---------------+----------------+----------------+----------------+
+| Order         | No order       | Insertion      | Sorted by key  |
+| Null key      | One null key   | One null key   | No null key    |
+| Performance   | O(1)           | O(1)           | O(log n)       |
+| Thread-safe   | No             | No             | No             |
++---------------+----------------+----------------+----------------+
+
+
+COMMON METHODS:
+---------------
++---------------------------+----------------------------------------------+
+| List Methods              | Description                                  |
++---------------------------+----------------------------------------------+
+| add(element)              | Add at end                                   |
+| add(index, element)       | Add at index                                 |
+| get(index)                | Get element at index                         |
+| set(index, element)       | Replace element at index                     |
+| remove(index)             | Remove by index                              |
+| remove(object)            | Remove first occurrence                      |
+| size()                    | Get size                                     |
+| isEmpty()                 | Check if empty                               |
+| contains(object)          | Check if contains                            |
+| indexOf(object)           | Find index                                   |
++---------------------------+----------------------------------------------+
+
++---------------------------+----------------------------------------------+
+| Map Methods               | Description                                  |
++---------------------------+----------------------------------------------+
+| put(key, value)           | Add/update entry                             |
+| get(key)                  | Get value by key                             |
+| getOrDefault(key, def)    | Get value or default                         |
+| remove(key)               | Remove by key                                |
+| containsKey(key)          | Check if key exists                          |
+| containsValue(value)      | Check if value exists                        |
+| keySet()                  | Get all keys                                 |
+| values()                  | Get all values                               |
+| entrySet()                | Get all entries                              |
++---------------------------+----------------------------------------------+
+
+
+CHOOSING THE RIGHT COLLECTION:
+------------------------------
++----------------------------------+-------------------------------------------+
+| Requirement                      | Best Choice                               |
++----------------------------------+-------------------------------------------+
+| Ordered, allows duplicates       | ArrayList or LinkedList                   |
+| Fast random access               | ArrayList                                 |
+| Frequent insert/delete at ends   | LinkedList                                |
+| No duplicates, no order          | HashSet                                   |
+| No duplicates, maintain order    | LinkedHashSet                             |
+| No duplicates, sorted            | TreeSet                                   |
+| Key-value pairs, no order        | HashMap                                   |
+| Key-value pairs, maintain order  | LinkedHashMap                             |
+| Key-value pairs, sorted by key   | TreeMap                                   |
+| Thread-safe List                 | CopyOnWriteArrayList or Vector            |
+| Thread-safe Map                  | ConcurrentHashMap                         |
+| FIFO queue                       | LinkedList or ArrayDeque                  |
+| Priority queue                   | PriorityQueue                             |
++----------------------------------+-------------------------------------------+
+
+
+================================================================================
+                    PRACTICE EXERCISES - COLLECTIONS
+================================================================================
+
+EXERCISE 1: Product Inventory
+-----------------------------
+- Create ArrayList of Product objects (id, name, price, quantity)
+- Add, remove, update products
+- Search by name, filter by price range
+- Sort by price, sort by name
+- Calculate total inventory value
+
+EXERCISE 2: Student Grade Management
+------------------------------------
+- Use HashMap<String, List<Integer>> for student grades
+- Add students, add grades to students
+- Calculate average grade per student
+- Find highest/lowest scorer
+- List all students with grades above average
+
+EXERCISE 3: Duplicate Finder
+----------------------------
+- Given a List, find all duplicate elements
+- Given a List, remove all duplicates (maintain order)
+- Given two Lists, find common elements
+- Given two Lists, find unique elements
+
+EXERCISE 4: Word Counter
+------------------------
+- Count frequency of each word in a text
+- Find most/least frequent words
+- Find words that appear exactly N times
+- Sort words by frequency
+
+EXERCISE 5: API Test Data Manager
+---------------------------------
+- Create Map-based test data for API testing
+- Support multiple test scenarios
+- Include request body, headers, expected response
+- Iterate and execute tests
+
+
+================================================================================
+                    SUMMARY - COLLECTIONS FRAMEWORK
+================================================================================
+
+KEY TAKEAWAYS:
+--------------
+1. Use List for ordered collections with duplicates (ArrayList, LinkedList)
+2. Use Set for unique elements (HashSet, LinkedHashSet, TreeSet)
+3. Use Map for key-value pairs (HashMap, LinkedHashMap, TreeMap)
+4. Always use generics for type safety
+5. Choose implementation based on use case (order, speed, thread-safety)
+6. Use Iterator for safe removal during iteration
+7. Collections utility class provides sorting, searching, shuffling
+8. Handle null carefully - different collections have different rules
+9. Avoid modifying collection while iterating (use Iterator.remove())
+10. Collections are essential for test data management in automation
+
+
+AUTOMATION USE CASES:
+---------------------
++----------------------------------+-------------------------------------------+
+| Use Case                         | Collection Type                           |
++----------------------------------+-------------------------------------------+
+| Store WebElements                | List<WebElement>                          |
+| Store unique values              | Set<String>                               |
+| Store locators                   | Map<String, String>                       |
+| Store test data                  | List<Map<String, Object>>                 |
+| Store API headers                | Map<String, String>                       |
+| Store API response               | Map<String, Object>                       |
+| Store window handles             | Set<String>                               |
+| Store dropdown options           | List<String>                              |
+| Store table data                 | List<Map<String, String>>                 |
+| Store configuration              | Map<String, String>                       |
++----------------------------------+-------------------------------------------+
+
+
+================================================================================
+                    WHAT'S NEXT?
+================================================================================
+
+We've covered:
+- Topic 10: Inheritance
+- Topic 11: Polymorphism
+- Topic 12: Abstraction
+- Topic 13: Encapsulation
+- Topic 14: Collections Framework
+
+Next topics according to your curriculum:
+- Topic 15: Exception Handling
+- Topic 16: File Handling
+
+Would you like me to continue with Topic 15: Exception Handling?
+```
+
+Would you like me to continue with **Topic 15: Exception Handling**? This is a critical topic that covers:
+- What are Exceptions
+- Types of Exceptions (Checked vs Unchecked)
+- try-catch-finally blocks
+- throw and throws keywords
+- Custom exceptions
+- Exception handling in Selenium and REST Assured automation

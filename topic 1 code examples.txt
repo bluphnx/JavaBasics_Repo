@@ -1,0 +1,65 @@
+// ============================================================================
+// TOPIC 1 - CODE EXAMPLES
+// ============================================================================
+
+// ----------------------------------------------------------------------------
+// Example 1: Hello World Program
+// ----------------------------------------------------------------------------
+public class HelloWorld {
+    public static void main(String[] args) {
+        System.out.println("Hello, I am learning Java for Automation!");
+    }
+}
+// Output:
+// Hello, I am learning Java for Automation!
+
+
+// ----------------------------------------------------------------------------
+// Example 2: Print Statements Demo
+// ----------------------------------------------------------------------------
+public class PrintDemo {
+    public static void main(String[] args) {
+        
+        // println - prints and moves to next line
+        System.out.println("Line 1");
+        System.out.println("Line 2");
+        
+        // print - prints and stays on same line
+        System.out.print("Hello ");
+        System.out.print("World");
+    }
+}
+// Output:
+// Line 1
+// Line 2
+// Hello World
+
+
+// ----------------------------------------------------------------------------
+// Example 3: My First Test
+// ----------------------------------------------------------------------------
+public class MyFirstTest {
+    public static void main(String[] args) {
+        System.out.println("Starting Automation Test");
+        System.out.println("Opening Browser...");
+        System.out.println("Test Completed!");
+    }
+}
+// Output:
+// Starting Automation Test
+// Opening Browser...
+// Test Completed!
+
+
+// ============================================================================
+// TOPIC 1 SUMMARY
+// ============================================================================
+// Concept              What You Learned
+// -------              ----------------
+// Java                 Platform-independent, OOP language
+// JDK                  Development kit (what you install)
+// JVM                  Executes your code
+// class                Container for your code
+// main method          Entry point of program
+// System.out.println() Prints output
+// ============================================================================

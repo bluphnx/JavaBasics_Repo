@@ -1,0 +1,143 @@
+ TOPIC 2: Variables and Data Types
+
+================================================================================
+                    TOPIC 2: VARIABLES AND DATA TYPES
+================================================================================
+
+WHAT IS A VARIABLE?
+-------------------
+A variable is a container that stores data in memory.
+
+Think of it like a labeled box:
+┌─────────────────┐
+│                 │
+│       25        │   ← Value stored inside
+│                 │
+└─────────────────┘
+       age            ← Label (variable name)
+
+
+SYNTAX TO CREATE VARIABLE
+-------------------------
+dataType variableName = value;
+
+Example:
+int age = 25;
+
+Part            Meaning
+----            -------
+int             Data type (integer/whole number)
+age             Variable name
+=               Assignment operator
+25              Value
+
+
+DATA TYPES IN JAVA
+------------------
+┌─────────────────────────────────────────────────────┐
+│                   DATA TYPES                        │
+├─────────────────────┬───────────────────────────────┤
+│     PRIMITIVE       │       NON-PRIMITIVE           │
+│   (Basic types)     │    (Reference types)          │
+├─────────────────────┼───────────────────────────────┤
+│ • byte              │ • String                      │
+│ • short             │ • Array                       │
+│ • int               │ • Class                       │
+│ • long              │ • Object                      │
+│ • float             │ • Interface                   │
+│ • double            │                               │
+│ • char              │                               │
+│ • boolean           │                               │
+└─────────────────────┴───────────────────────────────┘
+
+
+PRIMITIVE DATA TYPES (8 TYPES)
+------------------------------
+
+1. INTEGER TYPES (Whole Numbers)
+--------------------------------
+Type      Size       Range                         Example
+----      ----       -----                         -------
+byte      1 byte     -128 to 127                   byte a = 100;
+short     2 bytes    -32,768 to 32,767             short b = 5000;
+int       4 bytes    -2 billion to 2 billion       int c = 100000;
+long      8 bytes    Very large numbers            long d = 999999999L;
+
+Note: Use 'L' at the end for long values
+
+
+2. DECIMAL TYPES (Floating Point Numbers)
+-----------------------------------------
+Type      Size       Precision              Example
+----      ----       ---------              -------
+float     4 bytes    6-7 decimal digits     float a = 5.75f;
+double    8 bytes    15 decimal digits      double b = 19.99;
+
+Note: Use 'f' at the end for float values
+
+
+3. CHARACTER TYPE
+-----------------
+Type      Size       Description            Example
+----      ----       -----------            -------
+char      2 bytes    Single character       char grade = 'A';
+
+Note: Use SINGLE QUOTES ' ' for char
+
+
+4. BOOLEAN TYPE
+---------------
+Type      Size       Values                 Example
+----      ----       ------                 -------
+boolean   1 bit      true or false          boolean isActive = true;
+
+
+NON-PRIMITIVE TYPE: STRING
+--------------------------
+String stores text (sequence of characters)
+Note: Use DOUBLE QUOTES " " for String
+
+Example:
+String name = "John";
+String url = "https://google.com";
+
+
+CHAR VS STRING COMPARISON
+-------------------------
+char singleLetter = 'A';        // Single quotes - ONE character
+String text = "Automation";     // Double quotes - Multiple characters
+
+
+VARIABLE NAMING RULES
+---------------------
+Valid Names:
+  int age;
+  int myAge;
+  int my_age;
+  int _age;
+  int age2;
+  int myVariableName;    // camelCase (Recommended)
+
+Invalid Names:
+  int 2age;       // Cannot start with number
+  int my-age;     // No hyphens
+  int my age;     // No spaces
+  int class;      // Cannot use reserved keywords
+
+
+NAMING CONVENTION (Best Practice)
+---------------------------------
+Use camelCase for variables:
+
+Good:
+  String firstName = "John";
+  int totalTestCases = 50;
+  boolean isElementDisplayed = true;
+
+Bad:
+  String firstname = "John";
+  String FIRSTNAME = "John";
+  String first_name = "John";
+
+
+================================================================================

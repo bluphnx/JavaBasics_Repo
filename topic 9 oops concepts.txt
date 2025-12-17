@@ -1,0 +1,3554 @@
+The user wants to learn Topic 9: Object-Oriented Programming (Classes and Objects) in Java. I need to cover:
+
+1. What is OOP
+2. Classes and Objects basics
+3. Class components (fields, methods, constructors)
+4. Creating objects
+5. Instance variables vs class variables
+6. Access modifiers
+7. Getters and Setters
+8. Encapsulation
+9. 'this' keyword
+10. Practical automation examples
+11. Negative scenarios
+
+I need to use simple ASCII formatting without emojis or special symbols. Let me create a comprehensive topic covering all aspects of Classes and Objects.
+
+================================================================================
+                    TOPIC 9: OBJECT-ORIENTED PROGRAMMING
+                    (Classes and Objects)
+================================================================================
+
+What is Object-Oriented Programming (OOP)?
+------------------------------------------
+OOP is a programming paradigm that organizes code around "objects" rather than
+"functions and logic". Objects are instances of classes that contain data
+(attributes/fields) and behavior (methods).
+
+Real-World Analogy:
+-------------------
+- Class: Blueprint of a house (defines structure)
+- Object: Actual house built from the blueprint (instance)
+
+You can build many houses (objects) from one blueprint (class).
+Each house has same structure but different characteristics (color, size, etc.)
+
+
+Four Pillars of OOP:
+--------------------
++-------------------+----------------------------------------------------------+
+| Pillar            | Description                                              |
++-------------------+----------------------------------------------------------+
+| Encapsulation     | Bundling data and methods, hiding internal details       |
+| Inheritance       | Creating new classes from existing classes               |
+| Polymorphism      | Same method behaving differently in different contexts   |
+| Abstraction       | Hiding complex implementation, showing only essentials   |
++-------------------+----------------------------------------------------------+
+
+Note: This topic covers Classes, Objects, and Encapsulation.
+      Other pillars will be covered in subsequent topics.
+
+
+Why Important for Automation?
+-----------------------------
+- Page Object Model (POM) - Each page is a class
+- Test data objects - Store test data in objects
+- Configuration objects - Manage test configurations
+- Utility classes - Reusable helper methods
+- Framework design - Organized, maintainable code
+- API response objects - Map JSON to Java objects
+
+
+================================================================================
+                    1. CLASSES - THE BLUEPRINT
+================================================================================
+
+What is a Class?
+----------------
+A class is a blueprint or template that defines:
+- What data an object will hold (fields/attributes)
+- What actions an object can perform (methods)
+
+
+Class Syntax:
+-------------
+accessModifier class ClassName {
+    
+    // Fields (attributes/properties)
+    dataType fieldName;
+    
+    // Constructor
+    ClassName() {
+        // initialization code
+    }
+    
+    // Methods (behaviors)
+    returnType methodName() {
+        // method body
+    }
+}
+
+
+Class Components:
+-----------------
++-------------------+----------------------------------------------------------+
+| Component         | Description                                              |
++-------------------+----------------------------------------------------------+
+| Fields            | Variables that hold object's data/state                  |
+| Constructors      | Special methods to initialize objects                    |
+| Methods           | Functions that define object's behavior                  |
+| Nested Classes    | Classes defined inside another class                     |
+| Blocks            | Static and instance initialization blocks                |
++-------------------+----------------------------------------------------------+
+
+
+Visual Representation:
+----------------------
++--------------------------------------------------+
+|                    CLASS: Car                     |
++--------------------------------------------------+
+| FIELDS (What it HAS):                            |
+|   - brand                                        |
+|   - model                                        |
+|   - color                                        |
+|   - speed                                        |
++--------------------------------------------------+
+| METHODS (What it DOES):                          |
+|   - start()                                      |
+|   - stop()                                       |
+|   - accelerate()                                 |
+|   - brake()                                      |
++--------------------------------------------------+
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 1: Basic Class Structure
+--------------------------------------------------------------------------------
+
+// File: Car.java
+public class Car {
+    
+    // ============ FIELDS (Attributes) ============
+    String brand;
+    String model;
+    String color;
+    int year;
+    double speed;
+    
+    // ============ METHODS (Behaviors) ============
+    
+    // Method to start the car
+    public void start() {
+        System.out.println(brand + " " + model + " is starting...");
+        System.out.println("Engine started!");
+    }
+    
+    // Method to stop the car
+    public void stop() {
+        speed = 0;
+        System.out.println(brand + " " + model + " has stopped.");
+    }
+    
+    // Method to accelerate
+    public void accelerate(double increment) {
+        speed += increment;
+        System.out.println("Accelerating... Current speed: " + speed + " km/h");
+    }
+    
+    // Method to brake
+    public void brake(double decrement) {
+        speed -= decrement;
+        if (speed < 0) {
+            speed = 0;
+        }
+        System.out.println("Braking... Current speed: " + speed + " km/h");
+    }
+    
+    // Method to display car info
+    public void displayInfo() {
+        System.out.println("Car Information:");
+        System.out.println("  Brand: " + brand);
+        System.out.println("  Model: " + model);
+        System.out.println("  Color: " + color);
+        System.out.println("  Year: " + year);
+        System.out.println("  Speed: " + speed + " km/h");
+    }
+}
+
+
+================================================================================
+                    2. OBJECTS - INSTANCES OF CLASS
+================================================================================
+
+What is an Object?
+------------------
+An object is an instance of a class. It is a concrete entity created from
+the class blueprint with its own set of data.
+
+
+Object Creation Syntax:
+-----------------------
+ClassName objectName = new ClassName();
+
+Breaking it down:
+- ClassName: Type of the object
+- objectName: Reference variable to access the object
+- new: Keyword to allocate memory
+- ClassName(): Constructor call to initialize
+
+
+Visual Representation:
+----------------------
+                     CLASS: Car
+                    +----------+
+                    | Blueprint|
+                    +----+-----+
+                         |
+         +---------------+---------------+
+         |               |               |
+         v               v               v
+    +---------+     +---------+     +---------+
+    | Object 1|     | Object 2|     | Object 3|
+    | myCar   |     | yourCar |     | hisCar  |
+    | Toyota  |     | Honda   |     | Ford    |
+    | Red     |     | Blue    |     | Black   |
+    +---------+     +---------+     +---------+
+    
+    Same class, different objects with different data
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 2: Creating and Using Objects
+--------------------------------------------------------------------------------
+
+public class CarDemo {
+    public static void main(String[] args) {
+        
+        System.out.println("=== Creating Objects ===\n");
+        
+        // Creating first object
+        Car myCar = new Car();
+        
+        // Setting field values
+        myCar.brand = "Toyota";
+        myCar.model = "Camry";
+        myCar.color = "Red";
+        myCar.year = 2023;
+        myCar.speed = 0;
+        
+        // Creating second object
+        Car yourCar = new Car();
+        yourCar.brand = "Honda";
+        yourCar.model = "Civic";
+        yourCar.color = "Blue";
+        yourCar.year = 2022;
+        yourCar.speed = 0;
+        
+        // Using object methods
+        System.out.println("--- My Car ---");
+        myCar.displayInfo();
+        
+        System.out.println("\n--- Your Car ---");
+        yourCar.displayInfo();
+        
+        // Calling methods on objects
+        System.out.println("\n=== Using Car Methods ===\n");
+        
+        myCar.start();
+        myCar.accelerate(30);
+        myCar.accelerate(20);
+        myCar.brake(10);
+        myCar.stop();
+        
+        System.out.println("\n--- Final State ---");
+        myCar.displayInfo();
+    }
+}
+
+OUTPUT:
+-------
+=== Creating Objects ===
+
+--- My Car ---
+Car Information:
+  Brand: Toyota
+  Model: Camry
+  Color: Red
+  Year: 2023
+  Speed: 0.0 km/h
+
+--- Your Car ---
+Car Information:
+  Brand: Honda
+  Model: Civic
+  Color: Blue
+  Year: 2022
+  Speed: 0.0 km/h
+
+=== Using Car Methods ===
+
+Toyota Camry is starting...
+Engine started!
+Accelerating... Current speed: 30.0 km/h
+Accelerating... Current speed: 50.0 km/h
+Braking... Current speed: 40.0 km/h
+Toyota Camry has stopped.
+
+--- Final State ---
+Car Information:
+  Brand: Toyota
+  Model: Camry
+  Color: Red
+  Year: 2023
+  Speed: 0.0 km/h
+
+
+================================================================================
+                    3. CONSTRUCTORS
+================================================================================
+
+What is a Constructor?
+----------------------
+A constructor is a special method that initializes an object when it is created.
+
+Constructor Characteristics:
+----------------------------
+- Same name as the class
+- No return type (not even void)
+- Called automatically when object is created
+- Can be overloaded (multiple constructors)
+
+
+Types of Constructors:
+----------------------
++----------------------+-------------------------------------------------------+
+| Type                 | Description                                           |
++----------------------+-------------------------------------------------------+
+| Default Constructor  | No parameters, provided by Java if none defined       |
+| No-Arg Constructor   | No parameters, explicitly defined by programmer       |
+| Parameterized        | Takes parameters to initialize fields                 |
+| Copy Constructor     | Creates object by copying another object              |
++----------------------+-------------------------------------------------------+
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 3: Different Types of Constructors
+--------------------------------------------------------------------------------
+
+public class Employee {
+    
+    // Fields
+    String name;
+    int id;
+    String department;
+    double salary;
+    
+    // ============ DEFAULT CONSTRUCTOR ============
+    // If no constructor is defined, Java provides this automatically
+    // It initializes fields to default values (null, 0, false, etc.)
+    
+    // ============ NO-ARG CONSTRUCTOR ============
+    public Employee() {
+        System.out.println("No-arg constructor called");
+        this.name = "Unknown";
+        this.id = 0;
+        this.department = "Unassigned";
+        this.salary = 0.0;
+    }
+    
+    // ============ PARAMETERIZED CONSTRUCTOR ============
+    public Employee(String name, int id) {
+        System.out.println("Two-param constructor called");
+        this.name = name;
+        this.id = id;
+        this.department = "Unassigned";
+        this.salary = 0.0;
+    }
+    
+    // ============ FULLY PARAMETERIZED CONSTRUCTOR ============
+    public Employee(String name, int id, String department, double salary) {
+        System.out.println("Four-param constructor called");
+        this.name = name;
+        this.id = id;
+        this.department = department;
+        this.salary = salary;
+    }
+    
+    // ============ COPY CONSTRUCTOR ============
+    public Employee(Employee other) {
+        System.out.println("Copy constructor called");
+        this.name = other.name;
+        this.id = other.id;
+        this.department = other.department;
+        this.salary = other.salary;
+    }
+    
+    // Display method
+    public void display() {
+        System.out.println("Employee [ID=" + id + ", Name=" + name + 
+                          ", Dept=" + department + ", Salary=" + salary + "]");
+    }
+}
+
+// Demo class
+public class EmployeeDemo {
+    public static void main(String[] args) {
+        
+        System.out.println("=== Constructor Examples ===\n");
+        
+        // Using no-arg constructor
+        System.out.println("--- No-arg Constructor ---");
+        Employee emp1 = new Employee();
+        emp1.display();
+        
+        System.out.println();
+        
+        // Using two-param constructor
+        System.out.println("--- Two-param Constructor ---");
+        Employee emp2 = new Employee("John Doe", 101);
+        emp2.display();
+        
+        System.out.println();
+        
+        // Using four-param constructor
+        System.out.println("--- Four-param Constructor ---");
+        Employee emp3 = new Employee("Jane Smith", 102, "Engineering", 75000);
+        emp3.display();
+        
+        System.out.println();
+        
+        // Using copy constructor
+        System.out.println("--- Copy Constructor ---");
+        Employee emp4 = new Employee(emp3);
+        emp4.display();
+        
+        System.out.println();
+        
+        // Verify they are different objects
+        System.out.println("=== Verify Different Objects ===");
+        System.out.println("emp3 == emp4: " + (emp3 == emp4));
+        emp4.name = "Copy of Jane";
+        System.out.println("After changing emp4's name:");
+        System.out.println("emp3 name: " + emp3.name);
+        System.out.println("emp4 name: " + emp4.name);
+    }
+}
+
+OUTPUT:
+-------
+=== Constructor Examples ===
+
+--- No-arg Constructor ---
+No-arg constructor called
+Employee [ID=0, Name=Unknown, Dept=Unassigned, Salary=0.0]
+
+--- Two-param Constructor ---
+Two-param constructor called
+Employee [ID=101, Name=John Doe, Dept=Unassigned, Salary=0.0]
+
+--- Four-param Constructor ---
+Four-param constructor called
+Employee [ID=102, Name=Jane Smith, Dept=Engineering, Salary=75000.0]
+
+--- Copy Constructor ---
+Copy constructor called
+Employee [ID=102, Name=Jane Smith, Dept=Engineering, Salary=75000.0]
+
+=== Verify Different Objects ===
+emp3 == emp4: false
+After changing emp4's name:
+emp3 name: Jane Smith
+emp4 name: Copy of Jane
+
+
+================================================================================
+                    4. 'THIS' KEYWORD
+================================================================================
+
+What is 'this' keyword?
+-----------------------
+'this' is a reference to the current object. It is used to:
+1. Distinguish between instance variables and parameters with same name
+2. Call one constructor from another
+3. Pass current object as parameter
+4. Return current object from method
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 4: Using 'this' Keyword
+--------------------------------------------------------------------------------
+
+public class Student {
+    
+    // Fields
+    private String name;
+    private int age;
+    private String grade;
+    
+    // ============ USE 1: Distinguish fields from parameters ============
+    public Student(String name, int age, String grade) {
+        // 'this.name' refers to instance variable
+        // 'name' refers to parameter
+        this.name = name;
+        this.age = age;
+        this.grade = grade;
+    }
+    
+    // ============ USE 2: Call one constructor from another ============
+    public Student(String name) {
+        // Calling another constructor using this()
+        this(name, 0, "Not Assigned");
+        System.out.println("Single-param constructor completed");
+    }
+    
+    public Student() {
+        // Calling another constructor
+        this("Unknown", 0, "Not Assigned");
+        System.out.println("No-arg constructor completed");
+    }
+    
+    // ============ USE 3: Pass current object as parameter ============
+    public void enroll(Course course) {
+        course.addStudent(this);    // Passing current Student object
+    }
+    
+    // ============ USE 4: Return current object (Method Chaining) ============
+    public Student setName(String name) {
+        this.name = name;
+        return this;    // Return current object for chaining
+    }
+    
+    public Student setAge(int age) {
+        this.age = age;
+        return this;
+    }
+    
+    public Student setGrade(String grade) {
+        this.grade = grade;
+        return this;
+    }
+    
+    public void display() {
+        System.out.println("Student: " + name + ", Age: " + age + ", Grade: " + grade);
+    }
+    
+    public String getName() {
+        return this.name;
+    }
+}
+
+// Helper class for demonstrating 'this' as parameter
+class Course {
+    private String courseName;
+    
+    public Course(String name) {
+        this.courseName = name;
+    }
+    
+    public void addStudent(Student student) {
+        System.out.println(student.getName() + " enrolled in " + courseName);
+    }
+}
+
+// Demo class
+public class ThisKeywordDemo {
+    public static void main(String[] args) {
+        
+        System.out.println("=== 'this' Keyword Examples ===\n");
+        
+        // Example 1: Constructor with this
+        System.out.println("--- Constructor with 'this' ---");
+        Student s1 = new Student("Alice", 20, "A");
+        s1.display();
+        
+        System.out.println();
+        
+        // Example 2: Constructor chaining
+        System.out.println("--- Constructor Chaining ---");
+        Student s2 = new Student("Bob");
+        s2.display();
+        
+        System.out.println();
+        
+        Student s3 = new Student();
+        s3.display();
+        
+        System.out.println();
+        
+        // Example 3: Passing 'this' as parameter
+        System.out.println("--- Passing 'this' as Parameter ---");
+        Student s4 = new Student("Charlie", 22, "B");
+        Course course = new Course("Java Programming");
+        s4.enroll(course);
+        
+        System.out.println();
+        
+        // Example 4: Method chaining using 'this'
+        System.out.println("--- Method Chaining with 'this' ---");
+        Student s5 = new Student();
+        s5.setName("David")
+          .setAge(21)
+          .setGrade("A+")
+          .display();
+    }
+}
+
+OUTPUT:
+-------
+=== 'this' Keyword Examples ===
+
+--- Constructor with 'this' ---
+Student: Alice, Age: 20, Grade: A
+
+--- Constructor Chaining ---
+Single-param constructor completed
+Student: Bob, Age: 0, Grade: Not Assigned
+
+No-arg constructor completed
+Student: Unknown, Age: 0, Grade: Not Assigned
+
+--- Passing 'this' as Parameter ---
+Charlie enrolled in Java Programming
+
+--- Method Chaining with 'this' ---
+Student: David, Age: 21, Grade: A+
+
+
+================================================================================
+                    5. ACCESS MODIFIERS
+================================================================================
+
+Access modifiers control the visibility of class members (fields and methods).
+
++---------------+-------+----------+-----------+----------+
+| Modifier      | Class | Package  | Subclass  | World    |
++---------------+-------+----------+-----------+----------+
+| public        | Yes   | Yes      | Yes       | Yes      |
+| protected     | Yes   | Yes      | Yes       | No       |
+| default       | Yes   | Yes      | No        | No       |
+| private       | Yes   | No       | No        | No       |
++---------------+-------+----------+-----------+----------+
+
+
+Visual Representation:
+----------------------
++------------------------------------------------------------------+
+|                          WORLD                                    |
+|  +------------------------------------------------------------+  |
+|  |                      OTHER PACKAGES                        |  |
+|  |  +------------------------------------------------------+  |  |
+|  |  |                    SAME PACKAGE                      |  |  |
+|  |  |  +------------------------------------------------+  |  |  |
+|  |  |  |                   SUBCLASS                     |  |  |  |
+|  |  |  |  +------------------------------------------+  |  |  |  |
+|  |  |  |  |                 CLASS                    |  |  |  |  |
+|  |  |  |  |                                          |  |  |  |  |
+|  |  |  |  |  private   <-- Only here                 |  |  |  |  |
+|  |  |  |  |                                          |  |  |  |  |
+|  |  |  |  +------------------------------------------+  |  |  |  |
+|  |  |  |  protected   <-- Up to here                    |  |  |  |
+|  |  |  +------------------------------------------------+  |  |  |
+|  |  |  default        <-- Up to here                       |  |  |
+|  |  +------------------------------------------------------+  |  |
+|  +------------------------------------------------------------+  |
+|  public              <-- Everywhere                              |
++------------------------------------------------------------------+
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 5: Access Modifiers Demonstration
+--------------------------------------------------------------------------------
+
+// File: AccessDemo.java
+public class AccessDemo {
+    
+    // Different access levels
+    public String publicField = "Public Field";
+    protected String protectedField = "Protected Field";
+    String defaultField = "Default Field";    // package-private
+    private String privateField = "Private Field";
+    
+    // Public method - accessible everywhere
+    public void publicMethod() {
+        System.out.println("Public method called");
+        // Can access all fields within same class
+        System.out.println("  Accessing: " + privateField);
+    }
+    
+    // Protected method - accessible in package and subclasses
+    protected void protectedMethod() {
+        System.out.println("Protected method called");
+    }
+    
+    // Default method - accessible only in same package
+    void defaultMethod() {
+        System.out.println("Default method called");
+    }
+    
+    // Private method - accessible only in this class
+    private void privateMethod() {
+        System.out.println("Private method called");
+    }
+    
+    // Public method that uses private method
+    public void callPrivate() {
+        System.out.println("Calling private method from public method:");
+        privateMethod();
+    }
+}
+
+// Test class in same package
+public class AccessTest {
+    public static void main(String[] args) {
+        
+        AccessDemo obj = new AccessDemo();
+        
+        System.out.println("=== Access from Same Package ===\n");
+        
+        // Accessing fields
+        System.out.println("--- Accessing Fields ---");
+        System.out.println("Public: " + obj.publicField);
+        System.out.println("Protected: " + obj.protectedField);
+        System.out.println("Default: " + obj.defaultField);
+        // System.out.println(obj.privateField);    // Error! Cannot access
+        
+        System.out.println();
+        
+        // Accessing methods
+        System.out.println("--- Accessing Methods ---");
+        obj.publicMethod();
+        obj.protectedMethod();
+        obj.defaultMethod();
+        // obj.privateMethod();    // Error! Cannot access
+        
+        System.out.println();
+        
+        // Access private through public method
+        System.out.println("--- Indirect Private Access ---");
+        obj.callPrivate();
+    }
+}
+
+OUTPUT:
+-------
+=== Access from Same Package ===
+
+--- Accessing Fields ---
+Public: Public Field
+Protected: Protected Field
+Default: Default Field
+
+--- Accessing Methods ---
+Public method called
+  Accessing: Private Field
+Protected method called
+Default method called
+
+--- Indirect Private Access ---
+Calling private method from public method:
+Private method called
+
+
+================================================================================
+                    6. ENCAPSULATION
+================================================================================
+
+What is Encapsulation?
+----------------------
+Encapsulation is the bundling of data (fields) and methods that operate on
+that data within a single unit (class), while restricting direct access to
+some of the object's components.
+
+Key Principles:
+---------------
+1. Make fields private
+2. Provide public getter methods to read field values
+3. Provide public setter methods to modify field values
+4. Add validation logic in setters if needed
+
+
+Benefits of Encapsulation:
+--------------------------
+- Data hiding: Internal details are hidden
+- Flexibility: Can change implementation without affecting users
+- Validation: Can validate data before setting
+- Read-only/Write-only: Can create read-only or write-only fields
+- Control: Full control over data access
+
+
+Visual Representation:
+----------------------
+WITHOUT ENCAPSULATION:           WITH ENCAPSULATION:
++----------------+               +------------------+
+|    Object      |               |     Object       |
+|                |               |  +------------+  |
+|  field1  <-----|---Direct      |  | private    |  |
+|  field2  <-----|---Access      |  | field1     |  |
+|  field3  <-----|               |  | field2     |  |
+|                |               |  +------------+  |
++----------------+               |        ^         |
+                                 |        |         |
+                                 |  +-----+------+  |
+                                 |  | getters/   |  |
+                                 |  | setters    |<-|--Controlled
+                                 |  +------------+  |   Access
+                                 +------------------+
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 6: Encapsulation with Getters and Setters
+--------------------------------------------------------------------------------
+
+public class BankAccount {
+    
+    // Private fields - cannot be accessed directly
+    private String accountNumber;
+    private String accountHolder;
+    private double balance;
+    private String pin;
+    
+    // Constructor
+    public BankAccount(String accountNumber, String accountHolder, String pin) {
+        this.accountNumber = accountNumber;
+        this.accountHolder = accountHolder;
+        this.pin = pin;
+        this.balance = 0.0;
+    }
+    
+    // ============ GETTERS ============
+    
+    // Getter for accountNumber (read-only after creation)
+    public String getAccountNumber() {
+        // Return masked account number for security
+        return "****" + accountNumber.substring(accountNumber.length() - 4);
+    }
+    
+    // Getter for accountHolder
+    public String getAccountHolder() {
+        return accountHolder;
+    }
+    
+    // Getter for balance
+    public double getBalance() {
+        return balance;
+    }
+    
+    // No getter for PIN - it's completely private
+    
+    // ============ SETTERS ============
+    
+    // Setter for accountHolder with validation
+    public void setAccountHolder(String accountHolder) {
+        if (accountHolder == null || accountHolder.trim().isEmpty()) {
+            System.out.println("Error: Account holder name cannot be empty");
+            return;
+        }
+        this.accountHolder = accountHolder;
+        System.out.println("Account holder updated successfully");
+    }
+    
+    // No direct setter for balance - use deposit/withdraw methods
+    // No setter for accountNumber - it's immutable after creation
+    
+    // Setter for PIN with validation
+    public boolean setPin(String oldPin, String newPin) {
+        // Verify old PIN first
+        if (!this.pin.equals(oldPin)) {
+            System.out.println("Error: Invalid old PIN");
+            return false;
+        }
+        
+        // Validate new PIN
+        if (newPin == null || newPin.length() != 4) {
+            System.out.println("Error: PIN must be 4 digits");
+            return false;
+        }
+        
+        if (!newPin.matches("\\d{4}")) {
+            System.out.println("Error: PIN must contain only digits");
+            return false;
+        }
+        
+        this.pin = newPin;
+        System.out.println("PIN changed successfully");
+        return true;
+    }
+    
+    // ============ BUSINESS METHODS ============
+    
+    // Deposit with validation
+    public boolean deposit(double amount) {
+        if (amount <= 0) {
+            System.out.println("Error: Deposit amount must be positive");
+            return false;
+        }
+        
+        balance += amount;
+        System.out.println("Deposited: $" + amount);
+        System.out.println("New balance: $" + balance);
+        return true;
+    }
+    
+    // Withdraw with validation
+    public boolean withdraw(double amount, String pin) {
+        // Verify PIN
+        if (!this.pin.equals(pin)) {
+            System.out.println("Error: Invalid PIN");
+            return false;
+        }
+        
+        // Validate amount
+        if (amount <= 0) {
+            System.out.println("Error: Withdrawal amount must be positive");
+            return false;
+        }
+        
+        // Check sufficient balance
+        if (amount > balance) {
+            System.out.println("Error: Insufficient balance");
+            System.out.println("Available: $" + balance + ", Requested: $" + amount);
+            return false;
+        }
+        
+        balance -= amount;
+        System.out.println("Withdrawn: $" + amount);
+        System.out.println("New balance: $" + balance);
+        return true;
+    }
+    
+    // Display account info
+    public void displayInfo() {
+        System.out.println("Account Information:");
+        System.out.println("  Account Number: " + getAccountNumber());
+        System.out.println("  Account Holder: " + accountHolder);
+        System.out.println("  Balance: $" + balance);
+    }
+}
+
+// Demo class
+public class BankAccountDemo {
+    public static void main(String[] args) {
+        
+        System.out.println("=== Encapsulation Demo: Bank Account ===\n");
+        
+        // Create account
+        BankAccount account = new BankAccount("[REDACTED:BANK_ACCOUNT_NUMBER]", "John Doe", "1234");
+        
+        // Display initial info
+        System.out.println("--- Initial Account Info ---");
+        account.displayInfo();
+        
+        System.out.println();
+        
+        // Test deposit
+        System.out.println("--- Testing Deposit ---");
+        account.deposit(1000);
+        account.deposit(-500);    // Invalid
+        
+        System.out.println();
+        
+        // Test withdrawal
+        System.out.println("--- Testing Withdrawal ---");
+        account.withdraw(200, "1234");    // Valid
+        account.withdraw(200, "0000");    // Invalid PIN
+        account.withdraw(10000, "1234");  // Insufficient balance
+        
+        System.out.println();
+        
+        // Test setters
+        System.out.println("--- Testing Setters ---");
+        account.setAccountHolder("John Smith");
+        account.setAccountHolder("");    // Invalid
+        
+        System.out.println();
+        
+        // Test PIN change
+        System.out.println("--- Testing PIN Change ---");
+        account.setPin("1234", "5678");    // Valid
+        account.setPin("1234", "9999");    // Invalid old PIN
+        account.setPin("5678", "abc");     // Invalid new PIN
+        
+        System.out.println();
+        
+        // Final info
+        System.out.println("--- Final Account Info ---");
+        account.displayInfo();
+        
+        System.out.println();
+        
+        // Demonstrate data hiding
+        System.out.println("--- Data Hiding Demo ---");
+        // account.balance = 1000000;    // Error! Cannot access private field
+        // account.pin = "0000";         // Error! Cannot access private field
+        System.out.println("Cannot directly access private fields!");
+        System.out.println("Must use public methods with validation.");
+    }
+}
+
+OUTPUT:
+-------
+=== Encapsulation Demo: Bank Account ===
+
+--- Initial Account Info ---
+Account Information:
+  Account Number: ****7890
+  Account Holder: John Doe
+  Balance: $0.0
+
+--- Testing Deposit ---
+Deposited: $1000.0
+New balance: $1000.0
+Error: Deposit amount must be positive
+
+--- Testing Withdrawal ---
+Withdrawn: $200.0
+New balance: $800.0
+Error: Invalid PIN
+Error: Insufficient balance
+Available: $800.0, Requested: $10000.0
+
+--- Testing Setters ---
+Account holder updated successfully
+Error: Account holder name cannot be empty
+
+--- Testing PIN Change ---
+PIN changed successfully
+Error: Invalid old PIN
+Error: PIN must contain only digits
+
+--- Final Account Info ---
+Account Information:
+  Account Number: ****7890
+  Account Holder: John Smith
+  Balance: $800.0
+
+--- Data Hiding Demo ---
+Cannot directly access private fields!
+Must use public methods with validation.
+
+
+================================================================================
+                    7. INSTANCE VS STATIC MEMBERS
+================================================================================
+
+Instance Members:
+-----------------
+- Belong to individual objects
+- Each object has its own copy
+- Accessed using object reference
+- Can access both instance and static members
+
+Static Members:
+---------------
+- Belong to the class itself
+- Shared by all objects
+- Accessed using class name
+- Can only access static members directly
+
+
+Visual Representation:
+----------------------
+                    CLASS: Counter
+                   +---------------+
+                   | static count  |  <-- Shared by all objects
+                   +---------------+
+                          |
+        +-----------------+-----------------+
+        |                 |                 |
+        v                 v                 v
+   +---------+       +---------+       +---------+
+   | Object1 |       | Object2 |       | Object3 |
+   | id = 1  |       | id = 2  |       | id = 3  |
+   +---------+       +---------+       +---------+
+   
+   Each object has its own 'id', but they all share 'count'
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 7: Instance vs Static Members
+--------------------------------------------------------------------------------
+
+public class Counter {
+    
+    // Instance variable - each object has its own copy
+    private int instanceId;
+    private String name;
+    
+    // Static variable - shared by all objects
+    private static int totalCount = 0;
+    private static final String COMPANY = "ABC Corp";    // Static constant
+    
+    // Constructor
+    public Counter(String name) {
+        this.name = name;
+        totalCount++;                    // Increment shared counter
+        this.instanceId = totalCount;    // Assign unique ID
+        System.out.println("Created: " + name + " (ID: " + instanceId + ")");
+    }
+    
+    // Instance method
+    public void displayInstance() {
+        System.out.println("Instance - Name: " + name + ", ID: " + instanceId);
+    }
+    
+    // Static method
+    public static void displayTotal() {
+        System.out.println("Total objects created: " + totalCount);
+        System.out.println("Company: " + COMPANY);
+        // Cannot access instance variables here
+        // System.out.println(name);    // Error!
+    }
+    
+    // Instance method can access static members
+    public void displayAll() {
+        System.out.println("Name: " + name);
+        System.out.println("ID: " + instanceId);
+        System.out.println("Total Count: " + totalCount);    // Can access static
+        System.out.println("Company: " + COMPANY);
+    }
+    
+    // Static method to get total
+    public static int getTotalCount() {
+        return totalCount;
+    }
+    
+    // Static method to reset counter (useful for testing)
+    public static void resetCounter() {
+        totalCount = 0;
+        System.out.println("Counter reset to 0");
+    }
+    
+    // Getters
+    public int getInstanceId() {
+        return instanceId;
+    }
+    
+    public String getName() {
+        return name;
+    }
+}
+
+// Demo class
+public class CounterDemo {
+    public static void main(String[] args) {
+        
+        System.out.println("=== Instance vs Static Demo ===\n");
+        
+        // Static method called without object
+        System.out.println("--- Before Creating Objects ---");
+        Counter.displayTotal();
+        
+        System.out.println();
+        
+        // Create objects
+        System.out.println("--- Creating Objects ---");
+        Counter c1 = new Counter("Counter-A");
+        Counter c2 = new Counter("Counter-B");
+        Counter c3 = new Counter("Counter-C");
+        
+        System.out.println();
+        
+        // Static method shows shared data
+        System.out.println("--- After Creating Objects ---");
+        Counter.displayTotal();
+        
+        System.out.println();
+        
+        // Instance methods show individual data
+        System.out.println("--- Instance Data ---");
+        c1.displayInstance();
+        c2.displayInstance();
+        c3.displayInstance();
+        
+        System.out.println();
+        
+        // Instance method accessing static data
+        System.out.println("--- Instance Method Accessing Static ---");
+        c1.displayAll();
+        
+        System.out.println();
+        
+        // Static access through object (not recommended but works)
+        System.out.println("--- Static Access Comparison ---");
+        System.out.println("Counter.getTotalCount(): " + Counter.getTotalCount());
+        System.out.println("c1.getTotalCount(): " + c1.getTotalCount());    // Works but not recommended
+        System.out.println("Both access the same static variable!");
+        
+        System.out.println();
+        
+        // Create more objects
+        System.out.println("--- Creating More Objects ---");
+        Counter c4 = new Counter("Counter-D");
+        Counter.displayTotal();
+    }
+}
+
+OUTPUT:
+-------
+=== Instance vs Static Demo ===
+
+--- Before Creating Objects ---
+Total objects created: 0
+Company: ABC Corp
+
+--- Creating Objects ---
+Created: Counter-A (ID: 1)
+Created: Counter-B (ID: 2)
+Created: Counter-C (ID: 3)
+
+--- After Creating Objects ---
+Total objects created: 3
+Company: ABC Corp
+
+--- Instance Data ---
+Instance - Name: Counter-A, ID: 1
+Instance - Name: Counter-B, ID: 2
+Instance - Name: Counter-C, ID: 3
+
+--- Instance Method Accessing Static ---
+Name: Counter-A
+ID: 1
+Total Count: 3
+Company: ABC Corp
+
+--- Static Access Comparison ---
+Counter.getTotalCount(): 3
+c1.getTotalCount(): 3
+Both access the same static variable!
+
+--- Creating More Objects ---
+Created: Counter-D (ID: 4)
+Total objects created: 4
+
+
+================================================================================
+                    8. OBJECT COMPARISON
+================================================================================
+
+Comparing objects can be done in two ways:
+1. == operator: Compares references (memory addresses)
+2. equals() method: Compares content (must be overridden)
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 8: Object Comparison
+--------------------------------------------------------------------------------
+
+public class Person {
+    
+    private String name;
+    private int age;
+    
+    public Person(String name, int age) {
+        this.name = name;
+        this.age = age;
+    }
+    
+    // Getters
+    public String getName() { return name; }
+    public int getAge() { return age; }
+    
+    // Override equals() method for content comparison
+    @Override
+    public boolean equals(Object obj) {
+        // Same reference
+        if (this == obj) {
+            return true;
+        }
+        
+        // Null check
+        if (obj == null) {
+            return false;
+        }
+        
+        // Type check
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        
+        // Cast and compare fields
+        Person other = (Person) obj;
+        return this.age == other.age && 
+               (this.name == null ? other.name == null : this.name.equals(other.name));
+    }
+    
+    // Override hashCode() when overriding equals()
+    @Override
+    public int hashCode() {
+        int result = 17;
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + age;
+        return result;
+    }
+    
+    // Override toString() for better output
+    @Override
+    public String toString() {
+        return "Person{name='" + name + "', age=" + age + "}";
+    }
+}
+
+// Demo class
+public class ObjectComparisonDemo {
+    public static void main(String[] args) {
+        
+        System.out.println("=== Object Comparison Demo ===\n");
+        
+        // Create persons
+        Person p1 = new Person("John", 25);
+        Person p2 = new Person("John", 25);
+        Person p3 = p1;    // Same reference
+        Person p4 = new Person("Jane", 30);
+        
+        System.out.println("Objects created:");
+        System.out.println("p1: " + p1);
+        System.out.println("p2: " + p2);
+        System.out.println("p3: " + p3 + " (same reference as p1)");
+        System.out.println("p4: " + p4);
+        
+        System.out.println();
+        
+        // Reference comparison (==)
+        System.out.println("--- Reference Comparison (==) ---");
+        System.out.println("p1 == p2: " + (p1 == p2));    // false (different objects)
+        System.out.println("p1 == p3: " + (p1 == p3));    // true (same reference)
+        System.out.println("p1 == p4: " + (p1 == p4));    // false
+        
+        System.out.println();
+        
+        // Content comparison (equals)
+        System.out.println("--- Content Comparison (equals) ---");
+        System.out.println("p1.equals(p2): " + p1.equals(p2));    // true (same content)
+        System.out.println("p1.equals(p3): " + p1.equals(p3));    // true
+        System.out.println("p1.equals(p4): " + p1.equals(p4));    // false (different content)
+        System.out.println("p1.equals(null): " + p1.equals(null)); // false
+        
+        System.out.println();
+        
+        // HashCode comparison
+        System.out.println("--- HashCode Comparison ---");
+        System.out.println("p1.hashCode(): " + p1.hashCode());
+        System.out.println("p2.hashCode(): " + p2.hashCode());
+        System.out.println("p3.hashCode(): " + p3.hashCode());
+        System.out.println("p4.hashCode(): " + p4.hashCode());
+        System.out.println("Equal objects should have same hashCode: " + 
+                          (p1.hashCode() == p2.hashCode()));
+    }
+}
+
+OUTPUT:
+-------
+=== Object Comparison Demo ===
+
+Objects created:
+p1: Person{name='John', age=25}
+p2: Person{name='John', age=25}
+p3: Person{name='John', age=25} (same reference as p1)
+p4: Person{name='Jane', age=30}
+
+--- Reference Comparison (==) ---
+p1 == p2: false
+p1 == p3: true
+p1 == p4: false
+
+--- Content Comparison (equals) ---
+p1.equals(p2): true
+p1.equals(p3): true
+p1.equals(p4): false
+p1.equals(null): false
+
+--- HashCode Comparison ---
+p1.hashCode(): 71763026
+p2.hashCode(): 71763026
+p3.hashCode(): 71763026
+p4.hashCode(): 71346691
+Equal objects should have same hashCode: true
+
+
+================================================================================
+                    9. CLASSES IN AUTOMATION CONTEXT
+================================================================================
+
+--------------------------------------------------------------------------------
+EXAMPLE 9: Page Object Model (POM) - Login Page
+--------------------------------------------------------------------------------
+
+// LoginPage.java - Page Object class
+public class LoginPage {
+    
+    // Page elements (locators)
+    private String usernameFieldId = "username";
+    private String passwordFieldId = "password";
+    private String loginButtonId = "login-btn";
+    private String errorMessageId = "error-msg";
+    private String rememberMeCheckboxId = "remember-me";
+    
+    // Page URL
+    private String pageUrl = "https://example.com/login";
+    
+    // Page state
+    private boolean isLoaded = false;
+    
+    // Constructor
+    public LoginPage() {
+        System.out.println("[LoginPage] Page object created");
+    }
+    
+    // ============ PAGE ACTIONS ============
+    
+    // Navigate to login page
+    public void navigateTo() {
+        System.out.println("[LoginPage] Navigating to: " + pageUrl);
+        // driver.get(pageUrl);
+        isLoaded = true;
+        System.out.println("[LoginPage] Page loaded successfully");
+    }
+    
+    // Enter username
+    public void enterUsername(String username) {
+        System.out.println("[LoginPage] Entering username: " + username);
+        // driver.findElement(By.id(usernameFieldId)).sendKeys(username);
+    }
+    
+    // Enter password
+    public void enterPassword(String password) {
+        System.out.println("[LoginPage] Entering password: " + "*".repeat(password.length()));
+        // driver.findElement(By.id(passwordFieldId)).sendKeys(password);
+    }
+    
+    // Click login button
+    public void clickLogin() {
+        System.out.println("[LoginPage] Clicking login button");
+        // driver.findElement(By.id(loginButtonId)).click();
+    }
+    
+    // Check remember me
+    public void checkRememberMe() {
+        System.out.println("[LoginPage] Checking 'Remember Me' checkbox");
+        // driver.findElement(By.id(rememberMeCheckboxId)).click();
+    }
+    
+    // Combined login method
+    public void login(String username, String password) {
+        System.out.println("[LoginPage] Performing login...");
+        enterUsername(username);
+        enterPassword(password);
+        clickLogin();
+    }
+    
+    // Login with remember me
+    public void loginWithRememberMe(String username, String password) {
+        System.out.println("[LoginPage] Performing login with Remember Me...");
+        enterUsername(username);
+        enterPassword(password);
+        checkRememberMe();
+        clickLogin();
+    }
+    
+    // ============ PAGE VERIFICATIONS ============
+    
+    // Check if page is loaded
+    public boolean isPageLoaded() {
+        return isLoaded;
+    }
+    
+    // Get error message
+    public String getErrorMessage() {
+        // return driver.findElement(By.id(errorMessageId)).getText();
+        return "Invalid credentials";    // Simulated
+    }
+    
+    // Check if error is displayed
+    public boolean isErrorDisplayed() {
+        // return driver.findElement(By.id(errorMessageId)).isDisplayed();
+        return true;    // Simulated
+    }
+    
+    // Get page title
+    public String getPageTitle() {
+        // return driver.getTitle();
+        return "Login - Example Website";    // Simulated
+    }
+}
+
+// HomePage.java - Another Page Object
+public class HomePage {
+    
+    private String welcomeMessageId = "welcome-msg";
+    private String logoutButtonId = "logout-btn";
+    private String userProfileId = "user-profile";
+    
+    public HomePage() {
+        System.out.println("[HomePage] Page object created");
+    }
+    
+    // Get welcome message
+    public String getWelcomeMessage() {
+        // return driver.findElement(By.id(welcomeMessageId)).getText();
+        return "Welcome, Test User!";    // Simulated
+    }
+    
+    // Click logout
+    public void clickLogout() {
+        System.out.println("[HomePage] Clicking logout");
+        // driver.findElement(By.id(logoutButtonId)).click();
+    }
+    
+    // Check if user is logged in
+    public boolean isUserLoggedIn() {
+        // return driver.findElement(By.id(userProfileId)).isDisplayed();
+        return true;    // Simulated
+    }
+    
+    // Get username from profile
+    public String getLoggedInUsername() {
+        // return driver.findElement(By.id(userProfileId)).getText();
+        return "testuser";    // Simulated
+    }
+}
+
+// Test class using Page Objects
+public class LoginTest {
+    public static void main(String[] args) {
+        
+        System.out.println("=".repeat(60));
+        System.out.println("           LOGIN TEST EXECUTION");
+        System.out.println("=".repeat(60));
+        System.out.println();
+        
+        // Create page objects
+        LoginPage loginPage = new LoginPage();
+        HomePage homePage = new HomePage();
+        
+        System.out.println();
+        
+        // Test Case 1: Valid Login
+        System.out.println("--- Test Case 1: Valid Login ---");
+        loginPage.navigateTo();
+        loginPage.login("testuser", "password123");
+        
+        // Verify home page
+        System.out.println("\n[Verification]");
+        System.out.println("  User logged in: " + homePage.isUserLoggedIn());
+        System.out.println("  Welcome message: " + homePage.getWelcomeMessage());
+        System.out.println("  TEST PASSED: Valid login successful");
+        
+        System.out.println();
+        
+        // Test Case 2: Invalid Login
+        System.out.println("--- Test Case 2: Invalid Login ---");
+        loginPage.navigateTo();
+        loginPage.login("wronguser", "wrongpass");
+        
+        // Verify error
+        System.out.println("\n[Verification]");
+        System.out.println("  Error displayed: " + loginPage.isErrorDisplayed());
+        System.out.println("  Error message: " + loginPage.getErrorMessage());
+        System.out.println("  TEST PASSED: Error displayed for invalid credentials");
+        
+        System.out.println();
+        
+        // Test Case 3: Login with Remember Me
+        System.out.println("--- Test Case 3: Login with Remember Me ---");
+        loginPage.navigateTo();
+        loginPage.loginWithRememberMe("testuser", "password123");
+        System.out.println("  TEST PASSED: Login with Remember Me completed");
+        
+        System.out.println();
+        System.out.println("=".repeat(60));
+        System.out.println("           TEST EXECUTION COMPLETED");
+        System.out.println("=".repeat(60));
+    }
+}
+
+OUTPUT:
+-------
+============================================================
+           LOGIN TEST EXECUTION
+============================================================
+
+[LoginPage] Page object created
+[HomePage] Page object created
+
+--- Test Case 1: Valid Login ---
+[LoginPage] Navigating to: https://example.com/login
+[LoginPage] Page loaded successfully
+[LoginPage] Performing login...
+[LoginPage] Entering username: testuser
+[LoginPage] Entering password: ***********
+[LoginPage] Clicking login button
+
+[Verification]
+  User logged in: true
+  Welcome message: Welcome, Test User!
+  TEST PASSED: Valid login successful
+
+--- Test Case 2: Invalid Login ---
+[LoginPage] Navigating to: https://example.com/login
+[LoginPage] Page loaded successfully
+[LoginPage] Performing login...
+[LoginPage] Entering username: wronguser
+[LoginPage] Entering password: *********
+[LoginPage] Clicking login button
+
+[Verification]
+  Error displayed: true
+  Error message: Invalid credentials
+  TEST PASSED: Error displayed for invalid credentials
+
+--- Test Case 3: Login with Remember Me ---
+[LoginPage] Navigating to: https://example.com/login
+[LoginPage] Page loaded successfully
+[LoginPage] Performing login with Remember Me...
+[LoginPage] Entering username: testuser
+[LoginPage] Entering password: ***********
+[LoginPage] Checking 'Remember Me' checkbox
+[LoginPage] Clicking login button
+  TEST PASSED: Login with Remember Me completed
+
+============================================================
+           TEST EXECUTION COMPLETED
+============================================================
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 10: Test Data Object
+--------------------------------------------------------------------------------
+
+// TestUser.java - Test data class
+public class TestUser {
+    
+    private String username;
+    private String password;
+    private String email;
+    private String firstName;
+    private String lastName;
+    private String role;
+    private boolean isActive;
+    
+    // Builder pattern constructor
+    private TestUser(Builder builder) {
+        this.username = builder.username;
+        this.password = builder.password;
+        this.email = builder.email;
+        this.firstName = builder.firstName;
+        this.lastName = builder.lastName;
+        this.role = builder.role;
+        this.isActive = builder.isActive;
+    }
+    
+    // Getters
+    public String getUsername() { return username; }
+    public String getPassword() { return password; }
+    public String getEmail() { return email; }
+    public String getFirstName() { return firstName; }
+    public String getLastName() { return lastName; }
+    public String getFullName() { return firstName + " " + lastName; }
+    public String getRole() { return role; }
+    public boolean isActive() { return isActive; }
+    
+    // Builder class
+    public static class Builder {
+        private String username;
+        private String password;
+        private String email;
+        private String firstName;
+        private String lastName;
+        private String role = "user";
+        private boolean isActive = true;
+        
+        public Builder username(String username) {
+            this.username = username;
+            return this;
+        }
+        
+        public Builder password(String password) {
+            this.password = password;
+            return this;
+        }
+        
+        public Builder email(String email) {
+            this.email = email;
+            return this;
+        }
+        
+        public Builder firstName(String firstName) {
+            this.firstName = firstName;
+            return this;
+        }
+        
+        public Builder lastName(String lastName) {
+            this.lastName = lastName;
+            return this;
+        }
+        
+        public Builder role(String role) {
+            this.role = role;
+            return this;
+        }
+        
+        public Builder isActive(boolean isActive) {
+            this.isActive = isActive;
+            return this;
+        }
+        
+        public TestUser build() {
+            return new TestUser(this);
+        }
+    }
+    
+    // Factory methods for common test users
+    public static TestUser createAdminUser() {
+        return new Builder()
+                .username("admin")
+                .password("[REDACTED:PASSWORD]")
+                .email("admin@test.com")
+                .firstName("Admin")
+                .lastName("User")
+                .role("admin")
+                .isActive(true)
+                .build();
+    }
+    
+    public static TestUser createStandardUser() {
+        return new Builder()
+                .username("testuser")
+                .password("[REDACTED:PASSWORD]")
+                .email("testuser@test.com")
+                .firstName("Test")
+                .lastName("User")
+                .role("user")
+                .isActive(true)
+                .build();
+    }
+    
+    public static TestUser createInactiveUser() {
+        return new Builder()
+                .username("inactive")
+                .password("[REDACTED:PASSWORD]")
+                .email("inactive@test.com")
+                .firstName("Inactive")
+                .lastName("User")
+                .role("user")
+                .isActive(false)
+                .build();
+    }
+    
+    @Override
+    public String toString() {
+        return "TestUser{" +
+               "username='" + username + '\'' +
+               ", email='" + email + '\'' +
+               ", fullName='" + getFullName() + '\'' +
+               ", role='" + role + '\'' +
+               ", isActive=" + isActive +
+               '}';
+    }
+}
+
+// Demo class
+public class TestDataDemo {
+    public static void main(String[] args) {
+        
+        System.out.println("=== Test Data Object Demo ===\n");
+        
+        // Using factory methods
+        System.out.println("--- Factory Method Users ---");
+        TestUser admin = TestUser.createAdminUser();
+        TestUser standard = TestUser.createStandardUser();
+        TestUser inactive = TestUser.createInactiveUser();
+        
+        System.out.println("Admin: " + admin);
+        System.out.println("Standard: " + standard);
+        System.out.println("Inactive: " + inactive);
+        
+        System.out.println();
+        
+        // Using builder pattern
+        System.out.println("--- Custom User with Builder ---");
+        TestUser customUser = new TestUser.Builder()
+                .username("john_doe")
+                .password("[REDACTED:PASSWORD]")
+                .email("john.doe@company.com")
+                .firstName("John")
+                .lastName("Doe")
+                .role("manager")
+                .isActive(true)
+                .build();
+        
+        System.out.println("Custom: " + customUser);
+        
+        System.out.println();
+        
+        // Using test data in tests
+        System.out.println("--- Using Test Data in Test ---");
+        performLoginTest(admin);
+        performLoginTest(standard);
+        performLoginTest(inactive);
+    }
+    
+    public static void performLoginTest(TestUser user) {
+        System.out.println("\nTest: Login as " + user.getRole());
+        System.out.println("  Username: " + user.getUsername());
+        System.out.println("  Password: " + "*".repeat(user.getPassword().length()));
+        System.out.println("  Active: " + user.isActive());
+        
+        if (user.isActive()) {
+            System.out.println("  Result: Login should succeed");
+        } else {
+            System.out.println("  Result: Login should fail (inactive user)");
+        }
+    }
+}
+
+OUTPUT:
+-------
+=== Test Data Object Demo ===
+
+--- Factory Method Users ---
+Admin: TestUser{username='admin', email='admin@test.com', fullName='Admin User', role='admin', isActive=true}
+Standard: TestUser{username='testuser', email='testuser@test.com', fullName='Test User', role='user', isActive=true}
+Inactive: TestUser{username='inactive', email='inactive@test.com', fullName='Inactive User', role='user', isActive=false}
+
+--- Custom User with Builder ---
+Custom: TestUser{username='john_doe', email='john.doe@company.com', fullName='John Doe', role='manager', isActive=true}
+
+--- Using Test Data in Test ---
+
+Test: Login as admin
+  Username: admin
+  Password: ********
+  Active: true
+  Result: Login should succeed
+
+Test: Login as user
+  Username: testuser
+  Password: *******
+  Active: true
+  Result: Login should succeed
+
+Test: Login as user
+  Username: inactive
+  Password: ***********
+  Active: false
+  Result: Login should fail (inactive user)
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 11: Configuration Object
+--------------------------------------------------------------------------------
+
+// TestConfig.java - Configuration class
+public class TestConfig {
+    
+    // Singleton instance
+    private static TestConfig instance;
+    
+    // Configuration properties
+    private String browser;
+    private String baseUrl;
+    private int implicitWait;
+    private int explicitWait;
+    private int pageLoadTimeout;
+    private boolean headless;
+    private String environment;
+    private String screenshotPath;
+    
+    // Private constructor for singleton
+    private TestConfig() {
+        loadDefaultConfig();
+    }
+    
+    // Get singleton instance
+    public static TestConfig getInstance() {
+        if (instance == null) {
+            instance = new TestConfig();
+        }
+        return instance;
+    }
+    
+    // Load default configuration
+    private void loadDefaultConfig() {
+        this.browser = "chrome";
+        this.baseUrl = "https://example.com";
+        this.implicitWait = 10;
+        this.explicitWait = 15;
+        this.pageLoadTimeout = 30;
+        this.headless = false;
+        this.environment = "QA";
+        this.screenshotPath = "./screenshots/";
+    }
+    
+    // Load environment-specific configuration
+    public void loadEnvironmentConfig(String env) {
+        this.environment = env;
+        
+        switch (env.toUpperCase()) {
+            case "DEV":
+                this.baseUrl = "https://dev.example.com";
+                this.headless = false;
+                break;
+            case "QA":
+                this.baseUrl = "https://qa.example.com";
+                this.headless = false;
+                break;
+            case "STAGING":
+                this.baseUrl = "https://staging.example.com";
+                this.headless = true;
+                break;
+            case "PROD":
+                this.baseUrl = "https://www.example.com";
+                this.headless = true;
+                break;
+            default:
+                System.out.println("Unknown environment. Using default.");
+        }
+        
+        System.out.println("Configuration loaded for: " + env);
+    }
+    
+    // Getters
+    public String getBrowser() { return browser; }
+    public String getBaseUrl() { return baseUrl; }
+    public int getImplicitWait() { return implicitWait; }
+    public int getExplicitWait() { return explicitWait; }
+    public int getPageLoadTimeout() { return pageLoadTimeout; }
+    public boolean isHeadless() { return headless; }
+    public String getEnvironment() { return environment; }
+    public String getScreenshotPath() { return screenshotPath; }
+    
+    // Setters
+    public void setBrowser(String browser) { this.browser = browser; }
+    public void setHeadless(boolean headless) { this.headless = headless; }
+    public void setImplicitWait(int seconds) { this.implicitWait = seconds; }
+    public void setExplicitWait(int seconds) { this.explicitWait = seconds; }
+    
+    // Display configuration
+    public void displayConfig() {
+        System.out.println("=== Test Configuration ===");
+        System.out.println("  Environment: " + environment);
+        System.out.println("  Browser: " + browser);
+        System.out.println("  Base URL: " + baseUrl);
+        System.out.println("  Headless: " + headless);
+        System.out.println("  Implicit Wait: " + implicitWait + "s");
+        System.out.println("  Explicit Wait: " + explicitWait + "s");
+        System.out.println("  Page Load Timeout: " + pageLoadTimeout + "s");
+        System.out.println("  Screenshot Path: " + screenshotPath);
+    }
+}
+
+// Demo class
+public class ConfigDemo {
+    public static void main(String[] args) {
+        
+        System.out.println("=== Configuration Object Demo ===\n");
+        
+        // Get singleton instance
+        TestConfig config = TestConfig.getInstance();
+        
+        // Display default config
+        System.out.println("--- Default Configuration ---");
+        config.displayConfig();
+        
+        System.out.println();
+        
+        // Load QA config
+        System.out.println("--- Loading QA Configuration ---");
+        config.loadEnvironmentConfig("QA");
+        config.displayConfig();
+        
+        System.out.println();
+        
+        // Load Staging config
+        System.out.println("--- Loading Staging Configuration ---");
+        config.loadEnvironmentConfig("STAGING");
+        config.displayConfig();
+        
+        System.out.println();
+        
+        // Customize config
+        System.out.println("--- Customizing Configuration ---");
+        config.setBrowser("firefox");
+        config.setHeadless(false);
+        config.setImplicitWait(15);
+        config.displayConfig();
+        
+        System.out.println();
+        
+        // Verify singleton
+        System.out.println("--- Singleton Verification ---");
+        TestConfig config2 = TestConfig.getInstance();
+        System.out.println("Same instance? " + (config == config2));
+        System.out.println("config2 browser: " + config2.getBrowser());
+    }
+}
+
+OUTPUT:
+-------
+=== Configuration Object Demo ===
+
+--- Default Configuration ---
+=== Test Configuration ===
+  Environment: QA
+  Browser: chrome
+  Base URL: https://example.com
+  Headless: false
+  Implicit Wait: 10s
+  Explicit Wait: 15s
+  Page Load Timeout: 30s
+  Screenshot Path: ./screenshots/
+
+--- Loading QA Configuration ---
+Configuration loaded for: QA
+=== Test Configuration ===
+  Environment: QA
+  Browser: chrome
+  Base URL: https://qa.example.com
+  Headless: false
+  Implicit Wait: 10s
+  Explicit Wait: 15s
+  Page Load Timeout: 30s
+  Screenshot Path: ./screenshots/
+
+--- Loading Staging Configuration ---
+Configuration loaded for: STAGING
+=== Test Configuration ===
+  Environment: STAGING
+  Browser: chrome
+  Base URL: https://staging.example.com
+  Headless: true
+  Implicit Wait: 10s
+  Explicit Wait: 15s
+  Page Load Timeout: 30s
+  Screenshot Path: ./screenshots/
+
+--- Customizing Configuration ---
+=== Test Configuration ===
+  Environment: STAGING
+  Browser: firefox
+  Base URL: https://staging.example.com
+  Headless: false
+  Implicit Wait: 15s
+  Explicit Wait: 15s
+  Page Load Timeout: 30s
+  Screenshot Path: ./screenshots/
+
+--- Singleton Verification ---
+Same instance? true
+config2 browser: firefox
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 12: API Response Object
+--------------------------------------------------------------------------------
+
+// ApiResponse.java - Generic API response wrapper
+public class ApiResponse {
+    
+    private int statusCode;
+    private String statusMessage;
+    private String body;
+    private long responseTime;
+    private java.util.Map<String, String> headers;
+    
+    // Constructor
+    public ApiResponse(int statusCode, String body, long responseTime) {
+        this.statusCode = statusCode;
+        this.body = body;
+        this.responseTime = responseTime;
+        this.statusMessage = getStatusMessage(statusCode);
+        this.headers = new java.util.HashMap<>();
+    }
+    
+    // Get status message from code
+    private String getStatusMessage(int code) {
+        switch (code) {
+            case 200: return "OK";
+            case 201: return "Created";
+            case 204: return "No Content";
+            case 400: return "Bad Request";
+            case 401: return "Unauthorized";
+            case 403: return "Forbidden";
+            case 404: return "Not Found";
+            case 500: return "Internal Server Error";
+            default: return "Unknown";
+        }
+    }
+    
+    // Getters
+    public int getStatusCode() { return statusCode; }
+    public String getStatusMessage() { return statusMessage; }
+    public String getBody() { return body; }
+    public long getResponseTime() { return responseTime; }
+    
+    // Add header
+    public void addHeader(String key, String value) {
+        headers.put(key, value);
+    }
+    
+    // Get header
+    public String getHeader(String key) {
+        return headers.get(key);
+    }
+    
+    // Validation methods
+    public boolean isSuccessful() {
+        return statusCode >= 200 && statusCode < 300;
+    }
+    
+    public boolean isClientError() {
+        return statusCode >= 400 && statusCode < 500;
+    }
+    
+    public boolean isServerError() {
+        return statusCode >= 500;
+    }
+    
+    public boolean hasBody() {
+        return body != null && !body.isEmpty();
+    }
+    
+    public boolean isResponseTimeAcceptable(long maxTime) {
+        return responseTime <= maxTime;
+    }
+    
+    // Extract value from JSON body (simplified)
+    public String extractJsonValue(String key) {
+        if (body == null) return null;
+        
+        String searchKey = "\"" + key + "\":";
+        int keyIndex = body.indexOf(searchKey);
+        
+        if (keyIndex == -1) return null;
+        
+        int valueStart = keyIndex + searchKey.length();
+        while (valueStart < body.length() && body.charAt(valueStart) == ' ') {
+            valueStart++;
+        }
+        
+        if (body.charAt(valueStart) == '"') {
+            int valueEnd = body.indexOf("\"", valueStart + 1);
+            return body.substring(valueStart + 1, valueEnd);
+        } else {
+            int valueEnd = valueStart;
+            while (valueEnd < body.length() && 
+                   body.charAt(valueEnd) != ',' && 
+                   body.charAt(valueEnd) != '}') {
+                valueEnd++;
+            }
+            return body.substring(valueStart, valueEnd).trim();
+        }
+    }
+    
+    // Display response
+    public void display() {
+        System.out.println("API Response:");
+        System.out.println("  Status: " + statusCode + " " + statusMessage);
+        System.out.println("  Response Time: " + responseTime + "ms");
+        System.out.println("  Body: " + (body != null ? body : "null"));
+        System.out.println("  Successful: " + isSuccessful());
+    }
+}
+
+// Demo class
+public class ApiResponseDemo {
+    public static void main(String[] args) {
+        
+        System.out.println("=== API Response Object Demo ===\n");
+        
+        // Successful response
+        System.out.println("--- Successful Response ---");
+        String successBody = "{\"id\":123,\"name\":\"John\",\"status\":\"active\"}";
+        ApiResponse successResponse = new ApiResponse(200, successBody, 150);
+        successResponse.display();
+        
+        System.out.println("\n  Extracted Values:");
+        System.out.println("  - id: " + successResponse.extractJsonValue("id"));
+        System.out.println("  - name: " + successResponse.extractJsonValue("name"));
+        System.out.println("  - status: " + successResponse.extractJsonValue("status"));
+        
+        System.out.println();
+        
+        // Error response
+        System.out.println("--- Error Response ---");
+        String errorBody = "{\"error\":\"User not found\",\"code\":\"USER_404\"}";
+        ApiResponse errorResponse = new ApiResponse(404, errorBody, 50);
+        errorResponse.display();
+        
+        System.out.println("\n  Error Message: " + errorResponse.extractJsonValue("error"));
+        
+        System.out.println();
+        
+        // Validation examples
+        System.out.println("--- Response Validations ---");
+        
+        System.out.println("\nValidating successful response:");
+        validateResponse(successResponse, 200, 500);
+        
+        System.out.println("\nValidating error response:");
+        validateResponse(errorResponse, 200, 500);
+    }
+    
+    public static void validateResponse(ApiResponse response, int expectedStatus, long maxResponseTime) {
+        System.out.println("  Status Code Match: " + (response.getStatusCode() == expectedStatus));
+        System.out.println("  Is Successful: " + response.isSuccessful());
+        System.out.println("  Response Time OK: " + response.isResponseTimeAcceptable(maxResponseTime));
+        System.out.println("  Has Body: " + response.hasBody());
+        
+        if (response.getStatusCode() == expectedStatus && response.isSuccessful()) {
+            System.out.println("  VALIDATION: PASSED");
+        } else {
+            System.out.println("  VALIDATION: FAILED");
+        }
+    }
+}
+
+OUTPUT:
+-------
+=== API Response Object Demo ===
+
+--- Successful Response ---
+API Response:
+  Status: 200 OK
+  Response Time: 150ms
+  Body: {"id":123,"name":"John","status":"active"}
+  Successful: true
+
+  Extracted Values:
+  - id: 123
+  - name: John
+  - status: active
+
+--- Error Response ---
+API Response:
+  Status: 404 Not Found
+  Response Time: 50ms
+  Body: {"error":"User not found","code":"USER_404"}
+  Successful: false
+
+  Error Message: User not found
+
+--- Response Validations ---
+
+Validating successful response:
+  Status Code Match: true
+  Is Successful: true
+  Response Time OK: true
+  Has Body: true
+  VALIDATION: PASSED
+
+Validating error response:
+  Status Code Match: false
+  Is Successful: false
+  Response Time OK: true
+  Has Body: true
+  VALIDATION: FAILED
+
+
+================================================================================
+================================================================================
+                    NEGATIVE SCENARIOS - CLASSES AND OBJECTS
+================================================================================
+================================================================================
+
+
+--------------------------------------------------------------------------------
+ERROR 1: NullPointerException - Using Object Before Initialization
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE:
+-----------------
+public class NullObjectError {
+    public static void main(String[] args) {
+        
+        Car myCar;    // Declared but not initialized
+        
+        // Using object before initialization
+        myCar.start();    // Error!
+    }
+}
+
+class Car {
+    public void start() {
+        System.out.println("Car started");
+    }
+}
+
+ERROR MESSAGE:
+--------------
+error: variable myCar might not have been initialized
+        myCar.start();
+        ^
+
+FIX:
+----
+public class NullObjectFixed {
+    public static void main(String[] args) {
+        
+        // Option 1: Initialize when declaring
+        Car myCar = new Car();
+        myCar.start();
+        
+        // Option 2: Initialize before using
+        Car anotherCar;
+        anotherCar = new Car();
+        anotherCar.start();
+        
+        // Option 3: Check for null
+        Car nullCar = null;
+        if (nullCar != null) {
+            nullCar.start();
+        } else {
+            System.out.println("Car object is null");
+        }
+    }
+}
+
+class Car {
+    public void start() {
+        System.out.println("Car started");
+    }
+}
+
+
+--------------------------------------------------------------------------------
+ERROR 2: NullPointerException - Accessing Members of Null Object
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE:
+-----------------
+public class NullMemberAccess {
+    public static void main(String[] args) {
+        
+        Person person = null;
+        
+        // Accessing member of null object
+        System.out.println(person.getName());    // NullPointerException!
+        person.setAge(25);                       // NullPointerException!
+    }
+}
+
+class Person {
+    private String name;
+    private int age;
+    
+    public String getName() { return name; }
+    public void setAge(int age) { this.age = age; }
+}
+
+ERROR MESSAGE (Runtime):
+------------------------
+Exception in thread "main" java.lang.NullPointerException
+
+FIX:
+----
+public class NullMemberAccessFixed {
+    public static void main(String[] args) {
+        
+        Person person = null;
+        
+        // Option 1: Check for null
+        if (person != null) {
+            System.out.println(person.getName());
+        } else {
+            System.out.println("Person object is null");
+        }
+        
+        // Option 2: Initialize the object
+        person = new Person();
+        person.setAge(25);
+        System.out.println("Age set successfully");
+        
+        // Option 3: Use Optional (Java 8+)
+        Person maybePerson = null;
+        String name = java.util.Optional.ofNullable(maybePerson)
+                                        .map(Person::getName)
+                                        .orElse("Unknown");
+        System.out.println("Name: " + name);
+    }
+}
+
+
+--------------------------------------------------------------------------------
+ERROR 3: Constructor Not Defined Error
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE:
+-----------------
+public class ConstructorNotDefined {
+    public static void main(String[] args) {
+        
+        // Class has parameterized constructor only
+        Employee emp = new Employee();    // Error! No no-arg constructor
+    }
+}
+
+class Employee {
+    private String name;
+    
+    // Only parameterized constructor
+    public Employee(String name) {
+        this.name = name;
+    }
+}
+
+ERROR MESSAGE:
+--------------
+error: constructor Employee in class Employee cannot be applied to given types;
+        Employee emp = new Employee();
+                       ^
+  required: String
+  found: no arguments
+
+FIX:
+----
+public class ConstructorNotDefinedFixed {
+    public static void main(String[] args) {
+        
+        // Option 1: Use the available constructor
+        Employee emp1 = new Employee("John");
+        System.out.println("Employee created: " + emp1.getName());
+        
+        // Option 2: Add no-arg constructor to class (see below)
+        Employee emp2 = new Employee();
+        System.out.println("Employee created with default name: " + emp2.getName());
+    }
+}
+
+class Employee {
+    private String name;
+    
+    // No-arg constructor
+    public Employee() {
+        this.name = "Unknown";
+    }
+    
+    // Parameterized constructor
+    public Employee(String name) {
+        this.name = name;
+    }
+    
+    public String getName() { return name; }
+}
+
+
+--------------------------------------------------------------------------------
+ERROR 4: Private Constructor - Cannot Instantiate
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE:
+-----------------
+public class PrivateConstructorError {
+    public static void main(String[] args) {
+        
+        // Cannot create instance - constructor is private
+        Utility util = new Utility();    // Error!
+    }
+}
+
+class Utility {
+    private Utility() {
+        // Private constructor
+    }
+    
+    public static void doSomething() {
+        System.out.println("Doing something");
+    }
+}
+
+ERROR MESSAGE:
+--------------
+error: Utility() has private access in Utility
+        Utility util = new Utility();
+                       ^
+
+FIX:
+----
+public class PrivateConstructorFixed {
+    public static void main(String[] args) {
+        
+        // Option 1: Use static methods directly
+        Utility.doSomething();
+        
+        // Option 2: Use factory method if provided
+        Singleton instance = Singleton.getInstance();
+        instance.display();
+    }
+}
+
+class Utility {
+    private Utility() { }
+    
+    public static void doSomething() {
+        System.out.println("Doing something");
+    }
+}
+
+class Singleton {
+    private static Singleton instance;
+    
+    private Singleton() { }
+    
+    public static Singleton getInstance() {
+        if (instance == null) {
+            instance = new Singleton();
+        }
+        return instance;
+    }
+    
+    public void display() {
+        System.out.println("Singleton instance");
+    }
+}
+
+
+--------------------------------------------------------------------------------
+ERROR 5: Accessing Private Members from Outside Class
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE:
+-----------------
+public class PrivateMemberAccess {
+    public static void main(String[] args) {
+        
+        Account account = new Account();
+        
+        // Cannot access private members directly
+        account.balance = 1000;              // Error!
+        System.out.println(account.balance); // Error!
+        account.calculateInterest();         // Error!
+    }
+}
+
+class Account {
+    private double balance;
+    
+    private void calculateInterest() {
+        balance *= 1.05;
+    }
+}
+
+ERROR MESSAGE:
+--------------
+error: balance has private access in Account
+        account.balance = 1000;
+               ^
+
+FIX:
+----
+public class PrivateMemberAccessFixed {
+    public static void main(String[] args) {
+        
+        Account account = new Account();
+        
+        // Use public methods to access private members
+        account.setBalance(1000);
+        System.out.println("Balance: " + account.getBalance());
+        
+        // Use public method that internally uses private method
+        account.applyInterest();
+        System.out.println("After interest: " + account.getBalance());
+    }
+}
+
+class Account {
+    private double balance;
+    
+    // Public getter
+    public double getBalance() {
+        return balance;
+    }
+    
+    // Public setter with validation
+    public void setBalance(double balance) {
+        if (balance >= 0) {
+            this.balance = balance;
+        }
+    }
+    
+    // Private method
+    private void calculateInterest() {
+        balance *= 1.05;
+    }
+    
+    // Public method that uses private method
+    public void applyInterest() {
+        calculateInterest();
+    }
+}
+
+
+--------------------------------------------------------------------------------
+ERROR 6: Static Method Accessing Instance Variable
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE:
+-----------------
+public class StaticAccessInstance {
+    
+    private String name = "Test";
+    private int count = 0;
+    
+    public static void displayInfo() {
+        // Cannot access instance variables from static method
+        System.out.println("Name: " + name);    // Error!
+        count++;                                 // Error!
+    }
+    
+    public static void main(String[] args) {
+        displayInfo();
+    }
+}
+
+ERROR MESSAGE:
+--------------
+error: non-static variable name cannot be referenced from a static context
+        System.out.println("Name: " + name);
+                                      ^
+
+FIX:
+----
+public class StaticAccessInstanceFixed {
+    
+    private String name = "Test";
+    private int count = 0;
+    
+    // Option 1: Make method non-static
+    public void displayInfo() {
+        System.out.println("Name: " + name);
+        count++;
+    }
+    
+    // Option 2: Pass object as parameter
+    public static void displayInfoStatic(StaticAccessInstanceFixed obj) {
+        System.out.println("Name: " + obj.name);
+        obj.count++;
+    }
+    
+    // Option 3: Use static variables
+    private static String staticName = "Static Test";
+    
+    public static void displayStaticInfo() {
+        System.out.println("
+        
+        --- ai stopped ---
+        
+--------------------------------------------------------------------------------
+ERROR 6: Static Method Accessing Instance Variable (CONTINUED)
+--------------------------------------------------------------------------------
+
+FIX:
+----
+public class StaticAccessInstanceFixed {
+    
+    private String name = "Test";
+    private int count = 0;
+    
+    // Option 1: Make method non-static
+    public void displayInfo() {
+        System.out.println("Name: " + name);
+        count++;
+    }
+    
+    // Option 2: Pass object as parameter
+    public static void displayInfoStatic(StaticAccessInstanceFixed obj) {
+        System.out.println("Name: " + obj.name);
+        obj.count++;
+    }
+    
+    // Option 3: Use static variables
+    private static String staticName = "Static Test";
+    private static int staticCount = 0;
+    
+    public static void displayStaticInfo() {
+        System.out.println("Static Name: " + staticName);
+        staticCount++;
+        System.out.println("Static Count: " + staticCount);
+    }
+    
+    public static void main(String[] args) {
+        
+        System.out.println("--- Option 1: Non-static method ---");
+        StaticAccessInstanceFixed obj = new StaticAccessInstanceFixed();
+        obj.displayInfo();
+        
+        System.out.println("\n--- Option 2: Pass object to static method ---");
+        displayInfoStatic(obj);
+        
+        System.out.println("\n--- Option 3: Use static variables ---");
+        displayStaticInfo();
+    }
+}
+
+OUTPUT:
+-------
+--- Option 1: Non-static method ---
+Name: Test
+
+--- Option 2: Pass object to static method ---
+Name: Test
+
+--- Option 3: Use static variables ---
+Static Name: Static Test
+Static Count: 1
+
+
+--------------------------------------------------------------------------------
+ERROR 7: this() Must Be First Statement in Constructor
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE:
+-----------------
+public class ThisNotFirstError {
+    
+    private String name;
+    private int age;
+    
+    public ThisNotFirstError() {
+        System.out.println("Initializing...");    // Statement before this()
+        this("Unknown", 0);    // Error! this() must be first
+    }
+    
+    public ThisNotFirstError(String name, int age) {
+        this.name = name;
+        this.age = age;
+    }
+    
+    public static void main(String[] args) {
+        ThisNotFirstError obj = new ThisNotFirstError();
+    }
+}
+
+ERROR MESSAGE:
+--------------
+error: call to this must be first statement in constructor
+        this("Unknown", 0);
+            ^
+
+FIX:
+----
+public class ThisNotFirstFixed {
+    
+    private String name;
+    private int age;
+    
+    public ThisNotFirstFixed() {
+        this("Unknown", 0);    // this() must be first statement
+        System.out.println("Initializing...");    // Other statements after
+    }
+    
+    public ThisNotFirstFixed(String name, int age) {
+        this.name = name;
+        this.age = age;
+        System.out.println("Created: " + name + ", " + age);
+    }
+    
+    public static void main(String[] args) {
+        ThisNotFirstFixed obj = new ThisNotFirstFixed();
+    }
+}
+
+OUTPUT:
+-------
+Created: Unknown, 0
+Initializing...
+
+
+--------------------------------------------------------------------------------
+ERROR 8: Circular Constructor Call
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE:
+-----------------
+public class CircularConstructor {
+    
+    private String name;
+    
+    public CircularConstructor() {
+        this("Default");    // Calls second constructor
+    }
+    
+    public CircularConstructor(String name) {
+        this();    // Calls first constructor - CIRCULAR!
+        this.name = name;
+    }
+    
+    public static void main(String[] args) {
+        CircularConstructor obj = new CircularConstructor();
+    }
+}
+
+ERROR MESSAGE:
+--------------
+error: recursive constructor invocation
+    public CircularConstructor(String name) {
+                              ^
+
+FIX:
+----
+public class CircularConstructorFixed {
+    
+    private String name;
+    
+    public CircularConstructorFixed() {
+        this("Default");    // Calls parameterized constructor
+    }
+    
+    public CircularConstructorFixed(String name) {
+        // Don't call this() here - this is the "final" constructor
+        this.name = name;
+        System.out.println("Created with name: " + name);
+    }
+    
+    public static void main(String[] args) {
+        CircularConstructorFixed obj1 = new CircularConstructorFixed();
+        CircularConstructorFixed obj2 = new CircularConstructorFixed("John");
+    }
+}
+
+OUTPUT:
+-------
+Created with name: Default
+Created with name: John
+
+
+--------------------------------------------------------------------------------
+ERROR 9: Forgetting 'this' Keyword - Variable Shadowing
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE:
+-----------------
+public class ShadowingError {
+    
+    private String name;
+    private int age;
+    
+    public ShadowingError(String name, int age) {
+        // Parameter shadows instance variable
+        name = name;    // Assigns parameter to itself!
+        age = age;      // Assigns parameter to itself!
+    }
+    
+    public void display() {
+        System.out.println("Name: " + name);    // null!
+        System.out.println("Age: " + age);      // 0!
+    }
+    
+    public static void main(String[] args) {
+        ShadowingError obj = new ShadowingError("John", 25);
+        obj.display();
+    }
+}
+
+OUTPUT (Unexpected):
+--------------------
+Name: null
+Age: 0
+
+FIX:
+----
+public class ShadowingFixed {
+    
+    private String name;
+    private int age;
+    
+    public ShadowingFixed(String name, int age) {
+        // Use 'this' to refer to instance variables
+        this.name = name;
+        this.age = age;
+    }
+    
+    // Alternative: Use different parameter names
+    public void setValues(String newName, int newAge) {
+        name = newName;
+        age = newAge;
+    }
+    
+    public void display() {
+        System.out.println("Name: " + name);
+        System.out.println("Age: " + age);
+    }
+    
+    public static void main(String[] args) {
+        ShadowingFixed obj = new ShadowingFixed("John", 25);
+        obj.display();
+    }
+}
+
+OUTPUT:
+-------
+Name: John
+Age: 25
+
+
+--------------------------------------------------------------------------------
+ERROR 10: Comparing Objects with == Instead of equals()
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE:
+-----------------
+public class ObjectCompareError {
+    public static void main(String[] args) {
+        
+        Person p1 = new Person("John", 25);
+        Person p2 = new Person("John", 25);
+        
+        // Using == compares references, not content
+        if (p1 == p2) {
+            System.out.println("Same person");
+        } else {
+            System.out.println("Different persons");    // This prints!
+        }
+    }
+}
+
+class Person {
+    String name;
+    int age;
+    
+    Person(String name, int age) {
+        this.name = name;
+        this.age = age;
+    }
+}
+
+OUTPUT (Unexpected):
+--------------------
+Different persons
+
+EXPLANATION:
+------------
+== compares object references (memory addresses)
+p1 and p2 are different objects in memory, even with same content
+
+FIX:
+----
+public class ObjectCompareFixed {
+    public static void main(String[] args) {
+        
+        Person p1 = new Person("John", 25);
+        Person p2 = new Person("John", 25);
+        Person p3 = p1;    // Same reference
+        
+        System.out.println("--- Reference Comparison (==) ---");
+        System.out.println("p1 == p2: " + (p1 == p2));    // false
+        System.out.println("p1 == p3: " + (p1 == p3));    // true
+        
+        System.out.println("\n--- Content Comparison (equals) ---");
+        System.out.println("p1.equals(p2): " + p1.equals(p2));    // true
+        System.out.println("p1.equals(p3): " + p1.equals(p3));    // true
+    }
+}
+
+class Person {
+    String name;
+    int age;
+    
+    Person(String name, int age) {
+        this.name = name;
+        this.age = age;
+    }
+    
+    // Override equals() for content comparison
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        
+        Person other = (Person) obj;
+        return age == other.age && 
+               (name == null ? other.name == null : name.equals(other.name));
+    }
+    
+    // Always override hashCode() when overriding equals()
+    @Override
+    public int hashCode() {
+        int result = name != null ? name.hashCode() : 0;
+        result = 31 * result + age;
+        return result;
+    }
+}
+
+OUTPUT:
+-------
+--- Reference Comparison (==) ---
+p1 == p2: false
+p1 == p3: true
+
+--- Content Comparison (equals) ---
+p1.equals(p2): true
+p1.equals(p3): true
+
+
+--------------------------------------------------------------------------------
+ERROR 11: Returning Reference to Private Mutable Object
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE:
+-----------------
+import java.util.ArrayList;
+import java.util.List;
+
+public class MutableReturnError {
+    public static void main(String[] args) {
+        
+        Team team = new Team();
+        team.addMember("Alice");
+        team.addMember("Bob");
+        
+        System.out.println("Original team: " + team.getMembers());
+        
+        // Get reference and modify it
+        List<String> members = team.getMembers();
+        members.clear();    // Clears the original list!
+        members.add("Hacker");
+        
+        System.out.println("After modification: " + team.getMembers());
+    }
+}
+
+class Team {
+    private List<String> members = new ArrayList<>();
+    
+    public void addMember(String name) {
+        members.add(name);
+    }
+    
+    // Returns reference to private list - DANGEROUS!
+    public List<String> getMembers() {
+        return members;
+    }
+}
+
+OUTPUT (Unexpected - data corruption):
+--------------------------------------
+Original team: [Alice, Bob]
+After modification: [Hacker]
+
+FIX:
+----
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+public class MutableReturnFixed {
+    public static void main(String[] args) {
+        
+        Team team = new Team();
+        team.addMember("Alice");
+        team.addMember("Bob");
+        
+        System.out.println("Original team: " + team.getMembers());
+        
+        // Get copy - modifications don't affect original
+        List<String> members = team.getMembers();
+        members.clear();    // Only clears the copy
+        members.add("Hacker");
+        
+        System.out.println("After modification attempt: " + team.getMembers());
+        System.out.println("Modified copy: " + members);
+    }
+}
+
+class Team {
+    private List<String> members = new ArrayList<>();
+    
+    public void addMember(String name) {
+        members.add(name);
+    }
+    
+    // Option 1: Return a copy
+    public List<String> getMembers() {
+        return new ArrayList<>(members);
+    }
+    
+    // Option 2: Return unmodifiable view
+    public List<String> getMembersReadOnly() {
+        return Collections.unmodifiableList(members);
+    }
+}
+
+OUTPUT:
+-------
+Original team: [Alice, Bob]
+After modification attempt: [Alice, Bob]
+Modified copy: [Hacker]
+
+
+--------------------------------------------------------------------------------
+ERROR 12: Memory Leak - Holding References Too Long
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE:
+-----------------
+import java.util.ArrayList;
+import java.util.List;
+
+public class MemoryLeakExample {
+    
+    // Static collection holds references indefinitely
+    private static List<Object> cache = new ArrayList<>();
+    
+    public static void processData() {
+        for (int i = 0; i < 10000; i++) {
+            byte[] largeData = new byte[1024 * 1024];    // 1MB
+            cache.add(largeData);    // Never removed - MEMORY LEAK!
+        }
+    }
+    
+    public static void main(String[] args) {
+        processData();    // Eventually causes OutOfMemoryError
+    }
+}
+
+ERROR MESSAGE (Runtime):
+------------------------
+Exception in thread "main" java.lang.OutOfMemoryError: Java heap space
+
+FIX:
+----
+import java.util.ArrayList;
+import java.util.List;
+
+public class MemoryLeakFixed {
+    
+    private static List<Object> cache = new ArrayList<>();
+    private static final int MAX_CACHE_SIZE = 100;
+    
+    public static void processData() {
+        for (int i = 0; i < 10000; i++) {
+            byte[] largeData = new byte[1024];    // Smaller data
+            
+            // Option 1: Limit cache size
+            if (cache.size() >= MAX_CACHE_SIZE) {
+                cache.remove(0);    // Remove oldest
+            }
+            cache.add(largeData);
+        }
+        System.out.println("Cache size: " + cache.size());
+    }
+    
+    public static void clearCache() {
+        cache.clear();
+        System.out.println("Cache cleared");
+    }
+    
+    public static void main(String[] args) {
+        processData();
+        clearCache();    // Clean up when done
+        System.out.println("Processing complete");
+    }
+}
+
+OUTPUT:
+-------
+Cache size: 100
+Cache cleared
+Processing complete
+
+
+--------------------------------------------------------------------------------
+ERROR 13: Not Overriding toString() - Unclear Output
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE:
+-----------------
+public class ToStringMissing {
+    public static void main(String[] args) {
+        
+        Product product = new Product("Laptop", 999.99);
+        
+        // Without toString(), prints memory reference
+        System.out.println(product);
+        System.out.println("Product: " + product);
+    }
+}
+
+class Product {
+    private String name;
+    private double price;
+    
+    public Product(String name, double price) {
+        this.name = name;
+        this.price = price;
+    }
+}
+
+OUTPUT (Unclear):
+-----------------
+Product@6d06d69c
+Product: Product@6d06d69c
+
+FIX:
+----
+public class ToStringFixed {
+    public static void main(String[] args) {
+        
+        Product product = new Product("Laptop", 999.99);
+        
+        // With toString(), prints meaningful information
+        System.out.println(product);
+        System.out.println("Product: " + product);
+    }
+}
+
+class Product {
+    private String name;
+    private double price;
+    
+    public Product(String name, double price) {
+        this.name = name;
+        this.price = price;
+    }
+    
+    @Override
+    public String toString() {
+        return "Product{name='" + name + "', price=$" + price + "}";
+    }
+}
+
+OUTPUT:
+-------
+Product{name='Laptop', price=$999.99}
+Product: Product{name='Laptop', price=$999.99}
+
+
+--------------------------------------------------------------------------------
+ERROR 14: Mutable Fields in Immutable Class
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE:
+-----------------
+import java.util.Date;
+
+public class ImmutableBroken {
+    public static void main(String[] args) {
+        
+        Date birthDate = new Date();
+        ImmutablePerson person = new ImmutablePerson("John", birthDate);
+        
+        System.out.println("Original: " + person.getBirthDate());
+        
+        // Modify the original date - affects "immutable" object!
+        birthDate.setYear(50);    // Changes year to 1950
+        
+        System.out.println("After external change: " + person.getBirthDate());
+        
+        // Modify through getter - also affects object!
+        person.getBirthDate().setYear(80);
+        
+        System.out.println("After getter change: " + person.getBirthDate());
+    }
+}
+
+class ImmutablePerson {
+    private final String name;
+    private final Date birthDate;
+    
+    public ImmutablePerson(String name, Date birthDate) {
+        this.name = name;
+        this.birthDate = birthDate;    // Stores reference - NOT SAFE!
+    }
+    
+    public String getName() {
+        return name;
+    }
+    
+    public Date getBirthDate() {
+        return birthDate;    // Returns reference - NOT SAFE!
+    }
+}
+
+OUTPUT (Immutability broken):
+-----------------------------
+Original: Mon Jan 15 10:30:00 EST 2024
+After external change: Sun Jan 15 10:30:00 EST 1950
+After getter change: Tue Jan 15 10:30:00 EST 1980
+
+FIX:
+----
+import java.util.Date;
+
+public class ImmutableFixed {
+    public static void main(String[] args) {
+        
+        Date birthDate = new Date();
+        ImmutablePerson person = new ImmutablePerson("John", birthDate);
+        
+        System.out.println("Original: " + person.getBirthDate());
+        
+        // Modify the original date - doesn't affect immutable object
+        birthDate.setYear(50);
+        
+        System.out.println("After external change: " + person.getBirthDate());
+        
+        // Modify through getter - doesn't affect object
+        person.getBirthDate().setYear(80);
+        
+        System.out.println("After getter change: " + person.getBirthDate());
+    }
+}
+
+class ImmutablePerson {
+    private final String name;
+    private final Date birthDate;
+    
+    public ImmutablePerson(String name, Date birthDate) {
+        this.name = name;
+        // Defensive copy in constructor
+        this.birthDate = new Date(birthDate.getTime());
+    }
+    
+    public String getName() {
+        return name;
+    }
+    
+    public Date getBirthDate() {
+        // Defensive copy in getter
+        return new Date(birthDate.getTime());
+    }
+}
+
+OUTPUT:
+-------
+Original: Mon Jan 15 10:30:00 EST 2024
+After external change: Mon Jan 15 10:30:00 EST 2024
+After getter change: Mon Jan 15 10:30:00 EST 2024
+
+
+--------------------------------------------------------------------------------
+ERROR 15: Class Name Doesn't Match Filename
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE:
+-----------------
+// File: MyClass.java
+
+public class WrongName {    // Error! Class name doesn't match filename
+    public static void main(String[] args) {
+        System.out.println("Hello");
+    }
+}
+
+ERROR MESSAGE:
+--------------
+error: class WrongName is public, should be declared in a file named WrongName.java
+public class WrongName {
+       ^
+
+FIX:
+----
+// Option 1: Rename the class to match filename
+// File: MyClass.java
+
+public class MyClass {
+    public static void main(String[] args) {
+        System.out.println("Hello");
+    }
+}
+
+// Option 2: Rename the file to match class name
+// File: WrongName.java
+
+public class WrongName {
+    public static void main(String[] args) {
+        System.out.println("Hello");
+    }
+}
+
+
+--------------------------------------------------------------------------------
+ERROR 16: Multiple Public Classes in Same File
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE:
+-----------------
+// File: Test.java
+
+public class Test {
+    public static void main(String[] args) {
+        Helper helper = new Helper();
+    }
+}
+
+public class Helper {    // Error! Only one public class per file
+    public void help() {
+        System.out.println("Helping...");
+    }
+}
+
+ERROR MESSAGE:
+--------------
+error: class Helper is public, should be declared in a file named Helper.java
+public class Helper {
+       ^
+
+FIX:
+----
+// Option 1: Make Helper non-public (package-private)
+// File: Test.java
+
+public class Test {
+    public static void main(String[] args) {
+        Helper helper = new Helper();
+        helper.help();
+    }
+}
+
+class Helper {    // No 'public' modifier
+    public void help() {
+        System.out.println("Helping...");
+    }
+}
+
+// Option 2: Put Helper in separate file
+// File: Helper.java
+public class Helper {
+    public void help() {
+        System.out.println("Helping...");
+    }
+}
+
+
+================================================================================
+                    QUICK REFERENCE SUMMARY
+================================================================================
+
+CLASS STRUCTURE:
+----------------
+public class ClassName {
+    // Fields (attributes)
+    private dataType fieldName;
+    
+    // Constructors
+    public ClassName() { }
+    public ClassName(parameters) { }
+    
+    // Methods
+    public returnType methodName() { }
+    
+    // Getters and Setters
+    public dataType getFieldName() { return fieldName; }
+    public void setFieldName(dataType value) { this.fieldName = value; }
+}
+
+
+OBJECT CREATION:
+----------------
+ClassName objectName = new ClassName();
+ClassName objectName = new ClassName(arguments);
+
+
+CONSTRUCTOR TYPES:
+------------------
++----------------------+-------------------------------------------------------+
+| Type                 | Description                                           |
++----------------------+-------------------------------------------------------+
+| Default              | Provided by Java if no constructor defined            |
+| No-arg               | Explicitly defined with no parameters                 |
+| Parameterized        | Takes parameters to initialize fields                 |
+| Copy                 | Creates copy of another object                        |
++----------------------+-------------------------------------------------------+
+
+
+ACCESS MODIFIERS:
+-----------------
++---------------+-------+----------+-----------+----------+
+| Modifier      | Class | Package  | Subclass  | World    |
++---------------+-------+----------+-----------+----------+
+| public        | Yes   | Yes      | Yes       | Yes      |
+| protected     | Yes   | Yes      | Yes       | No       |
+| default       | Yes   | Yes      | No        | No       |
+| private       | Yes   | No       | No        | No       |
++---------------+-------+----------+-----------+----------+
+
+
+'THIS' KEYWORD USES:
+--------------------
+1. Distinguish instance variable from parameter: this.name = name;
+2. Call another constructor: this(parameters);
+3. Pass current object: someMethod(this);
+4. Return current object: return this;
+
+
+ENCAPSULATION PRINCIPLES:
+-------------------------
+1. Make fields private
+2. Provide public getters (for read access)
+3. Provide public setters (for write access with validation)
+4. Add validation logic in setters
+
+
+INSTANCE VS STATIC:
+-------------------
++------------------+--------------------------------+--------------------------------+
+| Feature          | Instance                       | Static                         |
++------------------+--------------------------------+--------------------------------+
+| Belongs to       | Object                         | Class                          |
+| Memory           | Separate for each object       | Shared by all objects          |
+| Access           | objectName.member              | ClassName.member               |
+| Can access       | Both instance and static       | Only static                    |
++------------------+--------------------------------+--------------------------------+
+
+
+OBJECT COMPARISON:
+------------------
+- == : Compares references (memory addresses)
+- equals() : Compares content (must override)
+- Always override hashCode() when overriding equals()
+
+
+NEGATIVE SCENARIOS SUMMARY:
+---------------------------
++----+------------------------------------------+------------------------------------------+
+| #  | Error                                    | Fix                                      |
++----+------------------------------------------+------------------------------------------+
+| 1  | Using object before initialization       | Initialize before use or check null      |
+| 2  | Accessing members of null object         | Check for null or initialize             |
+| 3  | Constructor not defined                  | Use available constructor or add one     |
+| 4  | Private constructor                      | Use factory method or static methods     |
+| 5  | Accessing private members                | Use public getters/setters               |
+| 6  | Static accessing instance                | Make method non-static or use object     |
+| 7  | this() not first statement               | Move this() to first line                |
+| 8  | Circular constructor call                | Remove circular dependency               |
+| 9  | Variable shadowing                       | Use 'this' keyword                       |
+| 10 | Comparing with == instead of equals()    | Override and use equals()                |
+| 11 | Returning mutable object reference       | Return copy or unmodifiable view         |
+| 12 | Memory leak                              | Clear references when done               |
+| 13 | Missing toString()                       | Override toString()                      |
+| 14 | Mutable fields in immutable class        | Use defensive copying                    |
+| 15 | Class name doesn't match filename        | Make names match                         |
+| 16 | Multiple public classes in file          | One public class per file                |
++----+------------------------------------------+------------------------------------------+
+
+
+BEST PRACTICES:
+---------------
+1. Use meaningful class and variable names
+2. Follow naming conventions (PascalCase for classes, camelCase for methods/variables)
+3. Keep classes focused (single responsibility)
+4. Use encapsulation (private fields, public methods)
+5. Always override toString() for meaningful output
+6. Override equals() and hashCode() together
+7. Make defensive copies for mutable fields
+8. Use appropriate access modifiers
+9. Initialize fields in constructors
+10. Document public classes and methods
+
+
+================================================================================
+                    END OF TOPIC 9: CLASSES AND OBJECTS
+================================================================================
+
+This completes Topic 9: Object-Oriented Programming (Classes and Objects).
+
+Let me know when you are ready for the next topic. The upcoming topics would be:
+
+    Topic 10: Inheritance
+    Topic 11: Polymorphism
+    Topic 12: Abstraction and Interfaces
+    Topic 13: Exception Handling
+    Topic 14: Collections Framework
+    Topic 15: File Handling
+
+Which topic would you like to learn next?

@@ -1,0 +1,4061 @@
+Thinking:
+The user wants me to teach Topic 15: Exception Handling in Java, covering:
+1. What are Exceptions
+2. Types of Exceptions (Checked vs Unchecked)
+3. try-catch-finally blocks
+4. throw and throws keywords
+5. Custom exceptions
+6. Exception handling in Selenium and REST Assured automation
+
+I need to provide:
+- Positive scenarios (correct usage)
+- Negative scenarios (common errors and how to fix them)
+- Use cases in Selenium automation
+- Use cases in REST Assured automation
+
+I'll use simple ASCII characters for formatting as requested.
+
+Let me create a comprehensive guide on Exception Handling.
+
+================================================================================
+                    TOPIC 15: EXCEPTION HANDLING IN JAVA
+================================================================================
+```
+================================================================================
+                    TOPIC 15: EXCEPTION HANDLING IN JAVA
+================================================================================
+
+What is an Exception?
+---------------------
+An exception is an unwanted or unexpected event that occurs during the
+execution of a program (at runtime) that disrupts the normal flow of
+instructions.
+
+When an exception occurs:
+1. Program execution stops at that point
+2. An exception object is created containing error information
+3. The runtime system tries to find exception handler
+4. If no handler found, program terminates abnormally
+
+
+Real-World Analogy:
+-------------------
+Think of driving a car:
+- Normal flow: Start car -> Drive -> Reach destination
+- Exception: Flat tire, engine failure, accident
+
+You need to HANDLE these exceptions:
+- Flat tire -> Change tire or call roadside assistance
+- Engine failure -> Call mechanic
+- No fuel -> Go to gas station
+
+Similarly in programming, you need to handle exceptions gracefully.
+
+
+Why Handle Exceptions?
+----------------------
+1. Prevent program crashes
+2. Provide meaningful error messages to users
+3. Log errors for debugging
+4. Recover from errors when possible
+5. Clean up resources (close files, connections)
+6. Maintain application stability
+
+
+Exception vs Error:
+-------------------
++------------------+--------------------------------+--------------------------------+
+| Aspect           | Exception                      | Error                          |
++------------------+--------------------------------+--------------------------------+
+| Recoverable      | Yes, can be handled            | No, usually fatal              |
+| Cause            | Program logic, invalid input   | JVM/System issues              |
+| Examples         | FileNotFound, NullPointer      | OutOfMemoryError, StackOverflow|
+| Should catch?    | Yes                            | Generally no                   |
++------------------+--------------------------------+--------------------------------+
+
+
+Why Important for Automation?
+-----------------------------
+- Handle element not found scenarios
+- Manage timeout exceptions
+- Handle network/connection failures
+- Process invalid test data gracefully
+- Create robust, stable test frameworks
+- Generate meaningful test failure reports
+- Clean up resources (close browsers, connections)
+
+
+================================================================================
+                    PART 1: EXCEPTION HIERARCHY
+================================================================================
+
+Java Exception Class Hierarchy:
+-------------------------------
+
+                        java.lang.Object
+                              |
+                        java.lang.Throwable
+                              |
+              +---------------+---------------+
+              |                               |
+        java.lang.Exception             java.lang.Error
+              |                               |
+    +---------+---------+           +---------+---------+
+    |                   |           |                   |
+Checked           Unchecked    OutOfMemoryError   StackOverflowError
+Exceptions        Exceptions        
+    |                   |
+IOException      RuntimeException
+SQLException           |
+                  +----+----+----+----+
+                  |    |    |    |    |
+            NullPointer  ArrayIndex  ClassCast  Arithmetic
+            Exception    OutOfBounds Exception  Exception
+
+
+Types of Exceptions:
+--------------------
++----------------------+--------------------------------------------------+
+| Type                 | Description                                      |
++----------------------+--------------------------------------------------+
+| Checked Exceptions   | - Checked at compile time                        |
+|                      | - Must be handled or declared                    |
+|                      | - Extend Exception (not RuntimeException)        |
+|                      | - Examples: IOException, SQLException            |
++----------------------+--------------------------------------------------+
+| Unchecked Exceptions | - NOT checked at compile time                    |
+|                      | - Occur at runtime                               |
+|                      | - Extend RuntimeException                        |
+|                      | - Examples: NullPointerException, ArithmeticEx   |
++----------------------+--------------------------------------------------+
+| Errors               | - Serious problems                               |
+|                      | - Should not be caught normally                  |
+|                      | - Examples: OutOfMemoryError, StackOverflowError |
++----------------------+--------------------------------------------------+
+
+
+Common Exceptions:
+------------------
++--------------------------------+----------------------------------------------+
+| Exception                      | When it occurs                               |
++--------------------------------+----------------------------------------------+
+| NullPointerException           | Accessing method/field of null object        |
+| ArrayIndexOutOfBoundsException | Accessing invalid array index                |
+| ArithmeticException            | Division by zero                             |
+| NumberFormatException          | Invalid string to number conversion          |
+| ClassCastException             | Invalid type casting                         |
+| IllegalArgumentException       | Invalid argument passed to method            |
+| IllegalStateException          | Method called at inappropriate time          |
+| IOException                    | Input/Output operation failure               |
+| FileNotFoundException          | File not found                               |
+| SQLException                   | Database operation failure                   |
++--------------------------------+----------------------------------------------+
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 1: Common Runtime Exceptions
+--------------------------------------------------------------------------------
+
+public class CommonExceptionsDemo {
+    public static void main(String[] args) {
+        
+        System.out.println("================================================");
+        System.out.println("           COMMON EXCEPTIONS DEMO");
+        System.out.println("================================================\n");
+        
+        // ========== NullPointerException ==========
+        System.out.println("--- NullPointerException ---");
+        try {
+            String str = null;
+            int length = str.length();    // NullPointerException!
+        } catch (NullPointerException e) {
+            System.out.println("Exception: " + e.getClass().getSimpleName());
+            System.out.println("Message: " + e.getMessage());
+        }
+        
+        // ========== ArrayIndexOutOfBoundsException ==========
+        System.out.println("\n--- ArrayIndexOutOfBoundsException ---");
+        try {
+            int[] arr = {1, 2, 3};
+            int value = arr[5];    // ArrayIndexOutOfBoundsException!
+        } catch (ArrayIndexOutOfBoundsException e) {
+            System.out.println("Exception: " + e.getClass().getSimpleName());
+            System.out.println("Message: " + e.getMessage());
+        }
+        
+        // ========== ArithmeticException ==========
+        System.out.println("\n--- ArithmeticException ---");
+        try {
+            int result = 10 / 0;    // ArithmeticException!
+        } catch (ArithmeticException e) {
+            System.out.println("Exception: " + e.getClass().getSimpleName());
+            System.out.println("Message: " + e.getMessage());
+        }
+        
+        // ========== NumberFormatException ==========
+        System.out.println("\n--- NumberFormatException ---");
+        try {
+            int num = Integer.parseInt("abc123");    // NumberFormatException!
+        } catch (NumberFormatException e) {
+            System.out.println("Exception: " + e.getClass().getSimpleName());
+            System.out.println("Message: " + e.getMessage());
+        }
+        
+        // ========== ClassCastException ==========
+        System.out.println("\n--- ClassCastException ---");
+        try {
+            Object obj = "Hello";
+            Integer num = (Integer) obj;    // ClassCastException!
+        } catch (ClassCastException e) {
+            System.out.println("Exception: " + e.getClass().getSimpleName());
+            System.out.println("Message: " + e.getMessage());
+        }
+        
+        // ========== StringIndexOutOfBoundsException ==========
+        System.out.println("\n--- StringIndexOutOfBoundsException ---");
+        try {
+            String str = "Hello";
+            char ch = str.charAt(10);    // StringIndexOutOfBoundsException!
+        } catch (StringIndexOutOfBoundsException e) {
+            System.out.println("Exception: " + e.getClass().getSimpleName());
+            System.out.println("Message: " + e.getMessage());
+        }
+        
+        // ========== IllegalArgumentException ==========
+        System.out.println("\n--- IllegalArgumentException ---");
+        try {
+            Thread.sleep(-1000);    // IllegalArgumentException!
+        } catch (IllegalArgumentException e) {
+            System.out.println("Exception: " + e.getClass().getSimpleName());
+            System.out.println("Message: " + e.getMessage());
+        } catch (InterruptedException e) {
+            // Required for Thread.sleep
+        }
+        
+        System.out.println("\n--- Program continues after handling exceptions ---");
+        System.out.println("All exceptions were handled gracefully!");
+    }
+}
+
+OUTPUT:
+-------
+================================================
+           COMMON EXCEPTIONS DEMO
+================================================
+
+--- NullPointerException ---
+Exception: NullPointerException
+Message: Cannot invoke "String.length()" because "str" is null
+
+--- ArrayIndexOutOfBoundsException ---
+Exception: ArrayIndexOutOfBoundsException
+Message: Index 5 out of bounds for length 3
+
+--- ArithmeticException ---
+Exception: ArithmeticException
+Message: / by zero
+
+--- NumberFormatException ---
+Exception: NumberFormatException
+Message: For input string: "abc123"
+
+--- ClassCastException ---
+Exception: ClassCastException
+Message: class java.lang.String cannot be cast to class java.lang.Integer
+
+--- StringIndexOutOfBoundsException ---
+Exception: StringIndexOutOfBoundsException
+Message: String index out of range: 10
+
+--- IllegalArgumentException ---
+Exception: IllegalArgumentException
+Message: timeout value is negative
+
+--- Program continues after handling exceptions ---
+All exceptions were handled gracefully!
+
+
+================================================================================
+                    PART 2: TRY-CATCH-FINALLY BLOCKS
+================================================================================
+
+Syntax:
+-------
+try {
+    // Code that may throw exception
+} catch (ExceptionType1 e1) {
+    // Handle ExceptionType1
+} catch (ExceptionType2 e2) {
+    // Handle ExceptionType2
+} finally {
+    // Always executes (optional)
+    // Used for cleanup
+}
+
+
+Rules:
+------
+1. try block must be followed by catch OR finally (or both)
+2. Multiple catch blocks allowed
+3. More specific exceptions should come before general ones
+4. finally block always executes (except System.exit())
+5. Only one finally block allowed
+6. Variables declared in try are not accessible in catch/finally
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 2: Basic try-catch-finally
+--------------------------------------------------------------------------------
+
+public class TryCatchFinallyDemo {
+    public static void main(String[] args) {
+        
+        System.out.println("================================================");
+        System.out.println("          TRY-CATCH-FINALLY DEMO");
+        System.out.println("================================================\n");
+        
+        // ========== BASIC TRY-CATCH ==========
+        System.out.println("--- Basic try-catch ---");
+        
+        try {
+            System.out.println("Inside try block");
+            int result = 10 / 0;
+            System.out.println("Result: " + result);    // Never executes
+        } catch (ArithmeticException e) {
+            System.out.println("Inside catch block");
+            System.out.println("Error: " + e.getMessage());
+        }
+        System.out.println("After try-catch\n");
+        
+        // ========== TRY-CATCH-FINALLY ==========
+        System.out.println("--- try-catch-finally (with exception) ---");
+        
+        try {
+            System.out.println("1. Inside try");
+            int[] arr = {1, 2, 3};
+            System.out.println(arr[5]);    // Exception!
+            System.out.println("2. After exception");    // Never executes
+        } catch (ArrayIndexOutOfBoundsException e) {
+            System.out.println("3. Inside catch: " + e.getMessage());
+        } finally {
+            System.out.println("4. Inside finally - ALWAYS EXECUTES");
+        }
+        System.out.println("5. After try-catch-finally\n");
+        
+        // ========== FINALLY WITHOUT EXCEPTION ==========
+        System.out.println("--- try-catch-finally (no exception) ---");
+        
+        try {
+            System.out.println("1. Inside try");
+            int result = 10 / 2;    // No exception
+            System.out.println("2. Result: " + result);
+        } catch (ArithmeticException e) {
+            System.out.println("3. Inside catch");    // Not executed
+        } finally {
+            System.out.println("4. Inside finally - ALWAYS EXECUTES");
+        }
+        System.out.println("5. After try-catch-finally\n");
+        
+        // ========== TRY-FINALLY (NO CATCH) ==========
+        System.out.println("--- try-finally (no catch) ---");
+        
+        try {
+            System.out.println("Inside try");
+            // If exception here, finally still runs, then exception propagates
+        } finally {
+            System.out.println("Inside finally");
+        }
+        System.out.println();
+        
+        // ========== FINALLY WITH RETURN ==========
+        System.out.println("--- finally with return ---");
+        System.out.println("Result: " + testFinallyWithReturn());
+        System.out.println();
+        
+        // ========== NESTED TRY-CATCH ==========
+        System.out.println("--- Nested try-catch ---");
+        
+        try {
+            System.out.println("Outer try");
+            
+            try {
+                System.out.println("  Inner try");
+                int result = 10 / 0;
+            } catch (ArithmeticException e) {
+                System.out.println("  Inner catch: " + e.getMessage());
+            }
+            
+            System.out.println("Back to outer try");
+            String str = null;
+            str.length();    // Another exception
+            
+        } catch (NullPointerException e) {
+            System.out.println("Outer catch: NullPointerException");
+        }
+        System.out.println();
+        
+        // ========== FINALLY FOR RESOURCE CLEANUP ==========
+        System.out.println("--- finally for cleanup ---");
+        
+        String resource = null;
+        try {
+            resource = "Database Connection Opened";
+            System.out.println(resource);
+            // Simulate some operation that might fail
+            if (true) {
+                throw new RuntimeException("Operation failed!");
+            }
+        } catch (RuntimeException e) {
+            System.out.println("Error: " + e.getMessage());
+        } finally {
+            // Cleanup - always close resources
+            if (resource != null) {
+                System.out.println("Closing: " + resource);
+                resource = null;
+            }
+        }
+    }
+    
+    public static int testFinallyWithReturn() {
+        try {
+            System.out.println("try block - about to return 1");
+            return 1;
+        } finally {
+            System.out.println("finally block - executes before return!");
+            // If we return here, it overrides try's return
+            // return 2;    // Would return 2 instead of 1
+        }
+    }
+}
+
+OUTPUT:
+-------
+================================================
+          TRY-CATCH-FINALLY DEMO
+================================================
+
+--- Basic try-catch ---
+Inside try block
+Inside catch block
+Error: / by zero
+After try-catch
+
+--- try-catch-finally (with exception) ---
+1. Inside try
+3. Inside catch: Index 5 out of bounds for length 3
+4. Inside finally - ALWAYS EXECUTES
+5. After try-catch-finally
+
+--- try-catch-finally (no exception) ---
+1. Inside try
+2. Result: 5
+4. Inside finally - ALWAYS EXECUTES
+5. After try-catch-finally
+
+--- try-finally (no catch) ---
+Inside try
+Inside finally
+
+--- finally with return ---
+try block - about to return 1
+finally block - executes before return!
+Result: 1
+
+--- Nested try-catch ---
+Outer try
+  Inner try
+  Inner catch: / by zero
+Back to outer try
+Outer catch: NullPointerException
+
+--- finally for cleanup ---
+Database Connection Opened
+Error: Operation failed!
+Closing: Database Connection Opened
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 3: Multiple Catch Blocks
+--------------------------------------------------------------------------------
+
+public class MultipleCatchDemo {
+    public static void main(String[] args) {
+        
+        System.out.println("================================================");
+        System.out.println("          MULTIPLE CATCH BLOCKS DEMO");
+        System.out.println("================================================\n");
+        
+        // ========== MULTIPLE CATCH BLOCKS ==========
+        System.out.println("--- Multiple catch blocks ---");
+        
+        // Test different scenarios
+        testMultipleCatch(1);    // ArithmeticException
+        testMultipleCatch(2);    // ArrayIndexOutOfBoundsException
+        testMultipleCatch(3);    // NullPointerException
+        testMultipleCatch(4);    // NumberFormatException
+        testMultipleCatch(5);    // No exception
+        
+        // ========== CATCH ORDER MATTERS ==========
+        System.out.println("\n--- Catch order (specific to general) ---");
+        
+        try {
+            int[] arr = new int[2];
+            arr[5] = 10;
+        } catch (ArrayIndexOutOfBoundsException e) {
+            // Specific exception first
+            System.out.println("Caught ArrayIndexOutOfBoundsException");
+        } catch (RuntimeException e) {
+            // More general exception
+            System.out.println("Caught RuntimeException");
+        } catch (Exception e) {
+            // Most general exception last
+            System.out.println("Caught Exception");
+        }
+        
+        // ========== MULTI-CATCH (JAVA 7+) ==========
+        System.out.println("\n--- Multi-catch (Java 7+) ---");
+        
+        testMultiCatch("abc");    // NumberFormatException
+        testMultiCatch(null);     // NullPointerException
+        testMultiCatch("123");    // Success
+        
+        // ========== EXCEPTION OBJECT METHODS ==========
+        System.out.println("\n--- Exception object methods ---");
+        
+        try {
+            methodA();
+        } catch (Exception e) {
+            System.out.println("Exception Type: " + e.getClass().getName());
+            System.out.println("Message: " + e.getMessage());
+            System.out.println("Localized Message: " + e.getLocalizedMessage());
+            System.out.println("\nStack Trace:");
+            e.printStackTrace(System.out);
+            
+            System.out.println("\nStack Trace Elements:");
+            StackTraceElement[] stackTrace = e.getStackTrace();
+            for (int i = 0; i < Math.min(3, stackTrace.length); i++) {
+                System.out.println("  " + stackTrace[i]);
+            }
+        }
+    }
+    
+    public static void testMultipleCatch(int scenario) {
+        System.out.println("\nScenario " + scenario + ":");
+        try {
+            switch (scenario) {
+                case 1:
+                    int result = 10 / 0;
+                    break;
+                case 2:
+                    int[] arr = {1, 2};
+                    int val = arr[5];
+                    break;
+                case 3:
+                    String str = null;
+                    str.length();
+                    break;
+                case 4:
+                    int num = Integer.parseInt("abc");
+                    break;
+                default:
+                    System.out.println("  No exception - success!");
+            }
+        } catch (ArithmeticException e) {
+            System.out.println("  Caught ArithmeticException: " + e.getMessage());
+        } catch (ArrayIndexOutOfBoundsException e) {
+            System.out.println("  Caught ArrayIndexOutOfBoundsException: " + e.getMessage());
+        } catch (NullPointerException e) {
+            System.out.println("  Caught NullPointerException: " + e.getMessage());
+        } catch (NumberFormatException e) {
+            System.out.println("  Caught NumberFormatException: " + e.getMessage());
+        } catch (Exception e) {
+            System.out.println("  Caught general Exception: " + e.getMessage());
+        }
+    }
+    
+    public static void testMultiCatch(String input) {
+        System.out.println("Input: " + input);
+        try {
+            // This might throw NullPointerException or NumberFormatException
+            int num = Integer.parseInt(input.trim());
+            System.out.println("  Parsed number: " + num);
+        } catch (NullPointerException | NumberFormatException e) {
+            // Multi-catch - handle multiple exceptions the same way
+            System.out.println("  Caught " + e.getClass().getSimpleName() + ": " + e.getMessage());
+        }
+    }
+    
+    public static void methodA() {
+        methodB();
+    }
+    
+    public static void methodB() {
+        methodC();
+    }
+    
+    public static void methodC() {
+        throw new RuntimeException("Error in methodC!");
+    }
+}
+
+OUTPUT:
+-------
+================================================
+          MULTIPLE CATCH BLOCKS DEMO
+================================================
+
+--- Multiple catch blocks ---
+
+Scenario 1:
+  Caught ArithmeticException: / by zero
+
+Scenario 2:
+  Caught ArrayIndexOutOfBoundsException: Index 5 out of bounds for length 2
+
+Scenario 3:
+  Caught NullPointerException: Cannot invoke "String.length()" because "str" is null
+
+Scenario 4:
+  Caught NumberFormatException: For input string: "abc"
+
+Scenario 5:
+  No exception - success!
+
+--- Catch order (specific to general) ---
+Caught ArrayIndexOutOfBoundsException
+
+--- Multi-catch (Java 7+) ---
+Input: abc
+  Caught NumberFormatException: For input string: "abc"
+Input: null
+  Caught NullPointerException: Cannot invoke "String.trim()" because "input" is null
+Input: 123
+  Parsed number: 123
+
+--- Exception object methods ---
+Exception Type: java.lang.RuntimeException
+Message: Error in methodC!
+Localized Message: Error in methodC!
+
+Stack Trace:
+java.lang.RuntimeException: Error in methodC!
+    at MultipleCatchDemo.methodC(MultipleCatchDemo.java:98)
+    at MultipleCatchDemo.methodB(MultipleCatchDemo.java:94)
+    at MultipleCatchDemo.methodA(MultipleCatchDemo.java:90)
+    at MultipleCatchDemo.main(MultipleCatchDemo.java:54)
+
+Stack Trace Elements:
+  MultipleCatchDemo.methodC(MultipleCatchDemo.java:98)
+  MultipleCatchDemo.methodB(MultipleCatchDemo.java:94)
+  MultipleCatchDemo.methodA(MultipleCatchDemo.java:90)
+
+
+================================================================================
+                    PART 3: THROW AND THROWS KEYWORDS
+================================================================================
+
+throw vs throws:
+----------------
++------------------+--------------------------------+--------------------------------+
+| Aspect           | throw                          | throws                         |
++------------------+--------------------------------+--------------------------------+
+| Purpose          | Actually throws exception      | Declares exception             |
+| Location         | Inside method body             | In method signature            |
+| Followed by      | Exception object               | Exception class name(s)        |
+| Count            | One exception at a time        | Multiple exceptions            |
+| Usage            | To raise an exception          | To delegate handling to caller |
++------------------+--------------------------------+--------------------------------+
+
+Syntax:
+-------
+// throw - to throw an exception
+throw new ExceptionType("Error message");
+
+// throws - to declare exceptions
+public void methodName() throws ExceptionType1, ExceptionType2 {
+    // method body
+}
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 4: throw Keyword
+--------------------------------------------------------------------------------
+
+public class ThrowKeywordDemo {
+    public static void main(String[] args) {
+        
+        System.out.println("================================================");
+        System.out.println("              THROW KEYWORD DEMO");
+        System.out.println("================================================\n");
+        
+        // ========== BASIC THROW ==========
+        System.out.println("--- Basic throw ---");
+        
+        try {
+            validateAge(15);
+        } catch (IllegalArgumentException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+        
+        try {
+            validateAge(25);
+            System.out.println("Age 25 is valid!");
+        } catch (IllegalArgumentException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+        
+        // ========== THROW WITH VALIDATION ==========
+        System.out.println("\n--- Validation with throw ---");
+        
+        try {
+            User user = createUser("", "test@email.com", 25);
+        } catch (IllegalArgumentException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+        
+        try {
+            User user = createUser("John", "invalid-email", 25);
+        } catch (IllegalArgumentException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+        
+        try {
+            User user = createUser("John", "john@email.com", -5);
+        } catch (IllegalArgumentException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+        
+        try {
+            User user = createUser("John", "john@email.com", 25);
+            System.out.println("User created: " + user);
+        } catch (IllegalArgumentException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+        
+        // ========== RE-THROWING EXCEPTION ==========
+        System.out.println("\n--- Re-throwing exception ---");
+        
+        try {
+            processData("invalid");
+        } catch (RuntimeException e) {
+            System.out.println("Final handler caught: " + e.getMessage());
+            if (e.getCause() != null) {
+                System.out.println("Original cause: " + e.getCause().getMessage());
+            }
+        }
+        
+        // ========== THROW IN CONDITIONAL ==========
+        System.out.println("\n--- Throw in conditional ---");
+        
+        try {
+            String result = getValue(null);
+        } catch (NullPointerException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+        
+        try {
+            String result = getValue("test");
+            System.out.println("Result: " + result);
+        } catch (NullPointerException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+        
+        // ========== THROW DIFFERENT EXCEPTION TYPES ==========
+        System.out.println("\n--- Different exception types ---");
+        
+        testOperation("null");
+        testOperation("negative");
+        testOperation("overflow");
+        testOperation("valid");
+    }
+    
+    public static void validateAge(int age) {
+        if (age < 18) {
+            throw new IllegalArgumentException("Age must be 18 or above. Given: " + age);
+        }
+        // Continue with valid age
+    }
+    
+    public static User createUser(String name, String email, int age) {
+        // Validate name
+        if (name == null || name.trim().isEmpty()) {
+            throw new IllegalArgumentException("Name cannot be null or empty");
+        }
+        
+        // Validate email
+        if (email == null || !email.contains("@")) {
+            throw new IllegalArgumentException("Invalid email format: " + email);
+        }
+        
+        // Validate age
+        if (age < 0 || age > 150) {
+            throw new IllegalArgumentException("Invalid age: " + age);
+        }
+        
+        return new User(name, email, age);
+    }
+    
+    public static void processData(String data) {
+        try {
+            // Simulate processing
+            if (data.equals("invalid")) {
+                throw new IllegalArgumentException("Invalid data format");
+            }
+        } catch (IllegalArgumentException e) {
+            // Log and re-throw with more context
+            System.out.println("Logging: " + e.getMessage());
+            throw new RuntimeException("Data processing failed", e);
+        }
+    }
+    
+    public static String getValue(String input) {
+        if (input == null) {
+            throw new NullPointerException("Input cannot be null");
+        }
+        return input.toUpperCase();
+    }
+    
+    public static void testOperation(String type) {
+        try {
+            switch (type) {
+                case "null":
+                    throw new NullPointerException("Null value encountered");
+                case "negative":
+                    throw new IllegalArgumentException("Negative value not allowed");
+                case "overflow":
+                    throw new ArithmeticException("Integer overflow");
+                default:
+                    System.out.println("Operation '" + type + "' successful!");
+            }
+        } catch (Exception e) {
+            System.out.println("Caught " + e.getClass().getSimpleName() + ": " + e.getMessage());
+        }
+    }
+}
+
+class User {
+    private String name;
+    private String email;
+    private int age;
+    
+    public User(String name, String email, int age) {
+        this.name = name;
+        this.email = email;
+        this.age = age;
+    }
+    
+    @Override
+    public String toString() {
+        return "User{name='" + name + "', email='" + email + "', age=" + age + "}";
+    }
+}
+
+OUTPUT:
+-------
+================================================
+              THROW KEYWORD DEMO
+================================================
+
+--- Basic throw ---
+Error: Age must be 18 or above. Given: 15
+Age 25 is valid!
+
+--- Validation with throw ---
+Error: Name cannot be null or empty
+Error: Invalid email format: invalid-email
+Error: Invalid age: -5
+User created: User{name='John', email='john@email.com', age=25}
+
+--- Re-throwing exception ---
+Logging: Invalid data format
+Final handler caught: Data processing failed
+Original cause: Invalid data format
+
+--- Throw in conditional ---
+Error: Input cannot be null
+Result: TEST
+
+--- Different exception types ---
+Caught NullPointerException: Null value encountered
+Caught IllegalArgumentException: Negative value not allowed
+Caught ArithmeticException: Integer overflow
+Operation 'valid' successful!
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 5: throws Keyword
+--------------------------------------------------------------------------------
+
+import java.io.*;
+
+public class ThrowsKeywordDemo {
+    public static void main(String[] args) {
+        
+        System.out.println("================================================");
+        System.out.println("             THROWS KEYWORD DEMO");
+        System.out.println("================================================\n");
+        
+        // ========== HANDLING CHECKED EXCEPTION ==========
+        System.out.println("--- Checked exception with throws ---");
+        
+        // Option 1: Handle with try-catch
+        try {
+            String content = readFile("test.txt");
+            System.out.println("Content: " + content);
+        } catch (IOException e) {
+            System.out.println("Error reading file: " + e.getMessage());
+        }
+        
+        // ========== MULTIPLE EXCEPTIONS IN THROWS ==========
+        System.out.println("\n--- Multiple exceptions in throws ---");
+        
+        try {
+            processFile("data.txt");
+        } catch (FileNotFoundException e) {
+            System.out.println("File not found: " + e.getMessage());
+        } catch (IOException e) {
+            System.out.println("IO Error: " + e.getMessage());
+        } catch (IllegalArgumentException e) {
+            System.out.println("Invalid argument: " + e.getMessage());
+        }
+        
+        // ========== PROPAGATING EXCEPTIONS ==========
+        System.out.println("\n--- Exception propagation ---");
+        
+        try {
+            level1();
+        } catch (Exception e) {
+            System.out.println("Caught at main: " + e.getMessage());
+            System.out.println("Exception traveled up the call stack!");
+        }
+        
+        // ========== THROWS WITH UNCHECKED EXCEPTIONS ==========
+        System.out.println("\n--- throws with unchecked exceptions ---");
+        
+        // Not required but can be used for documentation
+        try {
+            divideNumbers(10, 0);
+        } catch (ArithmeticException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+        
+        // ========== OVERRIDING WITH THROWS ==========
+        System.out.println("\n--- Overriding with throws ---");
+        
+        Parent parent = new Child();
+        try {
+            parent.doSomething();
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+    }
+    
+    // Method declares that it throws IOException
+    public static String readFile(String filename) throws IOException {
+        // Simulating file read
+        if (!filename.endsWith(".txt")) {
+            throw new IOException("Only .txt files are supported");
+        }
+        
+        // In real code: Files.readString(Path.of(filename))
+        System.out.println("Reading file: " + filename);
+        return "File content here";
+    }
+    
+    // Method declares multiple exceptions
+    public static void processFile(String filename) throws FileNotFoundException, IOException {
+        if (filename == null || filename.isEmpty()) {
+            throw new IllegalArgumentException("Filename cannot be empty");
+        }
+        
+        if (!filename.endsWith(".txt")) {
+            throw new FileNotFoundException("File not found: " + filename);
+        }
+        
+        // Simulate processing
+        System.out.println("Processing: " + filename);
+    }
+    
+    // Exception propagation through call stack
+    public static void level1() throws Exception {
+        System.out.println("In level1, calling level2...");
+        level2();
+    }
+    
+    public static void level2() throws Exception {
+        System.out.println("In level2, calling level3...");
+        level3();
+    }
+    
+    public static void level3() throws Exception {
+        System.out.println("In level3, throwing exception...");
+        throw new Exception("Error occurred in level3");
+    }
+    
+    // throws with unchecked exception (optional but documents intent)
+    public static int divideNumbers(int a, int b) throws ArithmeticException {
+        if (b == 0) {
+            throw new ArithmeticException("Cannot divide by zero");
+        }
+        return a / b;
+    }
+}
+
+// Parent class with throws
+class Parent {
+    public void doSomething() throws Exception {
+        throw new Exception("Parent exception");
+    }
+}
+
+// Child can throw same, fewer, or no exceptions (not more)
+class Child extends Parent {
+    @Override
+    public void doSomething() throws RuntimeException {
+        // Can throw RuntimeException (unchecked) or no exception
+        // Cannot throw broader checked exception than parent
+        throw new RuntimeException("Child exception");
+    }
+}
+
+OUTPUT:
+-------
+================================================
+             THROWS KEYWORD DEMO
+================================================
+
+--- Checked exception with throws ---
+Reading file: test.txt
+Content: File content here
+
+--- Multiple exceptions in throws ---
+File not found: File not found: data.txt
+
+--- Exception propagation ---
+In level1, calling level2...
+In level2, calling level3...
+In level3, throwing exception...
+Caught at main: Error occurred in level3
+Exception traveled up the call stack!
+
+--- throws with unchecked exceptions ---
+Error: Cannot divide by zero
+
+--- Overriding with throws ---
+Error: Child exception
+
+
+================================================================================
+                    PART 4: CHECKED VS UNCHECKED EXCEPTIONS
+================================================================================
+
++------------------------+-----------------------------+-----------------------------+
+| Aspect                 | Checked Exceptions          | Unchecked Exceptions        |
++------------------------+-----------------------------+-----------------------------+
+| Compile-time check     | Yes                         | No                          |
+| Must handle/declare    | Yes                         | No                          |
+| Extends                | Exception                   | RuntimeException            |
+| When to use            | Recoverable conditions      | Programming errors          |
+| Examples               | IOException, SQLException   | NullPointerException        |
++------------------------+-----------------------------+-----------------------------+
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 6: Checked vs Unchecked Exceptions
+--------------------------------------------------------------------------------
+
+import java.io.*;
+import java.sql.*;
+
+public class CheckedUncheckedDemo {
+    public static void main(String[] args) {
+        
+        System.out.println("================================================");
+        System.out.println("      CHECKED VS UNCHECKED EXCEPTIONS");
+        System.out.println("================================================\n");
+        
+        // ========== CHECKED EXCEPTIONS ==========
+        System.out.println("--- Checked Exceptions ---");
+        System.out.println("Must be handled or declared!\n");
+        
+        // IOException - checked
+        System.out.println("1. IOException:");
+        try {
+            FileReader reader = new FileReader("nonexistent.txt");
+        } catch (FileNotFoundException e) {
+            System.out.println("   Caught: " + e.getClass().getSimpleName());
+        }
+        
+        // InterruptedException - checked
+        System.out.println("2. InterruptedException:");
+        try {
+            Thread.sleep(100);
+            System.out.println("   Sleep completed");
+        } catch (InterruptedException e) {
+            System.out.println("   Caught: " + e.getClass().getSimpleName());
+        }
+        
+        // ClassNotFoundException - checked
+        System.out.println("3. ClassNotFoundException:");
+        try {
+            Class.forName("com.nonexistent.MyClass");
+        } catch (ClassNotFoundException e) {
+            System.out.println("   Caught: " + e.getClass().getSimpleName());
+        }
+        
+        // ========== UNCHECKED EXCEPTIONS ==========
+        System.out.println("\n--- Unchecked Exceptions ---");
+        System.out.println("Handling is optional (but recommended)\n");
+        
+        // NullPointerException - unchecked
+        System.out.println("1. NullPointerException:");
+        try {
+            String str = null;
+            str.length();
+        } catch (NullPointerException e) {
+            System.out.println("   Caught: " + e.getClass().getSimpleName());
+        }
+        
+        // ArrayIndexOutOfBoundsException - unchecked
+        System.out.println("2. ArrayIndexOutOfBoundsException:");
+        try {
+            int[] arr = {1, 2, 3};
+            int val = arr[10];
+        } catch (ArrayIndexOutOfBoundsException e) {
+            System.out.println("   Caught: " + e.getClass().getSimpleName());
+        }
+        
+        // ArithmeticException - unchecked
+        System.out.println("3. ArithmeticException:");
+        try {
+            int result = 10 / 0;
+        } catch (ArithmeticException e) {
+            System.out.println("   Caught: " + e.getClass().getSimpleName());
+        }
+        
+        // IllegalArgumentException - unchecked
+        System.out.println("4. IllegalArgumentException:");
+        try {
+            setAge(-5);
+        } catch (IllegalArgumentException e) {
+            System.out.println("   Caught: " + e.getClass().getSimpleName());
+        }
+        
+        // ========== WHEN TO USE WHICH ==========
+        System.out.println("\n--- When to Use Which ---");
+        System.out.println("+------------------+-----------------------------------+");
+        System.out.println("| Use Checked      | When caller can reasonably        |");
+        System.out.println("|                  | recover from the exception        |");
+        System.out.println("+------------------+-----------------------------------+");
+        System.out.println("| Use Unchecked    | For programming errors that       |");
+        System.out.println("|                  | indicate bugs in the code         |");
+        System.out.println("+------------------+-----------------------------------+");
+        
+        // ========== CONVERTING CHECKED TO UNCHECKED ==========
+        System.out.println("\n--- Converting Checked to Unchecked ---");
+        
+        try {
+            readFileWrapper("test.txt");
+        } catch (RuntimeException e) {
+            System.out.println("Caught RuntimeException: " + e.getMessage());
+            if (e.getCause() != null) {
+                System.out.println("Caused by: " + e.getCause().getClass().getSimpleName());
+            }
+        }
+    }
+    
+    // Unchecked exception - no need to declare
+    public static void setAge(int age) {
+        if (age < 0) {
+            throw new IllegalArgumentException("Age cannot be negative");
+        }
+    }
+    
+    // Wrapping checked exception in unchecked
+    public static String readFileWrapper(String filename) {
+        try {
+            // Checked exception
+            FileReader reader = new FileReader(filename);
+            return "File content";
+        } catch (FileNotFoundException e) {
+            // Wrap in unchecked exception
+            throw new RuntimeException("Failed to read file: " + filename, e);
+        }
+    }
+}
+
+OUTPUT:
+-------
+================================================
+      CHECKED VS UNCHECKED EXCEPTIONS
+================================================
+
+--- Checked Exceptions ---
+Must be handled or declared!
+
+1. IOException:
+   Caught: FileNotFoundException
+2. InterruptedException:
+   Sleep completed
+3. ClassNotFoundException:
+   Caught: ClassNotFoundException
+
+--- Unchecked Exceptions ---
+Handling is optional (but recommended)
+
+1. NullPointerException:
+   Caught: NullPointerException
+2. ArrayIndexOutOfBoundsException:
+   Caught: ArrayIndexOutOfBoundsException
+3. ArithmeticException:
+   Caught: ArithmeticException
+4. IllegalArgumentException:
+   Caught: IllegalArgumentException
+
+--- When to Use Which ---
++------------------+-----------------------------------+
+| Use Checked      | When caller can reasonably        |
+|                  | recover from the exception        |
++------------------+-----------------------------------+
+| Use Unchecked    | For programming errors that       |
+|                  | indicate bugs in the code         |
++------------------+-----------------------------------+
+
+--- Converting Checked to Unchecked ---
+Caught RuntimeException: Failed to read file: test.txt
+Caused by: FileNotFoundException
+
+
+================================================================================
+                    PART 5: CUSTOM EXCEPTIONS
+================================================================================
+
+Why Create Custom Exceptions?
+-----------------------------
+1. Represent application-specific errors
+2. Provide meaningful error messages
+3. Add additional error information
+4. Better error categorization
+5. Cleaner code and better documentation
+
+
+How to Create Custom Exception:
+-------------------------------
+// Checked exception - extends Exception
+public class MyCheckedException extends Exception {
+    public MyCheckedException(String message) {
+        super(message);
+    }
+}
+
+// Unchecked exception - extends RuntimeException
+public class MyUncheckedException extends RuntimeException {
+    public MyUncheckedException(String message) {
+        super(message);
+    }
+}
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 7: Custom Exceptions
+--------------------------------------------------------------------------------
+
+// ========== CUSTOM UNCHECKED EXCEPTIONS ==========
+
+class ValidationException extends RuntimeException {
+    private String fieldName;
+    private Object invalidValue;
+    
+    public ValidationException(String message) {
+        super(message);
+    }
+    
+    public ValidationException(String fieldName, Object invalidValue, String message) {
+        super(message);
+        this.fieldName = fieldName;
+        this.invalidValue = invalidValue;
+    }
+    
+    public String getFieldName() {
+        return fieldName;
+    }
+    
+    public Object getInvalidValue() {
+        return invalidValue;
+    }
+    
+    @Override
+    public String toString() {
+        if (fieldName != null) {
+            return "ValidationException{field='" + fieldName + 
+                   "', value='" + invalidValue + "', message='" + getMessage() + "'}";
+        }
+        return "ValidationException: " + getMessage();
+    }
+}
+
+class UserNotFoundException extends RuntimeException {
+    private String userId;
+    
+    public UserNotFoundException(String userId) {
+        super("User not found with ID: " + userId);
+        this.userId = userId;
+    }
+    
+    public String getUserId() {
+        return userId;
+    }
+}
+
+class InsufficientBalanceException extends RuntimeException {
+    private double currentBalance;
+    private double requestedAmount;
+    
+    public InsufficientBalanceException(double currentBalance, double requestedAmount) {
+        super(String.format("Insufficient balance. Current: $%.2f, Requested: $%.2f", 
+              currentBalance, requestedAmount));
+        this.currentBalance = currentBalance;
+        this.requestedAmount = requestedAmount;
+    }
+    
+    public double getCurrentBalance() {
+        return currentBalance;
+    }
+    
+    public double getRequestedAmount() {
+        return requestedAmount;
+    }
+    
+    public double getShortfall() {
+        return requestedAmount - currentBalance;
+    }
+}
+
+// ========== CUSTOM CHECKED EXCEPTION ==========
+
+class DatabaseConnectionException extends Exception {
+    private String host;
+    private int port;
+    
+    public DatabaseConnectionException(String message) {
+        super(message);
+    }
+    
+    public DatabaseConnectionException(String host, int port, String message) {
+        super(message);
+        this.host = host;
+        this.port = port;
+    }
+    
+    public DatabaseConnectionException(String message, Throwable cause) {
+        super(message, cause);
+    }
+    
+    public String getHost() {
+        return host;
+    }
+    
+    public int getPort() {
+        return port;
+    }
+}
+
+// ========== SERVICE CLASS USING CUSTOM EXCEPTIONS ==========
+
+class UserService {
+    private java.util.Map<String, Double> userBalances = new java.util.HashMap<>();
+    
+    public UserService() {
+        userBalances.put("user1", 1000.0);
+        userBalances.put("user2", 500.0);
+        userBalances.put("user3", 2500.0);
+    }
+    
+    public void validateEmail(String email) {
+        if (email == null || email.trim().isEmpty()) {
+            throw new ValidationException("email", email, "Email cannot be null or empty");
+        }
+        if (!email.contains("@") || !email.contains(".")) {
+            throw new ValidationException("email", email, "Invalid email format");
+        }
+    }
+    
+    public void validateAge(int age) {
+        if (age < 0) {
+            throw new ValidationException("age", age, "Age cannot be negative");
+        }
+        if (age > 150) {
+            throw new ValidationException("age", age, "Age cannot exceed 150");
+        }
+    }
+    
+    public double getBalance(String userId) {
+        if (!userBalances.containsKey(userId)) {
+            throw new UserNotFoundException(userId);
+        }
+        return userBalances.get(userId);
+    }
+    
+    public void withdraw(String userId, double amount) {
+        if (!userBalances.containsKey(userId)) {
+            throw new UserNotFoundException(userId);
+        }
+        
+        double currentBalance = userBalances.get(userId);
+        if (amount > currentBalance) {
+            throw new InsufficientBalanceException(currentBalance, amount);
+        }
+        
+        userBalances.put(userId, currentBalance - amount);
+        System.out.println("Withdrawn $" + amount + " from " + userId);
+        System.out.println("New balance: $" + userBalances.get(userId));
+    }
+}
+
+class DatabaseService {
+    public void connect(String host, int port) throws DatabaseConnectionException {
+        // Simulate connection attempt
+        if (host == null || host.isEmpty()) {
+            throw new DatabaseConnectionException("Host cannot be empty");
+        }
+        
+        if (port < 1 || port > 65535) {
+            throw new DatabaseConnectionException(host, port, "Invalid port number");
+        }
+        
+        // Simulate connection failure
+        if (host.equals("invalid-host")) {
+            throw new DatabaseConnectionException(host, port, 
+                "Could not connect to database at " + host + ":" + port);
+        }
+        
+        System.out.println("Connected to database at " + host + ":" + port);
+    }
+}
+
+public class CustomExceptionDemo {
+    public static void main(String[] args) {
+        
+        System.out.println("================================================");
+        System.out.println("           CUSTOM EXCEPTIONS DEMO");
+        System.out.println("================================================\n");
+        
+        UserService userService = new UserService();
+        DatabaseService dbService = new DatabaseService();
+        
+        // ========== VALIDATION EXCEPTION ==========
+        System.out.println("--- ValidationException ---");
+        
+        // Test email validation
+        String[] emails = {"", "invalid", "valid@email.com"};
+        for (String email : emails) {
+            try {
+                System.out.println("Validating: '" + email + "'");
+                userService.validateEmail(email);
+                System.out.println("  Valid!\n");
+            } catch (ValidationException e) {
+                System.out.println("  " + e);
+                System.out.println();
+            }
+        }
+        
+        // Test age validation
+        int[] ages = {-5, 200, 25};
+        for (int age : ages) {
+            try {
+                System.out.println("Validating age: " + age);
+                userService.validateAge(age);
+                System.out.println("  Valid!\n");
+            } catch (ValidationException e) {
+                System.out.println("  Invalid: " + e.getMessage());
+                System.out.println("  Field: " + e.getFieldName() + ", Value: " + e.getInvalidValue());
+                System.out.println();
+            }
+        }
+        
+        // ========== USER NOT FOUND EXCEPTION ==========
+        System.out.println("--- UserNotFoundException ---");
+        
+        String[] userIds = {"user1", "user99"};
+        for (String userId : userIds) {
+            try {
+                System.out.println("Getting balance for: " + userId);
+                double balance = userService.getBalance(userId);
+                System.out.println("  Balance: $" + balance + "\n");
+            } catch (UserNotFoundException e) {
+                System.out.println("  Error: " + e.getMessage());
+                System.out.println("  User ID: " + e.getUserId() + "\n");
+            }
+        }
+        
+        // ========== INSUFFICIENT BALANCE EXCEPTION ==========
+        System.out.println("--- InsufficientBalanceException ---");
+        
+        try {
+            System.out.println("Withdrawing $200 from user1:");
+            userService.withdraw("user1", 200);
+            System.out.println();
+        } catch (InsufficientBalanceException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+        
+        try {
+            System.out.println("Withdrawing $1000 from user2:");
+            userService.withdraw("user2", 1000);
+        } catch (InsufficientBalanceException e) {
+            System.out.println("  Error: " + e.getMessage());
+            System.out.println("  Current Balance: $" + e.getCurrentBalance());
+            System.out.println("  Requested: $" + e.getRequestedAmount());
+            System.out.println("  Shortfall: $" + e.getShortfall());
+        }
+        
+        // ========== DATABASE CONNECTION EXCEPTION (CHECKED) ==========
+        System.out.println("\n--- DatabaseConnectionException (Checked) ---");
+        
+        String[][] dbConfigs = {
+            {"localhost", "5432"},
+            {"", "3306"},
+            {"invalid-host", "5432"},
+            {"db.example.com", "3306"}
+        };
+        
+        for (String[] config : dbConfigs) {
+            try {
+                System.out.println("Connecting to " + config[0] + ":" + config[1]);
+                dbService.connect(config[0], Integer.parseInt(config[1]));
+            } catch (DatabaseConnectionException e) {
+                System.out.println("  Error: " + e.getMessage());
+                if (e.getHost() != null) {
+                    System.out.println("  Host: " + e.getHost() + ", Port: " + e.getPort());
+                }
+            }
+            System.out.println();
+        }
+    }
+}
+
+OUTPUT:
+-------
+================================================
+           CUSTOM EXCEPTIONS DEMO
+================================================
+
+--- ValidationException ---
+Validating: ''
+  ValidationException{field='email', value='', message='Email cannot be null or empty'}
+
+Validating: 'invalid'
+  ValidationException{field='email', value='invalid', message='Invalid email format'}
+
+Validating: 'valid@email.com'
+  Valid!
+
+Validating age: -5
+  Invalid: Age cannot be negative
+  Field: age, Value: -5
+
+Validating age: 200
+  Invalid: Age cannot exceed 150
+  Field: age, Value: 200
+
+Validating age: 25
+  Valid!
+
+--- UserNotFoundException ---
+Getting balance for: user1
+  Balance: $1000.0
+
+Getting balance for: user99
+  Error: User not found with ID: user99
+  User ID: user99
+
+--- InsufficientBalanceException ---
+Withdrawing $200 from user1:
+Withdrawn $200.0 from user1
+New balance: $800.0
+
+Withdrawing $1000 from user2:
+  Error: Insufficient balance. Current: $500.00, Requested: $1000.00
+  Current Balance: $500.0
+  Requested: $1000.0
+  Shortfall: $500.0
+
+--- DatabaseConnectionException (Checked) ---
+Connecting to localhost:5432
+Connected to database at localhost:5432
+
+Connecting to :3306
+  Error: Host cannot be empty
+
+Connecting to invalid-host:5432
+  Error: Could not connect to database at invalid-host:5432
+  Host: invalid-host, Port: 5432
+
+Connecting to db.example.com:3306
+Connected to database at db.example.com:3306
+
+
+================================================================================
+                    PART 6: TRY-WITH-RESOURCES (JAVA 7+)
+================================================================================
+
+What is try-with-resources?
+---------------------------
+- Automatically closes resources after try block
+- Resources must implement AutoCloseable interface
+- No need for finally block to close resources
+- Cleaner, less error-prone code
+
+
+Syntax:
+-------
+try (Resource resource = new Resource()) {
+    // Use resource
+} catch (Exception e) {
+    // Handle exception
+}
+// Resource automatically closed here
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 8: Try-with-Resources
+--------------------------------------------------------------------------------
+
+import java.io.*;
+
+// Custom AutoCloseable resource
+class DatabaseConnection implements AutoCloseable {
+    private String connectionId;
+    private boolean connected;
+    
+    public DatabaseConnection(String host) throws Exception {
+        this.connectionId = "CONN-" + System.currentTimeMillis();
+        System.out.println("[" + connectionId + "] Opening connection to: " + host);
+        
+        if (host.equals("invalid")) {
+            throw new Exception("Cannot connect to invalid host");
+        }
+        
+        this.connected = true;
+        System.out.println("[" + connectionId + "] Connection established");
+    }
+    
+    public void executeQuery(String query) {
+        if (!connected) {
+            throw new IllegalStateException("Not connected!");
+        }
+        System.out.println("[" + connectionId + "] Executing: " + query);
+    }
+    
+    @Override
+    public void close() {
+        System.out.println("[" + connectionId + "] Closing connection...");
+        connected = false;
+        System.out.println("[" + connectionId + "] Connection closed");
+    }
+}
+
+class FileResource implements AutoCloseable {
+    private String filename;
+    
+    public FileResource(String filename) {
+        this.filename = filename;
+        System.out.println("Opening file: " + filename);
+    }
+    
+    public void write(String data) {
+        System.out.println("Writing to " + filename + ": " + data);
+    }
+    
+    public String read() {
+        System.out.println("Reading from " + filename);
+        return "File content from " + filename;
+    }
+    
+    @Override
+    public void close() {
+        System.out.println("Closing file: " + filename);
+    }
+}
+
+public class TryWithResourcesDemo {
+    public static void main(String[] args) {
+        
+        System.out.println("================================================");
+        System.out.println("          TRY-WITH-RESOURCES DEMO");
+        System.out.println("================================================\n");
+        
+        // ========== BASIC TRY-WITH-RESOURCES ==========
+        System.out.println("--- Basic try-with-resources ---");
+        
+        try (DatabaseConnection conn = new DatabaseConnection("localhost")) {
+            conn.executeQuery("SELECT * FROM users");
+            conn.executeQuery("SELECT * FROM products");
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+        // Connection automatically closed!
+        
+        System.out.println();
+        
+        // ========== MULTIPLE RESOURCES ==========
+        System.out.println("--- Multiple resources ---");
+        
+        try (FileResource input = new FileResource("input.txt");
+             FileResource output = new FileResource("output.txt")) {
+            
+            String data = input.read();
+            output.write(data);
+            
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+        // Both files automatically closed (in reverse order)!
+        
+        System.out.println();
+        
+        // ========== EXCEPTION DURING RESOURCE CREATION ==========
+        System.out.println("--- Exception during resource creation ---");
+        
+        try (DatabaseConnection conn = new DatabaseConnection("invalid")) {
+            conn.executeQuery("SELECT * FROM users");
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+        
+        System.out.println();
+        
+        // ========== EXCEPTION DURING OPERATION ==========
+        System.out.println("--- Exception during operation ---");
+        
+        try (DatabaseConnection conn = new DatabaseConnection("localhost")) {
+            conn.executeQuery("SELECT * FROM users");
+            
+            // Simulate exception
+            if (true) {
+                throw new RuntimeException("Query execution failed!");
+            }
+            
+            conn.executeQuery("This won't execute");
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+        // Connection still closed even though exception occurred!
+        
+        System.out.println();
+        
+        // ========== TRADITIONAL VS TRY-WITH-RESOURCES ==========
+        System.out.println("--- Traditional vs Try-with-resources ---");
+        
+        // Traditional way (verbose, error-prone)
+        System.out.println("\nTraditional way:");
+        DatabaseConnection conn = null;
+        try {
+            conn = new DatabaseConnection("localhost");
+            conn.executeQuery("SELECT 1");
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+        } finally {
+            if (conn != null) {
+                conn.close();
+            }
+        }
+        
+        // Try-with-resources (cleaner)
+        System.out.println("\nTry-with-resources way:");
+        try (DatabaseConnection conn2 = new DatabaseConnection("localhost")) {
+            conn2.executeQuery("SELECT 1");
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+        
+        System.out.println();
+        
+        // ========== REAL-WORLD FILE I/O ==========
+        System.out.println("--- Real-world file I/O example ---");
+        
+        // Writing to file
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter("test.txt"))) {
+            writer.write("Hello, World!");
+            writer.newLine();
+            writer.write("This is a test.");
+            System.out.println("Successfully wrote to file");
+        } catch (IOException e) {
+            System.out.println("Error writing file: " + e.getMessage());
+        }
+        
+        // Reading from file
+        try (BufferedReader reader = new BufferedReader(new FileReader("test.txt"))) {
+            String line;
+            System.out.println("File content:");
+            while ((line = reader.readLine()) != null) {
+                System.out.println("  " + line);
+            }
+        } catch (IOException e) {
+            System.out.println("Error reading file: " + e.getMessage());
+        }
+        
+        // Cleanup
+        new File("test.txt").delete();
+    }
+}
+
+OUTPUT:
+-------
+================================================
+          TRY-WITH-RESOURCES DEMO
+================================================
+
+--- Basic try-with-resources ---
+[CONN-1234567890] Opening connection to: localhost
+[CONN-1234567890] Connection established
+[CONN-1234567890] Executing: SELECT * FROM users
+[CONN-1234567890] Executing: SELECT * FROM products
+[CONN-1234567890] Closing connection...
+[CONN-1234567890] Connection closed
+
+--- Multiple resources ---
+Opening file: input.txt
+Opening file: output.txt
+Reading from input.txt
+Writing to output.txt: File content from input.txt
+Closing file: output.txt
+Closing file: input.txt
+
+--- Exception during resource creation ---
+[CONN-1234567891] Opening connection to: invalid
+Error: Cannot connect to invalid host
+
+--- Exception during operation ---
+[CONN-1234567892] Opening connection to: localhost
+[CONN-1234567892] Connection established
+[CONN-1234567892] Executing: SELECT * FROM users
+[CONN-1234567892] Closing connection...
+[CONN-1234567892] Connection closed
+Error: Query execution failed!
+
+--- Traditional vs Try-with-resources ---
+
+Traditional way:
+[CONN-1234567893] Opening connection to: localhost
+[CONN-1234567893] Connection established
+[CONN-1234567893] Executing: SELECT 1
+[CONN-1234567893] Closing connection...
+[CONN-1234567893] Connection closed
+
+Try-with-resources way:
+[CONN-1234567894] Opening connection to: localhost
+[CONN-1234567894] Connection established
+[CONN-1234567894] Executing: SELECT 1
+[CONN-1234567894] Closing connection...
+[CONN-1234567894] Connection closed
+
+--- Real-world file I/O example ---
+Successfully wrote to file
+File content:
+  Hello, World!
+  This is a test.
+
+
+================================================================================
+                    PART 7: EXCEPTION HANDLING IN SELENIUM AUTOMATION
+================================================================================
+
+Common Selenium Exceptions:
+---------------------------
++-----------------------------------+------------------------------------------+
+| Exception                         | When it occurs                           |
++-----------------------------------+------------------------------------------+
+| NoSuchElementException            | Element not found in DOM                 |
+| TimeoutException                  | Wait condition not met in time           |
+| StaleElementReferenceException    | Element no longer attached to DOM        |
+| ElementNotInteractableException   | Element not clickable/typeable           |
+| ElementClickInterceptedException  | Another element receives the click       |
+| NoSuchWindowException             | Window/tab not found                     |
+| NoSuchFrameException              | Frame not found                          |
+| InvalidSelectorException          | Invalid locator syntax                   |
+| WebDriverException                | General WebDriver error                  |
+| SessionNotCreatedException        | Browser session couldn't be created      |
++-----------------------------------+------------------------------------------+
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 9: Selenium Exception Handling
+--------------------------------------------------------------------------------
+
+import java.util.*;
+
+// Simulated Selenium Exceptions
+class NoSuchElementException extends RuntimeException {
+    public NoSuchElementException(String message) {
+        super(message);
+    }
+}
+
+class TimeoutException extends RuntimeException {
+    public TimeoutException(String message) {
+        super(message);
+    }
+}
+
+class StaleElementReferenceException extends RuntimeException {
+    public StaleElementReferenceException(String message) {
+        super(message);
+    }
+}
+
+class ElementNotInteractableException extends RuntimeException {
+    public ElementNotInteractableException(String message) {
+        super(message);
+    }
+}
+
+class ElementClickInterceptedException extends RuntimeException {
+    public ElementClickInterceptedException(String message) {
+        super(message);
+    }
+}
+
+// Simulated WebElement
+class WebElement {
+    private String locator;
+    private boolean displayed;
+    private boolean enabled;
+    private boolean stale;
+    private String text;
+    
+    public WebElement(String locator, String text) {
+        this.locator = locator;
+        this.text = text;
+        this.displayed = true;
+        this.enabled = true;
+        this.stale = false;
+    }
+    
+    public void setDisplayed(boolean displayed) { this.displayed = displayed; }
+    public void setEnabled(boolean enabled) { this.enabled = enabled; }
+    public void setStale(boolean stale) { this.stale = stale; }
+    
+    public void click() {
+        if (stale) {
+            throw new StaleElementReferenceException(
+                "Element is no longer attached to the DOM: " + locator);
+        }
+        if (!displayed) {
+            throw new ElementNotInteractableException(
+                "Element is not displayed: " + locator);
+        }
+        if (!enabled) {
+            throw new ElementNotInteractableException(
+                "Element is not enabled: " + locator);
+        }
+        System.out.println("Clicked: " + locator);
+    }
+    
+    public void sendKeys(String text) {
+        if (stale) {
+            throw new StaleElementReferenceException(
+                "Element is no longer attached to the DOM: " + locator);
+        }
+        if (!displayed || !enabled) {
+            throw new ElementNotInteractableException(
+                "Element is not interactable: " + locator);
+        }
+        System.out.println("Typed '" + text + "' into: " + locator);
+    }
+    
+    public String getText() {
+        if (stale) {
+            throw new StaleElementReferenceException(
+                "Element is no longer attached to the DOM: " + locator);
+        }
+        return text;
+    }
+    
+    public boolean isDisplayed() { return displayed; }
+    public boolean isEnabled() { return enabled; }
+    public String getLocator() { return locator; }
+}
+
+// Simulated WebDriver
+class WebDriver {
+    private Map<String, WebElement> elements = new HashMap<>();
+    private boolean sessionActive = true;
+    
+    public WebDriver() {
+        // Pre-populate some elements
+        elements.put("//input[@id='username']", new WebElement("//input[@id='username']", ""));
+        elements.put("//input[@id='password']", new WebElement("//input[@id='password']", ""));
+        elements.put("//button[@id='login']", new WebElement("//button[@id='login']", "Login"));
+        elements.put("//div[@id='welcome']", new WebElement("//div[@id='welcome']", "Welcome, User!"));
+    }
+    
+    public WebElement findElement(String locator) {
+        if (!sessionActive) {
+            throw new RuntimeException("Session not active");
+        }
+        
+        // Simulate delay
+        try { Thread.sleep(100); } catch (InterruptedException e) {}
+        
+        WebElement element = elements.get(locator);
+        if (element == null) {
+            throw new NoSuchElementException(
+                "Unable to locate element: " + locator);
+        }
+        return element;
+    }
+    
+    public List<WebElement> findElements(String locator) {
+        List<WebElement> found = new ArrayList<>();
+        for (Map.Entry<String, WebElement> entry : elements.entrySet()) {
+            if (entry.getKey().contains(locator)) {
+                found.add(entry.getValue());
+            }
+        }
+        return found;
+    }
+    
+    public void addElement(String locator, WebElement element) {
+        elements.put(locator, element);
+    }
+    
+    public void removeElement(String locator) {
+        elements.remove(locator);
+    }
+    
+    public void quit() {
+        sessionActive = false;
+        System.out.println("Browser closed");
+    }
+}
+
+// ========== PAGE OBJECT WITH EXCEPTION HANDLING ==========
+class LoginPage {
+    private WebDriver driver;
+    private int defaultTimeout = 10;
+    
+    // Locators
+    private static final String USERNAME_FIELD = "//input[@id='username']";
+    private static final String PASSWORD_FIELD = "//input[@id='password']";
+    private static final String LOGIN_BUTTON = "//button[@id='login']";
+    private static final String ERROR_MESSAGE = "//div[@id='error']";
+    
+    public LoginPage(WebDriver driver) {
+        this.driver = driver;
+    }
+    
+    // Safe click with retry
+    public void clickWithRetry(String locator, int maxRetries) {
+        int attempts = 0;
+        while (attempts < maxRetries) {
+            try {
+                WebElement element = driver.findElement(locator);
+                element.click();
+                return;    // Success
+            } catch (StaleElementReferenceException e) {
+                attempts++;
+                System.out.println("Stale element, retrying... (" + attempts + "/" + maxRetries + ")");
+                if (attempts >= maxRetries) {
+                    throw e;
+                }
+                try { Thread.sleep(500); } catch (InterruptedException ie) {}
+            } catch (ElementNotInteractableException e) {
+                attempts++;
+                System.out.println("Element not interactable, retrying... (" + attempts + "/" + maxRetries + ")");
+                if (attempts >= maxRetries) {
+                    throw e;
+                }
+                try { Thread.sleep(500); } catch (InterruptedException ie) {}
+            }
+        }
+    }
+    
+    // Safe type with validation
+    public void typeText(String locator, String text) {
+        try {
+            WebElement element = driver.findElement(locator);
+            element.sendKeys(text);
+        } catch (NoSuchElementException e) {
+            System.out.println("ERROR: Input field not found: " + locator);
+            throw e;
+        } catch (ElementNotInteractableException e) {
+            System.out.println("ERROR: Cannot type into element: " + locator);
+            throw e;
+        }
+    }
+    
+    // Check if element exists (without throwing exception)
+    public boolean isElementPresent(String locator) {
+        try {
+            driver.findElement(locator);
+            return true;
+        } catch (NoSuchElementException e) {
+            return false;
+        }
+    }
+    
+    // Get element text safely
+    public String getTextSafely(String locator, String defaultValue) {
+        try {
+            WebElement element = driver.findElement(locator);
+            return element.getText();
+        } catch (NoSuchElementException e) {
+            System.out.println("Element not found, returning default: " + defaultValue);
+            return defaultValue;
+        } catch (StaleElementReferenceException e) {
+            System.out.println("Stale element, returning default: " + defaultValue);
+            return defaultValue;
+        }
+    }
+    
+    // Login method with comprehensive error handling
+    public boolean login(String username, String password) {
+        System.out.println("\n--- Attempting Login ---");
+        
+        try {
+            // Enter username
+            System.out.println("Entering username...");
+            typeText(USERNAME_FIELD, username);
+            
+            // Enter password
+            System.out.println("Entering password...");
+            typeText(PASSWORD_FIELD, password);
+            
+            // Click login button
+            System.out.println("Clicking login button...");
+            clickWithRetry(LOGIN_BUTTON, 3);
+            
+            // Check for success
+            System.out.println("Login action completed successfully");
+            return true;
+            
+        } catch (NoSuchElementException e) {
+            System.out.println("LOGIN FAILED: Required element not found");
+            System.out.println("  Details: " + e.getMessage());
+            return false;
+            
+        } catch (ElementNotInteractableException e) {
+            System.out.println("LOGIN FAILED: Element not interactable");
+            System.out.println("  Details: " + e.getMessage());
+            return false;
+            
+        } catch (StaleElementReferenceException e) {
+            System.out.println("LOGIN FAILED: Page changed during login");
+            System.out.println("  Details: " + e.getMessage());
+            return false;
+            
+        } catch (Exception e) {
+            System.out.println("LOGIN FAILED: Unexpected error");
+            System.out.println("  Type: " + e.getClass().getSimpleName());
+            System.out.println("  Details: " + e.getMessage());
+            return false;
+        }
+    }
+}
+
+// ========== BASE TEST CLASS ==========
+class BaseTest {
+    protected WebDriver driver;
+    
+    public void setUp() {
+        System.out.println("Setting up test...");
+        try {
+            driver = new WebDriver();
+            System.out.println("WebDriver initialized");
+        } catch (Exception e) {
+            System.out.println("SETUP FAILED: " + e.getMessage());
+            throw new RuntimeException("Test setup failed", e);
+        }
+    }
+    
+    public void tearDown() {
+        System.out.println("\nTearing down test...");
+        try {
+            if (driver != null) {
+                driver.quit();
+            }
+        } catch (Exception e) {
+            System.out.println("Warning: Error during teardown: " + e.getMessage());
+        }
+    }
+    
+    // Wrapper method for test execution
+    public void runTest(String testName, Runnable test) {
+        System.out.println("\n" + "=".repeat(50));
+        System.out.println("TEST: " + testName);
+        System.out.println("=".repeat(50));
+        
+        try {
+            setUp();
+            test.run();
+            System.out.println("\nRESULT: PASSED");
+        } catch (AssertionError e) {
+            System.out.println("\nRESULT: FAILED");
+            System.out.println("Assertion: " + e.getMessage());
+        } catch (Exception e) {
+            System.out.println("\nRESULT: ERROR");
+            System.out.println("Exception: " + e.getClass().getSimpleName());
+            System.out.println("Message: " + e.getMessage());
+        } finally {
+            tearDown();
+        }
+    }
+}
+
+public class SeleniumExceptionDemo {
+    public static void main(String[] args) {
+        
+        System.out.println("====================================================");
+        System.out.println("       SELENIUM EXCEPTION HANDLING DEMO");
+        System.out.println("====================================================");
+        
+        BaseTest baseTest = new BaseTest();
+        
+        // Test 1: Successful login
+        baseTest.runTest("Successful Login", () -> {
+            LoginPage loginPage = new LoginPage(baseTest.driver);
+            boolean result = loginPage.login("testuser", "password123");
+            if (!result) {
+                throw new AssertionError("Login should have succeeded");
+            }
+        });
+        
+        // Test 2: Element not found
+        baseTest.runTest("Element Not Found", () -> {
+            LoginPage loginPage = new LoginPage(baseTest.driver);
+            // Try to interact with non-existent element
+            try {
+                baseTest.driver.findElement("//button[@id='nonexistent']").click();
+            } catch (NoSuchElementException e) {
+                System.out.println("Expected exception caught: " + e.getMessage());
+            }
+        });
+        
+        // Test 3: Stale element
+        baseTest.runTest("Stale Element Handling", () -> {
+            WebElement button = baseTest.driver.findElement("//button[@id='login']");
+            button.setStale(true);    // Simulate stale element
+            
+            try {
+                button.click();
+            } catch (StaleElementReferenceException e) {
+                System.out.println("Stale element detected: " + e.getMessage());
+                System.out.println("Re-finding element...");
+                // In real scenario, would re-find the element
+            }
+        });
+        
+        // Test 4: Element not interactable
+        baseTest.runTest("Element Not Interactable", () -> {
+            WebElement input = baseTest.driver.findElement("//input[@id='username']");
+            input.setEnabled(false);    // Disable the element
+            
+            try {
+                input.sendKeys("test");
+            } catch (ElementNotInteractableException e) {
+                System.out.println("Element not interactable: " + e.getMessage());
+                System.out.println("Waiting for element to be enabled...");
+            }
+        });
+        
+        // Test 5: Using safe methods
+        baseTest.runTest("Safe Methods Usage", () -> {
+            LoginPage loginPage = new LoginPage(baseTest.driver);
+            
+            // Check element presence
+            boolean usernamePresent = loginPage.isElementPresent("//input[@id='username']");
+            boolean invalidPresent = loginPage.isElementPresent("//input[@id='invalid']");
+            
+            System.out.println("Username field present: " + usernamePresent);
+            System.out.println("Invalid field present: " + invalidPresent);
+            
+            // Get text safely
+            String welcomeText = loginPage.getTextSafely("//div[@id='welcome']", "Not found");
+            String errorText = loginPage.getTextSafely("//div[@id='error']", "No error");
+            
+            System.out.println("Welcome text: " + welcomeText);
+            System.out.println("Error text: " + errorText);
+        });
+    }
+}
+
+OUTPUT:
+-------
+====================================================
+       SELENIUM EXCEPTION HANDLING DEMO
+====================================================
+
+==================================================
+TEST: Successful Login
+==================================================
+Setting up test...
+WebDriver initialized
+
+--- Attempting Login ---
+Entering username...
+Typed 'testuser' into: //input[@id='username']
+Entering password...
+Typed 'password123' into: //input[@id='password']
+Clicking login button...
+Clicked: //button[@id='login']
+Login action completed successfully
+
+RESULT: PASSED
+
+Tearing down test...
+Browser closed
+
+==================================================
+TEST: Element Not Found
+==================================================
+Setting up test...
+WebDriver initialized
+Expected exception caught: Unable to locate element: //button[@id='nonexistent']
+
+RESULT: PASSED
+
+Tearing down test...
+Browser closed
+
+==================================================
+TEST: Stale Element Handling
+==================================================
+Setting up test...
+WebDriver initialized
+Stale element detected: Element is no longer attached to the DOM: //button[@id='login']
+Re-finding element...
+
+RESULT: PASSED
+
+Tearing down test...
+Browser closed
+
+==================================================
+TEST: Element Not Interactable
+==================================================
+Setting up test...
+WebDriver initialized
+Element not interactable: Element is not interactable: //input[@id='username']
+Waiting for element to be enabled...
+
+RESULT: PASSED
+
+Tearing down test...
+Browser closed
+
+==================================================
+TEST: Safe Methods Usage
+==================================================
+Setting up test...
+WebDriver initialized
+Username field present: true
+Invalid field present: false
+Welcome text: Welcome, User!
+Element not found, returning default: No error
+Error text: No error
+
+RESULT: PASSED
+
+Tearing down test...
+Browser closed
+
+
+================================================================================
+                    PART 8: EXCEPTION HANDLING IN REST ASSURED AUTOMATION
+================================================================================
+
+Common API/REST Exceptions:
+---------------------------
++-----------------------------------+------------------------------------------+
+| Exception/Error                   | When it occurs                           |
++-----------------------------------+------------------------------------------+
+| ConnectException                  | Cannot connect to server                 |
+| SocketTimeoutException            | Connection/read timeout                  |
+| UnknownHostException              | Invalid hostname                         |
+| SSLException                      | SSL/TLS certificate issues               |
+| JsonParseException                | Invalid JSON response                    |
+| AssertionError                    | Response validation failed               |
++-----------------------------------+------------------------------------------+
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 10: REST Assured Exception Handling
+--------------------------------------------------------------------------------
+
+import java.util.*;
+
+// Custom API Exceptions
+class ApiException extends RuntimeException {
+    private int statusCode;
+    private String responseBody;
+    
+    public ApiException(String message) {
+        super(message);
+    }
+    
+    public ApiException(String message, int statusCode, String responseBody) {
+        super(message);
+        this.statusCode = statusCode;
+        this.responseBody = responseBody;
+    }
+    
+    public int getStatusCode() { return statusCode; }
+    public String getResponseBody() { return responseBody; }
+}
+
+class ConnectionException extends ApiException {
+    public ConnectionException(String message) {
+        super(message);
+    }
+    
+    public ConnectionException(String message, Throwable cause) {
+        super(message);
+        initCause(cause);
+    }
+}
+
+class Timeout
+
+--- ai stopped ---
+
+class TimeoutApiException extends ApiException {
+    private int timeoutSeconds;
+    
+    public TimeoutApiException(String message, int timeoutSeconds) {
+        super(message);
+        this.timeoutSeconds = timeoutSeconds;
+    }
+    
+    public int getTimeoutSeconds() { return timeoutSeconds; }
+}
+
+class AuthenticationException extends ApiException {
+    public AuthenticationException(String message) {
+        super(message);
+    }
+    
+    public AuthenticationException(String message, int statusCode, String responseBody) {
+        super(message, statusCode, responseBody);
+    }
+}
+
+class ResourceNotFoundException extends ApiException {
+    private String resourceType;
+    private String resourceId;
+    
+    public ResourceNotFoundException(String resourceType, String resourceId) {
+        super(resourceType + " not found with ID: " + resourceId, 404, 
+              "{\"error\": \"" + resourceType + " not found\"}");
+        this.resourceType = resourceType;
+        this.resourceId = resourceId;
+    }
+    
+    public String getResourceType() { return resourceType; }
+    public String getResourceId() { return resourceId; }
+}
+
+class ValidationApiException extends ApiException {
+    private Map<String, String> fieldErrors;
+    
+    public ValidationApiException(String message, Map<String, String> fieldErrors) {
+        super(message, 400, fieldErrors.toString());
+        this.fieldErrors = fieldErrors;
+    }
+    
+    public Map<String, String> getFieldErrors() { return fieldErrors; }
+}
+
+// Simulated API Response
+class ApiResponse {
+    private int statusCode;
+    private String body;
+    private Map<String, String> headers;
+    private long responseTime;
+    
+    public ApiResponse(int statusCode, String body, long responseTime) {
+        this.statusCode = statusCode;
+        this.body = body;
+        this.responseTime = responseTime;
+        this.headers = new HashMap<>();
+        headers.put("Content-Type", "application/json");
+    }
+    
+    public int getStatusCode() { return statusCode; }
+    public String getBody() { return body; }
+    public long getResponseTime() { return responseTime; }
+    public Map<String, String> getHeaders() { return headers; }
+    
+    public boolean isSuccess() {
+        return statusCode >= 200 && statusCode < 300;
+    }
+    
+    @Override
+    public String toString() {
+        return "ApiResponse{statusCode=" + statusCode + ", body='" + body + "', time=" + responseTime + "ms}";
+    }
+}
+
+// ========== API CLIENT WITH EXCEPTION HANDLING ==========
+class ApiClient {
+    private String baseUrl;
+    private int timeout;
+    private String authToken;
+    private boolean connected;
+    
+    public ApiClient(String baseUrl) {
+        this.baseUrl = baseUrl;
+        this.timeout = 30;
+        this.connected = false;
+    }
+    
+    public void setAuthToken(String token) {
+        this.authToken = token;
+    }
+    
+    public void setTimeout(int seconds) {
+        this.timeout = seconds;
+    }
+    
+    // Connect with retry logic
+    public void connect() throws ConnectionException {
+        System.out.println("Connecting to: " + baseUrl);
+        
+        int maxRetries = 3;
+        int attempt = 0;
+        
+        while (attempt < maxRetries) {
+            try {
+                attempt++;
+                System.out.println("  Attempt " + attempt + "/" + maxRetries);
+                
+                // Simulate connection
+                if (baseUrl.contains("invalid")) {
+                    throw new RuntimeException("Unknown host");
+                }
+                
+                if (baseUrl.contains("timeout")) {
+                    throw new RuntimeException("Connection timed out");
+                }
+                
+                connected = true;
+                System.out.println("  Connected successfully!");
+                return;
+                
+            } catch (RuntimeException e) {
+                System.out.println("  Failed: " + e.getMessage());
+                if (attempt >= maxRetries) {
+                    throw new ConnectionException(
+                        "Failed to connect after " + maxRetries + " attempts", e);
+                }
+                try { Thread.sleep(1000); } catch (InterruptedException ie) {}
+            }
+        }
+    }
+    
+    // GET request with exception handling
+    public ApiResponse get(String endpoint) {
+        String fullUrl = baseUrl + endpoint;
+        System.out.println("\n[GET] " + fullUrl);
+        
+        try {
+            validateConnection();
+            validateAuthentication();
+            
+            // Simulate different responses based on endpoint
+            if (endpoint.contains("/users/999")) {
+                throw new ResourceNotFoundException("User", "999");
+            }
+            
+            if (endpoint.contains("/slow")) {
+                throw new TimeoutApiException("Request timed out", timeout);
+            }
+            
+            // Simulate successful response
+            String responseBody = "{\"id\": 1, \"name\": \"John Doe\"}";
+            ApiResponse response = new ApiResponse(200, responseBody, 150);
+            
+            System.out.println("[Response] " + response.getStatusCode() + " - " + response.getResponseTime() + "ms");
+            return response;
+            
+        } catch (ApiException e) {
+            throw e;    // Re-throw API exceptions
+        } catch (Exception e) {
+            throw new ApiException("GET request failed: " + e.getMessage());
+        }
+    }
+    
+    // POST request with exception handling
+    public ApiResponse post(String endpoint, Map<String, Object> body) {
+        String fullUrl = baseUrl + endpoint;
+        System.out.println("\n[POST] " + fullUrl);
+        System.out.println("[Body] " + body);
+        
+        try {
+            validateConnection();
+            validateAuthentication();
+            validateRequestBody(body);
+            
+            // Simulate validation errors
+            if (body.containsKey("email")) {
+                String email = (String) body.get("email");
+                if (email != null && !email.contains("@")) {
+                    Map<String, String> errors = new HashMap<>();
+                    errors.put("email", "Invalid email format");
+                    throw new ValidationApiException("Validation failed", errors);
+                }
+            }
+            
+            // Simulate successful response
+            String responseBody = "{\"id\": 123, \"status\": \"created\"}";
+            ApiResponse response = new ApiResponse(201, responseBody, 200);
+            
+            System.out.println("[Response] " + response.getStatusCode() + " - " + response.getResponseTime() + "ms");
+            return response;
+            
+        } catch (ApiException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new ApiException("POST request failed: " + e.getMessage());
+        }
+    }
+    
+    // PUT request
+    public ApiResponse put(String endpoint, Map<String, Object> body) {
+        String fullUrl = baseUrl + endpoint;
+        System.out.println("\n[PUT] " + fullUrl);
+        System.out.println("[Body] " + body);
+        
+        try {
+            validateConnection();
+            validateAuthentication();
+            
+            // Simulate resource not found
+            if (endpoint.contains("/999")) {
+                throw new ResourceNotFoundException("Resource", "999");
+            }
+            
+            String responseBody = "{\"id\": 1, \"status\": \"updated\"}";
+            ApiResponse response = new ApiResponse(200, responseBody, 180);
+            
+            System.out.println("[Response] " + response.getStatusCode() + " - " + response.getResponseTime() + "ms");
+            return response;
+            
+        } catch (ApiException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new ApiException("PUT request failed: " + e.getMessage());
+        }
+    }
+    
+    // DELETE request
+    public ApiResponse delete(String endpoint) {
+        String fullUrl = baseUrl + endpoint;
+        System.out.println("\n[DELETE] " + fullUrl);
+        
+        try {
+            validateConnection();
+            validateAuthentication();
+            
+            ApiResponse response = new ApiResponse(204, "", 100);
+            System.out.println("[Response] " + response.getStatusCode() + " - " + response.getResponseTime() + "ms");
+            return response;
+            
+        } catch (ApiException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new ApiException("DELETE request failed: " + e.getMessage());
+        }
+    }
+    
+    // Validation helpers
+    private void validateConnection() {
+        if (!connected) {
+            throw new ConnectionException("Not connected to API server");
+        }
+    }
+    
+    private void validateAuthentication() {
+        if (authToken == null || authToken.isEmpty()) {
+            throw new AuthenticationException("Authentication required", 401, 
+                "{\"error\": \"Missing authentication token\"}");
+        }
+    }
+    
+    private void validateRequestBody(Map<String, Object> body) {
+        if (body == null || body.isEmpty()) {
+            throw new ValidationApiException("Request body cannot be empty", 
+                Collections.singletonMap("body", "Required"));
+        }
+    }
+}
+
+// ========== API TEST CLASS WITH EXCEPTION HANDLING ==========
+class ApiTestBase {
+    protected ApiClient apiClient;
+    
+    public void setUp(String baseUrl) {
+        System.out.println("\n--- Test Setup ---");
+        apiClient = new ApiClient(baseUrl);
+    }
+    
+    public void tearDown() {
+        System.out.println("\n--- Test Teardown ---");
+        apiClient = null;
+    }
+    
+    // Execute test with comprehensive error handling
+    public void executeTest(String testName, Runnable testLogic) {
+        System.out.println("\n" + "=".repeat(60));
+        System.out.println("TEST: " + testName);
+        System.out.println("=".repeat(60));
+        
+        long startTime = System.currentTimeMillis();
+        String status = "PASSED";
+        String errorMessage = null;
+        
+        try {
+            testLogic.run();
+            
+        } catch (AssertionError e) {
+            status = "FAILED";
+            errorMessage = "Assertion failed: " + e.getMessage();
+            
+        } catch (ConnectionException e) {
+            status = "ERROR";
+            errorMessage = "Connection error: " + e.getMessage();
+            
+        } catch (AuthenticationException e) {
+            status = "ERROR";
+            errorMessage = "Auth error [" + e.getStatusCode() + "]: " + e.getMessage();
+            
+        } catch (ResourceNotFoundException e) {
+            status = "FAILED";
+            errorMessage = "Resource not found: " + e.getResourceType() + " " + e.getResourceId();
+            
+        } catch (ValidationApiException e) {
+            status = "FAILED";
+            errorMessage = "Validation error: " + e.getFieldErrors();
+            
+        } catch (TimeoutApiException e) {
+            status = "ERROR";
+            errorMessage = "Timeout after " + e.getTimeoutSeconds() + "s: " + e.getMessage();
+            
+        } catch (ApiException e) {
+            status = "ERROR";
+            errorMessage = "API error [" + e.getStatusCode() + "]: " + e.getMessage();
+            
+        } catch (Exception e) {
+            status = "ERROR";
+            errorMessage = "Unexpected error: " + e.getClass().getSimpleName() + " - " + e.getMessage();
+        }
+        
+        long duration = System.currentTimeMillis() - startTime;
+        
+        System.out.println("\n" + "-".repeat(60));
+        System.out.println("STATUS: " + status);
+        System.out.println("DURATION: " + duration + "ms");
+        if (errorMessage != null) {
+            System.out.println("ERROR: " + errorMessage);
+        }
+        System.out.println("-".repeat(60));
+    }
+    
+    // Assertion helpers
+    public void assertEquals(String message, Object expected, Object actual) {
+        if (!Objects.equals(expected, actual)) {
+            throw new AssertionError(message + " - Expected: " + expected + ", Actual: " + actual);
+        }
+        System.out.println("[ASSERT] " + message + ": PASS");
+    }
+    
+    public void assertTrue(String message, boolean condition) {
+        if (!condition) {
+            throw new AssertionError(message);
+        }
+        System.out.println("[ASSERT] " + message + ": PASS");
+    }
+    
+    public void assertNotNull(String message, Object obj) {
+        if (obj == null) {
+            throw new AssertionError(message + " - Object is null");
+        }
+        System.out.println("[ASSERT] " + message + ": PASS");
+    }
+}
+
+// ========== USER API SERVICE ==========
+class UserApiService {
+    private ApiClient client;
+    
+    public UserApiService(ApiClient client) {
+        this.client = client;
+    }
+    
+    public ApiResponse getUser(String userId) {
+        return client.get("/users/" + userId);
+    }
+    
+    public ApiResponse createUser(String name, String email) {
+        Map<String, Object> body = new HashMap<>();
+        body.put("name", name);
+        body.put("email", email);
+        return client.post("/users", body);
+    }
+    
+    public ApiResponse updateUser(String userId, String name) {
+        Map<String, Object> body = new HashMap<>();
+        body.put("name", name);
+        return client.put("/users/" + userId, body);
+    }
+    
+    public ApiResponse deleteUser(String userId) {
+        return client.delete("/users/" + userId);
+    }
+    
+    // Safe method with default value
+    public ApiResponse getUserSafe(String userId, ApiResponse defaultResponse) {
+        try {
+            return getUser(userId);
+        } catch (ResourceNotFoundException e) {
+            System.out.println("User not found, returning default response");
+            return defaultResponse;
+        }
+    }
+}
+
+public class RestAssuredExceptionDemo {
+    public static void main(String[] args) {
+        
+        System.out.println("========================================================");
+        System.out.println("       REST ASSURED EXCEPTION HANDLING DEMO");
+        System.out.println("========================================================");
+        
+        ApiTestBase testBase = new ApiTestBase();
+        
+        // ========== TEST 1: Successful API calls ==========
+        testBase.executeTest("Successful User CRUD Operations", () -> {
+            testBase.setUp("https://api.example.com");
+            
+            try {
+                testBase.apiClient.connect();
+                testBase.apiClient.setAuthToken("valid-token-123");
+                
+                UserApiService userService = new UserApiService(testBase.apiClient);
+                
+                // Create user
+                ApiResponse createResponse = userService.createUser("John Doe", "john@example.com");
+                testBase.assertEquals("Create status", 201, createResponse.getStatusCode());
+                testBase.assertTrue("Create success", createResponse.isSuccess());
+                
+                // Get user
+                ApiResponse getResponse = userService.getUser("1");
+                testBase.assertEquals("Get status", 200, getResponse.getStatusCode());
+                
+                // Update user
+                ApiResponse updateResponse = userService.updateUser("1", "John Updated");
+                testBase.assertEquals("Update status", 200, updateResponse.getStatusCode());
+                
+                // Delete user
+                ApiResponse deleteResponse = userService.deleteUser("1");
+                testBase.assertEquals("Delete status", 204, deleteResponse.getStatusCode());
+                
+            } finally {
+                testBase.tearDown();
+            }
+        });
+        
+        // ========== TEST 2: Connection failure ==========
+        testBase.executeTest("Connection Failure Handling", () -> {
+            testBase.setUp("https://invalid-host.example.com");
+            
+            try {
+                testBase.apiClient.connect();
+            } finally {
+                testBase.tearDown();
+            }
+        });
+        
+        // ========== TEST 3: Authentication failure ==========
+        testBase.executeTest("Authentication Failure", () -> {
+            testBase.setUp("https://api.example.com");
+            
+            try {
+                testBase.apiClient.connect();
+                // Not setting auth token!
+                
+                UserApiService userService = new UserApiService(testBase.apiClient);
+                userService.getUser("1");
+                
+            } finally {
+                testBase.tearDown();
+            }
+        });
+        
+        // ========== TEST 4: Resource not found ==========
+        testBase.executeTest("Resource Not Found (404)", () -> {
+            testBase.setUp("https://api.example.com");
+            
+            try {
+                testBase.apiClient.connect();
+                testBase.apiClient.setAuthToken("valid-token");
+                
+                UserApiService userService = new UserApiService(testBase.apiClient);
+                userService.getUser("999");    // Non-existent user
+                
+            } finally {
+                testBase.tearDown();
+            }
+        });
+        
+        // ========== TEST 5: Validation error ==========
+        testBase.executeTest("Validation Error (400)", () -> {
+            testBase.setUp("https://api.example.com");
+            
+            try {
+                testBase.apiClient.connect();
+                testBase.apiClient.setAuthToken("valid-token");
+                
+                UserApiService userService = new UserApiService(testBase.apiClient);
+                userService.createUser("John", "invalid-email");    // Invalid email
+                
+            } finally {
+                testBase.tearDown();
+            }
+        });
+        
+        // ========== TEST 6: Timeout handling ==========
+        testBase.executeTest("Timeout Handling", () -> {
+            testBase.setUp("https://api.example.com");
+            
+            try {
+                testBase.apiClient.connect();
+                testBase.apiClient.setAuthToken("valid-token");
+                testBase.apiClient.setTimeout(5);
+                
+                testBase.apiClient.get("/slow-endpoint");    // Simulates timeout
+                
+            } finally {
+                testBase.tearDown();
+            }
+        });
+        
+        // ========== TEST 7: Safe method usage ==========
+        testBase.executeTest("Safe Method with Default Value", () -> {
+            testBase.setUp("https://api.example.com");
+            
+            try {
+                testBase.apiClient.connect();
+                testBase.apiClient.setAuthToken("valid-token");
+                
+                UserApiService userService = new UserApiService(testBase.apiClient);
+                
+                // Default response for not found
+                ApiResponse defaultResponse = new ApiResponse(200, "{\"id\": 0, \"name\": \"Guest\"}", 0);
+                
+                // Try to get non-existent user
+                ApiResponse response = userService.getUserSafe("999", defaultResponse);
+                
+                testBase.assertEquals("Status code", 200, response.getStatusCode());
+                testBase.assertNotNull("Response body", response.getBody());
+                System.out.println("Response: " + response.getBody());
+                
+            } finally {
+                testBase.tearDown();
+            }
+        });
+        
+        // ========== TEST 8: Retry logic demonstration ==========
+        testBase.executeTest("Retry Logic for Transient Errors", () -> {
+            testBase.setUp("https://api.example.com");
+            
+            try {
+                // Connection with retry (built into connect method)
+                testBase.apiClient.connect();
+                testBase.apiClient.setAuthToken("valid-token");
+                
+                System.out.println("Connection established with retry logic");
+                
+            } finally {
+                testBase.tearDown();
+            }
+        });
+        
+        // ========== SUMMARY ==========
+        System.out.println("\n" + "=".repeat(60));
+        System.out.println("                    TEST SUMMARY");
+        System.out.println("=".repeat(60));
+        System.out.println("Exception handling patterns demonstrated:");
+        System.out.println("  1. Connection retry with max attempts");
+        System.out.println("  2. Authentication validation");
+        System.out.println("  3. Resource not found handling (404)");
+        System.out.println("  4. Validation error handling (400)");
+        System.out.println("  5. Timeout handling");
+        System.out.println("  6. Safe methods with default values");
+        System.out.println("  7. Comprehensive test execution wrapper");
+        System.out.println("=".repeat(60));
+    }
+}
+
+OUTPUT:
+-------
+========================================================
+       REST ASSURED EXCEPTION HANDLING DEMO
+========================================================
+
+============================================================
+TEST: Successful User CRUD Operations
+============================================================
+
+--- Test Setup ---
+Connecting to: https://api.example.com
+  Attempt 1/3
+  Connected successfully!
+
+[POST] https://api.example.com/users
+[Body] {name=John Doe, email=john@example.com}
+[Response] 201 - 200ms
+[ASSERT] Create status: PASS
+[ASSERT] Create success: PASS
+
+[GET] https://api.example.com/users/1
+[Response] 200 - 150ms
+[ASSERT] Get status: PASS
+
+[PUT] https://api.example.com/users/1
+[Body] {name=John Updated}
+[Response] 200 - 180ms
+[ASSERT] Update status: PASS
+
+[DELETE] https://api.example.com/users/1
+[Response] 204 - 100ms
+[ASSERT] Delete status: PASS
+
+--- Test Teardown ---
+
+------------------------------------------------------------
+STATUS: PASSED
+DURATION: 850ms
+------------------------------------------------------------
+
+============================================================
+TEST: Connection Failure Handling
+============================================================
+
+--- Test Setup ---
+Connecting to: https://invalid-host.example.com
+  Attempt 1/3
+  Failed: Unknown host
+  Attempt 2/3
+  Failed: Unknown host
+  Attempt 3/3
+  Failed: Unknown host
+
+--- Test Teardown ---
+
+------------------------------------------------------------
+STATUS: ERROR
+DURATION: 3050ms
+ERROR: Connection error: Failed to connect after 3 attempts
+------------------------------------------------------------
+
+============================================================
+TEST: Authentication Failure
+============================================================
+
+--- Test Setup ---
+Connecting to: https://api.example.com
+  Attempt 1/3
+  Connected successfully!
+
+[GET] https://api.example.com/users/1
+
+--- Test Teardown ---
+
+------------------------------------------------------------
+STATUS: ERROR
+DURATION: 120ms
+ERROR: Auth error [401]: Authentication required
+------------------------------------------------------------
+
+============================================================
+TEST: Resource Not Found (404)
+============================================================
+
+--- Test Setup ---
+Connecting to: https://api.example.com
+  Attempt 1/3
+  Connected successfully!
+
+[GET] https://api.example.com/users/999
+
+--- Test Teardown ---
+
+------------------------------------------------------------
+STATUS: FAILED
+DURATION: 110ms
+ERROR: Resource not found: User 999
+------------------------------------------------------------
+
+============================================================
+TEST: Validation Error (400)
+============================================================
+
+--- Test Setup ---
+Connecting to: https://api.example.com
+  Attempt 1/3
+  Connected successfully!
+
+[POST] https://api.example.com/users
+[Body] {name=John, email=invalid-email}
+
+--- Test Teardown ---
+
+------------------------------------------------------------
+STATUS: FAILED
+DURATION: 115ms
+ERROR: Validation error: {email=Invalid email format}
+------------------------------------------------------------
+
+============================================================
+TEST: Timeout Handling
+============================================================
+
+--- Test Setup ---
+Connecting to: https://api.example.com
+  Attempt 1/3
+  Connected successfully!
+
+[GET] https://api.example.com/slow-endpoint
+
+--- Test Teardown ---
+
+------------------------------------------------------------
+STATUS: ERROR
+DURATION: 105ms
+ERROR: Timeout after 5s: Request timed out
+------------------------------------------------------------
+
+============================================================
+TEST: Safe Method with Default Value
+============================================================
+
+--- Test Setup ---
+Connecting to: https://api.example.com
+  Attempt 1/3
+  Connected successfully!
+
+[GET] https://api.example.com/users/999
+User not found, returning default response
+[ASSERT] Status code: PASS
+[ASSERT] Response body: PASS
+Response: {"id": 0, "name": "Guest"}
+
+--- Test Teardown ---
+
+------------------------------------------------------------
+STATUS: PASSED
+DURATION: 125ms
+------------------------------------------------------------
+
+============================================================
+TEST: Retry Logic for Transient Errors
+============================================================
+
+--- Test Setup ---
+Connecting to: https://api.example.com
+  Attempt 1/3
+  Connected successfully!
+Connection established with retry logic
+
+--- Test Teardown ---
+
+------------------------------------------------------------
+STATUS: PASSED
+DURATION: 105ms
+------------------------------------------------------------
+
+============================================================
+                    TEST SUMMARY
+============================================================
+Exception handling patterns demonstrated:
+  1. Connection retry with max attempts
+  2. Authentication validation
+  3. Resource not found handling (404)
+  4. Validation error handling (400)
+  5. Timeout handling
+  6. Safe methods with default values
+  7. Comprehensive test execution wrapper
+============================================================
+
+
+================================================================================
+                    NEGATIVE SCENARIOS - EXCEPTION HANDLING
+================================================================================
+
+
+--------------------------------------------------------------------------------
+ERROR 1: Catching Exception Before Specific Exceptions
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE:
+-----------------
+public class CatchOrderError {
+    public static void main(String[] args) {
+        try {
+            int result = 10 / 0;
+        } catch (Exception e) {
+            System.out.println("General exception");
+        } catch (ArithmeticException e) {    // ERROR! Unreachable
+            System.out.println("Arithmetic exception");
+        }
+    }
+}
+
+ERROR MESSAGE:
+--------------
+error: exception ArithmeticException has already been caught
+        } catch (ArithmeticException e) {
+          ^
+
+EXPLANATION:
+------------
+More general exceptions catch everything, making specific catches unreachable.
+Exception is parent of ArithmeticException, so it catches everything first.
+
+FIX:
+----
+public class CatchOrderFixed {
+    public static void main(String[] args) {
+        try {
+            int result = 10 / 0;
+        } catch (ArithmeticException e) {
+            // Specific exception FIRST
+            System.out.println("Arithmetic exception: " + e.getMessage());
+        } catch (RuntimeException e) {
+            // More general
+            System.out.println("Runtime exception: " + e.getMessage());
+        } catch (Exception e) {
+            // Most general LAST
+            System.out.println("General exception: " + e.getMessage());
+        }
+    }
+}
+
+OUTPUT:
+-------
+Arithmetic exception: / by zero
+
+
+--------------------------------------------------------------------------------
+ERROR 2: Not Handling Checked Exception
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE:
+-----------------
+import java.io.*;
+
+public class CheckedExceptionError {
+    public static void main(String[] args) {
+        // FileReader throws FileNotFoundException (checked)
+        FileReader reader = new FileReader("test.txt");    // ERROR!
+    }
+}
+
+ERROR MESSAGE:
+--------------
+error: unreported exception FileNotFoundException; must be caught or declared to be thrown
+        FileReader reader = new FileReader("test.txt");
+                            ^
+
+FIX:
+----
+import java.io.*;
+
+public class CheckedExceptionFixed {
+    public static void main(String[] args) {
+        
+        // Option 1: Handle with try-catch
+        try {
+            FileReader reader = new FileReader("test.txt");
+            System.out.println("File opened successfully");
+            reader.close();
+        } catch (FileNotFoundException e) {
+            System.out.println("File not found: " + e.getMessage());
+        } catch (IOException e) {
+            System.out.println("IO error: " + e.getMessage());
+        }
+        
+        // Option 2: Declare with throws (in method signature)
+        // public static void readFile() throws FileNotFoundException { ... }
+    }
+}
+
+
+--------------------------------------------------------------------------------
+ERROR 3: Empty Catch Block (Swallowing Exception)
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE:
+-----------------
+public class EmptyCatchError {
+    public static void main(String[] args) {
+        try {
+            int result = 10 / 0;
+        } catch (ArithmeticException e) {
+            // Empty catch - BAD PRACTICE!
+            // Exception is silently swallowed
+        }
+        
+        System.out.println("Program continues without knowing about error");
+    }
+}
+
+PROBLEM:
+--------
+- Exception is completely ignored
+- No logging, no error message
+- Debugging becomes impossible
+- Silent failures are dangerous
+
+FIX:
+----
+public class EmptyCatchFixed {
+    public static void main(String[] args) {
+        
+        // Option 1: Log the exception
+        try {
+            int result = 10 / 0;
+        } catch (ArithmeticException e) {
+            System.err.println("Error: " + e.getMessage());
+            e.printStackTrace();
+        }
+        
+        // Option 2: Log and rethrow
+        try {
+            int result = 10 / 0;
+        } catch (ArithmeticException e) {
+            System.err.println("Logging error: " + e.getMessage());
+            throw e;    // Rethrow after logging
+        }
+        
+        // Option 3: Handle with meaningful action
+        try {
+            int result = 10 / 0;
+        } catch (ArithmeticException e) {
+            System.out.println("Cannot divide by zero, using default value");
+            int result = 0;    // Use default value
+        }
+        
+        // Option 4: At minimum, add a comment explaining why it's empty
+        try {
+            int result = 10 / 0;
+        } catch (ArithmeticException e) {
+            // Intentionally ignored - division by zero is expected and handled elsewhere
+        }
+    }
+}
+
+
+--------------------------------------------------------------------------------
+ERROR 4: Using Exception Instead of Specific Type
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE:
+-----------------
+public class GenericCatchError {
+    public static void processInput(String input) {
+        try {
+            int number = Integer.parseInt(input);
+            int[] arr = new int[number];
+            arr[number] = 100;
+        } catch (Exception e) {
+            // Too generic - can't tell what went wrong!
+            System.out.println("Something went wrong: " + e.getMessage());
+        }
+    }
+    
+    public static void main(String[] args) {
+        processInput("abc");    // NumberFormatException
+        processInput("-5");     // NegativeArraySizeException
+        processInput("5");      // ArrayIndexOutOfBoundsException
+    }
+}
+
+FIX:
+----
+public class SpecificCatchFixed {
+    public static void processInput(String input) {
+        try {
+            int number = Integer.parseInt(input);
+            int[] arr = new int[number];
+            arr[number - 1] = 100;    // Fixed index
+            System.out.println("Success with input: " + input);
+            
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid number format: '" + input + "'");
+            
+        } catch (NegativeArraySizeException e) {
+            System.out.println("Cannot create array with negative size: " + input);
+            
+        } catch (ArrayIndexOutOfBoundsException e) {
+            System.out.println("Array index error: " + e.getMessage());
+            
+        } catch (Exception e) {
+            // Catch-all for unexpected exceptions
+            System.out.println("Unexpected error: " + e.getClass().getSimpleName());
+            e.printStackTrace();
+        }
+    }
+    
+    public static void main(String[] args) {
+        processInput("abc");
+        processInput("-5");
+        processInput("5");
+    }
+}
+
+OUTPUT:
+-------
+Invalid number format: 'abc'
+Cannot create array with negative size: -5
+Success with input: 5
+
+
+--------------------------------------------------------------------------------
+ERROR 5: Throwing Exception in finally Block
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE:
+-----------------
+public class FinallyThrowError {
+    public static void main(String[] args) {
+        try {
+            System.out.println(riskyMethod());
+        } catch (Exception e) {
+            System.out.println("Caught: " + e.getMessage());
+        }
+    }
+    
+    public static String riskyMethod() {
+        try {
+            throw new RuntimeException("Original exception");
+        } finally {
+            // BAD: This exception overwrites the original!
+            throw new RuntimeException("Exception in finally");
+        }
+    }
+}
+
+OUTPUT:
+-------
+Caught: Exception in finally
+(Original exception is LOST!)
+
+FIX:
+----
+public class FinallyThrowFixed {
+    public static void main(String[] args) {
+        try {
+            System.out.println(riskyMethod());
+        } catch (Exception e) {
+            System.out.println("Caught: " + e.getMessage());
+            if (e.getSuppressed().length > 0) {
+                System.out.println("Suppressed: " + e.getSuppressed()[0].getMessage());
+            }
+        }
+    }
+    
+    public static String riskyMethod() {
+        Exception originalException = null;
+        
+        try {
+            throw new RuntimeException("Original exception");
+        } catch (RuntimeException e) {
+            originalException = e;
+            throw e;
+        } finally {
+            try {
+                // Cleanup code that might throw
+                throw new RuntimeException("Exception in finally");
+            } catch (RuntimeException e) {
+                if (originalException != null) {
+                    // Add as suppressed exception instead of overwriting
+                    originalException.addSuppressed(e);
+                } else {
+                    throw e;
+                }
+            }
+        }
+    }
+}
+
+OUTPUT:
+-------
+Caught: Original exception
+Suppressed: Exception in finally
+
+
+--------------------------------------------------------------------------------
+ERROR 6: Return in finally Overwriting try's Return
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE:
+-----------------
+public class FinallyReturnError {
+    public static void main(String[] args) {
+        System.out.println("Result: " + getValue());
+    }
+    
+    public static int getValue() {
+        try {
+            return 1;    // Trying to return 1
+        } finally {
+            return 2;    // BAD: This overwrites try's return!
+        }
+    }
+}
+
+OUTPUT:
+-------
+Result: 2    // Expected 1, got 2!
+
+FIX:
+----
+public class FinallyReturnFixed {
+    public static void main(String[] args) {
+        System.out.println("Result: " + getValue());
+        System.out.println("Result with exception: " + getValueWithException());
+    }
+    
+    public static int getValue() {
+        int result = 0;
+        try {
+            result = 1;
+            return result;
+        } finally {
+            // Do cleanup here, but DON'T return
+            System.out.println("Cleanup in finally");
+            // result = 2;    // This won't affect return value
+        }
+    }
+    
+    public static int getValueWithException() {
+        try {
+            throw new RuntimeException("Error");
+        } catch (RuntimeException e) {
+            return -1;    // Error case
+        } finally {
+            System.out.println("Cleanup after exception");
+            // Don't return here!
+        }
+    }
+}
+
+OUTPUT:
+-------
+Cleanup in finally
+Result: 1
+Cleanup after exception
+Result with exception: -1
+
+
+--------------------------------------------------------------------------------
+ERROR 7: Not Closing Resources Properly
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE:
+-----------------
+import java.io.*;
+
+public class ResourceLeakError {
+    public static void main(String[] args) {
+        FileReader reader = null;
+        try {
+            reader = new FileReader("test.txt");
+            // Process file...
+            int data = reader.read();
+            
+            // If exception occurs here, reader is never closed!
+            if (data == -1) {
+                throw new RuntimeException("Empty file");
+            }
+            
+        } catch (IOException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+        // reader.close() never called if exception in try block!
+    }
+}
+
+FIX:
+----
+import java.io.*;
+
+public class ResourceLeakFixed {
+    public static void main(String[] args) {
+        
+        // Option 1: try-with-resources (BEST)
+        System.out.println("--- Using try-with-resources ---");
+        try (FileReader reader = new FileReader("test.txt")) {
+            int data = reader.read();
+            System.out.println("Read: " + data);
+        } catch (IOException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+        // reader automatically closed!
+        
+        // Option 2: finally block (traditional)
+        System.out.println("\n--- Using finally block ---");
+        FileReader reader = null;
+        try {
+            reader = new FileReader("test.txt");
+            int data = reader.read();
+            System.out.println("Read: " + data);
+        } catch (IOException e) {
+            System.out.println("Error: " + e.getMessage());
+        } finally {
+            if (reader != null) {
+                try {
+                    reader.close();
+                    System.out.println("Reader closed");
+                } catch (IOException e) {
+                    System.out.println("Error closing reader: " + e.getMessage());
+                }
+            }
+        }
+    }
+}
+
+
+--------------------------------------------------------------------------------
+ERROR 8: Declaring Too Many Exceptions in throws
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE:
+-----------------
+import java.io.*;
+import java.sql.*;
+
+public class TooManyThrowsError {
+    // Too many exceptions - hard to handle for caller
+    public void processData() throws IOException, SQLException, 
+            ClassNotFoundException, InterruptedException, 
+            IllegalAccessException, InstantiationException {
+        // Multiple operations that throw different exceptions
+    }
+}
+
+FIX:
+----
+import java.io.*;
+import java.sql.*;
+
+// Option 1: Create custom exception to wrap others
+class DataProcessingException extends Exception {
+    public DataProcessingException(String message, Throwable cause) {
+        super(message, cause);
+    }
+}
+
+public class ConsolidatedThrowsFixed {
+    
+    // Clean method signature with single exception
+    public void processData() throws DataProcessingException {
+        try {
+            readFromFile();
+            queryDatabase();
+            // Other operations...
+        } catch (IOException e) {
+            throw new DataProcessingException("File processing failed", e);
+        } catch (SQLException e) {
+            throw new DataProcessingException("Database operation failed", e);
+        }
+    }
+    
+    private void readFromFile() throws IOException {
+        // File operations
+    }
+    
+    private void queryDatabase() throws SQLException {
+        // Database operations
+    }
+    
+    public static void main(String[] args) {
+        ConsolidatedThrowsFixed processor = new ConsolidatedThrowsFixed();
+        
+        try {
+            processor.processData();
+        } catch (DataProcessingException e) {
+            System.out.println("Error: " + e.getMessage());
+            System.out.println("Cause: " + e.getCause().getClass().getSimpleName());
+        }
+    }
+}
+
+
+--------------------------------------------------------------------------------
+ERROR 9: Catching Throwable or Error
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE:
+-----------------
+public class CatchThrowableError {
+    public static void main(String[] args) {
+        try {
+            recursiveMethod(0);
+        } catch (Throwable t) {
+            // BAD: Catching Errors that shouldn't be caught
+            System.out.println("Caught: " + t.getClass().getSimpleName());
+        }
+    }
+    
+    public static void recursiveMethod(int depth) {
+        recursiveMethod(depth + 1);    // StackOverflowError
+    }
+}
+
+PROBLEM:
+--------
+- Catching Throwable catches Errors too
+- Errors (OutOfMemoryError, StackOverflowError) are usually unrecoverable
+- Application may be in inconsistent state after Error
+
+FIX:
+----
+public class DontCatchThrowableFixed {
+    public static void main(String[] args) {
+        try {
+            processData();
+        } catch (Exception e) {
+            // Catch Exception, not Throwable
+            System.out.println("Exception: " + e.getMessage());
+            // Handle or recover
+        }
+        // Let Errors propagate and crash the application
+        // It's better to fail fast than continue in bad state
+    }
+    
+    public static void processData() throws Exception {
+        // Business logic
+        throw new Exception("Business error");
+    }
+    
+    // If you MUST handle specific errors (rare cases):
+    public static void handleSpecificError() {
+        try {
+            // Memory-intensive operation
+            byte[] largeArray = new byte[Integer.MAX_VALUE];
+        } catch (OutOfMemoryError e) {
+            // Log and attempt graceful shutdown
+            System.err.println("CRITICAL: Out of memory!");
+            // Clear caches, release resources
+            System.gc();
+            // Notify monitoring system
+            // DON'T try to continue normal operation!
+        }
+    }
+}
+
+
+--------------------------------------------------------------------------------
+ERROR 10: Exception in Multi-threaded Code
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE:
+-----------------
+public class ThreadExceptionError {
+    public static void main(String[] args) {
+        Thread thread = new Thread(() -> {
+            throw new RuntimeException("Error in thread");
+        });
+        
+        try {
+            thread.start();
+            thread.join();
+        } catch (RuntimeException e) {
+            // This WON'T catch the exception from the thread!
+            System.out.println("Caught: " + e.getMessage());
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        
+        System.out.println("Main thread continues...");
+        // Exception in child thread is lost!
+    }
+}
+
+FIX:
+----
+import java.util.concurrent.*;
+
+public class ThreadExceptionFixed {
+    public static void main(String[] args) {
+        
+        // Option 1: Use UncaughtExceptionHandler
+        System.out.println("--- Using UncaughtExceptionHandler ---");
+        Thread thread1 = new Thread(() -> {
+            throw new RuntimeException("Error in thread 1");
+        });
+        
+        thread1.setUncaughtExceptionHandler((t, e) -> {
+            System.out.println("Thread " + t.getName() + " threw: " + e.getMessage());
+        });
+        
+        thread1.start();
+        try { thread1.join(); } catch (InterruptedException e) {}
+        
+        // Option 2: Use Callable with Future
+        System.out.println("\n--- Using Callable with Future ---");
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        
+        Future<String> future = executor.submit(() -> {
+            if (true) {
+                throw new RuntimeException("Error in callable");
+            }
+            return "Success";
+        });
+        
+        try {
+            String result = future.get();
+            System.out.println("Result: " + result);
+        } catch (ExecutionException e) {
+            System.out.println("Caught from future: " + e.getCause().getMessage());
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        
+        executor.shutdown();
+        
+        // Option 3: Handle exception inside the thread
+        System.out.println("\n--- Handling inside thread ---");
+        Thread thread2 = new Thread(() -> {
+            try {
+                throw new RuntimeException("Error in thread 2");
+            } catch (RuntimeException e) {
+                System.out.println("Handled in thread: " + e.getMessage());
+            }
+        });
+        
+        thread2.start();
+        try { thread2.join(); } catch (InterruptedException e) {}
+        
+        System.out.println("\nMain thread completed");
+    }
+}
+
+OUTPUT:
+-------
+--- Using UncaughtExceptionHandler ---
+Thread Thread-0 threw: Error in thread 1
+
+--- Using Callable with Future ---
+Caught from future: Error in callable
+
+--- Handling inside thread ---
+Handled in thread: Error in thread 2
+
+Main thread completed
+
+
+================================================================================
+                    EXCEPTION HANDLING - QUICK REFERENCE
+================================================================================
+
+EXCEPTION HIERARCHY:
+--------------------
+Throwable
+  |-- Error (Don't catch - JVM errors)
+  |     |-- OutOfMemoryError
+  |     |-- StackOverflowError
+  |
+  |-- Exception
+        |-- RuntimeException (Unchecked)
+        |     |-- NullPointerException
+        |     |-- ArrayIndexOutOfBoundsException
+        |     |-- ArithmeticException
+        |     |-- IllegalArgumentException
+        |
+        |-- IOException (Checked)
+        |-- SQLException (Checked)
+        |-- ClassNotFoundException (Checked)
+
+
+TRY-CATCH-FINALLY SYNTAX:
+-------------------------
+try {
+    // Risky code
+} catch (SpecificException e) {
+    // Handle specific
+} catch (GeneralException e) {
+    // Handle general
+} finally {
+    // Always executes - cleanup
+}
+
+
+TRY-WITH-RESOURCES SYNTAX:
+--------------------------
+try (Resource res = new Resource()) {
+    // Use resource
+} catch (Exception e) {
+    // Handle exception
+}
+// Resource automatically closed
+
+
+THROW VS THROWS:
+----------------
++------------------+----------------------------------+
+| throw            | throws                           |
++------------------+----------------------------------+
+| Throws exception | Declares exception               |
+| In method body   | In method signature              |
+| One at a time    | Multiple allowed                 |
+| throw new Ex()   | void method() throws Ex1, Ex2    |
++------------------+----------------------------------+
+
+
+BEST PRACTICES:
+---------------
+1. Catch specific exceptions before general ones
+2. Never leave catch blocks empty
+3. Use try-with-resources for AutoCloseable resources
+4. Don't catch Throwable or Error
+5. Log exceptions with stack trace
+6. Throw early, catch late
+7. Use custom exceptions for business logic
+8. Don't use exceptions for flow control
+9. Always clean up resources in finally
+10. Document exceptions with @throws in Javadoc
+
+
+COMMON SELENIUM EXCEPTIONS:
+---------------------------
++-----------------------------------+--------------------------------------+
+| Exception                         | Solution                             |
++-----------------------------------+--------------------------------------+
+| NoSuchElementException            | Check locator, add wait              |
+| TimeoutException                  | Increase timeout, check condition    |
+| StaleElementReferenceException    | Re-find element, refresh page        |
+| ElementNotInteractableException   | Wait for visibility, scroll to elem  |
+| ElementClickInterceptedException  | Close overlays, use JS click         |
++-----------------------------------+--------------------------------------+
+
+
+COMMON API EXCEPTIONS:
+----------------------
++-----------------------------------+--------------------------------------+
+| Exception/Status                  | Solution                             |
++-----------------------------------+--------------------------------------+
+| ConnectException                  | Check URL, retry with backoff        |
+| SocketTimeoutException            | Increase timeout, check server       |
+| 401 Unauthorized                  | Check authentication token           |
+| 403 Forbidden                     | Check permissions                    |
+| 404 Not Found                     | Verify resource exists               |
+| 500 Internal Server Error         | Log and retry, contact support       |
++-----------------------------------+--------------------------------------+
+
+
+================================================================================
+                    PRACTICE EXERCISES - EXCEPTION HANDLING
+================================================================================
+
+EXERCISE 1: Calculator with Exception Handling
+----------------------------------------------
+Create a calculator that:
+- Handles division by zero
+- Handles invalid input (non-numeric)
+- Handles overflow
+- Uses custom CalculatorException
+
+EXERCISE 2: File Processor
+--------------------------
+Create a file processor that:
+- Handles FileNotFoundException
+- Handles IOException
+- Uses try-with-resources
+- Logs all exceptions
+
+EXERCISE 3: User Registration System
+------------------------------------
+Create a registration system with:
+- Custom ValidationException
+- Custom DuplicateUserException
+- Input validation (email, password strength)
+- Proper exception hierarchy
+
+EXERCISE 4: API Client with Retry
+---------------------------------
+Create an API client that:
+- Retries on connection failure (max 3 times)
+- Handles different HTTP status codes
+- Uses custom exceptions for each error type
+- Implements exponential backoff
+
+EXERCISE 5: Selenium Test Framework
+-----------------------------------
+Create a test framework that:
+- Handles common Selenium exceptions
+- Implements retry mechanism for flaky tests
+- Takes screenshot on failure
+- Generates detailed error reports
+
+
+================================================================================
+                    SUMMARY - EXCEPTION HANDLING
+================================================================================
+
+KEY TAKEAWAYS:
+--------------
+1. Exceptions are events that disrupt normal program flow
+2. Checked exceptions must be handled or declared
+3. Unchecked exceptions (RuntimeException) are optional to handle
+4. Use try-catch-finally for exception handling
+5. Use try-with-resources for automatic resource management
+6. throw creates exception, throws declares it
+7. Create custom exceptions for business-specific errors
+8. Always handle exceptions appropriately - never swallow them
+9. Specific exceptions should be caught before general ones
+10. finally block always executes (except System.exit())
+
+
+EXCEPTION HANDLING IN AUTOMATION:
+---------------------------------
+SELENIUM:
+- Handle NoSuchElementException with waits
+- Retry on StaleElementReferenceException
+- Take screenshots on failures
+- Clean up WebDriver in finally/teardown
+
+REST ASSURED:
+- Handle connection timeouts with retry
+- Validate response status codes
+- Parse error responses properly
+- Use custom exceptions for API errors
+
+
+================================================================================
+                    WHAT'S NEXT?
+================================================================================
+
+We've covered:
+- Topic 10: Inheritance
+- Topic 11: Polymorphism
+- Topic 12: Abstraction
+- Topic 13: Encapsulation
+- Topic 14: Collections Framework
+- Topic 15: Exception Handling
+
+Next topic according to your curriculum:
+- Topic 16: File Handling (Reading/Writing files, Properties files)
+
+Would you like me to continue with Topic 16: File Handling?
+
+Would you like me to continue with Topic 16: File Handling? This will cover:
+
+    Reading files (text files, CSV files)
+    Writing files
+    Properties files (very important for automation configuration)
+    Working with JSON files (important for API testing)
+    File operations in Selenium and REST Assured automation

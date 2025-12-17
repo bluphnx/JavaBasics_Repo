@@ -1,0 +1,3495 @@
+The user wants me to teach Topic 8: Methods/Functions in Java with both positive and negative scenarios, using simple ASCII formatting.
+
+I'll cover:
+1. What are Methods
+2. Method Syntax and Components
+3. Types of Methods (based on return type, parameters)
+4. Method Parameters (pass by value)
+5. Return Types
+6. Method Overloading
+7. Variable Arguments (Varargs)
+8. Static vs Non-static Methods
+9. Access Modifiers
+10. Recursion
+11. Methods in Automation Context
+12. Negative Scenarios
+
+Let me create a comprehensive tutorial.
+
+================================================================================
+                    TOPIC 8: METHODS/FUNCTIONS IN JAVA
+================================================================================
+
+What is a Method?
+-----------------
+A method is a block of code that performs a specific task. It runs only when
+it is called. Methods help to organize code, make it reusable, and easier
+to maintain.
+
+In Java, functions are called "methods" because they are always defined
+inside a class.
+
+
+Key Benefits of Methods:
+------------------------
+- Code Reusability: Write once, use multiple times
+- Code Organization: Break complex problems into smaller pieces
+- Maintainability: Easy to update and fix
+- Readability: Makes code easier to understand
+- Testing: Easier to test individual units of code
+
+
+Why Important for Automation?
+-----------------------------
+- Create reusable functions for common actions (click, type, wait)
+- Build utility methods for test data generation
+- Organize test logic into manageable pieces
+- Create helper methods for assertions
+- Build page object methods for web elements
+- Handle common operations like screenshots, logging
+
+
+================================================================================
+                    1. METHOD SYNTAX AND COMPONENTS
+================================================================================
+
+Basic Syntax:
+-------------
+accessModifier returnType methodName(parameterList) {
+    // method body
+    // code to execute
+    return value;    // if returnType is not void
+}
+
+
+Components Breakdown:
+---------------------
++-------------------+----------------------------------------------------------+
+| Component         | Description                                              |
++-------------------+----------------------------------------------------------+
+| accessModifier    | public, private, protected, or default (package-private) |
+| returnType        | Data type of value returned (int, String, void, etc.)    |
+| methodName        | Name of the method (follows camelCase convention)        |
+| parameterList     | Input values (can be empty)                              |
+| method body       | Code that executes when method is called                 |
+| return statement  | Returns value to caller (not needed for void)            |
++-------------------+----------------------------------------------------------+
+
+
+Visual Representation:
+----------------------
+
+    +-- Access Modifier
+    |
+    |      +-- Return Type
+    |      |
+    |      |      +-- Method Name
+    |      |      |
+    v      v      v
+  public  int  addNumbers(int a, int b) {
+                          ^^^^^^^^^^^^^
+                               |
+                          Parameters
+      
+      int sum = a + b;    <-- Method Body
+      return sum;         <-- Return Statement
+  }
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 1: Basic Method Structure
+--------------------------------------------------------------------------------
+
+public class MethodBasics {
+    public static void main(String[] args) {
+        
+        System.out.println("=== Calling Methods ===");
+        
+        // Calling method without return value
+        sayHello();
+        
+        // Calling method with return value
+        int result = addNumbers(10, 20);
+        System.out.println("Sum: " + result);
+        
+        // Calling method with parameters
+        greetUser("John");
+        
+        // Using return value directly
+        System.out.println("Product: " + multiply(5, 4));
+    }
+    
+    // Method with no parameters and no return value
+    public static void sayHello() {
+        System.out.println("Hello, World!");
+    }
+    
+    // Method with parameters and return value
+    public static int addNumbers(int a, int b) {
+        int sum = a + b;
+        return sum;
+    }
+    
+    // Method with parameter and no return value
+    public static void greetUser(String name) {
+        System.out.println("Hello, " + name + "!");
+    }
+    
+    // Method with parameters and return value (single line)
+    public static int multiply(int a, int b) {
+        return a * b;
+    }
+}
+
+OUTPUT:
+-------
+=== Calling Methods ===
+Hello, World!
+Sum: 30
+Hello, John!
+Product: 20
+
+
+================================================================================
+                    2. TYPES OF METHODS
+================================================================================
+
+Methods can be categorized based on:
+1. Return Type (void vs non-void)
+2. Parameters (with or without)
+3. Access (static vs non-static)
+
+
+Method Categories:
+------------------
++---------------------------+--------------------------------------------------+
+| Category                  | Description                                      |
++---------------------------+--------------------------------------------------+
+| No parameter, No return   | void methodName() { }                            |
+| No parameter, With return | int methodName() { return value; }               |
+| With parameter, No return | void methodName(int x) { }                       |
+| With parameter, With return| int methodName(int x) { return value; }         |
++---------------------------+--------------------------------------------------+
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 2: Different Types of Methods
+--------------------------------------------------------------------------------
+
+public class MethodTypes {
+    public static void main(String[] args) {
+        
+        // Type 1: No parameter, No return
+        System.out.println("=== Type 1: No Parameter, No Return ===");
+        printLine();
+        displayWelcome();
+        printLine();
+        
+        // Type 2: No parameter, With return
+        System.out.println("\n=== Type 2: No Parameter, With Return ===");
+        int randomNum = getRandomNumber();
+        System.out.println("Random Number: " + randomNum);
+        
+        String currentDate = getCurrentDate();
+        System.out.println("Current Date: " + currentDate);
+        
+        // Type 3: With parameter, No return
+        System.out.println("\n=== Type 3: With Parameter, No Return ===");
+        printMessage("Hello from method!");
+        printRepeated("*", 20);
+        
+        // Type 4: With parameter, With return
+        System.out.println("\n=== Type 4: With Parameter, With Return ===");
+        int square = calculateSquare(5);
+        System.out.println("Square of 5: " + square);
+        
+        boolean isEven = checkEven(10);
+        System.out.println("Is 10 even? " + isEven);
+        
+        String formatted = formatName("john", "doe");
+        System.out.println("Formatted name: " + formatted);
+    }
+    
+    // =========== Type 1: No parameter, No return ===========
+    public static void printLine() {
+        System.out.println("--------------------");
+    }
+    
+    public static void displayWelcome() {
+        System.out.println("Welcome to Java Methods!");
+    }
+    
+    // =========== Type 2: No parameter, With return ===========
+    public static int getRandomNumber() {
+        return (int) (Math.random() * 100);
+    }
+    
+    public static String getCurrentDate() {
+        java.time.LocalDate date = java.time.LocalDate.now();
+        return date.toString();
+    }
+    
+    // =========== Type 3: With parameter, No return ===========
+    public static void printMessage(String message) {
+        System.out.println("Message: " + message);
+    }
+    
+    public static void printRepeated(String str, int times) {
+        for (int i = 0; i < times; i++) {
+            System.out.print(str);
+        }
+        System.out.println();
+    }
+    
+    // =========== Type 4: With parameter, With return ===========
+    public static int calculateSquare(int num) {
+        return num * num;
+    }
+    
+    public static boolean checkEven(int num) {
+        return num % 2 == 0;
+    }
+    
+    public static String formatName(String firstName, String lastName) {
+        return firstName.substring(0, 1).toUpperCase() + firstName.substring(1) + " " +
+               lastName.substring(0, 1).toUpperCase() + lastName.substring(1);
+    }
+}
+
+OUTPUT:
+-------
+=== Type 1: No Parameter, No Return ===
+--------------------
+Welcome to Java Methods!
+--------------------
+
+=== Type 2: No Parameter, With Return ===
+Random Number: 47
+Current Date: 2024-01-15
+
+=== Type 3: With Parameter, No Return ===
+Message: Hello from method!
+********************
+
+=== Type 4: With Parameter, With Return ===
+Square of 5: 25
+Is 10 even? true
+Formatted name: John Doe
+
+
+================================================================================
+                    3. METHOD PARAMETERS
+================================================================================
+
+Parameters are variables that receive values when a method is called.
+Arguments are the actual values passed to the method.
+
+Terminology:
+------------
+- Parameters: Variables in method definition (formal parameters)
+- Arguments: Values passed when calling method (actual parameters)
+
+
+Parameter Types:
+----------------
++------------------+-----------------------------------------------------------+
+| Type             | Description                                               |
++------------------+-----------------------------------------------------------+
+| Primitive        | int, double, boolean, char, etc. (pass by value)          |
+| Reference        | Objects, Arrays, Strings (pass by reference value)        |
+| Variable Args    | int... nums (variable number of arguments)                |
++------------------+-----------------------------------------------------------+
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 3: Method Parameters
+--------------------------------------------------------------------------------
+
+public class MethodParameters {
+    public static void main(String[] args) {
+        
+        // Single parameter
+        System.out.println("=== Single Parameter ===");
+        printSquare(5);
+        
+        // Multiple parameters
+        System.out.println("\n=== Multiple Parameters ===");
+        int sum = add(10, 20, 30);
+        System.out.println("Sum: " + sum);
+        
+        // Different data type parameters
+        System.out.println("\n=== Different Data Types ===");
+        displayUserInfo("John", 25, true);
+        
+        // Array as parameter
+        System.out.println("\n=== Array Parameter ===");
+        int[] numbers = {10, 20, 30, 40, 50};
+        int total = calculateSum(numbers);
+        System.out.println("Array Sum: " + total);
+        
+        // String array as parameter
+        System.out.println("\n=== String Array Parameter ===");
+        String[] names = {"Alice", "Bob", "Charlie"};
+        printNames(names);
+        
+        // Object as parameter
+        System.out.println("\n=== Object Reference ===");
+        StringBuilder sb = new StringBuilder("Hello");
+        modifyStringBuilder(sb);
+        System.out.println("After method: " + sb);
+    }
+    
+    // Single parameter
+    public static void printSquare(int num) {
+        System.out.println(num + " squared = " + (num * num));
+    }
+    
+    // Multiple parameters of same type
+    public static int add(int a, int b, int c) {
+        return a + b + c;
+    }
+    
+    // Multiple parameters of different types
+    public static void displayUserInfo(String name, int age, boolean isActive) {
+        System.out.println("Name: " + name);
+        System.out.println("Age: " + age);
+        System.out.println("Active: " + isActive);
+    }
+    
+    // Array parameter
+    public static int calculateSum(int[] arr) {
+        int sum = 0;
+        for (int num : arr) {
+            sum += num;
+        }
+        return sum;
+    }
+    
+    // String array parameter
+    public static void printNames(String[] names) {
+        for (int i = 0; i < names.length; i++) {
+            System.out.println((i + 1) + ". " + names[i]);
+        }
+    }
+    
+    // Object reference parameter
+    public static void modifyStringBuilder(StringBuilder sb) {
+        sb.append(" World");
+    }
+}
+
+OUTPUT:
+-------
+=== Single Parameter ===
+5 squared = 25
+
+=== Multiple Parameters ===
+Sum: 60
+
+=== Different Data Types ===
+Name: John
+Age: 25
+Active: true
+
+=== Array Parameter ===
+Array Sum: 150
+
+=== String Array Parameter ===
+1. Alice
+2. Bob
+3. Charlie
+
+=== Object Reference ===
+After method: Hello World
+
+
+================================================================================
+                    4. PASS BY VALUE IN JAVA
+================================================================================
+
+Java is strictly "Pass by Value":
+- For primitives: A copy of the value is passed
+- For objects: A copy of the reference is passed (not the object itself)
+
+
+Visual Explanation:
+-------------------
+
+PRIMITIVES (Copy of Value):
+---------------------------
+int x = 10;
+changeValue(x);
+
++-------+                  +-------+
+|  x    |   copy value     | num   |
+|  10   | --------------> |  10   |
++-------+                  +-------+
+ (main)                    (method)
+
+After method: x is still 10
+
+
+OBJECTS (Copy of Reference):
+----------------------------
+int[] arr = {1, 2, 3};
+changeArray(arr);
+
++-------+                  +-------+
+|  arr  |  copy reference  | nums  |
+|  ref  | --------------> |  ref  |
++---+---+                  +---+---+
+    |                          |
+    |    +---------------+     |
+    +--->| 1 | 2 | 3 |   |<----+
+         +---------------+
+         (Same array in heap)
+
+After method: Array is modified!
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 4: Pass by Value Demonstration
+--------------------------------------------------------------------------------
+
+public class PassByValue {
+    public static void main(String[] args) {
+        
+        // Primitive - Pass by Value (copy)
+        System.out.println("=== Primitive Types ===");
+        int number = 10;
+        System.out.println("Before method: " + number);
+        changePrimitive(number);
+        System.out.println("After method: " + number);    // Still 10!
+        
+        System.out.println("");
+        
+        // Object Reference - Pass by Value (copy of reference)
+        System.out.println("=== Object Reference (Array) ===");
+        int[] array = {1, 2, 3};
+        System.out.println("Before method: " + java.util.Arrays.toString(array));
+        changeArray(array);
+        System.out.println("After method: " + java.util.Arrays.toString(array));    // Changed!
+        
+        System.out.println("");
+        
+        // String - Immutable, so appears unchanged
+        System.out.println("=== String (Immutable) ===");
+        String text = "Hello";
+        System.out.println("Before method: " + text);
+        changeString(text);
+        System.out.println("After method: " + text);    // Still "Hello"!
+        
+        System.out.println("");
+        
+        // StringBuilder - Mutable object
+        System.out.println("=== StringBuilder (Mutable) ===");
+        StringBuilder sb = new StringBuilder("Hello");
+        System.out.println("Before method: " + sb);
+        changeStringBuilder(sb);
+        System.out.println("After method: " + sb);    // Changed!
+        
+        System.out.println("");
+        
+        // Reassigning reference inside method
+        System.out.println("=== Reassigning Reference ===");
+        int[] arr2 = {10, 20, 30};
+        System.out.println("Before method: " + java.util.Arrays.toString(arr2));
+        reassignArray(arr2);
+        System.out.println("After method: " + java.util.Arrays.toString(arr2));    // Unchanged!
+    }
+    
+    // Primitive - only local copy changes
+    public static void changePrimitive(int num) {
+        num = 100;
+        System.out.println("Inside method: " + num);
+    }
+    
+    // Array - modifies actual array through reference
+    public static void changeArray(int[] nums) {
+        nums[0] = 999;
+        System.out.println("Inside method: " + java.util.Arrays.toString(nums));
+    }
+    
+    // String - immutable, creates new string
+    public static void changeString(String str) {
+        str = str + " World";    // Creates new String, doesn't modify original
+        System.out.println("Inside method: " + str);
+    }
+    
+    // StringBuilder - mutable, modifies actual object
+    public static void changeStringBuilder(StringBuilder sb) {
+        sb.append(" World");
+        System.out.println("Inside method: " + sb);
+    }
+    
+    // Reassigning reference - only local reference changes
+    public static void reassignArray(int[] nums) {
+        nums = new int[]{100, 200, 300};    // Creates new array, doesn't affect original
+        System.out.println("Inside method: " + java.util.Arrays.toString(nums));
+    }
+}
+
+OUTPUT:
+-------
+=== Primitive Types ===
+Before method: 10
+Inside method: 100
+After method: 10
+
+=== Object Reference (Array) ===
+Before method: [1, 2, 3]
+Inside method: [999, 2, 3]
+After method: [999, 2, 3]
+
+=== String (Immutable) ===
+Before method: Hello
+Inside method: Hello World
+After method: Hello
+
+=== StringBuilder (Mutable) ===
+Before method: Hello
+Inside method: Hello World
+After method: Hello World
+
+=== Reassigning Reference ===
+Before method: [10, 20, 30]
+Inside method: [100, 200, 300]
+After method: [10, 20, 30]
+
+
+================================================================================
+                    5. RETURN TYPES
+================================================================================
+
+Methods can return various types of values or nothing (void).
+
+
+Return Type Options:
+--------------------
++------------------+-----------------------------------------------------------+
+| Return Type      | Description                                               |
++------------------+-----------------------------------------------------------+
+| void             | Returns nothing                                           |
+| Primitive        | int, double, boolean, char, etc.                          |
+| String           | Returns String object                                     |
+| Array            | Returns array of any type                                 |
+| Object           | Returns any object type                                   |
++------------------+-----------------------------------------------------------+
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 5: Different Return Types
+--------------------------------------------------------------------------------
+
+public class ReturnTypes {
+    public static void main(String[] args) {
+        
+        // void return type
+        System.out.println("=== void Return ===");
+        printMessage("Hello!");
+        
+        // Primitive return types
+        System.out.println("\n=== Primitive Returns ===");
+        int sum = getSum(10, 20);
+        double avg = getAverage(10, 20, 30);
+        boolean isValid = isPositive(-5);
+        char grade = getGrade(85);
+        
+        System.out.println("Sum: " + sum);
+        System.out.println("Average: " + avg);
+        System.out.println("Is Valid: " + isValid);
+        System.out.println("Grade: " + grade);
+        
+        // String return type
+        System.out.println("\n=== String Return ===");
+        String fullName = getFullName("John", "Doe");
+        System.out.println("Full Name: " + fullName);
+        
+        // Array return type
+        System.out.println("\n=== Array Return ===");
+        int[] evenNumbers = getEvenNumbers(10);
+        System.out.println("Even numbers: " + java.util.Arrays.toString(evenNumbers));
+        
+        String[] fruits = getFruits();
+        System.out.println("Fruits: " + java.util.Arrays.toString(fruits));
+        
+        // Multiple values using array
+        System.out.println("\n=== Multiple Values Return ===");
+        int[] stats = getMinMax(new int[]{5, 2, 9, 1, 7});
+        System.out.println("Min: " + stats[0] + ", Max: " + stats[1]);
+        
+        // Returning object
+        System.out.println("\n=== Object Return ===");
+        StringBuilder sb = createGreeting("World");
+        System.out.println("Greeting: " + sb);
+    }
+    
+    // void - no return
+    public static void printMessage(String msg) {
+        System.out.println("Message: " + msg);
+        // No return statement needed (or use: return;)
+    }
+    
+    // int return
+    public static int getSum(int a, int b) {
+        return a + b;
+    }
+    
+    // double return
+    public static double getAverage(int a, int b, int c) {
+        return (a + b + c) / 3.0;
+    }
+    
+    // boolean return
+    public static boolean isPositive(int num) {
+        return num > 0;
+    }
+    
+    // char return
+    public static char getGrade(int marks) {
+        if (marks >= 90) return 'A';
+        else if (marks >= 80) return 'B';
+        else if (marks >= 70) return 'C';
+        else if (marks >= 60) return 'D';
+        else return 'F';
+    }
+    
+    // String return
+    public static String getFullName(String first, String last) {
+        return first + " " + last;
+    }
+    
+    // int array return
+    public static int[] getEvenNumbers(int count) {
+        int[] evens = new int[count];
+        for (int i = 0; i < count; i++) {
+            evens[i] = (i + 1) * 2;
+        }
+        return evens;
+    }
+    
+    // String array return
+    public static String[] getFruits() {
+        return new String[]{"Apple", "Banana", "Cherry"};
+    }
+    
+    // Return multiple values using array
+    public static int[] getMinMax(int[] arr) {
+        int min = arr[0];
+        int max = arr[0];
+        
+        for (int num : arr) {
+            if (num < min) min = num;
+            if (num > max) max = num;
+        }
+        
+        return new int[]{min, max};
+    }
+    
+    // Object return
+    public static StringBuilder createGreeting(String name) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Hello, ").append(name).append("!");
+        return sb;
+    }
+}
+
+OUTPUT:
+-------
+=== void Return ===
+Message: Hello!
+
+=== Primitive Returns ===
+Sum: 30
+Average: 20.0
+Is Valid: false
+Grade: B
+
+=== String Return ===
+Full Name: John Doe
+
+=== Array Return ===
+Even numbers: [2, 4, 6, 8, 10, 12, 14, 16, 18, 20]
+Fruits: [Apple, Banana, Cherry]
+
+=== Multiple Values Return ===
+Min: 1, Max: 9
+
+=== Object Return ===
+Greeting: Hello, World!
+
+
+================================================================================
+                    6. METHOD OVERLOADING
+================================================================================
+
+Method overloading allows multiple methods with the same name but different
+parameters (different number, types, or order of parameters).
+
+Rules for Overloading:
+----------------------
+- Same method name
+- Different parameter list (number, type, or order)
+- Return type alone is NOT enough for overloading
+- Access modifiers can be different
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 6: Method Overloading
+--------------------------------------------------------------------------------
+
+public class MethodOverloading {
+    public static void main(String[] args) {
+        
+        // Overloading by number of parameters
+        System.out.println("=== Overloading by Number of Parameters ===");
+        System.out.println("add(10, 20) = " + add(10, 20));
+        System.out.println("add(10, 20, 30) = " + add(10, 20, 30));
+        System.out.println("add(10, 20, 30, 40) = " + add(10, 20, 30, 40));
+        
+        // Overloading by type of parameters
+        System.out.println("\n=== Overloading by Type of Parameters ===");
+        System.out.println("add(10, 20) = " + add(10, 20));
+        System.out.println("add(10.5, 20.5) = " + add(10.5, 20.5));
+        System.out.println("add(\"Hello\", \"World\") = " + add("Hello", "World"));
+        
+        // Overloading by order of parameters
+        System.out.println("\n=== Overloading by Order of Parameters ===");
+        display("John", 25);
+        display(30, "Jane");
+        
+        // Practical example: print method
+        System.out.println("\n=== Practical: print() Overloading ===");
+        print("Hello");
+        print(42);
+        print(3.14);
+        print(true);
+        print(new int[]{1, 2, 3});
+        
+        // Practical example: calculate area
+        System.out.println("\n=== Practical: Area Calculation ===");
+        System.out.println("Circle area (r=5): " + calculateArea(5));
+        System.out.println("Rectangle area (4x6): " + calculateArea(4, 6));
+        System.out.println("Triangle area (base=4, height=6): " + calculateArea(4.0, 6.0, "triangle"));
+    }
+    
+    // =========== Overloading by Number of Parameters ===========
+    public static int add(int a, int b) {
+        return a + b;
+    }
+    
+    public static int add(int a, int b, int c) {
+        return a + b + c;
+    }
+    
+    public static int add(int a, int b, int c, int d) {
+        return a + b + c + d;
+    }
+    
+    // =========== Overloading by Type of Parameters ===========
+    public static double add(double a, double b) {
+        return a + b;
+    }
+    
+    public static String add(String a, String b) {
+        return a + " " + b;
+    }
+    
+    // =========== Overloading by Order of Parameters ===========
+    public static void display(String name, int age) {
+        System.out.println("Name: " + name + ", Age: " + age);
+    }
+    
+    public static void display(int age, String name) {
+        System.out.println("Age: " + age + ", Name: " + name);
+    }
+    
+    // =========== Practical: print() Overloading ===========
+    public static void print(String value) {
+        System.out.println("String: " + value);
+    }
+    
+    public static void print(int value) {
+        System.out.println("Integer: " + value);
+    }
+    
+    public static void print(double value) {
+        System.out.println("Double: " + value);
+    }
+    
+    public static void print(boolean value) {
+        System.out.println("Boolean: " + value);
+    }
+    
+    public static void print(int[] value) {
+        System.out.println("Array: " + java.util.Arrays.toString(value));
+    }
+    
+    // =========== Practical: Area Calculation ===========
+    // Circle area
+    public static double calculateArea(int radius) {
+        return Math.PI * radius * radius;
+    }
+    
+    // Rectangle area
+    public static int calculateArea(int length, int width) {
+        return length * width;
+    }
+    
+    // Triangle area
+    public static double calculateArea(double base, double height, String shape) {
+        if (shape.equalsIgnoreCase("triangle")) {
+            return 0.5 * base * height;
+        }
+        return 0;
+    }
+}
+
+OUTPUT:
+-------
+=== Overloading by Number of Parameters ===
+add(10, 20) = 30
+add(10, 20, 30) = 60
+add(10, 20, 30, 40) = 100
+
+=== Overloading by Type of Parameters ===
+add(10, 20) = 30
+add(10.5, 20.5) = 31.0
+add("Hello", "World") = Hello World
+
+=== Overloading by Order of Parameters ===
+Name: John, Age: 25
+Age: 30, Name: Jane
+
+=== Practical: print() Overloading ===
+String: Hello
+Integer: 42
+Double: 3.14
+Boolean: true
+Array: [1, 2, 3]
+
+=== Practical: Area Calculation ===
+Circle area (r=5): 78.53981633974483
+Rectangle area (4x6): 24
+Triangle area (base=4, height=6): 12.0
+
+
+================================================================================
+                    7. VARIABLE ARGUMENTS (VARARGS)
+================================================================================
+
+Varargs allows a method to accept zero or more arguments of a specified type.
+
+Syntax:
+-------
+returnType methodName(dataType... variableName) {
+    // variableName is treated as an array
+}
+
+
+Rules for Varargs:
+------------------
+- Only one varargs parameter allowed per method
+- Varargs must be the last parameter
+- Varargs is treated as an array inside the method
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 7: Variable Arguments (Varargs)
+--------------------------------------------------------------------------------
+
+public class MethodVarargs {
+    public static void main(String[] args) {
+        
+        // Basic varargs
+        System.out.println("=== Basic Varargs ===");
+        System.out.println("sum() = " + sum());
+        System.out.println("sum(10) = " + sum(10));
+        System.out.println("sum(10, 20) = " + sum(10, 20));
+        System.out.println("sum(10, 20, 30) = " + sum(10, 20, 30));
+        System.out.println("sum(10, 20, 30, 40, 50) = " + sum(10, 20, 30, 40, 50));
+        
+        // Varargs with array
+        System.out.println("\n=== Varargs with Array ===");
+        int[] numbers = {1, 2, 3, 4, 5};
+        System.out.println("sum(array) = " + sum(numbers));
+        
+        // String varargs
+        System.out.println("\n=== String Varargs ===");
+        printAll("Apple");
+        printAll("Apple", "Banana");
+        printAll("Apple", "Banana", "Cherry", "Date");
+        
+        // Varargs with other parameters
+        System.out.println("\n=== Varargs with Other Parameters ===");
+        printWithPrefix("Fruit", "Apple", "Banana", "Cherry");
+        printWithPrefix("Number", "One", "Two", "Three");
+        
+        // Practical: String concatenation
+        System.out.println("\n=== Practical: Concatenation ===");
+        String result = concatenate("-", "Java", "Selenium", "TestNG");
+        System.out.println("Result: " + result);
+        
+        // Practical: Find maximum
+        System.out.println("\n=== Practical: Find Maximum ===");
+        System.out.println("Max of (5, 2, 9, 1): " + findMax(5, 2, 9, 1));
+        System.out.println("Max of (100): " + findMax(100));
+        System.out.println("Max of (): " + findMax());
+    }
+    
+    // Basic varargs
+    public static int sum(int... numbers) {
+        int total = 0;
+        for (int num : numbers) {
+            total += num;
+        }
+        return total;
+    }
+    
+    // String varargs
+    public static void printAll(String... items) {
+        System.out.print("Items (" + items.length + "): ");
+        for (String item : items) {
+            System.out.print(item + " ");
+        }
+        System.out.println();
+    }
+    
+    // Varargs must be last parameter
+    public static void printWithPrefix(String prefix, String... items) {
+        System.out.print(prefix + ": ");
+        for (int i = 0; i < items.length; i++) {
+            System.out.print(items[i]);
+            if (i < items.length - 1) {
+                System.out.print(", ");
+            }
+        }
+        System.out.println();
+    }
+    
+    // Practical: Concatenate with delimiter
+    public static String concatenate(String delimiter, String... strings) {
+        if (strings.length == 0) return "";
+        
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < strings.length; i++) {
+            sb.append(strings[i]);
+            if (i < strings.length - 1) {
+                sb.append(delimiter);
+            }
+        }
+        return sb.toString();
+    }
+    
+    // Practical: Find maximum value
+    public static int findMax(int... numbers) {
+        if (numbers.length == 0) {
+            return Integer.MIN_VALUE;
+        }
+        
+        int max = numbers[0];
+        for (int num : numbers) {
+            if (num > max) {
+                max = num;
+            }
+        }
+        return max;
+    }
+}
+
+OUTPUT:
+-------
+=== Basic Varargs ===
+sum() = 0
+sum(10) = 10
+sum(10, 20) = 30
+sum(10, 20, 30) = 60
+sum(10, 20, 30, 40, 50) = 150
+
+=== Varargs with Array ===
+sum(array) = 15
+
+=== String Varargs ===
+Items (1): Apple 
+Items (2): Apple Banana 
+Items (4): Apple Banana Cherry Date 
+
+=== Varargs with Other Parameters ===
+Fruit: Apple, Banana, Cherry
+Number: One, Two, Three
+
+=== Practical: Concatenation ===
+Result: Java-Selenium-TestNG
+
+=== Practical: Find Maximum ===
+Max of (5, 2, 9, 1): 9
+Max of (100): 100
+Max of (): -2147483648
+
+
+================================================================================
+                    8. STATIC VS NON-STATIC METHODS
+================================================================================
+
+Static Methods:
+---------------
+- Belong to the class, not to any object
+- Can be called without creating an object
+- Cannot access non-static members directly
+- Use: ClassName.methodName()
+
+Non-Static Methods (Instance Methods):
+--------------------------------------
+- Belong to objects of the class
+- Require object creation to call
+- Can access both static and non-static members
+- Use: objectName.methodName()
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 8: Static vs Non-Static Methods
+--------------------------------------------------------------------------------
+
+public class StaticVsNonStatic {
+    
+    // Static variable (belongs to class)
+    static int staticCounter = 0;
+    
+    // Non-static variable (belongs to object)
+    int instanceCounter = 0;
+    
+    public static void main(String[] args) {
+        
+        // Static method - called without object
+        System.out.println("=== Static Methods ===");
+        staticMethod();
+        StaticVsNonStatic.staticMethod();    // Can use class name
+        
+        System.out.println("Static counter: " + staticCounter);
+        
+        // Non-static method - requires object
+        System.out.println("\n=== Non-Static Methods ===");
+        StaticVsNonStatic obj1 = new StaticVsNonStatic();
+        StaticVsNonStatic obj2 = new StaticVsNonStatic();
+        
+        obj1.nonStaticMethod();
+        obj1.nonStaticMethod();
+        obj2.nonStaticMethod();
+        
+        System.out.println("obj1 instance counter: " + obj1.instanceCounter);
+        System.out.println("obj2 instance counter: " + obj2.instanceCounter);
+        System.out.println("Static counter: " + staticCounter);
+        
+        // Practical example
+        System.out.println("\n=== Practical Example ===");
+        
+        // Static utility methods
+        System.out.println("Max(10, 20): " + MathUtils.max(10, 20));
+        System.out.println("Min(10, 20): " + MathUtils.min(10, 20));
+        System.out.println("Is Even(15): " + MathUtils.isEven(15));
+        
+        // Non-static methods with object state
+        Counter counter1 = new Counter("Counter1");
+        Counter counter2 = new Counter("Counter2");
+        
+        counter1.increment();
+        counter1.increment();
+        counter1.increment();
+        counter2.increment();
+        
+        counter1.display();
+        counter2.display();
+    }
+    
+    // Static method
+    public static void staticMethod() {
+        staticCounter++;
+        System.out.println("Static method called. Counter: " + staticCounter);
+        
+        // Cannot access non-static members directly
+        // instanceCounter++;    // Error!
+        // nonStaticMethod();    // Error!
+    }
+    
+    // Non-static method
+    public void nonStaticMethod() {
+        instanceCounter++;
+        staticCounter++;    // Can access static members
+        System.out.println("Non-static method called. Instance: " + instanceCounter + ", Static: " + staticCounter);
+    }
+}
+
+// Utility class with static methods
+class MathUtils {
+    public static int max(int a, int b) {
+        return (a > b) ? a : b;
+    }
+    
+    public static int min(int a, int b) {
+        return (a < b) ? a : b;
+    }
+    
+    public static boolean isEven(int num) {
+        return num % 2 == 0;
+    }
+}
+
+// Class with non-static methods
+class Counter {
+    private String name;
+    private int count;
+    
+    public Counter(String name) {
+        this.name = name;
+        this.count = 0;
+    }
+    
+    public void increment() {
+        count++;
+    }
+    
+    public void display() {
+        System.out.println(name + ": " + count);
+    }
+}
+
+OUTPUT:
+-------
+=== Static Methods ===
+Static method called. Counter: 1
+Static method called. Counter: 2
+Static counter: 2
+
+=== Non-Static Methods ===
+Non-static method called. Instance: 1, Static: 3
+Non-static method called. Instance: 2, Static: 4
+Non-static method called. Instance: 1, Static: 5
+obj1 instance counter: 2
+obj2 instance counter: 1
+Static counter: 5
+
+=== Practical Example ===
+Max(10, 20): 20
+Min(10, 20): 10
+Is Even(15): false
+Counter1: 3
+Counter2: 1
+
+
+WHEN TO USE STATIC VS NON-STATIC:
+---------------------------------
++----------------------+----------------------------------+----------------------------------+
+| Use Static When      | Use Non-Static When              | Examples                         |
++----------------------+----------------------------------+----------------------------------+
+| Method doesn't need  | Method needs object state        | Static: Math.sqrt(), Arrays.sort |
+| object state         |                                  | Non-static: list.add(), str.length|
+|                      |                                  |                                  |
+| Utility/helper       | Object behavior                  | Static: Utility classes          |
+| methods              |                                  | Non-static: Business objects     |
+|                      |                                  |                                  |
+| Factory methods      | Instance operations              | Static: getInstance()            |
+|                      |                                  | Non-static: processData()        |
++----------------------+----------------------------------+----------------------------------+
+
+
+================================================================================
+                    9. ACCESS MODIFIERS FOR METHODS
+================================================================================
+
+Access modifiers control the visibility of methods.
+
++---------------+-------+----------+-----------+----------+
+| Modifier      | Class | Package  | Subclass  | World    |
++---------------+-------+----------+-----------+----------+
+| public        | Yes   | Yes      | Yes       | Yes      |
+| protected     | Yes   | Yes      | Yes       | No       |
+| default       | Yes   | Yes      | No        | No       |
+| private       | Yes   | No       | No        | No       |
++---------------+-------+----------+-----------+----------+
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 9: Access Modifiers
+--------------------------------------------------------------------------------
+
+public class AccessModifiers {
+    
+    // Public - accessible everywhere
+    public void publicMethod() {
+        System.out.println("Public method - accessible everywhere");
+    }
+    
+    // Protected - accessible in same package and subclasses
+    protected void protectedMethod() {
+        System.out.println("Protected method - package and subclasses");
+    }
+    
+    // Default (no modifier) - accessible only in same package
+    void defaultMethod() {
+        System.out.println("Default method - same package only");
+    }
+    
+    // Private - accessible only within this class
+    private void privateMethod() {
+        System.out.println("Private method - this class only");
+    }
+    
+    // Public method that uses private method
+    public void callPrivateMethod() {
+        privateMethod();    // Can call private method from same class
+    }
+    
+    public static void main(String[] args) {
+        AccessModifiers obj = new AccessModifiers();
+        
+        System.out.println("=== Calling Methods from Same Class ===");
+        obj.publicMethod();
+        obj.protectedMethod();
+        obj.defaultMethod();
+        obj.privateMethod();    // Accessible here (same class)
+        
+        System.out.println("\n=== Using Public Method to Access Private ===");
+        obj.callPrivateMethod();
+    }
+}
+
+OUTPUT:
+-------
+=== Calling Methods from Same Class ===
+Public method - accessible everywhere
+Protected method - package and subclasses
+Default method - same package only
+Private method - this class only
+
+=== Using Public Method to Access Private ===
+Private method - this class only
+
+
+BEST PRACTICES:
+---------------
+- Use private for helper methods that shouldn't be exposed
+- Use public for methods that are part of the API
+- Use protected for methods that subclasses might need
+- Start with most restrictive (private) and relax as needed
+
+
+================================================================================
+                    10. RECURSION
+================================================================================
+
+Recursion is when a method calls itself. Every recursive method needs:
+1. Base case (termination condition)
+2. Recursive case (method calls itself with modified parameters)
+
+
+Visual Representation (Factorial):
+----------------------------------
+factorial(4)
+    |
+    +-- 4 * factorial(3)
+              |
+              +-- 3 * factorial(2)
+                        |
+                        +-- 2 * factorial(1)
+                                  |
+                                  +-- return 1 (base case)
+                        |
+                        +-- return 2 * 1 = 2
+              |
+              +-- return 3 * 2 = 6
+    |
+    +-- return 4 * 6 = 24
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 10: Recursion Examples
+--------------------------------------------------------------------------------
+
+public class MethodRecursion {
+    public static void main(String[] args) {
+        
+        // Factorial
+        System.out.println("=== Factorial ===");
+        System.out.println("5! = " + factorial(5));
+        System.out.println("0! = " + factorial(0));
+        System.out.println("10! = " + factorial(10));
+        
+        // Fibonacci
+        System.out.println("\n=== Fibonacci Sequence ===");
+        System.out.print("First 10 Fibonacci numbers: ");
+        for (int i = 0; i < 10; i++) {
+            System.out.print(fibonacci(i) + " ");
+        }
+        System.out.println();
+        
+        // Sum of digits
+        System.out.println("\n=== Sum of Digits ===");
+        System.out.println("Sum of digits in 12345: " + sumOfDigits(12345));
+        System.out.println("Sum of digits in 9999: " + sumOfDigits(9999));
+        
+        // Power calculation
+        System.out.println("\n=== Power Calculation ===");
+        System.out.println("2^10 = " + power(2, 10));
+        System.out.println("5^3 = " + power(5, 3));
+        
+        // String reversal
+        System.out.println("\n=== String Reversal ===");
+        System.out.println("Reverse of 'Hello': " + reverseString("Hello"));
+        System.out.println("Reverse of 'Selenium': " + reverseString("Selenium"));
+        
+        // Countdown
+        System.out.println("\n=== Countdown ===");
+        countdown(5);
+        
+        // Check palindrome
+        System.out.println("\n=== Palindrome Check ===");
+        System.out.println("'radar' is palindrome: " + isPalindrome("radar"));
+        System.out.println("'hello' is palindrome: " + isPalindrome("hello"));
+        System.out.println("'level' is palindrome: " + isPalindrome("level"));
+    }
+    
+    // Factorial: n! = n * (n-1)!
+    public static long factorial(int n) {
+        // Base case
+        if (n <= 1) {
+            return 1;
+        }
+        // Recursive case
+        return n * factorial(n - 1);
+    }
+    
+    // Fibonacci: fib(n) = fib(n-1) + fib(n-2)
+    public static int fibonacci(int n) {
+        // Base cases
+        if (n <= 0) return 0;
+        if (n == 1) return 1;
+        
+        // Recursive case
+        return fibonacci(n - 1) + fibonacci(n - 2);
+    }
+    
+    // Sum of digits
+    public static int sumOfDigits(int n) {
+        // Base case
+        if (n == 0) {
+            return 0;
+        }
+        // Recursive case
+        return (n % 10) + sumOfDigits(n / 10);
+    }
+    
+    // Power calculation
+    public static long power(int base, int exp) {
+        // Base case
+        if (exp == 0) {
+            return 1;
+        }
+        // Recursive case
+        return base * power(base, exp - 1);
+    }
+    
+    // String reversal
+    public static String reverseString(String str) {
+        // Base case
+        if (str.isEmpty() || str.length() == 1) {
+            return str;
+        }
+        // Recursive case
+        return reverseString(str.substring(1)) + str.charAt(0);
+    }
+    
+    // Countdown
+    public static void countdown(int n) {
+        // Base case
+        if (n < 0) {
+            System.out.println("Blast off!");
+            return;
+        }
+        // Recursive case
+        System.out.println(n);
+        countdown(n - 1);
+    }
+    
+    // Palindrome check
+    public static boolean isPalindrome(String str) {
+        // Base case
+        if (str.length() <= 1) {
+            return true;
+        }
+        // Check first and last characters
+        if (str.charAt(0) != str.charAt(str.length() - 1)) {
+            return false;
+        }
+        // Recursive case - check remaining string
+        return isPalindrome(str.substring(1, str.length() - 1));
+    }
+}
+
+OUTPUT:
+-------
+=== Factorial ===
+5! = 120
+0! = 1
+10! = 3628800
+
+=== Fibonacci Sequence ===
+First 10 Fibonacci numbers: 0 1 1 2 3 5 8 13 21 34 
+
+=== Sum of Digits ===
+Sum of digits in 12345: 15
+Sum of digits in 9999: 36
+
+=== Power Calculation ===
+2^10 = 1024
+5^3 = 125
+
+=== String Reversal ===
+Reverse of 'Hello': olleH
+Reverse of 'Selenium': muineleS
+
+=== Countdown ===
+5
+4
+3
+2
+1
+0
+Blast off!
+
+=== Palindrome Check ===
+'radar' is palindrome: true
+'hello' is palindrome: false
+'level' is palindrome: true
+
+
+================================================================================
+                    11. METHODS IN AUTOMATION CONTEXT
+================================================================================
+
+--------------------------------------------------------------------------------
+EXAMPLE 11: Utility Methods for Automation
+--------------------------------------------------------------------------------
+
+public class AutomationUtilityMethods {
+    public static void main(String[] args) {
+        
+        System.out.println("=== Automation Utility Methods Demo ===\n");
+        
+        // Wait utility
+        System.out.println("--- Wait Utility ---");
+        waitForSeconds(2);
+        System.out.println("Wait completed\n");
+        
+        // Generate test data
+        System.out.println("--- Test Data Generation ---");
+        System.out.println("Random Email: " + generateRandomEmail());
+        System.out.println("Random Phone: " + generateRandomPhone());
+        System.out.println("Random String (8): " + generateRandomString(8));
+        System.out.println("Timestamp: " + getTimestamp());
+        System.out.println();
+        
+        // URL utilities
+        System.out.println("--- URL Utilities ---");
+        String baseUrl = "https://example.com";
+        String endpoint = "/api/users";
+        System.out.println("Full URL: " + buildUrl(baseUrl, endpoint));
+        System.out.println("With params: " + buildUrlWithParams(baseUrl, "name", "John", "age", "25"));
+        System.out.println();
+        
+        // Validation methods
+        System.out.println("--- Validation Methods ---");
+        System.out.println("Is 'test@email.com' valid email: " + isValidEmail("test@email.com"));
+        System.out.println("Is '1234567890' valid phone: " + isValidPhone("1234567890"));
+        System.out.println("Is 'ABC123' alphanumeric: " + isAlphanumeric("ABC123"));
+        System.out.println();
+        
+        // Assertion helpers
+        System.out.println("--- Assertion Helpers ---");
+        assertEquals("Login", "Login", "Title verification");
+        assertEquals("Expected", "Actual", "Content verification");
+        System.out.println();
+        
+        // String utilities
+        System.out.println("--- String Utilities ---");
+        System.out.println("Truncated: " + truncateString("This is a very long string", 15));
+        System.out.println("Masked card: " + maskCreditCard("[REDACTED:CREDIT_DEBIT_NUMBER]"));
+        System.out.println("Masked email: " + maskEmail("john.doe@example.com"));
+        System.out.println();
+        
+        // XPath builders
+        System.out.println("--- XPath Builders ---");
+        System.out.println("By ID: " + getXPathById("username"));
+        System.out.println("By Text: " + getXPathByText("Login"));
+        System.out.println("By Contains: " + getXPathByContains("Submit"));
+        System.out.println("By Attribute: " + getXPathByAttribute("class", "btn-primary"));
+    }
+    
+    // ========== Wait Utility ==========
+    public static void waitForSeconds(int seconds) {
+        System.out.println("Waiting for " + seconds + " seconds...");
+        try {
+            Thread.sleep(seconds * 1000);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+    }
+    
+    // ========== Test Data Generation ==========
+    public static String generateRandomEmail() {
+        String random = generateRandomString(8).toLowerCase();
+        return random + "@test.com";
+    }
+    
+    public static String generateRandomPhone() {
+        StringBuilder phone = new StringBuilder();
+        for (int i = 0; i < 10; i++) {
+            phone.append((int) (Math.random() * 10));
+        }
+        return phone.toString();
+    }
+    
+    public static String generateRandomString(int length) {
+        String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < length; i++) {
+            int index = (int) (Math.random() * chars.length());
+            sb.append(chars.charAt(index));
+        }
+        return sb.toString();
+    }
+    
+    public static String getTimestamp() {
+        return java.time.LocalDateTime.now()
+                .format(java.time.format.DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss"));
+    }
+    
+    // ========== URL Utilities ==========
+    public static String buildUrl(String baseUrl, String endpoint) {
+        if (baseUrl.endsWith("/")) {
+            baseUrl = baseUrl.substring(0, baseUrl.length() - 1);
+        }
+        if (!endpoint.startsWith("/")) {
+            endpoint = "/" + endpoint;
+        }
+        return baseUrl + endpoint;
+    }
+    
+    public static String buildUrlWithParams(String baseUrl, String... params) {
+        if (params.length == 0 || params.length % 2 != 0) {
+            return baseUrl;
+        }
+        
+        StringBuilder url = new StringBuilder(baseUrl);
+        url.append("?");
+        
+        for (int i = 0; i < params.length; i += 2) {
+            if (i > 0) url.append("&");
+            url.append(params[i]).append("=").append(params[i + 1]);
+        }
+        
+        return url.toString();
+    }
+    
+    // ========== Validation Methods ==========
+    public static boolean isValidEmail(String email) {
+        if (email == null || email.isEmpty()) return false;
+        return email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$");
+    }
+    
+    public static boolean isValidPhone(String phone) {
+        if (phone == null) return false;
+        String digits = phone.replaceAll("[^0-9]", "");
+        return digits.length() == 10;
+    }
+    
+    public static boolean isAlphanumeric(String str) {
+        if (str == null || str.isEmpty()) return false;
+        return str.matches("^[a-zA-Z0-9]+$");
+    }
+    
+    // ========== Assertion Helpers ==========
+    public static void assertEquals(String expected, String actual, String message) {
+        boolean passed = expected.equals(actual);
+        String status = passed ? "PASSED" : "FAILED";
+        System.out.println("[" + status + "] " + message);
+        if (!passed) {
+            System.out.println("  Expected: " + expected);
+            System.out.println("  Actual: " + actual);
+        }
+    }
+    
+    public static void assertTrue(boolean condition, String message) {
+        String status = condition ? "PASSED" : "FAILED";
+        System.out.println("[" + status + "] " + message);
+    }
+    
+    // ========== String Utilities ==========
+    public static String truncateString(String str, int maxLength) {
+        if (str == null || str.length() <= maxLength) return str;
+        return str.substring(0, maxLength) + "...";
+    }
+    
+    public static String maskCreditCard(String cardNumber) {
+        if (cardNumber == null || cardNumber.length() < 4) return cardNumber;
+        String last4 = cardNumber.substring(cardNumber.length() - 4);
+        return "*".repeat(cardNumber.length() - 4) + last4;
+    }
+    
+    public static String maskEmail(String email) {
+        if (email == null || !email.contains("@")) return email;
+        int atIndex = email.indexOf("@");
+        if (atIndex <= 2) return email;
+        
+        String firstPart = email.substring(0, 2);
+        String domain = email.substring(atIndex);
+        return firstPart + "*".repeat(atIndex - 2) + domain;
+    }
+    
+    // ========== XPath Builders ==========
+    public static String getXPathById(String id) {
+        return String.format("//*[@id='%s']", id);
+    }
+    
+    public static String getXPathByText(String text) {
+        return String.format("//*[text()='%s']", text);
+    }
+    
+    public static String getXPathByContains(String partialText) {
+        return String.format("//*[contains(text(),'%s')]", partialText);
+    }
+    
+    public static String getXPathByAttribute(String attribute, String value) {
+        return String.format("//*[@%s='%s']", attribute, value);
+    }
+}
+
+OUTPUT:
+-------
+=== Automation Utility Methods Demo ===
+
+--- Wait Utility ---
+Waiting for 2 seconds...
+Wait completed
+
+--- Test Data Generation ---
+Random Email: kx7rm2np@test.com
+Random Phone: 4829163750
+Random String (8): Hy5Kp2Xm
+Timestamp: 20240115_103045
+
+--- URL Utilities ---
+Full URL: https://example.com/api/users
+With params: https://example.com?name=John&age=25
+
+--- Validation Methods ---
+Is 'test@email.com' valid email: true
+Is '1234567890' valid phone: true
+Is 'ABC123' alphanumeric: true
+
+--- Assertion Helpers ---
+[PASSED] Title verification
+[FAILED] Content verification
+  Expected: Expected
+  Actual: Actual
+
+--- String Utilities ---
+Truncated: This is a very ...
+Masked card: ************3456
+Masked email: jo**************@example.com
+
+--- XPath Builders ---
+By ID: //*[@id='username']
+By Text: //*[text()='Login']
+By Contains: //*[contains(text(),'Submit')]
+By Attribute: //*[@class='btn-primary']
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 12: Page Object Methods Pattern
+--------------------------------------------------------------------------------
+
+public class PageObjectMethodsDemo {
+    
+    // Simulated element states
+    private static boolean isLoggedIn = false;
+    private static String currentPage = "Home";
+    private static String lastAction = "";
+    
+    public static void main(String[] args) {
+        
+        System.out.println("=== Page Object Methods Demo ===\n");
+        
+        // Login Page Methods
+        System.out.println("--- Login Page ---");
+        navigateTo("https://example.com/login");
+        enterUsername("testuser");
+        enterPassword("[REDACTED:PASSWORD]");
+        clickLoginButton();
+        
+        System.out.println();
+        
+        // Verification
+        System.out.println("--- Verification ---");
+        boolean loginSuccess = verifyLoginSuccess();
+        System.out.println("Login successful: " + loginSuccess);
+        
+        System.out.println();
+        
+        // Home Page Methods
+        System.out.println("--- Home Page ---");
+        String pageTitle = getPageTitle();
+        System.out.println("Page Title: " + pageTitle);
+        
+        clickNavigationLink("Products");
+        
+        System.out.println();
+        
+        // Product Page Methods
+        System.out.println("--- Product Page ---");
+        searchProduct("Laptop");
+        selectProduct("MacBook Pro");
+        addToCart();
+        
+        System.out.println();
+        
+        // Cart Methods
+        System.out.println("--- Cart ---");
+        int cartCount = getCartItemCount();
+        System.out.println("Cart items: " + cartCount);
+        
+        System.out.println();
+        
+        // Complete test flow
+        System.out.println("--- Complete Test Flow ---");
+        performCompleteLoginTest("admin", "admin123");
+    }
+    
+    // ========== Navigation Methods ==========
+    public static void navigateTo(String url) {
+        System.out.println("Navigating to: " + url);
+        lastAction = "Navigate to " + url;
+    }
+    
+    public static void clickNavigationLink(String linkText) {
+        System.out.println("Clicking navigation link: " + linkText);
+        currentPage = linkText;
+        lastAction = "Click " + linkText;
+    }
+    
+    // ========== Login Page Methods ==========
+    public static void enterUsername(String username) {
+        System.out.println("Entering username: " + username);
+        lastAction = "Enter username";
+    }
+    
+    public static void enterPassword(String password) {
+        System.out.println("Entering password: " + "*".repeat(password.length()));
+        lastAction = "Enter password";
+    }
+    
+    public static void clickLoginButton() {
+        System.out.println("Clicking Login button");
+        isLoggedIn = true;
+        currentPage = "Dashboard";
+        lastAction = "Click login";
+    }
+    
+    public static boolean verifyLoginSuccess() {
+        return isLoggedIn && currentPage.equals("Dashboard");
+    }
+    
+    // Combined login method
+    public static boolean login(String username, String password) {
+        enterUsername(username);
+        enterPassword(password);
+        clickLoginButton();
+        return verifyLoginSuccess();
+    }
+    
+    // ========== Common Page Methods ==========
+    public static String getPageTitle() {
+        return currentPage + " | Example Website";
+    }
+    
+    public static boolean isElementDisplayed(String elementName) {
+        System.out.println("Checking if element is displayed: " + elementName);
+        return true;    // Simulated
+    }
+    
+    public static String getElementText(String elementName) {
+        System.out.println("Getting text from element: " + elementName);
+        return "Sample Text";    // Simulated
+    }
+    
+    // ========== Product Page Methods ==========
+    public static void searchProduct(String productName) {
+        System.out.println("Searching for product: " + productName);
+        lastAction = "Search " + productName;
+    }
+    
+    public static void selectProduct(String productName) {
+        System.out.println("Selecting product: " + productName);
+        lastAction = "Select " + productName;
+    }
+    
+    public static void addToCart() {
+        System.out.println("Adding product to cart");
+        lastAction = "Add to cart";
+    }
+    
+    // ========== Cart Methods ==========
+    public static int getCartItemCount() {
+        return 1;    // Simulated
+    }
+    
+    public static double getCartTotal() {
+        return 999.99;    // Simulated
+    }
+    
+    // ========== Complete Test Methods ==========
+    public static void performCompleteLoginTest(String username, String password) {
+        System.out.println("Starting login test...");
+        
+        // Navigate
+        navigateTo("https://example.com/login");
+        
+        // Perform login
+        boolean success = login(username, password);
+        
+        // Verify
+        if (success) {
+            System.out.println("TEST PASSED: Login successful");
+        } else {
+            System.out.println("TEST FAILED: Login unsuccessful");
+        }
+        
+        // Cleanup
+        logout();
+        System.out.println("Test completed");
+    }
+    
+    public static void logout() {
+        System.out.println("Logging out...");
+        isLoggedIn = false;
+        currentPage = "Login";
+    }
+}
+
+OUTPUT:
+-------
+=== Page Object Methods Demo ===
+
+--- Login Page ---
+Navigating to: https://example.com/login
+Entering username: testuser
+Entering password: ***********
+Clicking Login button
+
+--- Verification ---
+Login successful: true
+
+--- Home Page ---
+Page Title: Dashboard | Example Website
+Clicking navigation link: Products
+
+--- Product Page ---
+Searching for product: Laptop
+Selecting product: MacBook Pro
+Adding product to cart
+
+--- Cart ---
+Cart items: 1
+
+--- Complete Test Flow ---
+Starting login test...
+Navigating to: https://example.com/login
+Entering username: admin
+Entering password: ********
+Clicking Login button
+TEST PASSED: Login successful
+Logging out...
+Test completed
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 13: API Testing Helper Methods
+--------------------------------------------------------------------------------
+
+public class APITestingMethods {
+    public static void main(String[] args) {
+        
+        System.out.println("=== API Testing Helper Methods ===\n");
+        
+        // Build request headers
+        System.out.println("--- Request Headers ---");
+        String headers = buildHeaders("application/json", "Bearer token123");
+        System.out.println(headers);
+        
+        System.out.println();
+        
+        // Build JSON payload
+        System.out.println("--- JSON Payload ---");
+        String payload = buildJsonPayload(
+            "name", "John Doe",
+            "email", "john@example.com",
+            "age", "30"
+        );
+        System.out.println(payload);
+        
+        System.out.println();
+        
+        // Validate response
+        System.out.println("--- Response Validation ---");
+        String response = "{\"status\":\"success\",\"code\":200,\"data\":{\"id\":123}}";
+        
+        System.out.println("Response: " + response);
+        System.out.println("Status Code: " + extractJsonValue(response, "code"));
+        System.out.println("Status: " + extractJsonValue(response, "status"));
+        
+        boolean isSuccess = validateResponse(response, 200, "success");
+        System.out.println("Response Valid: " + isSuccess);
+        
+        System.out.println();
+        
+        // HTTP Status validation
+        System.out.println("--- HTTP Status Validation ---");
+        validateStatusCode(200, 200, "GET /users");
+        validateStatusCode(201, 201, "POST /users");
+        validateStatusCode(404, 200, "GET /invalid");
+        
+        System.out.println();
+        
+        // Response time validation
+        System.out.println("--- Response Time Validation ---");
+        validateResponseTime(150, 500, "GET /users");
+        validateResponseTime(600, 500, "POST /heavy-operation");
+    }
+    
+    // Build HTTP headers
+    public static String buildHeaders(String contentType, String authorization) {
+        StringBuilder headers = new StringBuilder();
+        headers.append("Content-Type: ").append(contentType).append("\n");
+        headers.append("Authorization: ").append(authorization).append("\n");
+        headers.append("Accept: application/json");
+        return headers.toString();
+    }
+    
+    // Build JSON payload from key-value pairs
+    public static String buildJsonPayload(String... pairs) {
+        if (pairs.length == 0 || pairs.length % 2 != 0) {
+            return "{}";
+        }
+        
+        StringBuilder json = new StringBuilder();
+        json.append("{\n");
+        
+        for (int i = 0; i < pairs.length; i += 2) {
+            json.append("  \"").append(pairs[i]).append("\": ");
+            json.append("\"").append(pairs[i + 1]).append("\"");
+            
+            if (i < pairs.length - 2) {
+                json.append(",");
+            }
+            json.append("\n");
+        }
+        
+        json.append("}");
+        return json.toString();
+    }
+    
+    // Extract value from JSON (simplified)
+    public static String extractJsonValue(String json, String key) {
+        String searchKey = "\"" + key + "\":";
+        int keyIndex = json.indexOf(searchKey);
+        
+        if (keyIndex == -1) return null;
+        
+        int valueStart = keyIndex + searchKey.length();
+        
+        // Skip whitespace
+        while (valueStart < json.length() && json.charAt(valueStart) == ' ') {
+            valueStart++;
+        }
+        
+        char firstChar = json.charAt(valueStart);
+        
+        if (firstChar == '"') {
+            int valueEnd = json.indexOf("\"", valueStart + 1);
+            return json.substring(valueStart + 1, valueEnd);
+        } else {
+            int valueEnd = valueStart;
+            while (valueEnd < json.length() && 
+                   json.charAt(valueEnd) != ',' && 
+                   json.charAt(valueEnd) != '}') {
+                valueEnd++;
+            }
+            return json.substring(valueStart, valueEnd).trim();
+        }
+    }
+    
+    // Validate response
+    public static boolean validateResponse(String response, int expectedCode, String expectedStatus) {
+        String actualCode = extractJsonValue(response, "code");
+        String actualStatus = extractJsonValue(response, "status");
+        
+        return actualCode != null && 
+               actualCode.equals(String.valueOf(expectedCode)) &&
+               expectedStatus.equals(actualStatus);
+    }
+    
+    // Validate status code
+    public static void validateStatusCode(int actual, int expected, String endpoint) {
+        String status = (actual == expected) ? "PASSED" : "FAILED";
+        System.out.println("[" + status + "] " + endpoint);
+        System.out.println("  Expected: " + expected + ", Actual: " + actual);
+    }
+    
+    // Validate response time
+    public static void validateResponseTime(long actual, long maxAllowed, String endpoint) {
+        String status = (actual <= maxAllowed) ? "PASSED" : "FAILED";
+        System.out.println("[" + status + "] Response time for " + endpoint);
+        System.out.println("  Actual: " + actual + "ms, Max allowed: " + maxAllowed + "ms");
+    }
+}
+
+OUTPUT:
+-------
+=== API Testing Helper Methods ===
+
+--- Request Headers ---
+Content-Type: application/json
+Authorization: Bearer token123
+Accept: application/json
+
+--- JSON Payload ---
+{
+  "name": "John Doe",
+  "email": "john@example.com",
+  "age": "30"
+}
+
+--- Response Validation ---
+Response: {"status":"success","code":200,"data":{"id":123}}
+Status Code: 200
+Status: success
+Response Valid: true
+
+--- HTTP Status Validation ---
+[PASSED] GET /users
+  Expected: 200, Actual: 200
+[PASSED] POST /users
+  Expected: 201, Actual: 201
+[FAILED] GET /invalid
+  Expected: 200, Actual: 404
+
+--- Response Time Validation ---
+[PASSED] Response time for GET /users
+  Actual: 150ms, Max allowed: 500ms
+[FAILED] Response time for POST /heavy-operation
+  Actual: 600ms, Max allowed: 500ms
+
+
+================================================================================
+================================================================================
+                    NEGATIVE SCENARIOS - METHODS
+================================================================================
+================================================================================
+
+
+--------------------------------------------------------------------------------
+ERROR 1: Missing Return Statement
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE:
+-----------------
+public class MissingReturn {
+    
+    public static int addNumbers(int a, int b) {
+        int sum = a + b;
+        // Missing return statement!
+    }
+    
+    public static void main(String[] args) {
+        int result = addNumbers(10, 20);
+    }
+}
+
+ERROR MESSAGE:
+--------------
+error: missing return statement
+    }
+    ^
+
+FIX:
+----
+public class MissingReturnFixed {
+    
+    public static int addNumbers(int a, int b) {
+        int sum = a + b;
+        return sum;    // Add return statement
+    }
+    
+    public static void main(String[] args) {
+        int result = addNumbers(10, 20);
+        System.out.println("Result: " + result);
+    }
+}
+
+
+--------------------------------------------------------------------------------
+ERROR 2: Return Type Mismatch
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE:
+-----------------
+public class ReturnTypeMismatch {
+    
+    // Return type is int, but returning String
+    public static int getMessage() {
+        return "Hello";    // Error!
+    }
+    
+    // Return type is String, but returning int
+    public static String getNumber() {
+        return 42;    // Error!
+    }
+    
+    public static void main(String[] args) {
+        System.out.println(getMessage());
+    }
+}
+
+ERROR MESSAGE:
+--------------
+error: incompatible types: String cannot be converted to int
+        return "Hello";
+               ^
+
+FIX:
+----
+public class ReturnTypeMismatchFixed {
+    
+    // Match return type with returned value
+    public static String getMessage() {
+        return "Hello";
+    }
+    
+    public static int getNumber() {
+        return 42;
+    }
+    
+    // Or convert the value
+    public static String getNumberAsString() {
+        return String.valueOf(42);
+    }
+    
+    public static void main(String[] args) {
+        System.out.println(getMessage());
+        System.out.println(getNumber());
+        System.out.println(getNumberAsString());
+    }
+}
+
+
+--------------------------------------------------------------------------------
+ERROR 3: Unreachable Code After Return
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE:
+-----------------
+public class UnreachableCode {
+    
+    public static int calculate(int a, int b) {
+        int result = a + b;
+        return result;
+        System.out.println("Calculation done");    // Unreachable!
+    }
+    
+    public static void main(String[] args) {
+        calculate(10, 20);
+    }
+}
+
+ERROR MESSAGE:
+--------------
+error: unreachable statement
+        System.out.println("Calculation done");
+        ^
+
+FIX:
+----
+public class UnreachableCodeFixed {
+    
+    public static int calculate(int a, int b) {
+        int result = a + b;
+        System.out.println("Calculation done");    // Move before return
+        return result;
+    }
+    
+    public static void main(String[] args) {
+        int result = calculate(10, 20);
+        System.out.println("Result: " + result);
+    }
+}
+
+
+--------------------------------------------------------------------------------
+ERROR 4: Method Not Returning Value in All Paths
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE:
+-----------------
+public class NotAllPathsReturn {
+    
+    public static String getGrade(int marks) {
+        if (marks >= 90) {
+            return "A";
+        } else if (marks >= 80) {
+            return "B";
+        }
+        // What if marks < 80? No return!
+    }
+    
+    public static void main(String[] args) {
+        System.out.println(getGrade(75));
+    }
+}
+
+ERROR MESSAGE:
+--------------
+error: missing return statement
+    }
+    ^
+
+FIX:
+----
+public class NotAllPathsReturnFixed {
+    
+    public static String getGrade(int marks) {
+        if (marks >= 90) {
+            return "A";
+        } else if (marks >= 80) {
+            return "B";
+        } else if (marks >= 70) {
+            return "C";
+        } else if (marks >= 60) {
+            return "D";
+        } else {
+            return "F";    // Handle all cases
+        }
+    }
+    
+    // Alternative: Return at the end
+    public static String getGradeAlternative(int marks) {
+        String grade;
+        
+        if (marks >= 90) {
+            grade = "A";
+        } else if (marks >= 80) {
+            grade = "B";
+        } else if (marks >= 70) {
+            grade = "C";
+        } else {
+            grade = "F";
+        }
+        
+        return grade;    // Single return at end
+    }
+    
+    public static void main(String[] args) {
+        System.out.println("75 marks: " + getGrade(75));
+        System.out.println("85 marks: " + getGrade(85));
+        System.out.println("55 marks: " + getGrade(55));
+    }
+}
+
+
+--------------------------------------------------------------------------------
+ERROR 5: Calling Non-Static Method from Static Context
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE:
+-----------------
+public class StaticContextError {
+    
+    // Non-static method
+    public void displayMessage() {
+        System.out.println("Hello");
+    }
+    
+    // Non-static variable
+    int count = 10;
+    
+    public static void main(String[] args) {
+        // Cannot call non-static method from static context
+        displayMessage();    // Error!
+        
+        // Cannot access non-static variable from static context
+        System.out.println(count);    // Error!
+    }
+}
+
+ERROR MESSAGE:
+--------------
+error: non-static method displayMessage() cannot be referenced from a static context
+        displayMessage();
+        ^
+
+FIX:
+----
+public class StaticContextFixed {
+    
+    public void displayMessage() {
+        System.out.println("Hello");
+    }
+    
+    int count = 10;
+    
+    public static void main(String[] args) {
+        
+        // Option 1: Create an object
+        StaticContextFixed obj = new StaticContextFixed();
+        obj.displayMessage();
+        System.out.println(obj.count);
+        
+        // Option 2: Make the method static
+        displayStaticMessage();
+    }
+    
+    // Static method can be called directly
+    public static void displayStaticMessage() {
+        System.out.println("Hello from static method");
+    }
+}
+
+
+--------------------------------------------------------------------------------
+ERROR 6: Wrong Number of Arguments
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE:
+-----------------
+public class WrongArgumentCount {
+    
+    public static int add(int a, int b) {
+        return a + b;
+    }
+    
+    public static void main(String[] args) {
+        // Too few arguments
+        int result1 = add(10);    // Error!
+        
+        // Too many arguments
+        int result2 = add(10, 20, 30);    // Error!
+    }
+}
+
+ERROR MESSAGE:
+--------------
+error: method add in class WrongArgumentCount cannot be applied to given types;
+        int result1 = add(10);
+                      ^
+  required: int,int
+  found: int
+  reason: actual and formal argument lists differ in length
+
+FIX:
+----
+public class WrongArgumentCountFixed {
+    
+    public static int add(int a, int b) {
+        return a + b;
+    }
+    
+    // Overloaded methods for different argument counts
+    public static int add(int a) {
+        return a;
+    }
+    
+    public static int add(int a, int b, int c) {
+        return a + b + c;
+    }
+    
+    // Or use varargs
+    public static int addAll(int... numbers) {
+        int sum = 0;
+        for (int num : numbers) {
+            sum += num;
+        }
+        return sum;
+    }
+    
+    public static void main(String[] args) {
+        System.out.println("add(10, 20) = " + add(10, 20));
+        System.out.println("add(10) = " + add(10));
+        System.out.println("add(10, 20, 30) = " + add(10, 20, 30));
+        System.out.println("addAll(1,2,3,4,5) = " + addAll(1, 2, 3, 4, 5));
+    }
+}
+
+
+--------------------------------------------------------------------------------
+ERROR 7: Wrong Argument Type
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE:
+-----------------
+public class WrongArgumentType {
+    
+    public static void printNumber(int num) {
+        System.out.println("Number: " + num);
+    }
+    
+    public static void main(String[] args) {
+        printNumber("Hello");    // Error! String instead of int
+        printNumber(3.14);       // Error! double instead of int (lossy)
+    }
+}
+
+ERROR MESSAGE:
+--------------
+error: incompatible types: String cannot be converted to int
+        printNumber("Hello");
+                    ^
+
+FIX:
+----
+public class WrongArgumentTypeFixed {
+    
+    public static void printNumber(int num) {
+        System.out.println("Integer: " + num);
+    }
+    
+    // Overload for different types
+    public static void printNumber(String str) {
+        System.out.println("String: " + str);
+    }
+    
+    public static void printNumber(double num) {
+        System.out.println("Double: " + num);
+    }
+    
+    public static void main(String[] args) {
+        printNumber(42);
+        printNumber("Hello");
+        printNumber(3.14);
+        
+        // Or convert types explicitly
+        printNumber((int) 3.14);    // Cast double to int
+        printNumber(Integer.parseInt("100"));    // Parse String to int
+    }
+}
+
+
+--------------------------------------------------------------------------------
+ERROR 8: Ignoring Return Value (CONTINUED)
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE (Logical Error):
+---------------------------------
+public class IgnoringReturnValue {
+    
+    public static String processData(String data) {
+        return data.toUpperCase().trim();
+    }
+    
+    public static void main(String[] args) {
+        String input = "  hello world  ";
+        
+        // Calling method but ignoring return value
+        processData(input);    // Result is lost!
+        
+        System.out.println("Processed: " + input);    // Still original!
+    }
+}
+
+OUTPUT (Unexpected):
+--------------------
+Processed:   hello world  
+
+EXPLANATION:
+------------
+The method returns the processed string, but we didn't capture it.
+The original string remains unchanged (String is immutable).
+
+FIX:
+----
+public class IgnoringReturnValueFixed {
+    
+    public static String processData(String data) {
+        return data.toUpperCase().trim();
+    }
+    
+    public static void main(String[] args) {
+        String input = "  hello world  ";
+        
+        // Capture the return value
+        String processed = processData(input);
+        
+        System.out.println("Original: '" + input + "'");
+        System.out.println("Processed: '" + processed + "'");
+        
+        // Or use directly
+        System.out.println("Direct use: '" + processData(input) + "'");
+    }
+}
+
+OUTPUT:
+-------
+Original: '  hello world  '
+Processed: 'HELLO WORLD'
+Direct use: 'HELLO WORLD'
+
+
+--------------------------------------------------------------------------------
+ERROR 9: Varargs Not as Last Parameter
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE:
+-----------------
+public class VarargsNotLast {
+    
+    // Varargs must be last parameter
+    public static void printItems(String... items, String prefix) {    // Error!
+        for (String item : items) {
+            System.out.println(prefix + item);
+        }
+    }
+    
+    public static void main(String[] args) {
+        printItems("A", "B", "C", "Prefix: ");
+    }
+}
+
+ERROR MESSAGE:
+--------------
+error: varargs parameter must be the last parameter
+    public static void printItems(String... items, String prefix) {
+                                          ^
+
+FIX:
+----
+public class VarargsNotLastFixed {
+    
+    // Varargs must be the last parameter
+    public static void printItems(String prefix, String... items) {
+        for (String item : items) {
+            System.out.println(prefix + item);
+        }
+    }
+    
+    public static void main(String[] args) {
+        printItems("Item: ", "A", "B", "C");
+    }
+}
+
+OUTPUT:
+-------
+Item: A
+Item: B
+Item: C
+
+
+--------------------------------------------------------------------------------
+ERROR 10: Multiple Varargs Parameters
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE:
+-----------------
+public class MultipleVarargs {
+    
+    // Only one varargs allowed per method
+    public static void process(int... numbers, String... names) {    // Error!
+        // code
+    }
+    
+    public static void main(String[] args) {
+        process(1, 2, 3, "A", "B");
+    }
+}
+
+ERROR MESSAGE:
+--------------
+error: varargs parameter must be the last parameter
+    public static void process(int... numbers, String... names) {
+                                     ^
+
+FIX:
+----
+public class MultipleVarargsFixed {
+    
+    // Option 1: Use arrays for one of them
+    public static void process(int[] numbers, String... names) {
+        System.out.println("Numbers: " + java.util.Arrays.toString(numbers));
+        System.out.println("Names: " + java.util.Arrays.toString(names));
+    }
+    
+    // Option 2: Use Object varargs
+    public static void processAll(Object... items) {
+        for (Object item : items) {
+            System.out.println(item.getClass().getSimpleName() + ": " + item);
+        }
+    }
+    
+    public static void main(String[] args) {
+        // Option 1
+        process(new int[]{1, 2, 3}, "A", "B", "C");
+        
+        System.out.println();
+        
+        // Option 2
+        processAll(1, 2, "Hello", "World", 3.14);
+    }
+}
+
+OUTPUT:
+-------
+Numbers: [1, 2, 3]
+Names: [A, B, C]
+
+Integer: 1
+Integer: 2
+String: Hello
+String: World
+Double: 3.14
+
+
+--------------------------------------------------------------------------------
+ERROR 11: Recursive Method Without Base Case (Stack Overflow)
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE:
+-----------------
+public class RecursionNoBaseCase {
+    
+    // No base case - infinite recursion!
+    public static void countDown(int n) {
+        System.out.println(n);
+        countDown(n - 1);    // Never stops!
+    }
+    
+    public static void main(String[] args) {
+        countDown(5);
+    }
+}
+
+ERROR MESSAGE (Runtime):
+------------------------
+5
+4
+3
+2
+1
+0
+-1
+-2
+... (continues until)
+Exception in thread "main" java.lang.StackOverflowError
+
+FIX:
+----
+public class RecursionNoBaseCaseFixed {
+    
+    // Add base case to stop recursion
+    public static void countDown(int n) {
+        // Base case
+        if (n < 0) {
+            System.out.println("Done!");
+            return;
+        }
+        
+        // Recursive case
+        System.out.println(n);
+        countDown(n - 1);
+    }
+    
+    public static void main(String[] args) {
+        countDown(5);
+    }
+}
+
+OUTPUT:
+-------
+5
+4
+3
+2
+1
+0
+Done!
+
+
+--------------------------------------------------------------------------------
+ERROR 12: Recursive Method with Wrong Base Case
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE:
+-----------------
+public class RecursionWrongBaseCase {
+    
+    public static int factorial(int n) {
+        // Wrong base case - doesn't handle negative numbers
+        if (n == 0) {
+            return 1;
+        }
+        return n * factorial(n - 1);
+    }
+    
+    public static void main(String[] args) {
+        System.out.println(factorial(-5));    // Infinite recursion!
+    }
+}
+
+ERROR MESSAGE (Runtime):
+------------------------
+Exception in thread "main" java.lang.StackOverflowError
+
+FIX:
+----
+public class RecursionWrongBaseCaseFixed {
+    
+    public static int factorial(int n) {
+        // Handle invalid input
+        if (n < 0) {
+            throw new IllegalArgumentException("Factorial not defined for negative numbers");
+        }
+        
+        // Base case
+        if (n <= 1) {
+            return 1;
+        }
+        
+        // Recursive case
+        return n * factorial(n - 1);
+    }
+    
+    public static void main(String[] args) {
+        System.out.println("5! = " + factorial(5));
+        System.out.println("0! = " + factorial(0));
+        System.out.println("1! = " + factorial(1));
+        
+        try {
+            System.out.println("-5! = " + factorial(-5));
+        } catch (IllegalArgumentException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+    }
+}
+
+OUTPUT:
+-------
+5! = 120
+0! = 1
+1! = 1
+Error: Factorial not defined for negative numbers
+
+
+--------------------------------------------------------------------------------
+ERROR 13: Method Overloading Ambiguity
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE:
+-----------------
+public class OverloadingAmbiguity {
+    
+    public static void print(int a, double b) {
+        System.out.println("int, double: " + a + ", " + b);
+    }
+    
+    public static void print(double a, int b) {
+        System.out.println("double, int: " + a + ", " + b);
+    }
+    
+    public static void main(String[] args) {
+        print(10, 20);    // Ambiguous! Both methods match
+    }
+}
+
+ERROR MESSAGE:
+--------------
+error: reference to print is ambiguous
+        print(10, 20);
+        ^
+  both method print(int,double) in OverloadingAmbiguity 
+  and method print(double,int) in OverloadingAmbiguity match
+
+FIX:
+----
+public class OverloadingAmbiguityFixed {
+    
+    public static void print(int a, double b) {
+        System.out.println("int, double: " + a + ", " + b);
+    }
+    
+    public static void print(double a, int b) {
+        System.out.println("double, int: " + a + ", " + b);
+    }
+    
+    // Add explicit method for int, int
+    public static void print(int a, int b) {
+        System.out.println("int, int: " + a + ", " + b);
+    }
+    
+    public static void main(String[] args) {
+        print(10, 20);        // Now calls int, int
+        print(10, 20.0);      // Calls int, double
+        print(10.0, 20);      // Calls double, int
+        
+        // Or cast explicitly
+        print((int) 10, (double) 20);    // Calls int, double
+    }
+}
+
+OUTPUT:
+-------
+int, int: 10, 20
+int, double: 10, 20.0
+double, int: 10.0, 20
+int, double: 10, 20.0
+
+
+--------------------------------------------------------------------------------
+ERROR 14: Returning void Method Result
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE:
+-----------------
+public class ReturningVoidResult {
+    
+    public static void printMessage(String msg) {
+        System.out.println(msg);
+    }
+    
+    public static void main(String[] args) {
+        // Cannot use void method result
+        String result = printMessage("Hello");    // Error!
+        
+        System.out.println(printMessage("Hello"));    // Error!
+    }
+}
+
+ERROR MESSAGE:
+--------------
+error: incompatible types: void cannot be converted to String
+        String result = printMessage("Hello");
+                                    ^
+
+FIX:
+----
+public class ReturningVoidResultFixed {
+    
+    // If you need to capture result, change return type
+    public static String getMessage(String msg) {
+        return "Message: " + msg;
+    }
+    
+    // Keep void method for printing only
+    public static void printMessage(String msg) {
+        System.out.println(msg);
+    }
+    
+    public static void main(String[] args) {
+        // Use void method without capturing
+        printMessage("Hello");
+        
+        // Use non-void method when you need result
+        String result = getMessage("World");
+        System.out.println(result);
+    }
+}
+
+OUTPUT:
+-------
+Hello
+Message: World
+
+
+--------------------------------------------------------------------------------
+ERROR 15: NullPointerException in Method Parameters
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE:
+-----------------
+public class NullParameterError {
+    
+    public static int getStringLength(String str) {
+        return str.length();    // NPE if str is null!
+    }
+    
+    public static void processArray(int[] arr) {
+        for (int num : arr) {    // NPE if arr is null!
+            System.out.println(num);
+        }
+    }
+    
+    public static void main(String[] args) {
+        String text = null;
+        System.out.println(getStringLength(text));
+        
+        int[] numbers = null;
+        processArray(numbers);
+    }
+}
+
+ERROR MESSAGE (Runtime):
+------------------------
+Exception in thread "main" java.lang.NullPointerException
+
+FIX:
+----
+public class NullParameterFixed {
+    
+    public static int getStringLength(String str) {
+        // Option 1: Check for null
+        if (str == null) {
+            return 0;
+        }
+        return str.length();
+    }
+    
+    public static int getStringLengthWithException(String str) {
+        // Option 2: Throw exception for null
+        if (str == null) {
+            throw new IllegalArgumentException("String cannot be null");
+        }
+        return str.length();
+    }
+    
+    public static void processArray(int[] arr) {
+        // Check for null before processing
+        if (arr == null) {
+            System.out.println("Array is null");
+            return;
+        }
+        
+        if (arr.length == 0) {
+            System.out.println("Array is empty");
+            return;
+        }
+        
+        for (int num : arr) {
+            System.out.println(num);
+        }
+    }
+    
+    public static void main(String[] args) {
+        // Test with null
+        String text = null;
+        System.out.println("Length of null: " + getStringLength(text));
+        
+        // Test with valid string
+        text = "Hello";
+        System.out.println("Length of 'Hello': " + getStringLength(text));
+        
+        System.out.println();
+        
+        // Test array
+        int[] numbers = null;
+        processArray(numbers);
+        
+        numbers = new int[]{1, 2, 3};
+        processArray(numbers);
+    }
+}
+
+OUTPUT:
+-------
+Length of null: 0
+Length of 'Hello': 5
+
+Array is null
+1
+2
+3
+
+
+--------------------------------------------------------------------------------
+ERROR 16: Modifying Parameter Expecting Original to Change (Primitives)
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE:
+-----------------
+public class ModifyPrimitiveParameter {
+    
+    public static void doubleValue(int num) {
+        num = num * 2;    // Only modifies local copy!
+        System.out.println("Inside method: " + num);
+    }
+    
+    public static void main(String[] args) {
+        int value = 10;
+        System.out.println("Before method: " + value);
+        
+        doubleValue(value);
+        
+        System.out.println("After method: " + value);    // Still 10!
+    }
+}
+
+OUTPUT (Unexpected for beginners):
+----------------------------------
+Before method: 10
+Inside method: 20
+After method: 10
+
+FIX:
+----
+public class ModifyPrimitiveParameterFixed {
+    
+    // Option 1: Return the modified value
+    public static int doubleValue(int num) {
+        return num * 2;
+    }
+    
+    // Option 2: Use array to hold value
+    public static void doubleValueArray(int[] nums) {
+        nums[0] = nums[0] * 2;
+    }
+    
+    // Option 3: Use wrapper class
+    public static void doubleValueWrapper(int[] result, int num) {
+        result[0] = num * 2;
+    }
+    
+    public static void main(String[] args) {
+        // Option 1: Capture return value
+        int value = 10;
+        value = doubleValue(value);
+        System.out.println("Option 1 - After method: " + value);
+        
+        // Option 2: Use array
+        int[] values = {10};
+        doubleValueArray(values);
+        System.out.println("Option 2 - After method: " + values[0]);
+        
+        // Option 3: Use result array
+        int[] result = new int[1];
+        doubleValueWrapper(result, 10);
+        System.out.println("Option 3 - After method: " + result[0]);
+    }
+}
+
+OUTPUT:
+-------
+Option 1 - After method: 20
+Option 2 - After method: 20
+Option 3 - After method: 20
+
+
+--------------------------------------------------------------------------------
+ERROR 17: Method Name Same as Class Name (Constructor Confusion)
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE:
+-----------------
+public class MethodNameConfusion {
+    
+    // This looks like a constructor but has return type!
+    public void MethodNameConfusion() {    // This is a METHOD, not constructor!
+        System.out.println("This is a method, not constructor");
+    }
+    
+    public static void main(String[] args) {
+        MethodNameConfusion obj = new MethodNameConfusion();
+        // Constructor is called, but our method is not!
+    }
+}
+
+OUTPUT:
+-------
+(No output - the method is never called)
+
+FIX:
+----
+public class MethodNameConfusionFixed {
+    
+    // Proper constructor - no return type
+    public MethodNameConfusionFixed() {
+        System.out.println("Constructor called");
+    }
+    
+    // Method with different name
+    public void initialize() {
+        System.out.println("Initialize method called");
+    }
+    
+    public static void main(String[] args) {
+        MethodNameConfusionFixed obj = new MethodNameConfusionFixed();
+        obj.initialize();
+    }
+}
+
+OUTPUT:
+-------
+Constructor called
+Initialize method called
+
+
+--------------------------------------------------------------------------------
+ERROR 18: Local Variable Not Initialized
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE:
+-----------------
+public class LocalVariableNotInitialized {
+    
+    public static int calculate(int a, int b) {
+        int result;    // Declared but not initialized
+        
+        if (a > b) {
+            result = a - b;
+        }
+        // What if a <= b? result is not initialized!
+        
+        return result;    // Error!
+    }
+    
+    public static void main(String[] args) {
+        System.out.println(calculate(5, 10));
+    }
+}
+
+ERROR MESSAGE:
+--------------
+error: variable result might not have been initialized
+        return result;
+               ^
+
+FIX:
+----
+public class LocalVariableNotInitializedFixed {
+    
+    public static int calculate(int a, int b) {
+        int result = 0;    // Initialize with default value
+        
+        if (a > b) {
+            result = a - b;
+        } else {
+            result = b - a;
+        }
+        
+        return result;
+    }
+    
+    // Alternative: Initialize in all branches
+    public static int calculateAlternative(int a, int b) {
+        int result;
+        
+        if (a > b) {
+            result = a - b;
+        } else {
+            result = b - a;    // Initialize in else branch
+        }
+        
+        return result;
+    }
+    
+    public static void main(String[] args) {
+        System.out.println("calculate(15, 10): " + calculate(15, 10));
+        System.out.println("calculate(5, 10): " + calculate(5, 10));
+    }
+}
+
+OUTPUT:
+-------
+calculate(15, 10): 5
+calculate(5, 10): 5
+
+
+--------------------------------------------------------------------------------
+ERROR 19: Shadowing Instance Variable with Parameter
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE:
+-----------------
+public class VariableShadowing {
+    
+    private String name = "Default";
+    
+    public void setName(String name) {
+        name = name;    // Assigns parameter to itself! Instance variable unchanged.
+    }
+    
+    public void printName() {
+        System.out.println("Name: " + name);
+    }
+    
+    public static void main(String[] args) {
+        VariableShadowing obj = new VariableShadowing();
+        obj.setName("John");
+        obj.printName();    // Still "Default"!
+    }
+}
+
+OUTPUT (Unexpected):
+--------------------
+Name: Default
+
+FIX:
+----
+public class VariableShadowingFixed {
+    
+    private String name = "Default";
+    
+    // Option 1: Use 'this' keyword
+    public void setName(String name) {
+        this.name = name;    // 'this.name' refers to instance variable
+    }
+    
+    // Option 2: Use different parameter name
+    public void setNameAlternative(String newName) {
+        name = newName;
+    }
+    
+    public void printName() {
+        System.out.println("Name: " + name);
+    }
+    
+    public static void main(String[] args) {
+        VariableShadowingFixed obj = new VariableShadowingFixed();
+        obj.setName("John");
+        obj.printName();
+    }
+}
+
+OUTPUT:
+-------
+Name: John
+
+
+--------------------------------------------------------------------------------
+ERROR 20: Infinite Method Call (Non-Recursive)
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE:
+-----------------
+public class InfiniteMethodCall {
+    
+    public static void methodA() {
+        System.out.println("Method A");
+        methodB();
+    }
+    
+    public static void methodB() {
+        System.out.println("Method B");
+        methodA();    // Calls methodA which calls methodB again!
+    }
+    
+    public static void main(String[] args) {
+        methodA();
+    }
+}
+
+ERROR MESSAGE (Runtime):
+------------------------
+Method A
+Method B
+Method A
+Method B
+... (continues until)
+Exception in thread "main" java.lang.StackOverflowError
+
+FIX:
+----
+public class InfiniteMethodCallFixed {
+    
+    private static int callCount = 0;
+    private static final int MAX_CALLS = 5;
+    
+    public static void methodA() {
+        callCount++;
+        if (callCount > MAX_CALLS) {
+            System.out.println("Max calls reached. Stopping.");
+            return;
+        }
+        
+        System.out.println("Method A (call " + callCount + ")");
+        methodB();
+    }
+    
+    public static void methodB() {
+        System.out.println("Method B");
+        methodA();
+    }
+    
+    // Better design: Remove circular dependency
+    public static void methodAFixed() {
+        System.out.println("Method A");
+        methodBFixed();
+    }
+    
+    public static void methodBFixed() {
+        System.out.println("Method B");
+        // Don't call methodA back
+    }
+    
+    public static void main(String[] args) {
+        System.out.println("=== With Counter Protection ===");
+        methodA();
+        
+        System.out.println("\n=== Fixed Design ===");
+        methodAFixed();
+    }
+}
+
+OUTPUT:
+-------
+=== With Counter Protection ===
+Method A (call 1)
+Method B
+Method A (call 2)
+Method B
+Method A (call 3)
+Method B
+Method A (call 4)
+Method B
+Method A (call 5)
+Method B
+Max calls reached. Stopping.
+
+=== Fixed Design ===
+Method A
+Method B
+
+
+================================================================================
+                    QUICK REFERENCE SUMMARY
+================================================================================
+
+METHOD SYNTAX:
+--------------
+accessModifier returnType methodName(parameters) {
+    // method body
+    return value;    // if not void
+}
+
+
+METHOD TYPES:
+-------------
++---------------------------+--------------------------------------------------+
+| Type                      | Example                                          |
++---------------------------+--------------------------------------------------+
+| No param, No return       | public void greet() { }                          |
+| No param, With return     | public int getCount() { return count; }          |
+| With param, No return     | public void print(String msg) { }               |
+| With param, With return   | public int add(int a, int b) { return a+b; }    |
+| Varargs                   | public int sum(int... nums) { }                  |
+| Static                    | public static void helper() { }                  |
++---------------------------+--------------------------------------------------+
+
+
+ACCESS MODIFIERS:
+-----------------
++---------------+-------+----------+-----------+----------+
+| Modifier      | Class | Package  | Subclass  | World    |
++---------------+-------+----------+-----------+----------+
+| public        | Yes   | Yes      | Yes       | Yes      |
+| protected     | Yes   | Yes      | Yes       | No       |
+| default       | Yes   | Yes      | No        | No       |
+| private       | Yes   | No       | No        | No       |
++---------------+-------+----------+-----------+----------+
+
+
+METHOD OVERLOADING RULES:
+-------------------------
+- Same method name
+- Different parameter list (number, type, or order)
+- Return type alone is NOT enough
+- Access modifiers can be different
+
+
+VARARGS RULES:
+--------------
+- Syntax: dataType... paramName
+- Only one varargs per method
+- Must be the last parameter
+- Treated as array inside method
+
+
+STATIC VS NON-STATIC:
+---------------------
++------------------+--------------------------------+--------------------------------+
+| Feature          | Static Method                  | Non-Static Method              |
++------------------+--------------------------------+--------------------------------+
+| Belongs to       | Class                          | Object                         |
+| Call syntax      | ClassName.method()             | objectName.method()            |
+| Can access       | Only static members            | Both static and non-static     |
+| Object needed    | No                             | Yes                            |
+| Use case         | Utility methods                | Object behavior                |
++------------------+--------------------------------+--------------------------------+
+
+
+RECURSION REQUIREMENTS:
+-----------------------
+1. Base case (termination condition)
+2. Recursive case (method calls itself)
+3. Progress toward base case
+
+
+PASS BY VALUE:
+--------------
+- Primitives: Copy of value (original unchanged)
+- Objects: Copy of reference (object can be modified)
+- Reassigning reference: Only local reference changes
+
+
+NEGATIVE SCENARIOS SUMMARY:
+---------------------------
++----+------------------------------------------+------------------------------------------+
+| #  | Error                                    | Fix                                      |
++----+------------------------------------------+------------------------------------------+
+| 1  | Missing return statement                 | Add return statement                     |
+| 2  | Return type mismatch                     | Match return type with value             |
+| 3  | Unreachable code after return            | Move code before return                  |
+| 4  | Not all paths return value               | Add return in all branches               |
+| 5  | Non-static from static context           | Create object or make method static      |
+| 6  | Wrong number of arguments                | Pass correct number or use varargs       |
+| 7  | Wrong argument type                      | Use correct type or overload             |
+| 8  | Ignoring return value                    | Capture return value in variable         |
+| 9  | Varargs not last parameter               | Move varargs to last position            |
+| 10 | Multiple varargs                         | Use only one varargs                     |
+| 11 | Recursion without base case              | Add base case                            |
+| 12 | Recursion with wrong base case           | Handle all edge cases                    |
+| 13 | Overloading ambiguity                    | Add explicit method or cast              |
+| 14 | Returning void result                    | Change return type or don't capture      |
+| 15 | NullPointerException in parameters       | Check for null before using              |
+| 16 | Expecting primitive to change            | Return value or use array                |
+| 17 | Method name same as class                | Constructors have no return type         |
+| 18 | Local variable not initialized           | Initialize in all code paths             |
+| 19 | Variable shadowing                       | Use 'this' keyword                       |
+| 20 | Infinite method calls                    | Add termination condition                |
++----+------------------------------------------+------------------------------------------+
+
+
+BEST PRACTICES:
+---------------
+1. Use meaningful method names (verb + noun): calculateTotal(), getUserName()
+2. Keep methods small and focused (single responsibility)
+3. Limit parameters (3-4 max, use objects for more)
+4. Always validate input parameters
+5. Use appropriate access modifiers (start with private)
+6. Document public methods with comments
+7. Return early for invalid cases
+8. Prefer returning values over modifying parameters
+9. Use static for utility methods that don't need object state
+10. Handle null parameters gracefully
+
+
+================================================================================
+                    END OF TOPIC 8: METHODS/FUNCTIONS
+================================================================================
+
+This completes Topic 8: Methods/Functions in Java.
+
+Let me know when you are ready for the next topic. The upcoming topics would be:
+
+    Topic 9: Object-Oriented Programming (Classes and Objects)
+    Topic 10: Constructors
+    Topic 11: Inheritance
+    Topic 12: Polymorphism
+    Topic 13: Abstraction and Interfaces
+    Topic 14: Exception Handling
+    Topic 15: Collections Framework
+
+Which topic would you like to learn next?
+    

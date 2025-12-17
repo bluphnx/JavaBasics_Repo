@@ -1,0 +1,2361 @@
+================================================================================
+                    TOPIC 4: CONTROL FLOW STATEMENTS
+                    (if, else, else-if, switch)
+================================================================================
+
+What are Control Flow Statements?
+---------------------------------
+Control flow statements allow you to control the execution of code based on
+certain conditions. They help you make decisions in your program.
+
+Types of Control Flow Statements:
+---------------------------------
+1. if statement
+2. if-else statement
+3. if-else-if ladder
+4. nested if statements
+5. switch statement
+
+
+Why Important for Automation?
+-----------------------------
+- Validate test conditions
+- Handle different test scenarios
+- Make decisions based on element states
+- Control test flow based on environment
+- Handle pass/fail conditions
+
+
+================================================================================
+                    1. IF STATEMENT
+================================================================================
+
+The if statement executes a block of code only if the condition is true.
+
+Syntax:
+-------
+if (condition) {
+    // code to execute if condition is true
+}
+
+
+Flow Diagram:
+-------------
+        +-------------+
+        |  Condition  |
+        +-------------+
+              |
+       +------+------+
+       |             |
+      TRUE         FALSE
+       |             |
+       v             |
+  +---------+        |
+  | Execute |        |
+  |  Code   |        |
+  +---------+        |
+       |             |
+       +------+------+
+              |
+              v
+        Continue...
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 1: Basic if Statement
+--------------------------------------------------------------------------------
+
+public class IfStatementBasic {
+    public static void main(String[] args) {
+        
+        int age = 20;
+        
+        // Check if person is adult
+        if (age >= 18) {
+            System.out.println("You are an adult");
+        }
+        
+        System.out.println("Program continues...");
+    }
+}
+
+OUTPUT:
+-------
+You are an adult
+Program continues...
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 2: if Statement with Different Conditions
+--------------------------------------------------------------------------------
+
+public class IfStatementConditions {
+    public static void main(String[] args) {
+        
+        int number = 10;
+        
+        // Check if positive
+        if (number > 0) {
+            System.out.println(number + " is positive");
+        }
+        
+        // Check if even
+        if (number % 2 == 0) {
+            System.out.println(number + " is even");
+        }
+        
+        // Check if greater than 5
+        if (number > 5) {
+            System.out.println(number + " is greater than 5");
+        }
+    }
+}
+
+OUTPUT:
+-------
+10 is positive
+10 is even
+10 is greater than 5
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 3: if Statement in Automation Context
+--------------------------------------------------------------------------------
+
+public class IfAutomationExample {
+    public static void main(String[] args) {
+        
+        // Simulating element states
+        boolean isElementDisplayed = true;
+        boolean isElementEnabled = true;
+        int elementCount = 5;
+        
+        // Check if element is displayed
+        if (isElementDisplayed) {
+            System.out.println("Element is visible on page");
+        }
+        
+        // Check if element is clickable
+        if (isElementDisplayed && isElementEnabled) {
+            System.out.println("Element is clickable - proceeding with click");
+        }
+        
+        // Check if elements exist
+        if (elementCount > 0) {
+            System.out.println("Found " + elementCount + " elements");
+        }
+    }
+}
+
+OUTPUT:
+-------
+Element is visible on page
+Element is clickable - proceeding with click
+Found 5 elements
+
+
+================================================================================
+                    2. IF-ELSE STATEMENT
+================================================================================
+
+The if-else statement executes one block if condition is true,
+and another block if condition is false.
+
+Syntax:
+-------
+if (condition) {
+    // code if condition is true
+} else {
+    // code if condition is false
+}
+
+
+Flow Diagram:
+-------------
+        +-------------+
+        |  Condition  |
+        +-------------+
+              |
+       +------+------+
+       |             |
+      TRUE         FALSE
+       |             |
+       v             v
+  +---------+   +---------+
+  | If Code |   |Else Code|
+  +---------+   +---------+
+       |             |
+       +------+------+
+              |
+              v
+        Continue...
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 4: Basic if-else Statement
+--------------------------------------------------------------------------------
+
+public class IfElseBasic {
+    public static void main(String[] args) {
+        
+        int age = 15;
+        
+        if (age >= 18) {
+            System.out.println("You are an adult");
+        } else {
+            System.out.println("You are a minor");
+        }
+    }
+}
+
+OUTPUT:
+-------
+You are a minor
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 5: if-else with Different Scenarios
+--------------------------------------------------------------------------------
+
+public class IfElseScenarios {
+    public static void main(String[] args) {
+        
+        // Scenario 1: Check even or odd
+        int number = 7;
+        if (number % 2 == 0) {
+            System.out.println(number + " is even");
+        } else {
+            System.out.println(number + " is odd");
+        }
+        
+        // Scenario 2: Check positive or negative
+        int value = -5;
+        if (value >= 0) {
+            System.out.println(value + " is positive or zero");
+        } else {
+            System.out.println(value + " is negative");
+        }
+        
+        // Scenario 3: Check pass or fail
+        int marks = 35;
+        if (marks >= 40) {
+            System.out.println("Result: PASS");
+        } else {
+            System.out.println("Result: FAIL");
+        }
+    }
+}
+
+OUTPUT:
+-------
+7 is odd
+-5 is negative
+Result: FAIL
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 6: if-else in Automation Context
+--------------------------------------------------------------------------------
+
+public class IfElseAutomation {
+    public static void main(String[] args) {
+        
+        // Test result validation
+        String expectedTitle = "Google";
+        String actualTitle = "Google";
+        
+        if (expectedTitle.equals(actualTitle)) {
+            System.out.println("TEST PASSED: Title matches");
+        } else {
+            System.out.println("TEST FAILED: Title mismatch");
+            System.out.println("Expected: " + expectedTitle);
+            System.out.println("Actual: " + actualTitle);
+        }
+        
+        // Element availability check
+        boolean isElementPresent = false;
+        
+        if (isElementPresent) {
+            System.out.println("Element found - clicking...");
+        } else {
+            System.out.println("Element not found - test cannot proceed");
+        }
+        
+        // Browser selection
+        String browser = "Firefox";
+        
+        if (browser.equals("Chrome")) {
+            System.out.println("Launching Chrome browser");
+        } else {
+            System.out.println("Launching " + browser + " browser");
+        }
+    }
+}
+
+OUTPUT:
+-------
+TEST PASSED: Title matches
+Element not found - test cannot proceed
+Launching Firefox browser
+
+
+================================================================================
+                    3. IF-ELSE-IF LADDER
+================================================================================
+
+Used when you have multiple conditions to check.
+
+Syntax:
+-------
+if (condition1) {
+    // code if condition1 is true
+} else if (condition2) {
+    // code if condition2 is true
+} else if (condition3) {
+    // code if condition3 is true
+} else {
+    // code if all conditions are false
+}
+
+
+Flow Diagram:
+-------------
+    +-------------+
+    | Condition 1 |
+    +-------------+
+          |
+    +-----+-----+
+    |           |
+   TRUE       FALSE
+    |           |
+    v           v
++-------+  +-------------+
+| Code 1|  | Condition 2 |
++-------+  +-------------+
+    |           |
+    |     +-----+-----+
+    |     |           |
+    |    TRUE       FALSE
+    |     |           |
+    |     v           v
+    | +-------+  +-------------+
+    | | Code 2|  | Condition 3 |
+    | +-------+  +-------------+
+    |     |           |
+    |     |     +-----+-----+
+    |     |     |           |
+    |     |    TRUE       FALSE
+    |     |     |           |
+    |     |     v           v
+    |     | +-------+   +-------+
+    |     | | Code 3|   |  Else |
+    |     | +-------+   +-------+
+    |     |     |           |
+    +-----+-----+-----+-----+
+                |
+                v
+           Continue...
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 7: Basic if-else-if Ladder
+--------------------------------------------------------------------------------
+
+public class IfElseIfBasic {
+    public static void main(String[] args) {
+        
+        int marks = 75;
+        
+        if (marks >= 90) {
+            System.out.println("Grade: A");
+        } else if (marks >= 80) {
+            System.out.println("Grade: B");
+        } else if (marks >= 70) {
+            System.out.println("Grade: C");
+        } else if (marks >= 60) {
+            System.out.println("Grade: D");
+        } else {
+            System.out.println("Grade: F");
+        }
+    }
+}
+
+OUTPUT:
+-------
+Grade: C
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 8: if-else-if with Number Comparison
+--------------------------------------------------------------------------------
+
+public class IfElseIfNumbers {
+    public static void main(String[] args) {
+        
+        int number = 0;
+        
+        if (number > 0) {
+            System.out.println(number + " is positive");
+        } else if (number < 0) {
+            System.out.println(number + " is negative");
+        } else {
+            System.out.println(number + " is zero");
+        }
+        
+        // Day of week
+        int day = 3;
+        
+        if (day == 1) {
+            System.out.println("Monday");
+        } else if (day == 2) {
+            System.out.println("Tuesday");
+        } else if (day == 3) {
+            System.out.println("Wednesday");
+        } else if (day == 4) {
+            System.out.println("Thursday");
+        } else if (day == 5) {
+            System.out.println("Friday");
+        } else if (day == 6) {
+            System.out.println("Saturday");
+        } else if (day == 7) {
+            System.out.println("Sunday");
+        } else {
+            System.out.println("Invalid day");
+        }
+    }
+}
+
+OUTPUT:
+-------
+0 is zero
+Wednesday
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 9: if-else-if in Automation Context
+--------------------------------------------------------------------------------
+
+public class IfElseIfAutomation {
+    public static void main(String[] args) {
+        
+        // HTTP Status Code Handling
+        int statusCode = 404;
+        
+        if (statusCode == 200) {
+            System.out.println("SUCCESS: Request completed");
+        } else if (statusCode == 201) {
+            System.out.println("SUCCESS: Resource created");
+        } else if (statusCode == 400) {
+            System.out.println("ERROR: Bad request");
+        } else if (statusCode == 401) {
+            System.out.println("ERROR: Unauthorized");
+        } else if (statusCode == 403) {
+            System.out.println("ERROR: Forbidden");
+        } else if (statusCode == 404) {
+            System.out.println("ERROR: Not found");
+        } else if (statusCode == 500) {
+            System.out.println("ERROR: Internal server error");
+        } else {
+            System.out.println("Unknown status code: " + statusCode);
+        }
+        
+        System.out.println("");
+        
+        // Browser Configuration
+        String browser = "Edge";
+        
+        if (browser.equals("Chrome")) {
+            System.out.println("Setting up ChromeDriver");
+            System.out.println("Chrome options configured");
+        } else if (browser.equals("Firefox")) {
+            System.out.println("Setting up GeckoDriver");
+            System.out.println("Firefox options configured");
+        } else if (browser.equals("Edge")) {
+            System.out.println("Setting up EdgeDriver");
+            System.out.println("Edge options configured");
+        } else if (browser.equals("Safari")) {
+            System.out.println("Setting up SafariDriver");
+            System.out.println("Safari options configured");
+        } else {
+            System.out.println("Unsupported browser: " + browser);
+        }
+        
+        System.out.println("");
+        
+        // Test Priority
+        String priority = "High";
+        
+        if (priority.equals("Critical")) {
+            System.out.println("Execute immediately - P0");
+        } else if (priority.equals("High")) {
+            System.out.println("Execute in current sprint - P1");
+        } else if (priority.equals("Medium")) {
+            System.out.println("Execute in next sprint - P2");
+        } else if (priority.equals("Low")) {
+            System.out.println("Execute when time permits - P3");
+        } else {
+            System.out.println("Priority not defined");
+        }
+    }
+}
+
+OUTPUT:
+-------
+ERROR: Not found
+
+Setting up EdgeDriver
+Edge options configured
+
+Execute in current sprint - P1
+
+
+================================================================================
+                    4. NESTED IF STATEMENTS
+================================================================================
+
+An if statement inside another if statement.
+
+Syntax:
+-------
+if (condition1) {
+    // code
+    if (condition2) {
+        // code if both conditions are true
+    }
+}
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 10: Basic Nested if
+--------------------------------------------------------------------------------
+
+public class NestedIfBasic {
+    public static void main(String[] args) {
+        
+        int age = 25;
+        boolean hasLicense = true;
+        
+        if (age >= 18) {
+            System.out.println("Age requirement met");
+            
+            if (hasLicense) {
+                System.out.println("Has valid license");
+                System.out.println("You can drive");
+            } else {
+                System.out.println("No license - cannot drive");
+            }
+        } else {
+            System.out.println("Too young to drive");
+        }
+    }
+}
+
+OUTPUT:
+-------
+Age requirement met
+Has valid license
+You can drive
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 11: Multiple Level Nested if
+--------------------------------------------------------------------------------
+
+public class NestedIfMultiLevel {
+    public static void main(String[] args) {
+        
+        int marks = 85;
+        int attendance = 80;
+        boolean projectSubmitted = true;
+        
+        if (marks >= 40) {
+            System.out.println("Marks criteria: PASSED");
+            
+            if (attendance >= 75) {
+                System.out.println("Attendance criteria: PASSED");
+                
+                if (projectSubmitted) {
+                    System.out.println("Project criteria: PASSED");
+                    System.out.println("----------------------------");
+                    System.out.println("FINAL RESULT: PASSED");
+                } else {
+                    System.out.println("Project not submitted");
+                    System.out.println("FINAL RESULT: FAILED");
+                }
+            } else {
+                System.out.println("Attendance below 75%");
+                System.out.println("FINAL RESULT: FAILED");
+            }
+        } else {
+            System.out.println("Marks below passing");
+            System.out.println("FINAL RESULT: FAILED");
+        }
+    }
+}
+
+OUTPUT:
+-------
+Marks criteria: PASSED
+Attendance criteria: PASSED
+Project criteria: PASSED
+----------------------------
+FINAL RESULT: PASSED
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 12: Nested if in Automation Context
+--------------------------------------------------------------------------------
+
+public class NestedIfAutomation {
+    public static void main(String[] args) {
+        
+        // Element interaction check
+        boolean isElementPresent = true;
+        boolean isElementDisplayed = true;
+        boolean isElementEnabled = true;
+        
+        System.out.println("=== Element Validation ===");
+        
+        if (isElementPresent) {
+            System.out.println("Step 1: Element exists in DOM");
+            
+            if (isElementDisplayed) {
+                System.out.println("Step 2: Element is visible");
+                
+                if (isElementEnabled) {
+                    System.out.println("Step 3: Element is enabled");
+                    System.out.println("Action: Clicking element...");
+                } else {
+                    System.out.println("Element is disabled - cannot click");
+                }
+            } else {
+                System.out.println("Element is hidden - scrolling to view");
+            }
+        } else {
+            System.out.println("Element not found in DOM");
+            System.out.println("Test Failed: Element missing");
+        }
+        
+        System.out.println("");
+        
+        // Login validation
+        String username = "admin";
+        String password = "[REDACTED:PASSWORD]";
+        boolean isAccountActive = true;
+        
+        System.out.println("=== Login Validation ===");
+        
+        if (username != null && !username.isEmpty()) {
+            System.out.println("Username provided: " + username);
+            
+            if (password != null && password.length() >= 6) {
+                System.out.println("Password meets requirements");
+                
+                if (isAccountActive) {
+                    System.out.println("Account is active");
+                    System.out.println("Login: SUCCESS");
+                } else {
+                    System.out.println("Account is deactivated");
+                    System.out.println("Login: FAILED");
+                }
+            } else {
+                System.out.println("Password too short or empty");
+                System.out.println("Login: FAILED");
+            }
+        } else {
+            System.out.println("Username is empty");
+            System.out.println("Login: FAILED");
+        }
+    }
+}
+
+OUTPUT:
+-------
+=== Element Validation ===
+Step 1: Element exists in DOM
+Step 2: Element is visible
+Step 3: Element is enabled
+Action: Clicking element...
+
+=== Login Validation ===
+Username provided: admin
+Password meets requirements
+Account is active
+Login: SUCCESS
+
+
+================================================================================
+                    5. SWITCH STATEMENT
+================================================================================
+
+Switch statement is used when you have multiple conditions based on a
+single variable. It is cleaner than multiple if-else-if statements.
+
+Syntax:
+-------
+switch (variable) {
+    case value1:
+        // code for value1
+        break;
+    case value2:
+        // code for value2
+        break;
+    case value3:
+        // code for value3
+        break;
+    default:
+        // code if no case matches
+}
+
+
+Supported Data Types for Switch:
+--------------------------------
+- byte, short, int, char
+- String (Java 7 onwards)
+- Enum
+- Wrapper classes (Byte, Short, Integer, Character)
+
+NOT Supported:
+--------------
+- long
+- float
+- double
+- boolean
+
+
+Flow Diagram:
+-------------
+      +----------+
+      | Variable |
+      +----------+
+           |
+    +------+------+------+------+
+    |      |      |      |      |
+  case1  case2  case3  case4  default
+    |      |      |      |      |
+    v      v      v      v      v
+ +----+ +----+ +----+ +----+ +----+
+ |Code| |Code| |Code| |Code| |Code|
+ +----+ +----+ +----+ +----+ +----+
+    |      |      |      |      |
+    +------+------+------+------+
+                  |
+                  v
+             Continue...
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 13: Basic Switch Statement
+--------------------------------------------------------------------------------
+
+public class SwitchBasic {
+    public static void main(String[] args) {
+        
+        int day = 4;
+        
+        switch (day) {
+            case 1:
+                System.out.println("Monday");
+                break;
+            case 2:
+                System.out.println("Tuesday");
+                break;
+            case 3:
+                System.out.println("Wednesday");
+                break;
+            case 4:
+                System.out.println("Thursday");
+                break;
+            case 5:
+                System.out.println("Friday");
+                break;
+            case 6:
+                System.out.println("Saturday");
+                break;
+            case 7:
+                System.out.println("Sunday");
+                break;
+            default:
+                System.out.println("Invalid day");
+        }
+    }
+}
+
+OUTPUT:
+-------
+Thursday
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 14: Switch with String
+--------------------------------------------------------------------------------
+
+public class SwitchString {
+    public static void main(String[] args) {
+        
+        String month = "March";
+        
+        switch (month) {
+            case "January":
+                System.out.println("Month 1 - 31 days");
+                break;
+            case "February":
+                System.out.println("Month 2 - 28/29 days");
+                break;
+            case "March":
+                System.out.println("Month 3 - 31 days");
+                break;
+            case "April":
+                System.out.println("Month 4 - 30 days");
+                break;
+            default:
+                System.out.println("Other month");
+        }
+    }
+}
+
+OUTPUT:
+-------
+Month 3 - 31 days
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 15: Switch with char
+--------------------------------------------------------------------------------
+
+public class SwitchChar {
+    public static void main(String[] args) {
+        
+        char grade = 'B';
+        
+        switch (grade) {
+            case 'A':
+                System.out.println("Excellent! Score: 90-100");
+                break;
+            case 'B':
+                System.out.println("Good! Score: 80-89");
+                break;
+            case 'C':
+                System.out.println("Average! Score: 70-79");
+                break;
+            case 'D':
+                System.out.println("Below Average! Score: 60-69");
+                break;
+            case 'F':
+                System.out.println("Fail! Score: Below 60");
+                break;
+            default:
+                System.out.println("Invalid grade");
+        }
+    }
+}
+
+OUTPUT:
+-------
+Good! Score: 80-89
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 16: Switch Without break (Fall-through)
+--------------------------------------------------------------------------------
+
+public class SwitchFallThrough {
+    public static void main(String[] args) {
+        
+        int number = 2;
+        
+        System.out.println("Without break (fall-through):");
+        switch (number) {
+            case 1:
+                System.out.println("One");
+            case 2:
+                System.out.println("Two");
+            case 3:
+                System.out.println("Three");
+            case 4:
+                System.out.println("Four");
+            default:
+                System.out.println("Default");
+        }
+        
+        System.out.println("");
+        System.out.println("With break:");
+        switch (number) {
+            case 1:
+                System.out.println("One");
+                break;
+            case 2:
+                System.out.println("Two");
+                break;
+            case 3:
+                System.out.println("Three");
+                break;
+            case 4:
+                System.out.println("Four");
+                break;
+            default:
+                System.out.println("Default");
+        }
+    }
+}
+
+OUTPUT:
+-------
+Without break (fall-through):
+Two
+Three
+Four
+Default
+
+With break:
+Two
+
+IMPORTANT:
+----------
+Without break, execution continues to next case (fall-through).
+Always use break unless fall-through is intentional.
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 17: Switch with Grouped Cases
+--------------------------------------------------------------------------------
+
+public class SwitchGroupedCases {
+    public static void main(String[] args) {
+        
+        int month = 4;
+        
+        switch (month) {
+            case 1:
+            case 3:
+            case 5:
+            case 7:
+            case 8:
+            case 10:
+            case 12:
+                System.out.println("31 days");
+                break;
+            case 4:
+            case 6:
+            case 9:
+            case 11:
+                System.out.println("30 days");
+                break;
+            case 2:
+                System.out.println("28 or 29 days");
+                break;
+            default:
+                System.out.println("Invalid month");
+        }
+        
+        System.out.println("");
+        
+        // Weekday vs Weekend
+        String day = "Saturday";
+        
+        switch (day) {
+            case "Monday":
+            case "Tuesday":
+            case "Wednesday":
+            case "Thursday":
+            case "Friday":
+                System.out.println(day + " is a weekday");
+                break;
+            case "Saturday":
+            case "Sunday":
+                System.out.println(day + " is a weekend");
+                break;
+            default:
+                System.out.println("Invalid day");
+        }
+    }
+}
+
+OUTPUT:
+-------
+30 days
+
+Saturday is a weekend
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 18: Switch in Automation Context
+--------------------------------------------------------------------------------
+
+public class SwitchAutomation {
+    public static void main(String[] args) {
+        
+        // Browser Selection
+        String browser = "Chrome";
+        
+        System.out.println("=== Browser Setup ===");
+        switch (browser) {
+            case "Chrome":
+                System.out.println("Initializing ChromeDriver");
+                System.out.println("Setting Chrome options");
+                System.out.println("Chrome browser launched");
+                break;
+            case "Firefox":
+                System.out.println("Initializing GeckoDriver");
+                System.out.println("Setting Firefox options");
+                System.out.println("Firefox browser launched");
+                break;
+            case "Edge":
+                System.out.println("Initializing EdgeDriver");
+                System.out.println("Setting Edge options");
+                System.out.println("Edge browser launched");
+                break;
+            case "Safari":
+                System.out.println("Initializing SafariDriver");
+                System.out.println("Setting Safari options");
+                System.out.println("Safari browser launched");
+                break;
+            default:
+                System.out.println("Unsupported browser: " + browser);
+                System.out.println("Defaulting to Chrome");
+        }
+        
+        System.out.println("");
+        
+        // Environment Configuration
+        String environment = "QA";
+        
+        System.out.println("=== Environment Setup ===");
+        switch (environment) {
+            case "DEV":
+                System.out.println("URL: https://dev.example.com");
+                System.out.println("Database: dev_db");
+                break;
+            case "QA":
+                System.out.println("URL: https://qa.example.com");
+                System.out.println("Database: qa_db");
+                break;
+            case "STAGING":
+                System.out.println("URL: https://staging.example.com");
+                System.out.println("Database: staging_db");
+                break;
+            case "PROD":
+                System.out.println("URL: https://www.example.com");
+                System.out.println("Database: prod_db (Read Only)");
+                break;
+            default:
+                System.out.println("Unknown environment");
+        }
+        
+        System.out.println("");
+        
+        // HTTP Status Code Handling
+        int statusCode = 201;
+        
+        System.out.println("=== API Response Handling ===");
+        switch (statusCode) {
+            case 200:
+                System.out.println("OK - Request successful");
+                break;
+            case 201:
+                System.out.println("Created - Resource created successfully");
+                break;
+            case 204:
+                System.out.println("No Content - Request successful, no body");
+                break;
+            case 400:
+                System.out.println("Bad Request - Invalid request");
+                break;
+            case 401:
+                System.out.println("Unauthorized - Authentication required");
+                break;
+            case 403:
+                System.out.println("Forbidden - Access denied");
+                break;
+            case 404:
+                System.out.println("Not Found - Resource not found");
+                break;
+            case 500:
+                System.out.println("Internal Server Error");
+                break;
+            default:
+                System.out.println("Status Code: " + statusCode);
+        }
+    }
+}
+
+OUTPUT:
+-------
+=== Browser Setup ===
+Initializing ChromeDriver
+Setting Chrome options
+Chrome browser launched
+
+=== Environment Setup ===
+URL: https://qa.example.com
+Database: qa_db
+
+=== API Response Handling ===
+Created - Resource created successfully
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 19: Switch with Return (in Methods)
+--------------------------------------------------------------------------------
+
+public class SwitchWithReturn {
+    public static void main(String[] args) {
+        
+        System.out.println("Monday: " + getDayType("Monday"));
+        System.out.println("Saturday: " + getDayType("Saturday"));
+        System.out.println("Invalid: " + getDayType("Funday"));
+        
+        System.out.println("");
+        
+        System.out.println("Grade A: " + getGradeDescription('A'));
+        System.out.println("Grade C: " + getGradeDescription('C'));
+    }
+    
+    public static String getDayType(String day) {
+        switch (day) {
+            case "Monday":
+            case "Tuesday":
+            case "Wednesday":
+            case "Thursday":
+            case "Friday":
+                return "Weekday";
+            case "Saturday":
+            case "Sunday":
+                return "Weekend";
+            default:
+                return "Invalid Day";
+        }
+    }
+    
+    public static String getGradeDescription(char grade) {
+        switch (grade) {
+            case 'A':
+                return "Excellent";
+            case 'B':
+                return "Good";
+            case 'C':
+                return "Average";
+            case 'D':
+                return "Below Average";
+            case 'F':
+                return "Fail";
+            default:
+                return "Invalid Grade";
+        }
+    }
+}
+
+OUTPUT:
+-------
+Monday: Weekday
+Saturday: Weekend
+Invalid: Invalid Day
+
+Grade A: Excellent
+Grade C: Average
+
+
+================================================================================
+                    6. ENHANCED SWITCH (Java 12+)
+================================================================================
+
+Java 12 introduced enhanced switch expressions with arrow syntax.
+
+Syntax:
+-------
+switch (variable) {
+    case value1 -> statement;
+    case value2 -> statement;
+    case value3, value4 -> statement;  // Multiple values
+    default -> statement;
+}
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 20: Enhanced Switch Expression
+--------------------------------------------------------------------------------
+
+public class EnhancedSwitch {
+    public static void main(String[] args) {
+        
+        int day = 3;
+        
+        // Traditional switch
+        System.out.println("Traditional Switch:");
+        String dayName1;
+        switch (day) {
+            case 1:
+                dayName1 = "Monday";
+                break;
+            case 2:
+                dayName1 = "Tuesday";
+                break;
+            case 3:
+                dayName1 = "Wednesday";
+                break;
+            default:
+                dayName1 = "Other";
+        }
+        System.out.println("Day: " + dayName1);
+        
+        System.out.println("");
+        
+        // Enhanced switch (Java 12+)
+        System.out.println("Enhanced Switch:");
+        String dayName2 = switch (day) {
+            case 1 -> "Monday";
+            case 2 -> "Tuesday";
+            case 3 -> "Wednesday";
+            case 4 -> "Thursday";
+            case 5 -> "Friday";
+            case 6, 7 -> "Weekend";
+            default -> "Invalid";
+        };
+        System.out.println("Day: " + dayName2);
+        
+        // Multiple values in one case
+        String month = "March";
+        int days = switch (month) {
+            case "January", "March", "May", "July", "August", "October", "December" -> 31;
+            case "April", "June", "September", "November" -> 30;
+            case "February" -> 28;
+            default -> 0;
+        };
+        System.out.println(month + " has " + days + " days");
+    }
+}
+
+OUTPUT:
+-------
+Traditional Switch:
+Day: Wednesday
+
+Enhanced Switch:
+Day: Wednesday
+March has 31 days
+
+NOTE:
+-----
+Enhanced switch requires Java 12 or later.
+No break needed with arrow syntax.
+Can return values directly.
+
+
+================================================================================
+                    IF-ELSE VS SWITCH COMPARISON
+================================================================================
+
+When to use IF-ELSE:
+--------------------
+- Range conditions (>, <, >=, <=)
+- Complex boolean expressions
+- Different variables in conditions
+- Conditions with AND (&&) or OR (||)
+
+When to use SWITCH:
+-------------------
+- Single variable with multiple exact values
+- Cleaner code for many conditions
+- Checking equality (==)
+- Menu-driven programs
+
+
++------------------+--------------------------------+--------------------------------+
+| Scenario         | Use if-else                    | Use switch                     |
++------------------+--------------------------------+--------------------------------+
+| Range check      | if (age >= 18 && age <= 65)    | Not suitable                   |
+| Multiple values  | if (x==1 || x==2 || x==3)      | switch with cases 1,2,3        |
+| Boolean logic    | if (a && b || c)               | Not suitable                   |
+| Exact match      | if (color.equals("red"))       | switch (color) case "red"      |
+| Null check       | if (str != null)               | Not suitable                   |
++------------------+--------------------------------+--------------------------------+
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 21: if-else vs switch
+--------------------------------------------------------------------------------
+
+public class IfElseVsSwitch {
+    public static void main(String[] args) {
+        
+        int score = 85;
+        String grade;
+        
+        // Using if-else (better for ranges)
+        System.out.println("=== Using if-else for ranges ===");
+        if (score >= 90) {
+            grade = "A";
+        } else if (score >= 80) {
+            grade = "B";
+        } else if (score >= 70) {
+            grade = "C";
+        } else {
+            grade = "F";
+        }
+        System.out.println("Score: " + score + ", Grade: " + grade);
+        
+        System.out.println("");
+        
+        // Using switch (better for exact values)
+        System.out.println("=== Using switch for exact values ===");
+        String command = "START";
+        
+        switch (command) {
+            case "START":
+                System.out.println("Starting the application");
+                break;
+            case "STOP":
+                System.out.println("Stopping the application");
+                break;
+            case "RESTART":
+                System.out.println("Restarting the application");
+                break;
+            case "STATUS":
+                System.out.println("Checking application status");
+                break;
+            default:
+                System.out.println("Unknown command");
+        }
+    }
+}
+
+OUTPUT:
+-------
+=== Using if-else for ranges ===
+Score: 85, Grade: B
+
+=== Using switch for exact values ===
+Starting the application
+
+
+================================================================================
+                    COMPLETE AUTOMATION EXAMPLE
+================================================================================
+
+public class TestFlowControl {
+    public static void main(String[] args) {
+        
+        // Test Configuration
+        String browser = "Chrome";
+        String environment = "QA";
+        String testType = "Smoke";
+        boolean isHeadless = false;
+        int retryCount = 3;
+        
+        System.out.println("============================================");
+        System.out.println("         TEST EXECUTION FRAMEWORK           ");
+        System.out.println("============================================");
+        
+        // Browser Setup using switch
+        System.out.println("\n--- Browser Configuration ---");
+        String driverPath;
+        switch (browser) {
+            case "Chrome":
+                driverPath = "/drivers/chromedriver";
+                System.out.println("Browser: Chrome");
+                break;
+            case "Firefox":
+                driverPath = "/drivers/geckodriver";
+                System.out.println("Browser: Firefox");
+                break;
+            case "Edge":
+                driverPath = "/drivers/msedgedriver";
+                System.out.println("Browser: Edge");
+                break;
+            default:
+                driverPath = "/drivers/chromedriver";
+                System.out.println("Browser: Chrome (default)");
+        }
+        System.out.println("Driver Path: " + driverPath);
+        
+        // Headless mode using if-else
+        if (isHeadless) {
+            System.out.println("Mode: Headless");
+        } else {
+            System.out.println("Mode: Normal (with UI)");
+        }
+        
+        // Environment Setup using switch
+        System.out.println("\n--- Environment Configuration ---");
+        String baseUrl;
+        String dbConnection;
+        switch (environment) {
+            case "DEV":
+                baseUrl = "https://dev.app.com";
+                dbConnection = "dev-db-server:3306";
+                break;
+            case "QA":
+                baseUrl = "https://qa.app.com";
+                dbConnection = "qa-db-server:3306";
+                break;
+            case "STAGING":
+                baseUrl = "https://staging.app.com";
+                dbConnection = "staging-db-server:3306";
+                break;
+            case "PROD":
+                baseUrl = "https://app.com";
+                dbConnection = "prod-db-server:3306";
+                break;
+            default:
+                baseUrl = "https://qa.app.com";
+                dbConnection = "qa-db-server:3306";
+        }
+        System.out.println("Environment: " + environment);
+        System.out.println("Base URL: " + baseUrl);
+        System.out.println("DB Connection: " + dbConnection);
+        
+        // Test Type Configuration using if-else-if
+        System.out.println("\n--- Test Suite Configuration ---");
+        int testCount;
+        int timeout;
+        
+        if (testType.equals("Smoke")) {
+            testCount = 10;
+            timeout = 30;
+            System.out.println("Test Type: Smoke Tests");
+            System.out.println("Quick validation of critical features");
+        } else if (testType.equals("Regression")) {
+            testCount = 100;
+            timeout = 60;
+            System.out.println("Test Type: Regression Tests");
+            System.out.println("Full feature validation");
+        } else if (testType.equals("Sanity")) {
+            testCount = 25;
+            timeout = 45;
+            System.out.println("Test Type: Sanity Tests");
+            System.out.println("Basic functionality check");
+        } else {
+            testCount = 50;
+            timeout = 45;
+            System.out.println("Test Type: Custom Tests");
+        }
+        System.out.println("Test Count: " + testCount);
+        System.out.println("Timeout: " + timeout + " seconds");
+        
+        // Retry Configuration using nested if
+        System.out.println("\n--- Retry Configuration ---");
+        if (retryCount > 0) {
+            System.out.println("Retry Enabled: Yes");
+            System.out.println("Max Retries: " + retryCount);
+            
+            if (retryCount > 5) {
+                System.out.println("Warning: High retry count may slow execution");
+            }
+        } else {
+            System.out.println("Retry Enabled: No");
+        }
+        
+        // Simulate Test Execution
+        System.out.println("\n--- Test Execution ---");
+        int passed = 8;
+        int failed = 2;
+        int total = passed + failed;
+        double passRate = (double) passed / total * 100;
+        
+        System.out.println("Total Tests: " + total);
+        System.out.println("Passed: " + passed);
+        System.out.println("Failed: " + failed);
+        System.out.println("Pass Rate: " + passRate + "%");
+        
+        // Final Result using if-else-if
+        System.out.println("\n--- Final Result ---");
+        if (passRate == 100) {
+            System.out.println("Status: ALL TESTS PASSED");
+            System.out.println("Build: STABLE");
+        } else if (passRate >= 90) {
+            System.out.println("Status: MOSTLY PASSED");
+            System.out.println("Build: ACCEPTABLE");
+        } else if (passRate >= 70) {
+            System.out.println("Status: SOME FAILURES");
+            System.out.println("Build: UNSTABLE");
+        } else {
+            System.out.println("Status: MANY FAILURES");
+            System.out.println("Build: FAILED");
+        }
+        
+        System.out.println("\n============================================");
+        System.out.println("         TEST EXECUTION COMPLETED           ");
+        System.out.println("============================================");
+    }
+}
+
+OUTPUT:
+-------
+============================================
+         TEST EXECUTION FRAMEWORK           
+============================================
+
+--- Browser Configuration ---
+Browser: Chrome
+Driver Path: /drivers/chromedriver
+Mode: Normal (with UI)
+
+--- Environment Configuration ---
+Environment: QA
+Base URL: https://qa.app.com
+DB Connection: qa-db-server:3306
+
+--- Test Suite Configuration ---
+Test Type: Smoke Tests
+Quick validation of critical features
+Test Count: 10
+Timeout: 30 seconds
+
+--- Retry Configuration ---
+Retry Enabled: Yes
+Max Retries: 3
+
+--- Test Execution ---
+Total Tests: 10
+Passed: 8
+Failed: 2
+Pass Rate: 80.0%
+
+--- Final Result ---
+Status: SOME FAILURES
+Build: UNSTABLE
+
+============================================
+         TEST EXECUTION COMPLETED           
+============================================
+
+
+================================================================================
+================================================================================
+                    NEGATIVE SCENARIOS - TOPIC 4
+================================================================================
+================================================================================
+
+
+--------------------------------------------------------------------------------
+ERROR 1: MISSING CURLY BRACES (Single Statement Trap)
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE:
+-----------------
+public class MissingBraces {
+    public static void main(String[] args) {
+        
+        int age = 15;
+        
+        if (age >= 18)
+            System.out.println("You are an adult");
+            System.out.println("You can vote");    // This always executes!
+    }
+}
+
+OUTPUT (Unexpected):
+--------------------
+You can vote
+
+EXPLANATION:
+------------
+Without curly braces, only the first statement belongs to if.
+The second statement always executes regardless of condition.
+
+FIX:
+----
+public class MissingBracesFixed {
+    public static void main(String[] args) {
+        
+        int age = 15;
+        
+        if (age >= 18) {
+            System.out.println("You are an adult");
+            System.out.println("You can vote");
+        }
+    }
+}
+
+OUTPUT:
+-------
+(No output - condition is false)
+
+RULE:
+-----
+Always use curly braces {} even for single statements.
+This prevents bugs and improves readability.
+
+
+--------------------------------------------------------------------------------
+ERROR 2: USING = INSTEAD OF == IN CONDITION
+--------------------------------------------------------------------------------
+
+INVALID CODE:
+-------------
+public class AssignmentInCondition {
+    public static void main(String[] args) {
+        
+        int x = 5;
+        
+        if (x = 10) {    // Assignment, not comparison
+            System.out.println("x is 10");
+        }
+    }
+}
+
+ERROR MESSAGE:
+--------------
+error: incompatible types: int cannot be converted to boolean
+        if (x = 10) {
+              ^
+
+FIX:
+----
+public class AssignmentInConditionFixed {
+    public static void main(String[] args) {
+        
+        int x = 5;
+        
+        if (x == 10) {    // Comparison operator
+            System.out.println("x is 10");
+        } else {
+            System.out.println("x is not 10");
+        }
+    }
+}
+
+OUTPUT:
+-------
+x is not 10
+
+
+--------------------------------------------------------------------------------
+ERROR 3: COMPARING STRINGS WITH == INSTEAD OF .equals()
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE:
+-----------------
+public class StringComparisonWrong {
+    public static void main(String[] args) {
+        
+        String str1 = new String("Hello");
+        String str2 = new String("Hello");
+        
+        if (str1 == str2) {
+            System.out.println("Strings are equal");
+        } else {
+            System.out.println("Strings are not equal");
+        }
+    }
+}
+
+OUTPUT (Unexpected):
+--------------------
+Strings are not equal
+
+EXPLANATION:
+------------
+== compares object references (memory addresses).
+str1 and str2 are different objects in memory.
+
+FIX:
+----
+public class StringComparisonCorrect {
+    public static void main(String[] args) {
+        
+        String str1 = new String("Hello");
+        String str2 = new String("Hello");
+        
+        // Use .equals() for string content comparison
+        if (str1.equals(str2)) {
+            System.out.println("Strings are equal");
+        } else {
+            System.out.println("Strings are not equal");
+        }
+        
+        // Or use equalsIgnoreCase() for case-insensitive
+        String s1 = "HELLO";
+        String s2 = "hello";
+        
+        if (s1.equalsIgnoreCase(s2)) {
+            System.out.println("Strings are equal (ignoring case)");
+        }
+    }
+}
+
+OUTPUT:
+-------
+Strings are equal
+Strings are equal (ignoring case)
+
+
+--------------------------------------------------------------------------------
+ERROR 4: DANGLING ELSE PROBLEM
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE:
+-----------------
+public class DanglingElse {
+    public static void main(String[] args) {
+        
+        int x = 5;
+        int y = 10;
+        
+        // Confusing: Which if does else belong to?
+        if (x > 0)
+            if (y > 0)
+                System.out.println("Both positive");
+        else
+            System.out.println("x is not positive");    // Wrong!
+    }
+}
+
+OUTPUT (Unexpected):
+--------------------
+(No output)
+
+EXPLANATION:
+------------
+The else binds to the nearest if (y > 0), not (x > 0).
+Since x=5 > 0 is true, it checks y > 0 which is also true.
+So "Both positive" should print, but else belongs to inner if.
+
+FIX:
+----
+public class DanglingElseFixed {
+    public static void main(String[] args) {
+        
+        int x = 5;
+        int y = 10;
+        
+        // Clear with braces
+        if (x > 0) {
+            if (y > 0) {
+                System.out.println("Both positive");
+            }
+        } else {
+            System.out.println("x is not positive");
+        }
+    }
+}
+
+OUTPUT:
+-------
+Both positive
+
+
+--------------------------------------------------------------------------------
+ERROR 5: MISSING BREAK IN SWITCH (Unintentional Fall-through)
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE:
+-----------------
+public class MissingBreak {
+    public static void main(String[] args) {
+        
+        int day = 2;
+        
+        switch (day) {
+            case 1:
+                System.out.println("Monday");
+            case 2:
+                System.out.println("Tuesday");
+            case 3:
+                System.out.println("Wednesday");
+            default:
+                System.out.println("Other day");
+        }
+    }
+}
+
+OUTPUT (Unexpected):
+--------------------
+Tuesday
+Wednesday
+Other day
+
+EXPLANATION:
+------------
+Without break, execution falls through to next cases.
+This is called "fall-through" behavior.
+
+FIX:
+----
+public class MissingBreakFixed {
+    public static void main(String[] args) {
+        
+        int day = 2;
+        
+        switch (day) {
+            case 1:
+                System.out.println("Monday");
+                break;
+            case 2:
+                System.out.println("Tuesday");
+                break;
+            case 3:
+                System.out.println("Wednesday");
+                break;
+            default:
+                System.out.println("Other day");
+        }
+    }
+}
+
+OUTPUT:
+-------
+Tuesday
+
+
+--------------------------------------------------------------------------------
+ERROR 6: DUPLICATE CASE VALUES IN SWITCH
+--------------------------------------------------------------------------------
+
+INVALID CODE:
+-------------
+public class DuplicateCase {
+    public static void main(String[] args) {
+        
+        int value = 1;
+        
+        switch (value) {
+            case 1:
+                System.out.println("One");
+                break;
+            case 1:    // Duplicate case value
+                System.out.println("First");
+                break;
+            case 2:
+                System.out.println("Two");
+                break;
+        }
+    }
+}
+
+ERROR MESSAGE:
+--------------
+error: duplicate case label
+            case 1:
+            ^
+
+FIX:
+----
+public class DuplicateCaseFixed {
+    public static void main(String[] args) {
+        
+        int value = 1;
+        
+        switch (value) {
+            case 1:
+                System.out.println("One or First");
+                break;
+            case 2:
+                System.out.println("Two");
+                break;
+        }
+    }
+}
+
+
+--------------------------------------------------------------------------------
+ERROR 7: USING UNSUPPORTED TYPE IN SWITCH
+--------------------------------------------------------------------------------
+
+INVALID CODE:
+-------------
+public class UnsupportedSwitchType {
+    public static void main(String[] args) {
+        
+        long value = 100L;
+        
+        switch (value) {    // long not supported
+            case 100:
+                System.out.println("Hundred");
+                break;
+        }
+    }
+}
+
+ERROR MESSAGE:
+--------------
+error: incompatible types: possible lossy conversion from long to int
+        switch (value) {
+               ^
+
+FIX:
+----
+public class UnsupportedSwitchTypeFixed {
+    public static void main(String[] args) {
+        
+        // Option 1: Use int instead
+        int value = 100;
+        
+        switch (value) {
+            case 100:
+                System.out.println("Hundred");
+                break;
+        }
+        
+        // Option 2: Use if-else for long
+        long longValue = 100L;
+        
+        if (longValue == 100L) {
+            System.out.println("Hundred (using if-else)");
+        }
+    }
+}
+
+SUPPORTED TYPES IN SWITCH:
+--------------------------
+- byte, short, int, char
+- String (Java 7+)
+- Enum
+- Wrapper classes (Byte, Short, Integer, Character)
+
+NOT SUPPORTED:
+--------------
+- long
+- float
+- double
+- boolean
+
+
+--------------------------------------------------------------------------------
+ERROR 8: USING VARIABLES IN CASE (Non-constant)
+--------------------------------------------------------------------------------
+
+INVALID CODE:
+-------------
+public class NonConstantCase {
+    public static void main(String[] args) {
+        
+        int value = 10;
+        int caseValue = 10;
+        
+        switch (value) {
+            case caseValue:    // Variable not allowed
+                System.out.println("Match");
+                break;
+        }
+    }
+}
+
+ERROR MESSAGE:
+--------------
+error: constant expression required
+            case caseValue:
+                 ^
+
+FIX:
+----
+public class NonConstantCaseFixed {
+    public static void main(String[] args) {
+        
+        int value = 10;
+        
+        // Option 1: Use literal constant
+        switch (value) {
+            case 10:
+                System.out.println("Match");
+                break;
+        }
+        
+        // Option 2: Use final constant
+        final int CASE_VALUE = 10;
+        
+        switch (value) {
+            case CASE_VALUE:    // final constant is allowed
+                System.out.println("Match with final");
+                break;
+        }
+    }
+}
+
+RULE:
+-----
+Case values must be compile-time constants:
+- Literal values: 10, 'A', "Hello"
+- final variables initialized with literals
+
+
+--------------------------------------------------------------------------------
+ERROR 9: UNREACHABLE CODE AFTER RETURN/BREAK
+--------------------------------------------------------------------------------
+
+INVALID CODE:
+-------------
+public class UnreachableCode {
+    public static void main(String[] args) {
+        
+        int x = 10;
+        
+        if (x > 5) {
+            System.out.println("Greater");
+            return;
+            System.out.println("This never executes");    // Unreachable
+        }
+    }
+}
+
+ERROR MESSAGE:
+--------------
+error: unreachable statement
+            System.out.println("This never executes");
+            ^
+
+FIX:
+----
+public class UnreachableCodeFixed {
+    public static void main(String[] args) {
+        
+        int x = 10;
+        
+        if (x > 5) {
+            System.out.println("Greater");
+            System.out.println("Before return");
+            return;
+        }
+    }
+}
+
+
+--------------------------------------------------------------------------------
+ERROR 10: SEMICOLON AFTER IF CONDITION
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE:
+-----------------
+public class SemicolonAfterIf {
+    public static void main(String[] args) {
+        
+        int x = 10;
+        
+        if (x > 5);    // Semicolon makes if body empty!
+        {
+            System.out.println("Greater than 5");
+        }
+    }
+}
+
+OUTPUT (Always executes):
+-------------------------
+Greater than 5
+
+EXPLANATION:
+------------
+The semicolon after if creates an empty statement.
+The block {} is independent and always executes.
+
+FIX:
+----
+public class SemicolonAfterIfFixed {
+    public static void main(String[] args) {
+        
+        int x = 10;
+        
+        if (x > 5) {    // No semicolon
+            System.out.println("Greater than 5");
+        }
+    }
+}
+
+
+--------------------------------------------------------------------------------
+ERROR 11: NULL POINTER IN STRING COMPARISON
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE:
+-----------------
+public class NullPointerComparison {
+    public static void main(String[] args) {
+        
+        String str = null;
+        
+        if (str.equals("Hello")) {    // NullPointerException!
+            System.out.println("Match");
+        }
+    }
+}
+
+ERROR MESSAGE (Runtime):
+------------------------
+Exception in thread "main" java.lang.NullPointerException
+
+FIX:
+----
+public class NullPointerComparisonFixed {
+    public static void main(String[] args) {
+        
+        String str = null;
+        
+        // Option 1: Check for null first
+        if (str != null && str.equals("Hello")) {
+            System.out.println("Match");
+        } else {
+            System.out.println("String is null or not matching");
+        }
+        
+        // Option 2: Put literal first (safer)
+        if ("Hello".equals(str)) {
+            System.out.println("Match");
+        } else {
+            System.out.println("Not matching or null");
+        }
+    }
+}
+
+OUTPUT:
+-------
+String is null or not matching
+Not matching or null
+
+BEST PRACTICE:
+--------------
+Always put the literal/known value first in comparison:
+"Hello".equals(str)   // Safe - returns false if str is null
+str.equals("Hello")   // Dangerous - throws NPE if str is null
+
+
+--------------------------------------------------------------------------------
+ERROR 12: WRONG CONDITION LOGIC (Always True/False)
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE:
+-----------------
+public class AlwaysTrueCondition {
+    public static void main(String[] args) {
+        
+        int x = 5;
+        
+        // This is always true (assignment returns value)
+        // This won't compile in Java for int, but concept is important
+        
+        // Common logical mistake
+        if (x > 0 || x < 0 || x == 0) {    // Always true!
+            System.out.println("This always executes");
+        }
+        
+        // Redundant condition
+        if (x > 5 && x < 3) {    // Always false! (impossible)
+            System.out.println("This never executes");
+        }
+    }
+}
+
+FIX:
+----
+public class AlwaysTrueConditionFixed {
+    public static void main(String[] args) {
+        
+        int x = 5;
+        
+        // Meaningful conditions
+        if (x > 0) {
+            System.out.println("Positive");
+        } else if (x < 0) {
+            System.out.println("Negative");
+        } else {
+            System.out.println("Zero");
+        }
+        
+        // Correct range check
+        if (x >= 3 && x <= 5) {    // Possible condition
+            System.out.println("x is between 3 and 5");
+        }
+    }
+}
+
+
+--------------------------------------------------------------------------------
+ERROR 13: MISSING DEFAULT IN SWITCH
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE (Not error but bad practice):
+----------------------------------------------
+public class MissingDefault {
+    public static void main(String[] args) {
+        
+        int day = 8;    // Invalid day
+        
+        switch (day) {
+            case 1:
+                System.out.println("Monday");
+                break;
+            case 2:
+                System.out.println("Tuesday");
+                break;
+            // No default - no output for invalid values
+        }
+        
+        System.out.println("Done");
+    }
+}
+
+OUTPUT:
+-------
+Done
+
+EXPLANATION:
+------------
+No output for invalid value. Silent failure.
+
+FIX:
+----
+public class MissingDefaultFixed {
+    public static void main(String[] args) {
+        
+        int day = 8;
+        
+        switch (day) {
+            case 1:
+                System.out.println("Monday");
+                break;
+            case 2:
+                System.out.println("Tuesday");
+                break;
+            default:
+                System.out.println("Invalid day: " + day);
+        }
+        
+        System.out.println("Done");
+    }
+}
+
+OUTPUT:
+-------
+Invalid day: 8
+Done
+
+BEST PRACTICE:
+--------------
+Always include default case in switch to handle unexpected values.
+
+
+--------------------------------------------------------------------------------
+ERROR 14: COMPLEX CONDITION WITHOUT PARENTHESES
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE:
+-----------------
+public class ComplexCondition {
+    public static void main(String[] args) {
+        
+        boolean a = true;
+        boolean b = false;
+        boolean c = true;
+        
+        // Confusing precedence
+        if (a || b && c) {    // && has higher precedence than ||
+            System.out.println("True");
+        }
+        
+        // What this actually means:
+        // a || (b && c)
+        // true || (false && true)
+        // true || false
+        // true
+    }
+}
+
+FIX:
+----
+public class ComplexConditionFixed {
+    public static void main(String[] args) {
+        
+        boolean a = true;
+        boolean b = false;
+        boolean c = true;
+        
+        // Clear with parentheses
+        if ((a || b) && c) {
+            System.out.println("(a OR b) AND c is True");
+        }
+        
+        if (a || (b && c)) {
+            System.out.println("a OR (b AND c) is True");
+        }
+    }
+}
+
+OUTPUT:
+-------
+(a OR b) AND c is True
+a OR (b AND c) is True
+
+BEST PRACTICE:
+--------------
+Always use parentheses to make complex conditions clear.
+
+
+================================================================================
+                    QUICK REFERENCE SUMMARY
+================================================================================
+
+CONTROL FLOW STATEMENTS:
+------------------------
++------------------+------------------------------------------+
+| Statement        | Use Case                                 |
++------------------+------------------------------------------+
+| if               | Single condition check                   |
+| if-else          | Two-way decision                         |
+| if-else-if       | Multiple conditions (ranges)             |
+| nested if        | Dependent conditions                     |
+| switch           | Multiple exact value matches             |
++------------------+------------------------------------------+
+
+
+NEGATIVE SCENARIOS SUMMARY:
+---------------------------
+1. Missing curly braces
+   PROBLEM: Only first statement belongs to if
+   FIX: Always use {} even for single statements
+
+2. Using = instead of ==
+   PROBLEM: Assignment instead of comparison
+   FIX: Use == for comparison
+
+3. Comparing strings with ==
+   PROBLEM: Compares references, not content
+   FIX: Use .equals() method
+
+4. Dangling else
+   PROBLEM: else binds to nearest if
+   FIX: Use curly braces
+
+5. Missing break in switch
+   PROBLEM: Fall-through to next cases
+   FIX: Add break after each case
+
+6. Duplicate case values
+   PROBLEM: Compilation error
+   FIX: Remove duplicate cases
+
+7. Unsupported type in switch
+   PROBLEM: long, float, double, boolean not supported
+   FIX: Use int, String, char, or if-else
+
+8. Variable in case
+   PROBLEM: Case needs constant expression
+   FIX: Use literal or final variable
+
+9. Unreachable code
+   PROBLEM: Code after return/break
+   FIX: Remove unreachable code
+
+10. Semicolon after if
+    PROBLEM: Empty if body
+    FIX: Remove semicolon
+
+11. Null pointer in string comparison
+    PROBLEM: NPE if string is null
+    FIX: Check null first or use "literal".equals(str)
+
+12. Always true/false conditions
+    PROBLEM: Logic error
+    FIX: Review condition logic
+
+13. Missing default in switch
+    PROBLEM: Silent failure for unexpected values
+    FIX: Always include default case
+
+14. Complex conditions without parentheses
+    PROBLEM: Precedence confusion
+    FIX: Use parentheses for clarity
+
+
+================================================================================
+                    END OF TOPIC 4
+================================================================================
+
+Let me know when you are ready for Topic 5: Loops (for, while, do-while).

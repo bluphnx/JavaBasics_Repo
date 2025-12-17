@@ -1,0 +1,3497 @@
+The user wants me to continue with Topic 13: Encapsulation. I need to cover:
+- What is Encapsulation
+- Access modifiers (private, protected, public, default)
+- Getters and Setters
+- Data hiding
+- Benefits of encapsulation
+- Positive examples
+- Negative scenarios (errors)
+- Use cases in Selenium automation
+- Use cases in Rest Assured automation
+
+I'll use simple ASCII formatting as requested:
+- Dashes (----)
+- Equal signs (====)
+- Plus signs for tables (+---)
+- Pipes for tables (|)
+- Simple bullets (- or *)
+
+Let me create a comprehensive topic on Encapsulation.
+
+================================================================================
+                    TOPIC 13: ENCAPSULATION IN JAVA
+================================================================================
+
+What is Encapsulation?
+----------------------
+Encapsulation is the process of wrapping data (variables) and code (methods)
+together as a single unit. It hides the internal state of an object and
+requires all interaction to be performed through an object's methods.
+
+Think of it as a protective shield that prevents data from being accessed
+directly from outside the class.
+
+
+Real-World Analogy:
+-------------------
+1. CAPSULE (Medicine):
+   - Medicine is wrapped inside a capsule
+   - You don't see or touch the medicine directly
+   - You just swallow the capsule (use the interface)
+
+2. CAR:
+   - Engine, transmission, fuel system are hidden under the hood
+   - You interact through steering wheel, pedals, gear shift
+   - You don't need to know how engine works to drive
+
+3. ATM MACHINE:
+   - Internal cash storage, counting mechanism hidden
+   - You interact through screen and keypad
+   - You can't directly access the cash vault
+
+4. TV REMOTE:
+   - Internal circuits, IR transmitter hidden
+   - You interact through buttons
+   - You don't need to know electronics to change channels
+
+
+Key Principles of Encapsulation:
+--------------------------------
+1. Declare variables as private
+2. Provide public getter methods to read values
+3. Provide public setter methods to write/update values
+4. Add validation logic in setters if needed
+
+
+Benefits of Encapsulation:
+--------------------------
++--------------------------------+----------------------------------------------+
+| Benefit                        | Description                                  |
++--------------------------------+----------------------------------------------+
+| Data Hiding                    | Internal data hidden from outside world      |
+| Increased Flexibility          | Can change internal implementation           |
+| Reusability                    | Encapsulated code can be reused              |
+| Testing                        | Easier to test individual units              |
+| Data Validation                | Can validate data before setting             |
+| Read-Only / Write-Only         | Can create read-only or write-only fields    |
+| Loose Coupling                 | Reduces dependencies between classes         |
++--------------------------------+----------------------------------------------+
+
+
+Why Important for Automation?
+-----------------------------
+- Protect test configuration data
+- Validate test inputs before use
+- Create maintainable page objects
+- Secure sensitive data (passwords, API keys)
+- Control access to WebDriver instance
+- Manage test data safely
+
+
+================================================================================
+                    PART 1: ACCESS MODIFIERS
+================================================================================
+
+Access modifiers control the visibility/accessibility of classes, methods,
+and variables. Java has four access modifiers:
+
++---------------+----------+----------+------------+----------+
+| Modifier      | Class    | Package  | Subclass   | World    |
++---------------+----------+----------+------------+----------+
+| private       |   YES    |    NO    |     NO     |    NO    |
+| default       |   YES    |   YES    |     NO     |    NO    |
+| protected     |   YES    |   YES    |    YES     |    NO    |
+| public        |   YES    |   YES    |    YES     |   YES    |
++---------------+----------+----------+------------+----------+
+
+Visual Representation:
+----------------------
+
+    +--------------------------------------------------+
+    |                      WORLD                        |
+    |   +------------------------------------------+   |
+    |   |               PACKAGE                     |   |
+    |   |   +----------------------------------+   |   |
+    |   |   |           SUBCLASS               |   |   |
+    |   |   |   +--------------------------+   |   |   |
+    |   |   |   |         CLASS            |   |   |   |
+    |   |   |   |                          |   |   |   |
+    |   |   |   |  private: HERE ONLY      |   |   |   |
+    |   |   |   |                          |   |   |   |
+    |   |   |   +--------------------------+   |   |   |
+    |   |   |   protected: CLASS + SUBCLASS    |   |   |
+    |   |   +----------------------------------+   |   |
+    |   |   default: CLASS + PACKAGE               |   |
+    |   +------------------------------------------+   |
+    |   public: EVERYWHERE                             |
+    +--------------------------------------------------+
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 1: Access Modifiers Demonstration
+--------------------------------------------------------------------------------
+
+// File: AccessModifiersDemo.java
+
+class AccessDemo {
+    
+    // Private - accessible only within this class
+    private String privateVar = "Private Variable";
+    
+    // Default (no modifier) - accessible within same package
+    String defaultVar = "Default Variable";
+    
+    // Protected - accessible within package + subclasses
+    protected String protectedVar = "Protected Variable";
+    
+    // Public - accessible from everywhere
+    public String publicVar = "Public Variable";
+    
+    // Private method
+    private void privateMethod() {
+        System.out.println("Private method called");
+        System.out.println("Can access all variables here:");
+        System.out.println("  - " + privateVar);
+        System.out.println("  - " + defaultVar);
+        System.out.println("  - " + protectedVar);
+        System.out.println("  - " + publicVar);
+    }
+    
+    // Default method
+    void defaultMethod() {
+        System.out.println("Default method called");
+        privateMethod();    // Can call private method from same class
+    }
+    
+    // Protected method
+    protected void protectedMethod() {
+        System.out.println("Protected method called");
+    }
+    
+    // Public method
+    public void publicMethod() {
+        System.out.println("Public method called");
+        privateMethod();    // Can call private method from same class
+    }
+}
+
+// Subclass in same package
+class SubClassSamePackage extends AccessDemo {
+    
+    public void testAccess() {
+        System.out.println("\n--- SubClass Same Package Access ---");
+        
+        // System.out.println(privateVar);    // ERROR! Not accessible
+        System.out.println("defaultVar: " + defaultVar);       // OK
+        System.out.println("protectedVar: " + protectedVar);   // OK
+        System.out.println("publicVar: " + publicVar);         // OK
+        
+        // privateMethod();     // ERROR! Not accessible
+        defaultMethod();        // OK
+        protectedMethod();      // OK
+        publicMethod();         // OK
+    }
+}
+
+// Non-subclass in same package
+class AnotherClassSamePackage {
+    
+    public void testAccess() {
+        AccessDemo obj = new AccessDemo();
+        
+        System.out.println("\n--- Another Class Same Package Access ---");
+        
+        // System.out.println(obj.privateVar);    // ERROR! Not accessible
+        System.out.println("defaultVar: " + obj.defaultVar);       // OK
+        System.out.println("protectedVar: " + obj.protectedVar);   // OK
+        System.out.println("publicVar: " + obj.publicVar);         // OK
+        
+        // obj.privateMethod();     // ERROR! Not accessible
+        obj.defaultMethod();        // OK
+        obj.protectedMethod();      // OK
+        obj.publicMethod();         // OK
+    }
+}
+
+public class AccessModifiersDemo {
+    public static void main(String[] args) {
+        
+        System.out.println("============================================");
+        System.out.println("        ACCESS MODIFIERS DEMO");
+        System.out.println("============================================");
+        
+        // Direct access from main
+        AccessDemo demo = new AccessDemo();
+        
+        System.out.println("\n--- Direct Access from Main ---");
+        // System.out.println(demo.privateVar);    // ERROR! Not accessible
+        System.out.println("defaultVar: " + demo.defaultVar);
+        System.out.println("protectedVar: " + demo.protectedVar);
+        System.out.println("publicVar: " + demo.publicVar);
+        
+        System.out.println();
+        demo.publicMethod();
+        
+        // Subclass access
+        SubClassSamePackage subClass = new SubClassSamePackage();
+        subClass.testAccess();
+        
+        // Another class access
+        AnotherClassSamePackage anotherClass = new AnotherClassSamePackage();
+        anotherClass.testAccess();
+    }
+}
+
+OUTPUT:
+-------
+============================================
+        ACCESS MODIFIERS DEMO
+============================================
+
+--- Direct Access from Main ---
+defaultVar: Default Variable
+protectedVar: Protected Variable
+publicVar: Public Variable
+
+Public method called
+Private method called
+Can access all variables here:
+  - Private Variable
+  - Default Variable
+  - Protected Variable
+  - Public Variable
+
+--- SubClass Same Package Access ---
+defaultVar: Default Variable
+protectedVar: Protected Variable
+publicVar: Public Variable
+Default method called
+Private method called
+Can access all variables here:
+  - Private Variable
+  - Default Variable
+  - Protected Variable
+  - Public Variable
+Protected method called
+Public method called
+Private method called
+Can access all variables here:
+  - Private Variable
+  - Default Variable
+  - Protected Variable
+  - Public Variable
+
+--- Another Class Same Package Access ---
+defaultVar: Default Variable
+protectedVar: Protected Variable
+publicVar: Public Variable
+Default method called
+Private method called
+Can access all variables here:
+  - Private Variable
+  - Default Variable
+  - Protected Variable
+  - Public Variable
+Protected method called
+Public method called
+Private method called
+Can access all variables here:
+  - Private Variable
+  - Default Variable
+  - Protected Variable
+  - Public Variable
+
+
+================================================================================
+                    PART 2: GETTERS AND SETTERS
+================================================================================
+
+What are Getters and Setters?
+-----------------------------
+- Getter: Method that returns the value of a private variable
+- Setter: Method that sets/updates the value of a private variable
+
+Naming Convention:
+------------------
+- Getter: getVariableName() or isVariableName() for boolean
+- Setter: setVariableName(value)
+
+Example:
+- Variable: private String name;
+- Getter: public String getName() { return name; }
+- Setter: public void setName(String name) { this.name = name; }
+
+
+Why Use Getters and Setters?
+----------------------------
+1. Control access to private data
+2. Add validation before setting values
+3. Perform actions when getting/setting (logging, formatting)
+4. Create read-only or write-only properties
+5. Change internal implementation without affecting external code
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 2: Basic Getters and Setters
+--------------------------------------------------------------------------------
+
+class Person {
+    
+    // Private fields - cannot be accessed directly from outside
+    private String name;
+    private int age;
+    private String email;
+    private double salary;
+    private boolean active;
+    
+    // Default constructor
+    public Person() {
+        this.name = "Unknown";
+        this.age = 0;
+        this.active = true;
+    }
+    
+    // Parameterized constructor
+    public Person(String name, int age, String email) {
+        this.name = name;
+        this.age = age;
+        this.email = email;
+        this.active = true;
+    }
+    
+    // ========== GETTERS ==========
+    
+    public String getName() {
+        return name;
+    }
+    
+    public int getAge() {
+        return age;
+    }
+    
+    public String getEmail() {
+        return email;
+    }
+    
+    public double getSalary() {
+        return salary;
+    }
+    
+    // For boolean, use 'is' prefix
+    public boolean isActive() {
+        return active;
+    }
+    
+    // ========== SETTERS ==========
+    
+    public void setName(String name) {
+        this.name = name;
+    }
+    
+    public void setAge(int age) {
+        this.age = age;
+    }
+    
+    public void setEmail(String email) {
+        this.email = email;
+    }
+    
+    public void setSalary(double salary) {
+        this.salary = salary;
+    }
+    
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+    
+    // Display method
+    public void displayInfo() {
+        System.out.println("Name: " + name);
+        System.out.println("Age: " + age);
+        System.out.println("Email: " + email);
+        System.out.println("Salary: $" + salary);
+        System.out.println("Active: " + active);
+    }
+}
+
+public class BasicGetterSetterDemo {
+    public static void main(String[] args) {
+        
+        System.out.println("============================================");
+        System.out.println("        BASIC GETTER SETTER DEMO");
+        System.out.println("============================================\n");
+        
+        // Create object using default constructor
+        Person person1 = new Person();
+        
+        System.out.println("--- Person 1 (Default Constructor) ---");
+        person1.displayInfo();
+        
+        // Use setters to update values
+        System.out.println("\n--- After Using Setters ---");
+        person1.setName("John Doe");
+        person1.setAge(30);
+        person1.setEmail("john@example.com");
+        person1.setSalary(50000);
+        person1.displayInfo();
+        
+        // Use getters to retrieve values
+        System.out.println("\n--- Using Getters ---");
+        System.out.println("Name from getter: " + person1.getName());
+        System.out.println("Age from getter: " + person1.getAge());
+        System.out.println("Is Active: " + person1.isActive());
+        
+        // Create object using parameterized constructor
+        System.out.println("\n--- Person 2 (Parameterized Constructor) ---");
+        Person person2 = new Person("Jane Smith", 25, "jane@example.com");
+        person2.setSalary(60000);
+        person2.displayInfo();
+        
+        // Cannot access private fields directly
+        // person1.name = "Test";     // ERROR! name is private
+        // person1.age = 100;         // ERROR! age is private
+    }
+}
+
+OUTPUT:
+-------
+============================================
+        BASIC GETTER SETTER DEMO
+============================================
+
+--- Person 1 (Default Constructor) ---
+Name: Unknown
+Age: 0
+Email: null
+Salary: $0.0
+Active: true
+
+--- After Using Setters ---
+Name: John Doe
+Age: 30
+Email: john@example.com
+Salary: $50000.0
+Active: true
+
+--- Using Getters ---
+Name from getter: John Doe
+Age from getter: 30
+Is Active: true
+
+--- Person 2 (Parameterized Constructor) ---
+Name: Jane Smith
+Age: 25
+Email: jane@example.com
+Salary: $60000.0
+Active: true
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 3: Getters and Setters with Validation
+--------------------------------------------------------------------------------
+
+class BankAccount {
+    
+    // Private fields
+    private String accountNumber;
+    private String accountHolder;
+    private double balance;
+    private String pin;
+    private boolean isLocked;
+    private int failedAttempts;
+    
+    // Constants
+    private static final double MIN_BALANCE = 100.0;
+    private static final double MAX_WITHDRAWAL = 10000.0;
+    private static final int MAX_FAILED_ATTEMPTS = 3;
+    
+    // Constructor
+    public BankAccount(String accountNumber, String accountHolder, double initialDeposit) {
+        this.accountNumber = accountNumber;
+        this.accountHolder = accountHolder;
+        this.balance = initialDeposit;
+        this.pin = "0000";
+        this.isLocked = false;
+        this.failedAttempts = 0;
+    }
+    
+    // ========== GETTERS ==========
+    
+    // Simple getter
+    public String getAccountNumber() {
+        return accountNumber;
+    }
+    
+    // Getter with formatting
+    public String getMaskedAccountNumber() {
+        if (accountNumber.length() > 4) {
+            return "****" + accountNumber.substring(accountNumber.length() - 4);
+        }
+        return accountNumber;
+    }
+    
+    public String getAccountHolder() {
+        return accountHolder;
+    }
+    
+    public double getBalance() {
+        return balance;
+    }
+    
+    // Getter with formatting
+    public String getFormattedBalance() {
+        return String.format("$%.2f", balance);
+    }
+    
+    public boolean isLocked() {
+        return isLocked;
+    }
+    
+    // No getter for PIN - security!
+    // public String getPin() - NOT PROVIDED
+    
+    // ========== SETTERS WITH VALIDATION ==========
+    
+    // Setter with validation
+    public void setAccountHolder(String accountHolder) {
+        if (accountHolder == null || accountHolder.trim().isEmpty()) {
+            System.out.println("[ERROR] Account holder name cannot be empty!");
+            return;
+        }
+        if (accountHolder.length() < 2) {
+            System.out.println("[ERROR] Account holder name too short!");
+            return;
+        }
+        this.accountHolder = accountHolder.trim();
+        System.out.println("[SUCCESS] Account holder updated to: " + this.accountHolder);
+    }
+    
+    // Setter with validation and constraints
+    public void setPin(String oldPin, String newPin) {
+        // Check if account is locked
+        if (isLocked) {
+            System.out.println("[ERROR] Account is locked! Cannot change PIN.");
+            return;
+        }
+        
+        // Verify old PIN
+        if (!this.pin.equals(oldPin)) {
+            failedAttempts++;
+            System.out.println("[ERROR] Incorrect old PIN! Attempt " + 
+                              failedAttempts + "/" + MAX_FAILED_ATTEMPTS);
+            
+            if (failedAttempts >= MAX_FAILED_ATTEMPTS) {
+                isLocked = true;
+                System.out.println("[ALERT] Account locked due to too many failed attempts!");
+            }
+            return;
+        }
+        
+        // Validate new PIN
+        if (newPin == null || newPin.length() != 4) {
+            System.out.println("[ERROR] PIN must be exactly 4 digits!");
+            return;
+        }
+        
+        if (!newPin.matches("\\d{4}")) {
+            System.out.println("[ERROR] PIN must contain only digits!");
+            return;
+        }
+        
+        // Reset failed attempts and set new PIN
+        this.pin = newPin;
+        this.failedAttempts = 0;
+        System.out.println("[SUCCESS] PIN changed successfully!");
+    }
+    
+    // No direct setter for balance - use deposit/withdraw
+    // public void setBalance(double balance) - NOT PROVIDED
+    
+    // ========== BUSINESS METHODS (Controlled access to balance) ==========
+    
+    public void deposit(double amount) {
+        if (isLocked) {
+            System.out.println("[ERROR] Account is locked!");
+            return;
+        }
+        
+        if (amount <= 0) {
+            System.out.println("[ERROR] Deposit amount must be positive!");
+            return;
+        }
+        
+        balance += amount;
+        System.out.println("[SUCCESS] Deposited: $" + amount);
+        System.out.println("New Balance: " + getFormattedBalance());
+    }
+    
+    public void withdraw(double amount, String pin) {
+        if (isLocked) {
+            System.out.println("[ERROR] Account is locked!");
+            return;
+        }
+        
+        // Verify PIN
+        if (!this.pin.equals(pin)) {
+            failedAttempts++;
+            System.out.println("[ERROR] Incorrect PIN! Attempt " + 
+                              failedAttempts + "/" + MAX_FAILED_ATTEMPTS);
+            
+            if (failedAttempts >= MAX_FAILED_ATTEMPTS) {
+                isLocked = true;
+                System.out.println("[ALERT] Account locked!");
+            }
+            return;
+        }
+        
+        // Reset failed attempts on successful PIN
+        failedAttempts = 0;
+        
+        // Validate withdrawal
+        if (amount <= 0) {
+            System.out.println("[ERROR] Withdrawal amount must be positive!");
+            return;
+        }
+        
+        if (amount > MAX_WITHDRAWAL) {
+            System.out.println("[ERROR] Maximum withdrawal limit is $" + MAX_WITHDRAWAL);
+            return;
+        }
+        
+        if (balance - amount < MIN_BALANCE) {
+            System.out.println("[ERROR] Insufficient balance! Minimum balance of $" + 
+                              MIN_BALANCE + " required.");
+            System.out.println("Maximum you can withdraw: $" + (balance - MIN_BALANCE));
+            return;
+        }
+        
+        balance -= amount;
+        System.out.println("[SUCCESS] Withdrawn: $" + amount);
+        System.out.println("New Balance: " + getFormattedBalance());
+    }
+    
+    // Admin method to unlock account
+    public void unlockAccount(String adminCode) {
+        if (adminCode.equals("ADMIN123")) {
+            isLocked = false;
+            failedAttempts = 0;
+            System.out.println("[ADMIN] Account unlocked successfully!");
+        } else {
+            System.out.println("[ERROR] Invalid admin code!");
+        }
+    }
+    
+    // Display account info
+    public void displayAccountInfo() {
+        System.out.println("-----------------------------");
+        System.out.println("Account Number: " + getMaskedAccountNumber());
+        System.out.println("Account Holder: " + accountHolder);
+        System.out.println("Balance: " + getFormattedBalance());
+        System.out.println("Status: " + (isLocked ? "LOCKED" : "ACTIVE"));
+        System.out.println("-----------------------------");
+    }
+}
+
+public class ValidationGetterSetterDemo {
+    public static void main(String[] args) {
+        
+        System.out.println("================================================");
+        System.out.println("    GETTER SETTER WITH VALIDATION DEMO");
+        System.out.println("================================================\n");
+        
+        // Create account
+        BankAccount account = new BankAccount("[REDACTED:BANK_ACCOUNT_NUMBER]", "John Doe", 1000.0);
+        
+        System.out.println("--- Initial Account Info ---");
+        account.displayAccountInfo();
+        
+        // Test deposit
+        System.out.println("\n--- Testing Deposit ---");
+        account.deposit(500);
+        account.deposit(-100);    // Should fail
+        account.deposit(0);       // Should fail
+        
+        // Test withdrawal
+        System.out.println("\n--- Testing Withdrawal ---");
+        account.withdraw(200, "0000");     // Should succeed
+        account.withdraw(200, "1111");     // Wrong PIN
+        account.withdraw(15000, "0000");   // Exceeds limit
+        account.withdraw(1500, "0000");    // Would go below minimum
+        
+        // Test PIN change
+        System.out.println("\n--- Testing PIN Change ---");
+        account.setPin("0000", "12345");   // Wrong length
+        account.setPin("0000", "abcd");    // Not digits
+        account.setPin("1111", "1234");    // Wrong old PIN
+        account.setPin("0000", "1234");    // Should succeed
+        
+        // Test account holder update
+        System.out.println("\n--- Testing Account Holder Update ---");
+        account.setAccountHolder("");           // Empty - should fail
+        account.setAccountHolder("A");          // Too short - should fail
+        account.setAccountHolder("Jane Smith"); // Should succeed
+        
+        // Test account locking
+        System.out.println("\n--- Testing Account Locking ---");
+        account.withdraw(100, "0000");    // Wrong PIN (now 1234)
+        account.withdraw(100, "0000");    // Wrong PIN
+        account.withdraw(100, "0000");    // Wrong PIN - should lock
+        account.withdraw(100, "1234");    // Account locked
+        
+        // Unlock account
+        System.out.println("\n--- Unlocking Account ---");
+        account.unlockAccount("WRONG");    // Wrong admin code
+        account.unlockAccount("ADMIN123"); // Should succeed
+        
+        // Final state
+        System.out.println("\n--- Final Account Info ---");
+        account.displayAccountInfo();
+    }
+}
+
+OUTPUT:
+-------
+================================================
+    GETTER SETTER WITH VALIDATION DEMO
+================================================
+
+--- Initial Account Info ---
+-----------------------------
+Account Number: ****7890
+Account Holder: John Doe
+Balance: $1000.00
+Status: ACTIVE
+-----------------------------
+
+--- Testing Deposit ---
+[SUCCESS] Deposited: $500.0
+New Balance: $1500.00
+[ERROR] Deposit amount must be positive!
+[ERROR] Deposit amount must be positive!
+
+--- Testing Withdrawal ---
+[SUCCESS] Withdrawn: $200.0
+New Balance: $1300.00
+[ERROR] Incorrect PIN! Attempt 1/3
+[ERROR] Maximum withdrawal limit is $10000.0
+[ERROR] Insufficient balance! Minimum balance of $100.0 required.
+Maximum you can withdraw: $1200.0
+
+--- Testing PIN Change ---
+[ERROR] PIN must be exactly 4 digits!
+[ERROR] PIN must contain only digits!
+[ERROR] Incorrect old PIN! Attempt 1/3
+[SUCCESS] PIN changed successfully!
+
+--- Testing Account Holder Update ---
+[ERROR] Account holder name cannot be empty!
+[ERROR] Account holder name too short!
+[SUCCESS] Account holder updated to: Jane Smith
+
+--- Testing Account Locking ---
+[ERROR] Incorrect PIN! Attempt 1/3
+[ERROR] Incorrect PIN! Attempt 2/3
+[ERROR] Incorrect PIN! Attempt 3/3
+[ALERT] Account locked due to too many failed attempts!
+[ERROR] Account is locked!
+
+--- Unlocking Account ---
+[ERROR] Invalid admin code!
+[ADMIN] Account unlocked successfully!
+
+--- Final Account Info ---
+-----------------------------
+Account Number: ****[REDACTED:BANK_ACCOUNT_NUMBER]
+Account Holder: Jane Smith
+Balance: $1300.00
+Status: ACTIVE
+-----------------------------
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 4: Read-Only and Write-Only Properties
+--------------------------------------------------------------------------------
+
+class SystemConfig {
+    
+    // Read-only property (no setter)
+    private final String systemId;
+    private final long createdTimestamp;
+    
+    // Write-only property (no getter) - for sensitive data
+    private String apiSecret;
+    
+    // Normal read-write property
+    private String systemName;
+    private boolean maintenanceMode;
+    
+    // Computed property (getter only, no backing field)
+    // private String status; - not needed, computed from other fields
+    
+    // Constructor
+    public SystemConfig(String systemName) {
+        this.systemId = "SYS-" + System.currentTimeMillis();
+        this.createdTimestamp = System.currentTimeMillis();
+        this.systemName = systemName;
+        this.maintenanceMode = false;
+    }
+    
+    // ========== READ-ONLY PROPERTIES ==========
+    // Only getters, no setters - values set only in constructor
+    
+    public String getSystemId() {
+        return systemId;
+    }
+    
+    public long getCreatedTimestamp() {
+        return createdTimestamp;
+    }
+    
+    public String getCreatedDate() {
+        return new java.util.Date(createdTimestamp).toString();
+    }
+    
+    // ========== WRITE-ONLY PROPERTY ==========
+    // Only setter, no getter - for sensitive data
+    
+    public void setApiSecret(String apiSecret) {
+        if (apiSecret == null || apiSecret.length() < 10) {
+            System.out.println("[ERROR] API secret must be at least 10 characters!");
+            return;
+        }
+        this.apiSecret = apiSecret;
+        System.out.println("[SUCCESS] API secret has been set (hidden for security)");
+    }
+    
+    // No getter for apiSecret - it's write-only!
+    // public String getApiSecret() { } - NOT PROVIDED
+    
+    // Method to verify API secret without exposing it
+    public boolean verifyApiSecret(String secret) {
+        return this.apiSecret != null && this.apiSecret.equals(secret);
+    }
+    
+    // ========== NORMAL READ-WRITE PROPERTIES ==========
+    
+    public String getSystemName() {
+        return systemName;
+    }
+    
+    public void setSystemName(String systemName) {
+        this.systemName = systemName;
+    }
+    
+    public boolean isMaintenanceMode() {
+        return maintenanceMode;
+    }
+    
+    public void setMaintenanceMode(boolean maintenanceMode) {
+        this.maintenanceMode = maintenanceMode;
+        System.out.println("[INFO] Maintenance mode: " + (maintenanceMode ? "ON" : "OFF"));
+    }
+    
+    // ========== COMPUTED PROPERTY ==========
+    // Getter only, value computed from other properties
+    
+    public String getStatus() {
+        if (maintenanceMode) {
+            return "MAINTENANCE";
+        } else if (apiSecret == null) {
+            return "NOT CONFIGURED";
+        } else {
+            return "RUNNING";
+        }
+    }
+    
+    // Display system info
+    public void displayInfo() {
+        System.out.println("========== SYSTEM CONFIG ==========");
+        System.out.println("System ID: " + getSystemId());
+        System.out.println("System Name: " + getSystemName());
+        System.out.println("Created: " + getCreatedDate());
+        System.out.println("Status: " + getStatus());
+        System.out.println("Maintenance Mode: " + isMaintenanceMode());
+        System.out.println("API Secret: " + (apiSecret != null ? "[CONFIGURED]" : "[NOT SET]"));
+        System.out.println("===================================");
+    }
+}
+
+public class ReadWriteOnlyDemo {
+    public static void main(String[] args) {
+        
+        System.out.println("================================================");
+        System.out.println("    READ-ONLY AND WRITE-ONLY PROPERTIES DEMO");
+        System.out.println("================================================\n");
+        
+        SystemConfig config = new SystemConfig("MyApplication");
+        
+        System.out.println("--- Initial State ---");
+        config.displayInfo();
+        
+        // Test read-only properties
+        System.out.println("\n--- Testing Read-Only Properties ---");
+        System.out.println("System ID: " + config.getSystemId());
+        System.out.println("Created: " + config.getCreatedDate());
+        
+        // Cannot modify read-only properties
+        // config.setSystemId("NEW-ID");       // ERROR! No setter
+        // config.setCreatedTimestamp(0);      // ERROR! No setter
+        System.out.println("(Cannot modify - no setters provided)");
+        
+        // Test write-only property
+        System.out.println("\n--- Testing Write-Only Property ---");
+        config.setApiSecret("short");                  // Too short
+        config.setApiSecret("mySecretApiKey12345");    // Should succeed
+        
+        // Cannot read write-only property
+        // String secret = config.getApiSecret();    // ERROR! No getter
+        System.out.println("(Cannot read API secret - no getter provided)");
+        
+        // But can verify it
+        System.out.println("Verify correct secret: " + config.verifyApiSecret("mySecretApiKey12345"));
+        System.out.println("Verify wrong secret: " + config.verifyApiSecret("wrongSecret"));
+        
+        // Test normal read-write property
+        System.out.println("\n--- Testing Read-Write Property ---");
+        System.out.println("Current name: " + config.getSystemName());
+        config.setSystemName("UpdatedApplication");
+        System.out.println("Updated name: " + config.getSystemName());
+        
+        // Test computed property
+        System.out.println("\n--- Testing Computed Property (Status) ---");
+        System.out.println("Current status: " + config.getStatus());
+        
+        config.setMaintenanceMode(true);
+        System.out.println("Status after maintenance on: " + config.getStatus());
+        
+        config.setMaintenanceMode(false);
+        System.out.println("Status after maintenance off: " + config.getStatus());
+        
+        // Final state
+        System.out.println("\n--- Final State ---");
+        config.displayInfo();
+    }
+}
+
+OUTPUT:
+-------
+================================================
+    READ-ONLY AND WRITE-ONLY PROPERTIES DEMO
+================================================
+
+--- Initial State ---
+========== SYSTEM CONFIG ==========
+System ID: SYS-1234567890123
+System Name: MyApplication
+Created: Mon Jan 01 12:00:00 UTC 2024
+Status: NOT CONFIGURED
+Maintenance Mode: false
+API Secret: [NOT SET]
+===================================
+
+--- Testing Read-Only Properties ---
+System ID: SYS-1234567890123
+Created: Mon Jan 01 12:00:00 UTC 2024
+(Cannot modify - no setters provided)
+
+--- Testing Write-Only Property ---
+[ERROR] API secret must be at least 10 characters!
+[SUCCESS] API secret has been set (hidden for security)
+(Cannot read API secret - no getter provided)
+Verify correct secret: true
+Verify wrong secret: false
+
+--- Testing Read-Write Property ---
+Current name: MyApplication
+Updated name: UpdatedApplication
+
+--- Testing Computed Property (Status) ---
+Current status: RUNNING
+[INFO] Maintenance mode: ON
+Status after maintenance on: MAINTENANCE
+[INFO] Maintenance mode: OFF
+Status after maintenance off: RUNNING
+
+--- Final State ---
+========== SYSTEM CONFIG ==========
+System ID: SYS-1234567890123
+System Name: UpdatedApplication
+Created: Mon Jan 01 12:00:00 UTC 2024
+Status: RUNNING
+Maintenance Mode: false
+API Secret: [CONFIGURED]
+===================================
+
+
+================================================================================
+                    PART 3: ENCAPSULATION IN SELENIUM AUTOMATION
+================================================================================
+
+--------------------------------------------------------------------------------
+EXAMPLE 5: Encapsulated Page Object Model
+--------------------------------------------------------------------------------
+
+// Base Page with encapsulated WebDriver
+class BasePageEncapsulated {
+    
+    // Private - WebDriver hidden from outside
+    private String driver;
+    private int defaultWaitTime;
+    private boolean isPageLoaded;
+    
+    // Protected - accessible to child page classes
+    protected String pageName;
+    protected String pageUrl;
+    
+    // Constructor
+    public BasePageEncapsulated(String driver) {
+        this.driver = driver;
+        this.defaultWaitTime = 10;
+        this.isPageLoaded = false;
+        System.out.println("[BasePage] Initialized with driver: " + driver);
+    }
+    
+    // ========== GETTERS ==========
+    
+    // Public getter for page info
+    public String getPageName() {
+        return pageName;
+    }
+    
+    public String getPageUrl() {
+        return pageUrl;
+    }
+    
+    public boolean isPageLoaded() {
+        return isPageLoaded;
+    }
+    
+    // Protected getter for driver - only subclasses can access
+    protected String getDriver() {
+        return driver;
+    }
+    
+    public int getDefaultWaitTime() {
+        return defaultWaitTime;
+    }
+    
+    // ========== SETTERS WITH VALIDATION ==========
+    
+    public void setDefaultWaitTime(int seconds) {
+        if (seconds < 1) {
+            System.out.println("[ERROR] Wait time must be at least 1 second!");
+            return;
+        }
+        if (seconds > 60) {
+            System.out.println("[WARNING] Wait time over 60 seconds may cause slow tests!");
+        }
+        this.defaultWaitTime = seconds;
+        System.out.println("[BasePage] Default wait time set to: " + seconds + " seconds");
+    }
+    
+    // ========== PROTECTED METHODS - For subclasses ==========
+    
+    protected void click(String locator) {
+        System.out.println("[" + pageName + "] Clicking: " + locator);
+        // driver.findElement(By.xpath(locator)).click();
+    }
+    
+    protected void type(String locator, String text) {
+        System.out.println("[" + pageName + "] Typing into: " + locator);
+        // driver.findElement(By.xpath(locator)).sendKeys(text);
+    }
+    
+    protected void typeSecure(String locator, String text) {
+        System.out.println("[" + pageName + "] Typing secure data into: " + locator);
+        // Masks the actual text in logs
+        // driver.findElement(By.xpath(locator)).sendKeys(text);
+    }
+    
+    protected String getText(String locator) {
+        System.out.println("[" + pageName + "] Getting text from: " + locator);
+        return "Sample Text";
+    }
+    
+    protected boolean isDisplayed(String locator) {
+        System.out.println("[" + pageName + "] Checking visibility: " + locator);
+        return true;
+    }
+    
+    protected void waitForElement(String locator) {
+        System.out.println("[" + pageName + "] Waiting " + defaultWaitTime + "s for: " + locator);
+    }
+    
+    // ========== PUBLIC METHODS ==========
+    
+    public void navigateTo() {
+        System.out.println("[" + pageName + "] Navigating to: " + pageUrl);
+        // driver.get(pageUrl);
+        isPageLoaded = true;
+    }
+    
+    public void takeScreenshot(String fileName) {
+        System.out.println("[" + pageName + "] Screenshot saved: " + fileName + ".png");
+    }
+    
+    public void refresh() {
+        System.out.println("[" + pageName + "] Refreshing page");
+        // driver.navigate().refresh();
+    }
+}
+
+// Login Page with encapsulated credentials handling
+class LoginPageEncapsulated extends BasePageEncapsulated {
+    
+    // Private locators - hidden from outside
+    private static final String USERNAME_FIELD = "//input[@id='username']";
+    private static final String PASSWORD_FIELD = "//input[@id='password']";
+    private static final String LOGIN_BUTTON = "//button[@id='login']";
+    private static final String ERROR_MESSAGE = "//div[@class='error']";
+    private static final String REMEMBER_ME = "//input[@id='remember']";
+    
+    // Private state
+    private boolean rememberMeChecked;
+    private int loginAttempts;
+    private static final int MAX_LOGIN_ATTEMPTS = 3;
+    
+    // Constructor
+    public LoginPageEncapsulated(String driver) {
+        super(driver);
+        this.pageName = "LoginPage";
+        this.pageUrl = "https://app.example.com/login";
+        this.rememberMeChecked = false;
+        this.loginAttempts = 0;
+    }
+    
+    // ========== GETTERS ==========
+    
+    public int getLoginAttempts() {
+        return loginAttempts;
+    }
+    
+    public int getRemainingAttempts() {
+        return MAX_LOGIN_ATTEMPTS - loginAttempts;
+    }
+    
+    public boolean isRememberMeChecked() {
+        return rememberMeChecked;
+    }
+    
+    // ========== PRIVATE HELPER METHODS ==========
+    
+    private void enterUsername(String username) {
+        waitForElement(USERNAME_FIELD);
+        type(USERNAME_FIELD, username);
+    }
+    
+    private void enterPassword(String password) {
+        typeSecure(PASSWORD_FIELD, password);
+    }
+    
+    private void clickLoginButton() {
+        click(LOGIN_BUTTON);
+    }
+    
+    private boolean validateCredentials(String username, String password) {
+        if (username == null || username.trim().isEmpty()) {
+            System.out.println("[LoginPage] ERROR: Username cannot be empty!");
+            return false;
+        }
+        if (password == null || password.length() < 6) {
+            System.out.println("[LoginPage] ERROR: Password must be at least 6 characters!");
+            return false;
+        }
+        return true;
+    }
+    
+    // ========== PUBLIC METHODS ==========
+    
+    public void setRememberMe(boolean checked) {
+        this.rememberMeChecked = checked;
+        if (checked) {
+            click(REMEMBER_ME);
+            System.out.println("[LoginPage] Remember Me: CHECKED");
+        } else {
+            System.out.println("[LoginPage] Remember Me: UNCHECKED");
+        }
+    }
+    
+    public DashboardPageEncapsulated login(String username, String password) {
+        System.out.println("\n--- Attempting Login ---");
+        
+        // Check max attempts
+        if (loginAttempts >= MAX_LOGIN_ATTEMPTS) {
+            System.out.println("[LoginPage] ERROR: Maximum login attempts reached!");
+            System.out.println("[LoginPage] Please wait or contact support.");
+            return null;
+        }
+        
+        // Validate credentials before attempting
+        if (!validateCredentials(username, password)) {
+            return null;
+        }
+        
+        loginAttempts++;
+        System.out.println("[LoginPage] Login attempt: " + loginAttempts + "/" + MAX_LOGIN_ATTEMPTS);
+        
+        enterUsername(username);
+        enterPassword(password);
+        clickLoginButton();
+        
+        // Simulate login result
+        System.out.println("[LoginPage] Login successful!");
+        return new DashboardPageEncapsulated(getDriver());
+    }
+    
+    public String getErrorMessage() {
+        if (isDisplayed(ERROR_MESSAGE)) {
+            return getText(ERROR_MESSAGE);
+        }
+        return null;
+    }
+    
+    public void resetLoginAttempts() {
+        this.loginAttempts = 0;
+        System.out.println("[LoginPage] Login attempts reset");
+    }
+    
+    public void verifyPageLoaded() {
+        System.out.println("[LoginPage] Verifying page loaded...");
+        waitForElement(USERNAME_FIELD);
+        waitForElement(PASSWORD_FIELD);
+        waitForElement(LOGIN_BUTTON);
+        System.out.println("[LoginPage] All elements verified!");
+    }
+}
+
+// Dashboard Page with encapsulated user session
+class DashboardPageEncapsulated extends BasePageEncapsulated {
+    
+    // Private locators
+    private static final String WELCOME_MSG = "//h1[@id='welcome']";
+    private static final String LOGOUT_BTN = "//button[@id='logout']";
+    private static final String PROFILE_MENU = "//div[@id='profile-menu']";
+    
+    // Private session data
+    private String currentUser;
+    private long sessionStartTime;
+    private boolean isSessionValid;
+    
+    // Constructor
+    public DashboardPageEncapsulated(String driver) {
+        super(driver);
+        this.pageName = "Dashboard";
+        this.pageUrl = "https://app.example.com/dashboard";
+        this.sessionStartTime = System.currentTimeMillis();
+        this.isSessionValid = true;
+    }
+    
+    // ========== GETTERS ==========
+    
+    public String getCurrentUser() {
+        return currentUser;
+    }
+    
+    public boolean isSessionValid() {
+        // Session expires after 30 minutes (simulated)
+        long sessionDuration = System.currentTimeMillis() - sessionStartTime;
+        return isSessionValid && sessionDuration < 1800000;
+    }
+    
+    public String getSessionDuration() {
+        long duration = System.currentTimeMillis() - sessionStartTime;
+        long minutes = duration / 60000;
+        long seconds = (duration % 60000) / 1000;
+        return minutes + " min " + seconds + " sec";
+    }
+    
+    // ========== SETTERS ==========
+    
+    // Package-private setter - only classes in same package can set user
+    void setCurrentUser(String username) {
+        this.currentUser = username;
+    }
+    
+    // ========== PRIVATE METHODS ==========
+    
+    private void checkSession() {
+        if (!isSessionValid()) {
+            System.out.println("[Dashboard] WARNING: Session may have expired!");
+        }
+    }
+    
+    // ========== PUBLIC METHODS ==========
+    
+    public String getWelcomeMessage() {
+        checkSession();
+        return getText(WELCOME_MSG);
+    }
+    
+    public void openProfileMenu() {
+        checkSession();
+        click(PROFILE_MENU);
+        System.out.println("[Dashboard] Profile menu opened");
+    }
+    
+    public LoginPageEncapsulated logout() {
+        System.out.println("\n--- Logging Out ---");
+        checkSession();
+        click(LOGOUT_BTN);
+        isSessionValid = false;
+        System.out.println("[Dashboard] User logged out successfully");
+        System.out.println("[Dashboard] Session duration: " + getSessionDuration());
+        return new LoginPageEncapsulated(getDriver());
+    }
+    
+    public void verifyPageLoaded() {
+        System.out.println("[Dashboard] Verifying page loaded...");
+        waitForElement(WELCOME_MSG);
+        waitForElement(LOGOUT_BTN);
+        System.out.println("[Dashboard] All elements verified!");
+    }
+    
+    public void displaySessionInfo() {
+        System.out.println("========== SESSION INFO ==========");
+        System.out.println("User: " + (currentUser != null ? currentUser : "Unknown"));
+        System.out.println("Session Valid: " + isSessionValid());
+        System.out.println("Duration: " + getSessionDuration());
+        System.out.println("==================================");
+    }
+}
+
+public class SeleniumEncapsulationDemo {
+    public static void main(String[] args) {
+        
+        System.out.println("====================================================");
+        System.out.println("    SELENIUM ENCAPSULATION DEMO - PAGE OBJECT MODEL");
+        System.out.println("====================================================\n");
+        
+        String driver = "ChromeDriver";
+        
+        // Create Login Page
+        LoginPageEncapsulated loginPage = new LoginPageEncapsulated(driver);
+        
+        // Configure wait time
+        System.out.println("--- Configuring Page ---");
+        loginPage.setDefaultWaitTime(0);     // Should fail
+        loginPage.setDefaultWaitTime(15);    // Should succeed
+        
+        // Navigate and verify
+        System.out.println("\n--- Navigate to Login Page ---");
+        loginPage.navigateTo();
+        loginPage.verifyPageLoaded();
+        
+        // Test validation
+        System.out.println("\n--- Test Login Validation ---");
+        loginPage.login("", "password123");           // Empty username
+        loginPage.login("testuser", "123");           // Short password
+        
+        // Successful login
+        System.out.println("\n--- Successful Login ---");
+        loginPage.setRememberMe(true);
+        DashboardPageEncapsulated dashboard = loginPage.login("testuser", "password123");
+        
+        if (dashboard != null) {
+            dashboard.setCurrentUser("testuser");
+            dashboard.verifyPageLoaded();
+            
+            System.out.println("\n--- Dashboard Operations ---");
+            dashboard.getWelcomeMessage();
+            dashboard.openProfileMenu();
+            dashboard.displaySessionInfo();
+            
+            System.out.println("\n--- Logout ---");
+            LoginPageEncapsulated loginAgain = dashboard.logout();
+            
+            // Cannot access private members
+            // loginPage.USERNAME_FIELD;    // ERROR! Private
+            // dashboard.sessionStartTime;  // ERROR! Private
+            // dashboard.checkSession();    // ERROR! Private
+        }
+        
+        // Test max login attempts
+        System.out.println("\n--- Test Max Login Attempts ---");
+        LoginPageEncapsulated newLoginPage = new LoginPageEncapsulated(driver);
+        newLoginPage.login("user", "password123");
+        newLoginPage.login("user", "password123");
+        newLoginPage.login("user", "password123");
+        newLoginPage.login("user", "password123");    // Should be blocked
+        
+        System.out.println("Remaining attempts: " + newLoginPage.getRemainingAttempts());
+        newLoginPage.resetLoginAttempts();
+        System.out.println("After reset, remaining: " + newLoginPage.getRemainingAttempts());
+    }
+}
+
+OUTPUT:
+-------
+====================================================
+    SELENIUM ENCAPSULATION DEMO - PAGE OBJECT MODEL
+====================================================
+
+[BasePage] Initialized with driver: ChromeDriver
+
+--- Configuring Page ---
+[ERROR] Wait time must be at least 1 second!
+[BasePage] Default wait time set to: 15 seconds
+
+--- Navigate to Login Page ---
+[LoginPage] Navigating to: https://app.example.com/login
+[LoginPage] Verifying page loaded...
+[LoginPage] Waiting 15s for: //input[@id='username']
+[LoginPage] Waiting 15s for: //input[@id='password']
+[LoginPage] Waiting 15s for: //button[@id='login']
+[LoginPage] All elements verified!
+
+--- Test Login Validation ---
+
+--- Attempting Login ---
+[LoginPage] ERROR: Username cannot be empty!
+
+--- Attempting Login ---
+[LoginPage] ERROR: Password must be at least 6 characters!
+
+--- Successful Login ---
+[LoginPage] Clicking: //input[@id='remember']
+[LoginPage] Remember Me: CHECKED
+
+--- Attempting Login ---
+[LoginPage] Login attempt: 1/3
+[LoginPage] Waiting 15s for: //input[@id='username']
+[LoginPage] Typing into: //input[@id='username']
+[LoginPage] Typing secure data into: //input[@id='password']
+[LoginPage] Clicking: //button[@id='login']
+[LoginPage] Login successful!
+[BasePage] Initialized with driver: ChromeDriver
+[Dashboard] Verifying page loaded...
+[Dashboard] Waiting 10s for: //h1[@id='welcome']
+[Dashboard] Waiting 10s for: //button[@id='logout']
+[Dashboard] All elements verified!
+
+--- Dashboard Operations ---
+[Dashboard] Getting text from: //h1[@id='welcome']
+[Dashboard] Clicking: //div[@id='profile-menu']
+[Dashboard] Profile menu opened
+========== SESSION INFO ==========
+User: testuser
+Session Valid: true
+Duration: 0 min 0 sec
+==================================
+
+--- Logout ---
+
+--- Logging Out ---
+[Dashboard] Clicking: //button[@id='logout']
+[Dashboard] User logged out successfully
+[Dashboard] Session duration: 0 min 0 sec
+[BasePage] Initialized with driver: ChromeDriver
+
+--- Test Max Login Attempts ---
+[BasePage] Initialized with driver: ChromeDriver
+
+--- Attempting Login ---
+[LoginPage] Login attempt: 1/3
+...
+[LoginPage] Login attempt: 3/3
+...
+--- Attempting Login ---
+[LoginPage] ERROR: Maximum login attempts reached!
+[LoginPage] Please wait or contact support.
+Remaining attempts: 0
+[LoginPage] Login attempts reset
+After reset, remaining: 3
+
+
+================================================================================
+                    PART 4: ENCAPSULATION IN REST ASSURED AUTOMATION
+================================================================================
+
+--------------------------------------------------------------------------------
+EXAMPLE 6: Encapsulated API Client
+--------------------------------------------------------------------------------
+
+// Encapsulated API Configuration
+class ApiConfig {
+    
+    // Private configuration
+    private String baseUrl;
+    private String apiKey;
+    private String authToken;
+    private int timeout;
+    private boolean loggingEnabled;
+    
+    // Private constants
+    private static final int MIN_TIMEOUT = 1000;
+    private static final int MAX_TIMEOUT = 120000;
+    private static final int DEFAULT_TIMEOUT = 30000;
+    
+    // Constructor
+    public ApiConfig(String baseUrl) {
+        this.baseUrl = baseUrl;
+        this.timeout = DEFAULT_TIMEOUT;
+        this.loggingEnabled = true;
+    }
+    
+    // ========== GETTERS ==========
+    
+    public String getBaseUrl() {
+        return baseUrl;
+    }
+    
+    public int getTimeout() {
+        return timeout;
+    }
+    
+    public boolean isLoggingEnabled() {
+        return loggingEnabled;
+    }
+    
+    // No getter for apiKey and authToken - security!
+    
+    // Check if authenticated (without exposing token)
+    public boolean isAuthenticated() {
+        return authToken != null && !authToken.isEmpty();
+    }
+    
+    public boolean hasApiKey() {
+        return apiKey != null && !apiKey.isEmpty();
+    }
+    
+    // ========== SETTERS WITH VALIDATION ==========
+    
+    public void setBaseUrl(String baseUrl) {
+        if (baseUrl == null || baseUrl.trim().isEmpty()) {
+            throw new IllegalArgumentException("Base URL cannot be empty!");
+        }
+        if (!baseUrl.startsWith("http://") && !baseUrl.startsWith("https://")) {
+            throw new IllegalArgumentException("Base URL must start with http:// or https://");
+        }
+        this.baseUrl = baseUrl.trim();
+        log("Base URL set: " + this.baseUrl);
+    }
+    
+    public void setTimeout(int milliseconds) {
+        if (milliseconds < MIN_TIMEOUT) {
+            log("WARNING: Timeout too low, using minimum: " + MIN_TIMEOUT + "ms");
+            this.timeout = MIN_TIMEOUT;
+        } else if (milliseconds > MAX_TIMEOUT) {
+            log("WARNING: Timeout too high, using maximum: " + MAX_TIMEOUT + "ms");
+            this.timeout = MAX_TIMEOUT;
+        } else {
+            this.timeout = milliseconds;
+            log("Timeout set: " + milliseconds + "ms");
+        }
+    }
+    
+    public void setApiKey(String apiKey) {
+        if (apiKey == null || apiKey.length() < 10) {
+            throw new IllegalArgumentException("API key must be at least 10 characters!");
+        }
+        this.apiKey = apiKey;
+        log("API key configured: " + maskString(apiKey));
+    }
+    
+    public void setAuthToken(String token) {
+        if (token == null || token.isEmpty()) {
+            throw new IllegalArgumentException("Auth token cannot be empty!");
+        }
+        this.authToken = token;
+        log("Auth token configured: " + maskString(token));
+    }
+    
+    public void setLoggingEnabled(boolean enabled) {
+        this.loggingEnabled = enabled;
+    }
+    
+    // ========== INTERNAL METHODS ==========
+    
+    // Package-private - only API client classes can access
+    String getAuthorizationHeader() {
+        if (authToken != null) {
+            return "Bearer " + authToken;
+        }
+        return null;
+    }
+    
+    String getApiKeyHeader() {
+        return apiKey;
+    }
+    
+    // Private helper methods
+    private String maskString(String str) {
+        if (str == null || str.length() <= 4) {
+            return "****";
+        }
+        return str.substring(0, 4) + "****" + str.substring(str.length() - 4);
+    }
+    
+    private void log(String message) {
+        if (loggingEnabled) {
+            System.out.println("[ApiConfig] " + message);
+        }
+    }
+    
+    // Display config (without sensitive data)
+    public void displayConfig() {
+        System.out.println("========== API CONFIGURATION ==========");
+        System.out.println("Base URL: " + baseUrl);
+        System.out.println("Timeout: " + timeout + "ms");
+        System.out.println("API Key: " + (hasApiKey() ? "[CONFIGURED]" : "[NOT SET]"));
+        System.out.println("Auth Token: " + (isAuthenticated() ? "[CONFIGURED]" : "[NOT SET]"));
+        System.out.println("Logging: " + (loggingEnabled ? "ENABLED" : "DISABLED"));
+        System.out.println("========================================");
+    }
+}
+
+// Encapsulated Request Builder
+class ApiRequestBuilder {
+    
+    // Private request components
+    private String method;
+    private String endpoint;
+    private String body;
+    private java.util.Map<String, String> headers;
+    private java.util.Map<String, String> queryParams;
+    private ApiConfig config;
+    
+    // Constructor
+    public ApiRequestBuilder(ApiConfig config) {
+        this.config = config;
+        this.headers = new java.util.HashMap<>();
+        this.queryParams = new java.util.HashMap<>();
+        
+        // Set default headers
+        headers.put("Content-Type", "application/json");
+        headers.put("Accept", "application/json");
+    }
+    
+    // ========== BUILDER METHODS (Return this for chaining) ==========
+    
+    public ApiRequestBuilder get(String endpoint) {
+        this.method = "GET";
+        this.endpoint = endpoint;
+        return this;
+    }
+    
+    public ApiRequestBuilder post(String endpoint) {
+        this.method = "POST";
+        this.endpoint = endpoint;
+        return this;
+    }
+    
+    public ApiRequestBuilder put(String endpoint) {
+        this.method = "PUT";
+        this.endpoint = endpoint;
+        return this;
+    }
+    
+    public ApiRequestBuilder delete(String endpoint) {
+        this.method = "DELETE";
+        this.endpoint = endpoint;
+        return this;
+    }
+    
+    public ApiRequestBuilder withBody(String body) {
+        this.body = body;
+        return this;
+    }
+    
+    public ApiRequestBuilder withHeader(String name, String value) {
+        if (name != null && value != null) {
+            headers.put(name, value);
+        }
+        return this;
+    }
+    
+    public ApiRequestBuilder withQueryParam(String name, String value) {
+        if (name != null && value != null) {
+            queryParams.put(name, value);
+        }
+        return this;
+    }
+    
+    public ApiRequestBuilder withAuth() {
+        String authHeader = config.getAuthorizationHeader();
+        if (authHeader != null) {
+            headers.put("Authorization", authHeader);
+        }
+        String apiKey = config.getApiKeyHeader();
+        if (apiKey != null) {
+            headers.put("X-API-Key", apiKey);
+        }
+        return this;
+    }
+    
+    // ========== EXECUTE METHOD ==========
+    
+    public ApiResponse execute() {
+        // Validate request
+        if (method == null || endpoint == null) {
+            throw new IllegalStateException("Method and endpoint must be set!");
+        }
+        
+        // Build full URL
+        String fullUrl = config.getBaseUrl() + endpoint;
+        if (!queryParams.isEmpty()) {
+            fullUrl += "?" + buildQueryString();
+        }
+        
+        // Log request
+        System.out.println("\n[REQUEST] " + method + " " + fullUrl);
+        System.out.println("[HEADERS]");
+        for (java.util.Map.Entry<String, String> entry : headers.entrySet()) {
+            String value = entry.getKey().contains("Authorization") || 
+                          entry.getKey().contains("API-Key") 
+                          ? "****" : entry.getValue();
+            System.out.println("  " + entry.getKey() + ": " + value);
+        }
+        if (body != null) {
+            System.out.println("[BODY] " + body);
+        }
+        
+        // Simulate API call and return response
+        return new ApiResponse(200, "{\"status\": \"success\"}", 150);
+    }
+    
+    // Private helper
+    private String buildQueryString() {
+        StringBuilder sb = new StringBuilder();
+        for (java.util.Map.Entry<String, String> entry : queryParams.entrySet()) {
+            if (sb.length() > 0) sb.append("&");
+            sb.append(entry.getKey()).append("=").append(entry.getValue());
+        }
+        return sb.toString();
+    }
+}
+
+// Encapsulated Response
+class ApiResponse {
+    
+    // Private response data
+    private final int statusCode;
+    private final String body;
+    private final long responseTime;
+    private final long timestamp;
+    
+    // Constructor (package-private)
+    ApiResponse(int statusCode, String body, long responseTime) {
+        this.statusCode = statusCode;
+        this.body = body;
+        this.responseTime = responseTime;
+        this.timestamp = System.currentTimeMillis();
+    }
+    
+    // ========== GETTERS ONLY (Immutable) ==========
+    
+    public int getStatusCode() {
+        return statusCode;
+    }
+    
+    public String getBody() {
+        return body;
+    }
+    
+    public long getResponseTime() {
+        return responseTime;
+    }
+    
+    public long getTimestamp() {
+        return timestamp;
+    }
+    
+    // ========== VALIDATION METHODS ==========
+    
+    public boolean isSuccess() {
+        return statusCode >= 200 && statusCode < 300;
+    }
+    
+    public boolean isClientError() {
+        return statusCode >= 400 && statusCode < 500;
+    }
+    
+    public boolean isServerError() {
+        return statusCode >= 500;
+    }
+    
+    public ApiResponse validateStatusCode(int expected) {
+        if (statusCode == expected) {
+            System.out.println("[PASS] Status code: " + statusCode);
+        } else {
+            System.out.println("[FAIL] Expected: " + expected + ", Actual: " + statusCode);
+        }
+        return this;
+    }
+    
+    public ApiResponse validateResponseTime(long maxMilliseconds) {
+        if (responseTime <= maxMilliseconds) {
+            System.out.println("[PASS] Response time: " + responseTime + "ms");
+        } else {
+            System.out.println("[FAIL] Response time " + responseTime + "ms > " + maxMilliseconds + "ms");
+        }
+        return this;
+    }
+    
+    public ApiResponse validateBodyContains(String expected) {
+        if (body != null && body.contains(expected)) {
+            System.out.println("[PASS] Body contains: " + expected);
+        } else {
+            System.out.println("[FAIL] Body does not contain: " + expected);
+        }
+        return this;
+    }
+    
+    // Display response
+    public void displayResponse() {
+        System.out.println("\n[RESPONSE]");
+        System.out.println("  Status: " + statusCode + " (" + getStatusDescription() + ")");
+        System.out.println("  Time: " + responseTime + "ms");
+        System.out.println("  Body: " + body);
+    }
+    
+    private String getStatusDescription() {
+        if (isSuccess()) return "Success";
+        if (isClientError()) return "Client Error";
+        if (isServerError()) return "Server Error";
+        return "Unknown";
+    }
+}
+
+// Encapsulated User API Service
+class UserApiService {
+    
+    // Private dependencies
+    private final ApiConfig config;
+    
+    // Constructor
+    public UserApiService(ApiConfig config) {
+        this.config = config;
+    }
+    
+    // ========== PUBLIC API METHODS ==========
+    
+    public ApiResponse getAllUsers() {
+        System.out.println("\n===== GET ALL USERS =====");
+        return new ApiRequestBuilder(config)
+            .get("/users")
+            .withAuth()
+            .execute();
+    }
+    
+    public ApiResponse getUserById(int id) {
+        System.out.println("\n===== GET USER BY ID =====");
+        return new ApiRequestBuilder(config)
+            .get("/users/" + id)
+            .withAuth()
+            .execute();
+    }
+    
+    public ApiResponse createUser(String name, String email) {
+        System.out.println("\n===== CREATE USER =====");
+        
+        // Validate input
+        if (name == null || name.trim().isEmpty()) {
+            throw new IllegalArgumentException("Name cannot be empty!");
+        }
+        if (email == null || !email.contains("@")) {
+            throw new IllegalArgumentException("Invalid email format!");
+        }
+        
+        String body = String.format("{\"name\": \"%s\", \"email\": \"%s\"}", name, email);
+        
+        return new ApiRequestBuilder(config)
+            .post("/users")
+            .withAuth()
+            .withBody(body)
+            .execute();
+    }
+    
+    public ApiResponse updateUser(int id, String name, String email) {
+        System.out.println("\n===== UPDATE USER =====");
+        
+        String body = String.format("{\"name\": \"%s\", \"email\": \"%s\"}", name, email);
+        
+        return new ApiRequestBuilder(config)
+            .put("/users/" + id)
+            .withAuth()
+            .withBody(body)
+            .execute();
+    }
+    
+    public ApiResponse deleteUser(int id) {
+        System.out.println("\n===== DELETE USER =====");
+        return new ApiRequestBuilder(config)
+            .delete("/users/" + id)
+            .withAuth()
+            .execute();
+    }
+    
+    public ApiResponse searchUsers(String query, int page, int limit) {
+        System.out.println("\n===== SEARCH USERS =====");
+        return new ApiRequestBuilder(config)
+            .get("/users/search")
+            .withAuth()
+            .withQueryParam("q", query)
+            .withQueryParam("page", String.valueOf(page))
+            .withQueryParam("limit", String.valueOf(limit))
+            .execute();
+    }
+}
+
+public class RestAssuredEncapsulationDemo {
+    public static void main(String[] args) {
+        
+        System.out.println("====================================================");
+        System.out.println("    REST ASSURED ENCAPSULATION DEMO");
+        System.out.println("====================================================");
+        
+        // Create and configure API
+        System.out.println("\n--- API Configuration ---");
+        ApiConfig config = new ApiConfig("https://api.example.com");
+        config.setTimeout(500);      // Too low, will use minimum
+        config.setTimeout(15000);    // Valid
+        config.setApiKey("myApiKey1234567890");
+        config.setAuthToken("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9");
+        
+        config.displayConfig();
+        
+        // Cannot access sensitive data directly
+        // String token = config.authToken;        // ERROR! Private
+        // String key = config.getApiKeyHeader();  // ERROR! Package-private
+        
+        // Can only check if configured
+        System.out.println("\nAuthenticated: " + config.isAuthenticated());
+        System.out.println("Has API Key: " + config.hasApiKey());
+        
+        // Create User API Service
+        UserApiService userService = new UserApiService(config);
+        
+        // Test CRUD operations
+        System.out.println("\n--- Testing User API ---");
+        
+        // Get all users
+        ApiResponse response = userService.getAllUsers();
+        response.displayResponse();
+        response.validateStatusCode(200)
+               .validateResponseTime(500)
+               .validateBodyContains("success");
+        
+        // Create user
+        response = userService.createUser("John Doe", "john@example.com");
+        response.displayResponse();
+        response.validateStatusCode(200);
+        
+        // Get user by ID
+        response = userService.getUserById(1);
+        response.displayResponse();
+        
+        // Search users
+        response = userService.searchUsers("john", 1, 10);
+        response.displayResponse();
+        
+        // Update user
+        response = userService.updateUser(1, "John Updated", "john.updated@example.com");
+        response.displayResponse();
+        
+        // Delete user
+        response = userService.deleteUser(1);
+        response.displayResponse();
+        
+        // Test validation
+        System.out.println("\n--- Testing Validation ---");
+        try {
+            userService.createUser("", "invalid-email");
+        } catch (IllegalArgumentException e) {
+            System.out.println("Validation error: " + e.getMessage());
+        }
+        
+        try {
+            userService.createUser("Valid Name", "invalid-email");
+        } catch (IllegalArgumentException e) {
+            System.out.println("Validation error: " + e.getMessage());
+        }
+    }
+}
+
+OUTPUT:
+-------
+====================================================
+    REST ASSURED ENCAPSULATION DEMO
+====================================================
+
+--- API Configuration ---
+[ApiConfig] WARNING: Timeout too low, using minimum: 1000ms
+[ApiConfig] Timeout set: 15000ms
+[ApiConfig] API key configured: myAp****7890
+[ApiConfig] Auth token configured: eyJh****VCJ9
+========== API CONFIGURATION ==========
+Base URL: https://api.example.com
+Timeout: 15000ms
+API Key: [CONFIGURED]
+Auth Token: [CONFIGURED]
+Logging: ENABLED
+========================================
+
+Authenticated: true
+Has API Key: true
+
+--- Testing User API ---
+
+===== GET ALL USERS =====
+
+[REQUEST] GET https://api.example.com/users
+[HEADERS]
+  Accept: application/json
+  Content-Type: application/json
+  Authorization: ****
+  X-API-Key: ****
+
+[RESPONSE]
+  Status: 200 (Success)
+  Time: 150ms
+  Body: {"status": "success"}
+[PASS] Status code: 200
+[PASS] Response time: 150ms
+[PASS] Body contains: success
+
+===== CREATE USER =====
+
+[REQUEST] POST https://api.example.com/users
+[HEADERS]
+  Accept: application/json
+  Content-Type: application/json
+  Authorization: ****
+  X-API-Key: ****
+[BODY] {"name": "John Doe", "email": "john@example.com"}
+
+[RESPONSE]
+  Status: 200 (Success)
+  Time: 150ms
+  Body: {"status": "success"}
+[PASS] Status code: 200
+
+===== GET USER BY ID =====
+
+[REQUEST] GET https://api.example.com/users/1
+[HEADERS]
+  Accept: application/json
+  Content-Type: application/json
+  Authorization: ****
+  X-API-Key: ****
+
+[RESPONSE]
+  Status: 200 (Success)
+  Time: 150ms
+  Body: {"status": "success"}
+
+===== SEARCH USERS =====
+
+[REQUEST] GET https://api.example.com/users/search?q=john&page=1&limit=10
+[HEADERS]
+  Accept: application/json
+  Content-Type: application/json
+  Authorization: ****
+  X-API-Key: ****
+
+[RESPONSE]
+  Status: 200 (Success)
+  Time: 150ms
+  Body: {"status": "success"}
+
+===== UPDATE USER =====
+
+[REQUEST] PUT https://api.example.com/users/1
+[HEADERS]
+  Accept: application/json
+  Content-Type: application/json
+  Authorization: ****
+  X-API-Key: ****
+[BODY] {"name": "John Updated", "email": "john.updated@example.com"}
+
+[RESPONSE]
+  Status: 200 (Success)
+  Time: 150ms
+  Body: {"status": "success"}
+
+===== DELETE USER =====
+
+[REQUEST] DELETE https://api.example.com/users/1
+[HEADERS]
+  Accept: application/json
+  Content-Type: application/json
+  Authorization: ****
+  X-API-Key: ****
+
+[RESPONSE]
+  Status: 200 (Success)
+  Time: 150ms
+  Body: {"status": "success"}
+
+--- Testing Validation ---
+Validation error: Name cannot be empty!
+Validation error: Invalid email format!
+
+
+================================================================================
+                    NEGATIVE SCENARIOS - ENCAPSULATION
+================================================================================
+
+
+--------------------------------------------------------------------------------
+ERROR 1: Accessing Private Members from Outside Class
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE:
+-----------------
+class Person {
+    private String name;
+    private int age;
+    
+    public Person(String name, int age) {
+        this.name = name;
+        this.age = age;
+    }
+}
+
+public class PrivateAccessError {
+    public static void main(String[] args) {
+        Person person = new Person("John", 30);
+        
+        // Trying to access private members
+        System.out.println(person.name);    // ERROR!
+        person.age = 25;                     // ERROR!
+    }
+}
+
+ERROR MESSAGE:
+--------------
+error: name has private access in Person
+        System.out.println(person.name);
+                                 ^
+error: age has private access in Person
+        person.age = 25;
+              ^
+
+FIX:
+----
+class Person {
+    private String name;
+    private int age;
+    
+    public Person(String name, int age) {
+        this.name = name;
+        this.age = age;
+    }
+    
+    // Add public getters
+    public String getName() {
+        return name;
+    }
+    
+    public int getAge() {
+        return age;
+    }
+    
+    // Add public setters
+    public void setName(String name) {
+        this.name = name;
+    }
+    
+    public void setAge(int age) {
+        this.age = age;
+    }
+}
+
+public class PrivateAccessFixed {
+    public static void main(String[] args) {
+        Person person = new Person("John", 30);
+        
+        // Use getters to read
+        System.out.println(person.getName());    // OK
+        
+        // Use setters to write
+        person.setAge(25);                       // OK
+        System.out.println(person.getAge());     // OK
+    }
+}
+
+
+--------------------------------------------------------------------------------
+ERROR 2: Protected Access from Non-Subclass in Different Package
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE:
+-----------------
+// File: package1/Parent.java
+package package1;
+
+public class Parent {
+    protected String protectedField = "Protected";
+    
+    protected void protectedMethod() {
+        System.out.println("Protected method");
+    }
+}
+
+// File: package2/Other.java
+package package2;
+
+import package1.Parent;
+
+public class Other {
+    public void test() {
+        Parent p = new Parent();
+        System.out.println(p.protectedField);    // ERROR!
+        p.protectedMethod();                      // ERROR!
+    }
+}
+
+ERROR MESSAGE:
+--------------
+error: protectedField has protected access in Parent
+        System.out.println(p.protectedField);
+                            ^
+error: protectedMethod() has protected access in Parent
+        p.protectedMethod();
+         ^
+
+FIX:
+----
+// Option 1: Extend the class (protected is accessible in subclass)
+package package2;
+
+import package1.Parent;
+
+public class Child extends Parent {
+    public void test() {
+        // Can access protected members as a subclass
+        System.out.println(protectedField);    // OK
+        protectedMethod();                      // OK
+    }
+}
+
+// Option 2: Add public methods in Parent
+package package1;
+
+public class Parent {
+    protected String protectedField = "Protected";
+    
+    protected void protectedMethod() {
+        System.out.println("Protected method");
+    }
+    
+    // Add public accessor
+    public String getProtectedField() {
+        return protectedField;
+    }
+    
+    public void callProtectedMethod() {
+        protectedMethod();
+    }
+}
+
+
+--------------------------------------------------------------------------------
+ERROR 3: Forgetting 'this' Keyword - Variable Shadowing
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE:
+-----------------
+class Employee {
+    private String name;
+    private double salary;
+    
+    public void setName(String name) {
+        name = name;    // BUG! Assigns parameter to itself
+    }
+    
+    public void setSalary(double salary) {
+        salary = salary;    // BUG! Assigns parameter to itself
+    }
+    
+    public String getName() {
+        return name;    // Returns null!
+    }
+    
+    public double getSalary() {
+        return salary;  // Returns 0.0!
+    }
+}
+
+public class ShadowingError {
+    public static void main(String[] args) {
+        Employee emp = new Employee();
+        emp.setName("John");
+        emp.setSalary(50000);
+        
+        System.out.println("Name: " + emp.getName());      // Prints: null
+        System.out.println("Salary: " + emp.getSalary());  // Prints: 0.0
+    }
+}
+
+FIX:
+----
+class Employee {
+    private String name;
+    private double salary;
+    
+    public void setName(String name) {
+        this.name = name;    // 'this' refers to instance variable
+    }
+    
+    public void setSalary(double salary) {
+        this.salary = salary;    // 'this' refers to instance variable
+    }
+    
+    // Alternative: Use different parameter names
+    public void setNameAlt(String newName) {
+        name = newName;    // No shadowing, 'name' refers to field
+    }
+    
+    public String getName() {
+        return name;
+    }
+    
+    public double getSalary() {
+        return salary;
+    }
+}
+
+public class ShadowingFixed {
+    public static void main(String[] args) {
+        Employee emp = new Employee();
+        emp.setName("John");
+        emp.setSalary(50000);
+        
+        System.out.println("Name: " + emp.getName());      // Prints: John
+        System.out.println("Salary: " + emp.getSalary());  // Prints: 50000.0
+    }
+}
+
+
+--------------------------------------------------------------------------------
+ERROR 4: Making Setter Return Void When Chaining is Needed
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE:
+-----------------
+class Builder {
+    private String name;
+    private int value;
+    
+    public void setName(String name) {
+        this.name = name;
+    }
+    
+    public void setValue(int value) {
+        this.value = value;
+    }
+}
+
+public class ChainingError {
+    public static void main(String[] args) {
+        Builder builder = new Builder();
+        
+        // Cannot chain methods
+        builder.setName("Test").setValue(100);    // ERROR!
+    }
+}
+
+ERROR MESSAGE:
+--------------
+error: void cannot be dereferenced
+        builder.setName("Test").setValue(100);
+                               ^
+
+FIX:
+----
+class Builder {
+    private String name;
+    private int value;
+    
+    // Return 'this' for method chaining
+    public Builder setName(String name) {
+        this.name = name;
+        return this;
+    }
+    
+    public Builder setValue(int value) {
+        this.value = value;
+        return this;
+    }
+    
+    public void display() {
+        System.out.println("Name: " + name + ", Value: " + value);
+    }
+}
+
+public class ChainingFixed {
+    public static void main(String[] args) {
+        Builder builder = new Builder();
+        
+        // Method chaining works!
+        builder.setName("Test")
+               .setValue(100)
+               .display();
+        
+        // Or in one line
+        new Builder().setName("Another").setValue(200).display();
+    }
+}
+
+
+--------------------------------------------------------------------------------
+ERROR 5: Exposing Internal Mutable Objects
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE:
+-----------------
+import java.util.ArrayList;
+import java.util.List;
+
+class Team {
+    private List<String> members;
+    
+    public Team() {
+        this.members = new ArrayList<>();
+    }
+    
+    // BAD: Returns direct reference to internal list
+    public List<String> getMembers() {
+        return members;
+    }
+    
+    public void addMember(String name) {
+        members.add(name);
+    }
+}
+
+public class MutableExposureError {
+    public static void main(String[] args) {
+        Team team = new Team();
+        team.addMember("John");
+        team.addMember("Jane");
+        
+        // Get the internal list
+        List<String> members = team.getMembers();
+        
+        // Modify it directly - breaks encapsulation!
+        members.clear();                    // Clears the team's list!
+        members.add("Hacker");              // Adds without validation!
+        
+        System.out.println(team.getMembers());  // [Hacker] - data corrupted!
+    }
+}
+
+FIX:
+----
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+class Team {
+    private List<String> members;
+    
+    public Team() {
+        this.members = new ArrayList<>();
+    }
+    
+    // Option 1: Return unmodifiable view
+    public List<String> getMembers() {
+        return Collections.unmodifiableList(members);
+    }
+    
+    // Option 2: Return a copy
+    public List<String> getMembersCopy() {
+        return new ArrayList<>(members);
+    }
+    
+    // Option 3: Return array
+    public String[] getMembersArray() {
+        return members.toArray(new String[0]);
+    }
+    
+    public void addMember(String name) {
+        if (name !=
+
+--- ai stopped ---
+
+--------------------------------------------------------------------------------
+ERROR 5: Exposing Internal Mutable Objects (CONTINUED)
+--------------------------------------------------------------------------------
+
+FIX:
+----
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+class Team {
+    private List<String> members;
+    
+    public Team() {
+        this.members = new ArrayList<>();
+    }
+    
+    // Option 1: Return unmodifiable view
+    public List<String> getMembers() {
+        return Collections.unmodifiableList(members);
+    }
+    
+    // Option 2: Return a copy
+    public List<String> getMembersCopy() {
+        return new ArrayList<>(members);
+    }
+    
+    // Option 3: Return array
+    public String[] getMembersArray() {
+        return members.toArray(new String[0]);
+    }
+    
+    public void addMember(String name) {
+        if (name != null && !name.trim().isEmpty()) {
+            members.add(name);
+            System.out.println("Added member: " + name);
+        } else {
+            System.out.println("Invalid member name!");
+        }
+    }
+    
+    public boolean removeMember(String name) {
+        if (members.remove(name)) {
+            System.out.println("Removed member: " + name);
+            return true;
+        }
+        System.out.println("Member not found: " + name);
+        return false;
+    }
+    
+    public int getMemberCount() {
+        return members.size();
+    }
+}
+
+public class MutableExposureFixed {
+    public static void main(String[] args) {
+        Team team = new Team();
+        team.addMember("John");
+        team.addMember("Jane");
+        
+        System.out.println("\n--- Testing Unmodifiable List ---");
+        List<String> members = team.getMembers();
+        System.out.println("Members: " + members);
+        
+        try {
+            members.clear();    // Throws exception!
+        } catch (UnsupportedOperationException e) {
+            System.out.println("Cannot modify! List is unmodifiable.");
+        }
+        
+        try {
+            members.add("Hacker");    // Throws exception!
+        } catch (UnsupportedOperationException e) {
+            System.out.println("Cannot add! List is unmodifiable.");
+        }
+        
+        System.out.println("\n--- Testing Copy ---");
+        List<String> copy = team.getMembersCopy();
+        copy.clear();    // Only clears the copy
+        copy.add("Hacker");
+        
+        System.out.println("Copy: " + copy);
+        System.out.println("Original: " + team.getMembers());    // Unchanged!
+        
+        System.out.println("\n--- Proper Way to Modify ---");
+        team.addMember("Bob");
+        team.removeMember("John");
+        System.out.println("Final members: " + team.getMembers());
+    }
+}
+
+OUTPUT:
+-------
+Added member: John
+Added member: Jane
+
+--- Testing Unmodifiable List ---
+Members: [John, Jane]
+Cannot modify! List is unmodifiable.
+Cannot add! List is unmodifiable.
+
+--- Testing Copy ---
+Copy: [Hacker]
+Original: [John, Jane]
+
+--- Proper Way to Modify ---
+Added member: Bob
+Removed member: John
+Final members: [Jane, Bob]
+
+
+--------------------------------------------------------------------------------
+ERROR 6: Not Validating Setter Input
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE:
+-----------------
+class Product {
+    private String name;
+    private double price;
+    private int quantity;
+    
+    // No validation - accepts any value
+    public void setName(String name) {
+        this.name = name;
+    }
+    
+    public void setPrice(double price) {
+        this.price = price;
+    }
+    
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+    
+    public void display() {
+        System.out.println("Product: " + name);
+        System.out.println("Price: $" + price);
+        System.out.println("Quantity: " + quantity);
+    }
+}
+
+public class NoValidationError {
+    public static void main(String[] args) {
+        Product product = new Product();
+        
+        // Invalid data accepted!
+        product.setName("");           // Empty name
+        product.setName(null);         // Null name
+        product.setPrice(-100);        // Negative price
+        product.setQuantity(-50);      // Negative quantity
+        
+        product.display();    // Shows invalid data
+    }
+}
+
+OUTPUT (with invalid data):
+---------------------------
+Product: null
+Price: $-100.0
+Quantity: -50
+
+FIX:
+----
+class Product {
+    private String name;
+    private double price;
+    private int quantity;
+    
+    // With validation
+    public void setName(String name) {
+        if (name == null) {
+            throw new IllegalArgumentException("Name cannot be null!");
+        }
+        if (name.trim().isEmpty()) {
+            throw new IllegalArgumentException("Name cannot be empty!");
+        }
+        if (name.length() > 100) {
+            throw new IllegalArgumentException("Name too long! Max 100 characters.");
+        }
+        this.name = name.trim();
+    }
+    
+    public void setPrice(double price) {
+        if (price < 0) {
+            throw new IllegalArgumentException("Price cannot be negative!");
+        }
+        if (price > 1000000) {
+            throw new IllegalArgumentException("Price exceeds maximum limit!");
+        }
+        this.price = price;
+    }
+    
+    public void setQuantity(int quantity) {
+        if (quantity < 0) {
+            throw new IllegalArgumentException("Quantity cannot be negative!");
+        }
+        if (quantity > 10000) {
+            throw new IllegalArgumentException("Quantity exceeds maximum stock limit!");
+        }
+        this.quantity = quantity;
+    }
+    
+    // Alternative: Return boolean instead of throwing exception
+    public boolean setNameSafe(String name) {
+        if (name == null || name.trim().isEmpty()) {
+            System.out.println("Warning: Invalid name provided");
+            return false;
+        }
+        this.name = name.trim();
+        return true;
+    }
+    
+    public boolean setPriceSafe(double price) {
+        if (price < 0 || price > 1000000) {
+            System.out.println("Warning: Invalid price provided");
+            return false;
+        }
+        this.price = price;
+        return true;
+    }
+    
+    public String getName() { return name; }
+    public double getPrice() { return price; }
+    public int getQuantity() { return quantity; }
+    
+    public void display() {
+        System.out.println("Product: " + name);
+        System.out.println("Price: $" + price);
+        System.out.println("Quantity: " + quantity);
+    }
+}
+
+public class WithValidationFixed {
+    public static void main(String[] args) {
+        Product product = new Product();
+        
+        System.out.println("--- Testing Validation with Exceptions ---");
+        
+        try {
+            product.setName("");
+        } catch (IllegalArgumentException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+        
+        try {
+            product.setPrice(-100);
+        } catch (IllegalArgumentException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+        
+        try {
+            product.setQuantity(-50);
+        } catch (IllegalArgumentException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+        
+        System.out.println("\n--- Testing Safe Setters ---");
+        product.setNameSafe("");           // Returns false
+        product.setPriceSafe(-100);        // Returns false
+        
+        System.out.println("\n--- Setting Valid Data ---");
+        product.setName("Laptop");
+        product.setPrice(999.99);
+        product.setQuantity(50);
+        product.display();
+    }
+}
+
+OUTPUT:
+-------
+--- Testing Validation with Exceptions ---
+Error: Name cannot be empty!
+Error: Price cannot be negative!
+Error: Quantity cannot be negative!
+
+--- Testing Safe Setters ---
+Warning: Invalid name provided
+Warning: Invalid price provided
+
+--- Setting Valid Data ---
+Product: Laptop
+Price: $999.99
+Quantity: 50
+
+
+--------------------------------------------------------------------------------
+ERROR 7: Inconsistent Access Modifiers in Getter/Setter
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE:
+-----------------
+class Account {
+    private double balance;
+    
+    // Getter is public
+    public double getBalance() {
+        return balance;
+    }
+    
+    // Setter is private - cannot be used outside class!
+    private void setBalance(double balance) {
+        this.balance = balance;
+    }
+}
+
+public class InconsistentAccessError {
+    public static void main(String[] args) {
+        Account account = new Account();
+        
+        System.out.println(account.getBalance());    // OK
+        account.setBalance(1000);                    // ERROR! Private
+    }
+}
+
+ERROR MESSAGE:
+--------------
+error: setBalance(double) has private access in Account
+        account.setBalance(1000);
+               ^
+
+FIX:
+----
+class Account {
+    private double balance;
+    
+    public Account(double initialBalance) {
+        if (initialBalance >= 0) {
+            this.balance = initialBalance;
+        }
+    }
+    
+    // Public getter
+    public double getBalance() {
+        return balance;
+    }
+    
+    // If setter should be public, make it public
+    public void setBalance(double balance) {
+        if (balance >= 0) {
+            this.balance = balance;
+        }
+    }
+    
+    // OR: If direct setting shouldn't be allowed, provide business methods
+    public void deposit(double amount) {
+        if (amount > 0) {
+            this.balance += amount;
+            System.out.println("Deposited: $" + amount);
+        }
+    }
+    
+    public boolean withdraw(double amount) {
+        if (amount > 0 && amount <= balance) {
+            this.balance -= amount;
+            System.out.println("Withdrawn: $" + amount);
+            return true;
+        }
+        System.out.println("Withdrawal failed!");
+        return false;
+    }
+}
+
+public class ConsistentAccessFixed {
+    public static void main(String[] args) {
+        Account account = new Account(100);
+        
+        System.out.println("Initial Balance: $" + account.getBalance());
+        
+        // Using business methods instead of direct setter
+        account.deposit(500);
+        System.out.println("After deposit: $" + account.getBalance());
+        
+        account.withdraw(200);
+        System.out.println("After withdrawal: $" + account.getBalance());
+        
+        account.withdraw(1000);    // Fails - insufficient balance
+    }
+}
+
+OUTPUT:
+-------
+Initial Balance: $100.0
+Deposited: $500.0
+After deposit: $600.0
+Withdrawn: $200.0
+After withdrawal: $400.0
+Withdrawal failed!
+
+
+--------------------------------------------------------------------------------
+ERROR 8: Breaking Encapsulation with Public Fields
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE:
+-----------------
+class User {
+    // Public fields - NO encapsulation!
+    public String username;
+    public String password;
+    public String email;
+    public int age;
+    public boolean isAdmin;
+}
+
+public class PublicFieldsError {
+    public static void main(String[] args) {
+        User user = new User();
+        
+        // Anyone can set any value - no control!
+        user.username = "";           // Empty username
+        user.password = "[REDACTED:PASSWORD]";        // Weak password
+        user.email = "not-an-email";  // Invalid email
+        user.age = -5;                // Invalid age
+        user.isAdmin = true;          // Security risk!
+        
+        System.out.println("Username: " + user.username);
+        System.out.println("Password: " + user.password);    // Exposed!
+        System.out.println("Is Admin: " + user.isAdmin);     // Anyone can be admin!
+    }
+}
+
+FIX:
+----
+class User {
+    // Private fields
+    private String username;
+    private String password;
+    private String email;
+    private int age;
+    private boolean isAdmin;
+    
+    // Controlled getters
+    public String getUsername() {
+        return username;
+    }
+    
+    // No getter for password - security!
+    // public String getPassword() - NOT PROVIDED
+    
+    public String getEmail() {
+        return email;
+    }
+    
+    public int getAge() {
+        return age;
+    }
+    
+    public boolean isAdmin() {
+        return isAdmin;
+    }
+    
+    // Validated setters
+    public void setUsername(String username) {
+        if (username == null || username.length() < 3) {
+            throw new IllegalArgumentException("Username must be at least 3 characters!");
+        }
+        if (!username.matches("^[a-zA-Z0-9_]+$")) {
+            throw new IllegalArgumentException("Username can only contain letters, numbers, and underscores!");
+        }
+        this.username = username;
+    }
+    
+    public void setPassword(String password) {
+        if (password == null || password.length() < 8) {
+            throw new IllegalArgumentException("Password must be at least 8 characters!");
+        }
+        if (!password.matches(".*[A-Z].*")) {
+            throw new IllegalArgumentException("Password must contain at least one uppercase letter!");
+        }
+        if (!password.matches(".*[0-9].*")) {
+            throw new IllegalArgumentException("Password must contain at least one digit!");
+        }
+        // Store hashed password in real application
+        this.password = password;
+        System.out.println("Password set successfully (stored securely)");
+    }
+    
+    public void setEmail(String email) {
+        if (email == null || !email.matches("^[\\w.-]+@[\\w.-]+\\.[a-zA-Z]{2,}$")) {
+            throw new IllegalArgumentException("Invalid email format!");
+        }
+        this.email = email;
+    }
+    
+    public void setAge(int age) {
+        if (age < 0 || age > 150) {
+            throw new IllegalArgumentException("Age must be between 0 and 150!");
+        }
+        this.age = age;
+    }
+    
+    // Admin status can only be set by admin action (internal method)
+    // No public setter for isAdmin!
+    void setAdminStatus(boolean isAdmin, String adminKey) {
+        if ("SUPER_SECRET_ADMIN_KEY".equals(adminKey)) {
+            this.isAdmin = isAdmin;
+            System.out.println("Admin status updated by authorized action");
+        } else {
+            throw new SecurityException("Unauthorized attempt to modify admin status!");
+        }
+    }
+    
+    // Password verification without exposing it
+    public boolean verifyPassword(String inputPassword) {
+        return this.password != null && this.password.equals(inputPassword);
+    }
+    
+    public void displayUserInfo() {
+        System.out.println("================");
+        System.out.println("Username: " + username);
+        System.out.println("Email: " + email);
+        System.out.println("Age: " + age);
+        System.out.println("Is Admin: " + isAdmin);
+        System.out.println("Password: ********");    // Never show password!
+        System.out.println("================");
+    }
+}
+
+public class EncapsulatedUserFixed {
+    public static void main(String[] args) {
+        User user = new User();
+        
+        System.out.println("--- Testing Validation ---\n");
+        
+        // Test username validation
+        try {
+            user.setUsername("ab");    // Too short
+        } catch (IllegalArgumentException e) {
+            System.out.println("Username error: " + e.getMessage());
+        }
+        
+        try {
+            user.setUsername("user@name");    // Invalid characters
+        } catch (IllegalArgumentException e) {
+            System.out.println("Username error: " + e.getMessage());
+        }
+        
+        // Test password validation
+        try {
+            user.setPassword("weak");    // Too short
+        } catch (IllegalArgumentException e) {
+            System.out.println("Password error: " + e.getMessage());
+        }
+        
+        try {
+            user.setPassword("alllowercase1");    // No uppercase
+        } catch (IllegalArgumentException e) {
+            System.out.println("Password error: " + e.getMessage());
+        }
+        
+        // Test email validation
+        try {
+            user.setEmail("invalid-email");
+        } catch (IllegalArgumentException e) {
+            System.out.println("Email error: " + e.getMessage());
+        }
+        
+        // Test age validation
+        try {
+            user.setAge(-5);
+        } catch (IllegalArgumentException e) {
+            System.out.println("Age error: " + e.getMessage());
+        }
+        
+        // Test admin security
+        try {
+            user.setAdminStatus(true, "wrong-key");
+        } catch (SecurityException e) {
+            System.out.println("Security error: " + e.getMessage());
+        }
+        
+        System.out.println("\n--- Setting Valid Data ---\n");
+        
+        user.setUsername("john_doe");
+        user.setPassword("SecurePass123");
+        user.setEmail("john@example.com");
+        user.setAge(30);
+        
+        user.displayUserInfo();
+        
+        System.out.println("\n--- Password Verification ---");
+        System.out.println("Verify correct: " + user.verifyPassword("SecurePass123"));
+        System.out.println("Verify wrong: " + user.verifyPassword("WrongPass"));
+    }
+}
+
+OUTPUT:
+-------
+--- Testing Validation ---
+
+Username error: Username must be at least 3 characters!
+Username error: Username can only contain letters, numbers, and underscores!
+Password error: Password must be at least 8 characters!
+Password error: Password must contain at least one uppercase letter!
+Email error: Invalid email format!
+Age error: Age must be between 0 and 150!
+Security error: Unauthorized attempt to modify admin status!
+
+--- Setting Valid Data ---
+
+Password set successfully (stored securely)
+================
+Username: john_doe
+Email: john@example.com
+Age: 30
+Is Admin: false
+Password: ********
+================
+
+--- Password Verification ---
+Verify correct: true
+Verify wrong: false
+
+
+--------------------------------------------------------------------------------
+ERROR 9: Not Using Encapsulation for Configuration
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE:
+-----------------
+class TestConfig {
+    // Public static fields - anyone can modify!
+    public static String BASE_URL = "https://test.example.com";
+    public static String USERNAME = "testuser";
+    public static String PASSWORD = "[REDACTED:PASSWORD]";
+    public static int TIMEOUT = 30;
+    public static boolean HEADLESS = false;
+}
+
+public class ConfigExposureError {
+    public static void main(String[] args) {
+        // Anyone can change config at any time
+        TestConfig.BASE_URL = "";           // Empty URL
+        TestConfig.TIMEOUT = -100;          // Negative timeout
+        TestConfig.PASSWORD = "";           // Empty password
+        
+        System.out.println("URL: " + TestConfig.BASE_URL);
+        System.out.println("Timeout: " + TestConfig.TIMEOUT);
+    }
+}
+
+FIX:
+----
+class TestConfig {
+    // Private static fields
+    private static String baseUrl;
+    private static String username;
+    private static String password;
+    private static int timeout;
+    private static boolean headless;
+    private static boolean initialized = false;
+    
+    // Private constructor - cannot instantiate
+    private TestConfig() {}
+    
+    // Initialize once
+    public static void initialize(String url, String user, String pass) {
+        if (initialized) {
+            System.out.println("Warning: Config already initialized!");
+            return;
+        }
+        
+        setBaseUrl(url);
+        setUsername(user);
+        setPassword(pass);
+        timeout = 30;
+        headless = false;
+        initialized = true;
+        
+        System.out.println("Configuration initialized successfully!");
+    }
+    
+    // Getters
+    public static String getBaseUrl() {
+        checkInitialized();
+        return baseUrl;
+    }
+    
+    public static String getUsername() {
+        checkInitialized();
+        return username;
+    }
+    
+    // No getter for password - use verify method
+    public static boolean verifyPassword(String input) {
+        checkInitialized();
+        return password != null && password.equals(input);
+    }
+    
+    public static int getTimeout() {
+        checkInitialized();
+        return timeout;
+    }
+    
+    public static boolean isHeadless() {
+        checkInitialized();
+        return headless;
+    }
+    
+    // Validated setters
+    public static void setBaseUrl(String url) {
+        if (url == null || url.trim().isEmpty()) {
+            throw new IllegalArgumentException("Base URL cannot be empty!");
+        }
+        if (!url.startsWith("http://") && !url.startsWith("https://")) {
+            throw new IllegalArgumentException("Base URL must start with http:// or https://");
+        }
+        baseUrl = url.trim();
+    }
+    
+    public static void setUsername(String user) {
+        if (user == null || user.trim().isEmpty()) {
+            throw new IllegalArgumentException("Username cannot be empty!");
+        }
+        username = user.trim();
+    }
+    
+    private static void setPassword(String pass) {
+        if (pass == null || pass.length() < 6) {
+            throw new IllegalArgumentException("Password must be at least 6 characters!");
+        }
+        password = pass;
+    }
+    
+    public static void setTimeout(int seconds) {
+        if (seconds < 1 || seconds > 300) {
+            throw new IllegalArgumentException("Timeout must be between 1 and 300 seconds!");
+        }
+        timeout = seconds;
+    }
+    
+    public static void setHeadless(boolean mode) {
+        headless = mode;
+    }
+    
+    private static void checkInitialized() {
+        if (!initialized) {
+            throw new IllegalStateException("Configuration not initialized! Call initialize() first.");
+        }
+    }
+    
+    public static void displayConfig() {
+        checkInitialized();
+        System.out.println("========== TEST CONFIG ==========");
+        System.out.println("Base URL: " + baseUrl);
+        System.out.println("Username: " + username);
+        System.out.println("Password: ********");
+        System.out.println("Timeout: " + timeout + " seconds");
+        System.out.println("Headless: " + headless);
+        System.out.println("=================================");
+    }
+}
+
+public class SecureConfigFixed {
+    public static void main(String[] args) {
+        
+        System.out.println("--- Testing Before Initialization ---");
+        try {
+            String url = TestConfig.getBaseUrl();
+        } catch (IllegalStateException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+        
+        System.out.println("\n--- Initializing Config ---");
+        TestConfig.initialize(
+            "https://test.example.com",
+            "testuser",
+            "securePassword123"
+        );
+        
+        System.out.println("\n--- Testing Validation ---");
+        try {
+            TestConfig.setBaseUrl("");
+        } catch (IllegalArgumentException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+        
+        try {
+            TestConfig.setTimeout(-100);
+        } catch (IllegalArgumentException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+        
+        System.out.println("\n--- Valid Updates ---");
+        TestConfig.setTimeout(60);
+        TestConfig.setHeadless(true);
+        
+        System.out.println("\n--- Final Configuration ---");
+        TestConfig.displayConfig();
+        
+        System.out.println("\n--- Password Verification ---");
+        System.out.println("Correct password: " + TestConfig.verifyPassword("[REDACTED:PASSWORD]"));
+        System.out.println("Wrong password: " + TestConfig.verifyPassword("wrong"));
+    }
+}
+
+OUTPUT:
+-------
+--- Testing Before Initialization ---
+Error: Configuration not initialized! Call initialize() first.
+
+--- Initializing Config ---
+Configuration initialized successfully!
+
+--- Testing Validation ---
+Error: Base URL cannot be empty!
+Error: Timeout must be between 1 and 300 seconds!
+
+--- Valid Updates ---
+
+--- Final Configuration ---
+========== TEST CONFIG ==========
+Base URL: https://test.example.com
+Username: testuser
+Password: ********
+Timeout: 60 seconds
+Headless: true
+=================================
+
+--- Password Verification ---
+Correct password: true
+Wrong password: false
+
+
+================================================================================
+                    ENCAPSULATION - QUICK REFERENCE
+================================================================================
+
+ACCESS MODIFIERS SUMMARY:
+-------------------------
++---------------+----------+----------+------------+----------+
+| Modifier      | Class    | Package  | Subclass   | World    |
++---------------+----------+----------+------------+----------+
+| private       |   YES    |    NO    |     NO     |    NO    |
+| default       |   YES    |   YES    |     NO     |    NO    |
+| protected     |   YES    |   YES    |    YES     |    NO    |
+| public        |   YES    |   YES    |    YES     |   YES    |
++---------------+----------+----------+------------+----------+
+
+
+GETTER/SETTER NAMING CONVENTIONS:
+---------------------------------
++----------------------+-------------------------------+
+| Field Type           | Getter                        |
++----------------------+-------------------------------+
+| String name          | public String getName()       |
+| int age              | public int getAge()           |
+| double price         | public double getPrice()      |
+| boolean active       | public boolean isActive()     |
+| boolean hasPermission| public boolean hasPermission()|
++----------------------+-------------------------------+
+
++----------------------+-------------------------------+
+| Field Type           | Setter                        |
++----------------------+-------------------------------+
+| String name          | public void setName(String)   |
+| int age              | public void setAge(int)       |
+| double price         | public void setPrice(double)  |
+| boolean active       | public void setActive(boolean)|
++----------------------+-------------------------------+
+
+
+ENCAPSULATION BEST PRACTICES:
+-----------------------------
+1. Make fields private
+2. Provide public getters for read access
+3. Provide public setters with validation for write access
+4. Use 'this' keyword to avoid shadowing
+5. Return copies of mutable objects, not references
+6. Don't expose sensitive data (passwords, tokens)
+7. Use business methods instead of direct setters when appropriate
+8. Make classes immutable when possible
+9. Validate all input in setters
+10. Use appropriate access modifiers (not everything needs to be public)
+
+
+ENCAPSULATION IN AUTOMATION:
+----------------------------
++--------------------------------+----------------------------------------------+
+| Use Case                       | How to Apply Encapsulation                   |
++--------------------------------+----------------------------------------------+
+| Page Objects                   | Private locators, public action methods      |
+| Test Configuration             | Private config values, validated setters     |
+| API Credentials                | Private tokens, no getters for secrets       |
+| WebDriver Instance             | Private driver, controlled access            |
+| Test Data                      | Private data, immutable after creation       |
+| Session Management             | Private session state, business methods      |
+| Logging                        | Private log level, validated setter          |
++--------------------------------+----------------------------------------------+
+
+
+================================================================================
+                    PRACTICE EXERCISES - ENCAPSULATION
+================================================================================
+
+EXERCISE 1: Product Inventory System
+------------------------------------
+Create a Product class with:
+- Private fields: id, name, price, quantity, category
+- Validation: price >= 0, quantity >= 0, name not empty
+- Methods: addStock(), removeStock(), applyDiscount()
+- Read-only field: id (set only in constructor)
+
+EXERCISE 2: User Authentication
+-------------------------------
+Create a UserAccount class with:
+- Private fields: username, passwordHash, email, loginAttempts, isLocked
+- Write-only: password (no getter, only setter and verify method)
+- Validation: email format, password strength
+- Methods: login(), logout(), resetPassword()
+- Auto-lock after 3 failed login attempts
+
+EXERCISE 3: Test Configuration Manager
+--------------------------------------
+Create a TestConfigManager class with:
+- Private static fields: baseUrl, browser, timeout, credentials
+- Singleton pattern (private constructor)
+- Validation for all setters
+- No getter for sensitive credentials
+- Methods: initialize(), reset(), displayConfig()
+
+EXERCISE 4: API Response Handler
+--------------------------------
+Create an immutable ApiResponse class with:
+- Private final fields: statusCode, body, headers, responseTime
+- Only getters, no setters (set in constructor)
+- Validation methods: isSuccess(), isError()
+- No way to modify response after creation
+
+
+================================================================================
+                    SUMMARY - ENCAPSULATION
+================================================================================
+
+KEY TAKEAWAYS:
+--------------
+1. Encapsulation = Data Hiding + Controlled Access
+2. Make fields private, access through methods
+3. Getters provide read access
+4. Setters provide write access with validation
+5. Use appropriate access modifiers
+6. Protect sensitive data (passwords, tokens, keys)
+7. Return copies of mutable objects, not references
+8. Validate all input before accepting
+9. Use business methods when direct setting isn't appropriate
+10. Encapsulation makes code maintainable, secure, and testable
+
+
+BENEFITS RECAP:
+---------------
+- Data Protection: Invalid data cannot be set
+- Flexibility: Internal implementation can change
+- Maintainability: Changes don't affect external code
+- Security: Sensitive data is protected
+- Validation: Data is validated before use
+- Debugging: Easier to track data changes
+- Testing: Can mock/stub getters and setters
+
+
+================================================================================
+                    WHAT'S NEXT?
+================================================================================
+
+We've completed OOP concepts:
+- Topic 10: Inheritance
+- Topic 11: Polymorphism
+- Topic 12: Abstraction
+- Topic 13: Encapsulation
+
+According to your curriculum, next topics are:
+- Topic 14: Collections Framework (ArrayList, HashMap, etc.)
+- Topic 15: Exception Handling
+- Topic 16: File Handling
+
+Which topic would you like to continue with next?
+
+Would you like me to continue with Topic 14: Collections Framework (ArrayList, LinkedList, HashSet, HashMap, etc.)? This is very important for automation testing as you'll frequently work with lists of elements, test data, and key-value pairs!
+

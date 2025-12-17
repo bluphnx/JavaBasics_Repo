@@ -1,0 +1,2861 @@
+================================================================================
+                    TOPIC 5: LOOPS IN JAVA
+                    (for, while, do-while, for-each)
+================================================================================
+
+What are Loops?
+---------------
+Loops are used to execute a block of code repeatedly until a condition is met.
+They help avoid writing the same code multiple times.
+
+Types of Loops in Java:
+-----------------------
+1. for loop
+2. while loop
+3. do-while loop
+4. Enhanced for loop (for-each)
+
+Loop Control Statements:
+------------------------
+1. break - Exit the loop immediately
+2. continue - Skip current iteration and continue with next
+
+
+Why Important for Automation?
+-----------------------------
+- Iterate through web elements (list of links, buttons, etc.)
+- Retry failed operations
+- Read test data from files/arrays
+- Execute same test with multiple data sets
+- Wait for element conditions
+- Process API response arrays
+
+
+================================================================================
+                    1. FOR LOOP
+================================================================================
+
+The for loop is used when you know how many times you want to execute code.
+
+Syntax:
+-------
+for (initialization; condition; increment/decrement) {
+    // code to execute
+}
+
+Parts of for Loop:
+------------------
+1. Initialization - Executed once at the beginning (int i = 0)
+2. Condition - Checked before each iteration (i < 5)
+3. Increment/Decrement - Executed after each iteration (i++)
+
+
+Flow Diagram:
+-------------
+        +----------------+
+        | Initialization |
+        +----------------+
+               |
+               v
+        +-------------+
+    +-->| Condition   |
+    |   +-------------+
+    |         |
+    |   +-----+-----+
+    |   |           |
+    |  TRUE       FALSE
+    |   |           |
+    |   v           v
+    | +------+    Exit
+    | | Body |    Loop
+    | +------+
+    |   |
+    |   v
+    | +-------------+
+    | | Increment/  |
+    | | Decrement   |
+    | +-------------+
+    |   |
+    +---+
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 1: Basic for Loop
+--------------------------------------------------------------------------------
+
+public class ForLoopBasic {
+    public static void main(String[] args) {
+        
+        // Print numbers 1 to 5
+        System.out.println("Numbers 1 to 5:");
+        for (int i = 1; i <= 5; i++) {
+            System.out.println("i = " + i);
+        }
+    }
+}
+
+OUTPUT:
+-------
+Numbers 1 to 5:
+i = 1
+i = 2
+i = 3
+i = 4
+i = 5
+
+STEP BY STEP EXECUTION:
+-----------------------
+Iteration 1: i=1, condition(1<=5)=true, print 1, i becomes 2
+Iteration 2: i=2, condition(2<=5)=true, print 2, i becomes 3
+Iteration 3: i=3, condition(3<=5)=true, print 3, i becomes 4
+Iteration 4: i=4, condition(4<=5)=true, print 4, i becomes 5
+Iteration 5: i=5, condition(5<=5)=true, print 5, i becomes 6
+Iteration 6: i=6, condition(6<=5)=false, EXIT LOOP
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 2: for Loop Variations
+--------------------------------------------------------------------------------
+
+public class ForLoopVariations {
+    public static void main(String[] args) {
+        
+        // Counting up (increment)
+        System.out.println("=== Counting Up (1 to 5) ===");
+        for (int i = 1; i <= 5; i++) {
+            System.out.println(i);
+        }
+        
+        System.out.println("");
+        
+        // Counting down (decrement)
+        System.out.println("=== Counting Down (5 to 1) ===");
+        for (int i = 5; i >= 1; i--) {
+            System.out.println(i);
+        }
+        
+        System.out.println("");
+        
+        // Step by 2
+        System.out.println("=== Step by 2 (0 to 10) ===");
+        for (int i = 0; i <= 10; i += 2) {
+            System.out.println(i);
+        }
+        
+        System.out.println("");
+        
+        // Starting from different value
+        System.out.println("=== Starting from 10 (10 to 15) ===");
+        for (int i = 10; i <= 15; i++) {
+            System.out.println(i);
+        }
+    }
+}
+
+OUTPUT:
+-------
+=== Counting Up (1 to 5) ===
+1
+2
+3
+4
+5
+
+=== Counting Down (5 to 1) ===
+5
+4
+3
+2
+1
+
+=== Step by 2 (0 to 10) ===
+0
+2
+4
+6
+8
+10
+
+=== Starting from 10 (10 to 15) ===
+10
+11
+12
+13
+14
+15
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 3: for Loop with Calculations
+--------------------------------------------------------------------------------
+
+public class ForLoopCalculations {
+    public static void main(String[] args) {
+        
+        // Sum of numbers 1 to 10
+        int sum = 0;
+        for (int i = 1; i <= 10; i++) {
+            sum = sum + i;    // or sum += i
+        }
+        System.out.println("Sum of 1 to 10 = " + sum);
+        
+        // Factorial of 5 (5! = 5*4*3*2*1)
+        int factorial = 1;
+        int n = 5;
+        for (int i = 1; i <= n; i++) {
+            factorial = factorial * i;    // or factorial *= i
+        }
+        System.out.println("Factorial of " + n + " = " + factorial);
+        
+        // Count even numbers between 1 and 20
+        int evenCount = 0;
+        for (int i = 1; i <= 20; i++) {
+            if (i % 2 == 0) {
+                evenCount++;
+            }
+        }
+        System.out.println("Even numbers between 1 and 20 = " + evenCount);
+    }
+}
+
+OUTPUT:
+-------
+Sum of 1 to 10 = 55
+Factorial of 5 = 120
+Even numbers between 1 and 20 = 10
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 4: for Loop in Automation Context
+--------------------------------------------------------------------------------
+
+public class ForLoopAutomation {
+    public static void main(String[] args) {
+        
+        // Simulating clicking on multiple elements
+        System.out.println("=== Clicking Multiple Elements ===");
+        int elementCount = 5;
+        for (int i = 1; i <= elementCount; i++) {
+            System.out.println("Clicking element " + i);
+        }
+        
+        System.out.println("");
+        
+        // Simulating test data iteration
+        System.out.println("=== Test Data Iteration ===");
+        String[] usernames = {"user1", "user2", "user3", "admin", "guest"};
+        for (int i = 0; i < usernames.length; i++) {
+            System.out.println("Test " + (i + 1) + ": Testing with username: " + usernames[i]);
+        }
+        
+        System.out.println("");
+        
+        // Simulating retry mechanism
+        System.out.println("=== Retry Mechanism ===");
+        int maxRetries = 3;
+        boolean success = false;
+        
+        for (int attempt = 1; attempt <= maxRetries; attempt++) {
+            System.out.println("Attempt " + attempt + " of " + maxRetries);
+            
+            // Simulating operation (fails first 2 times)
+            if (attempt == 3) {
+                success = true;
+                System.out.println("Operation succeeded!");
+                break;
+            } else {
+                System.out.println("Operation failed, retrying...");
+            }
+        }
+        
+        System.out.println("");
+        
+        // Simulating pagination
+        System.out.println("=== Pagination ===");
+        int totalItems = 25;
+        int itemsPerPage = 10;
+        int totalPages = (int) Math.ceil((double) totalItems / itemsPerPage);
+        
+        for (int page = 1; page <= totalPages; page++) {
+            int startItem = (page - 1) * itemsPerPage + 1;
+            int endItem = Math.min(page * itemsPerPage, totalItems);
+            System.out.println("Page " + page + ": Items " + startItem + " to " + endItem);
+        }
+    }
+}
+
+OUTPUT:
+-------
+=== Clicking Multiple Elements ===
+Clicking element 1
+Clicking element 2
+Clicking element 3
+Clicking element 4
+Clicking element 5
+
+=== Test Data Iteration ===
+Test 1: Testing with username: user1
+Test 2: Testing with username: user2
+Test 3: Testing with username: user3
+Test 4: Testing with username: admin
+Test 5: Testing with username: guest
+
+=== Retry Mechanism ===
+Attempt 1 of 3
+Operation failed, retrying...
+Attempt 2 of 3
+Operation failed, retrying...
+Attempt 3 of 3
+Operation succeeded!
+
+=== Pagination ===
+Page 1: Items 1 to 10
+Page 2: Items 11 to 20
+Page 3: Items 21 to 25
+
+
+================================================================================
+                    2. WHILE LOOP
+================================================================================
+
+The while loop executes code as long as condition is true.
+Use when you don't know how many iterations in advance.
+
+Syntax:
+-------
+while (condition) {
+    // code to execute
+    // update condition variable
+}
+
+
+Flow Diagram:
+-------------
+        +-------------+
+    +-->| Condition   |
+    |   +-------------+
+    |         |
+    |   +-----+-----+
+    |   |           |
+    |  TRUE       FALSE
+    |   |           |
+    |   v           v
+    | +------+    Exit
+    | | Body |    Loop
+    | +------+
+    |   |
+    +---+
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 5: Basic while Loop
+--------------------------------------------------------------------------------
+
+public class WhileLoopBasic {
+    public static void main(String[] args) {
+        
+        // Print numbers 1 to 5
+        System.out.println("Numbers 1 to 5:");
+        int i = 1;    // Initialization outside loop
+        
+        while (i <= 5) {    // Condition
+            System.out.println("i = " + i);
+            i++;    // Increment inside loop
+        }
+        
+        System.out.println("Loop ended. Final i = " + i);
+    }
+}
+
+OUTPUT:
+-------
+Numbers 1 to 5:
+i = 1
+i = 2
+i = 3
+i = 4
+i = 5
+Loop ended. Final i = 6
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 6: while Loop Variations
+--------------------------------------------------------------------------------
+
+public class WhileLoopVariations {
+    public static void main(String[] args) {
+        
+        // Counting down
+        System.out.println("=== Countdown ===");
+        int count = 5;
+        while (count > 0) {
+            System.out.println(count);
+            count--;
+        }
+        System.out.println("Blast off!");
+        
+        System.out.println("");
+        
+        // Sum until threshold
+        System.out.println("=== Sum Until Threshold ===");
+        int sum = 0;
+        int num = 1;
+        int threshold = 50;
+        
+        while (sum < threshold) {
+            sum += num;
+            System.out.println("Added " + num + ", Sum = " + sum);
+            num++;
+        }
+        System.out.println("Final sum: " + sum);
+        
+        System.out.println("");
+        
+        // Find first divisible number
+        System.out.println("=== Find First Number Divisible by 7 ===");
+        int number = 50;
+        while (number % 7 != 0) {
+            number++;
+        }
+        System.out.println("First number >= 50 divisible by 7 is: " + number);
+    }
+}
+
+OUTPUT:
+-------
+=== Countdown ===
+5
+4
+3
+2
+1
+Blast off!
+
+=== Sum Until Threshold ===
+Added 1, Sum = 1
+Added 2, Sum = 3
+Added 3, Sum = 6
+Added 4, Sum = 10
+Added 5, Sum = 15
+Added 6, Sum = 21
+Added 7, Sum = 28
+Added 8, Sum = 36
+Added 9, Sum = 45
+Added 10, Sum = 55
+Final sum: 55
+
+=== Find First Number Divisible by 7 ===
+First number >= 50 divisible by 7 is: 56
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 7: while Loop in Automation Context
+--------------------------------------------------------------------------------
+
+public class WhileLoopAutomation {
+    public static void main(String[] args) {
+        
+        // Simulating wait for element
+        System.out.println("=== Waiting for Element ===");
+        int waitTime = 0;
+        int maxWait = 10;
+        boolean elementFound = false;
+        
+        while (!elementFound && waitTime < maxWait) {
+            waitTime++;
+            System.out.println("Waiting... " + waitTime + " seconds");
+            
+            // Simulating element appears after 4 seconds
+            if (waitTime == 4) {
+                elementFound = true;
+                System.out.println("Element found!");
+            }
+        }
+        
+        if (!elementFound) {
+            System.out.println("Timeout! Element not found.");
+        }
+        
+        System.out.println("");
+        
+        // Simulating reading data until end
+        System.out.println("=== Reading Test Data ===");
+        String[] testData = {"data1", "data2", "data3", "END"};
+        int index = 0;
+        
+        while (!testData[index].equals("END")) {
+            System.out.println("Processing: " + testData[index]);
+            index++;
+        }
+        System.out.println("End of data reached");
+        
+        System.out.println("");
+        
+        // Simulating polling API
+        System.out.println("=== Polling API for Status ===");
+        String status = "PENDING";
+        int pollCount = 0;
+        int maxPolls = 5;
+        
+        while (status.equals("PENDING") && pollCount < maxPolls) {
+            pollCount++;
+            System.out.println("Poll " + pollCount + ": Status = " + status);
+            
+            // Simulating status change after 3 polls
+            if (pollCount == 3) {
+                status = "COMPLETED";
+            }
+        }
+        System.out.println("Final Status: " + status);
+    }
+}
+
+OUTPUT:
+-------
+=== Waiting for Element ===
+Waiting... 1 seconds
+Waiting... 2 seconds
+Waiting... 3 seconds
+Waiting... 4 seconds
+Element found!
+
+=== Reading Test Data ===
+Processing: data1
+Processing: data2
+Processing: data3
+End of data reached
+
+=== Polling API for Status ===
+Poll 1: Status = PENDING
+Poll 2: Status = PENDING
+Poll 3: Status = PENDING
+Final Status: COMPLETED
+
+
+================================================================================
+                    3. DO-WHILE LOOP
+================================================================================
+
+The do-while loop executes code at least once, then checks condition.
+The body executes BEFORE the condition is checked.
+
+Syntax:
+-------
+do {
+    // code to execute
+    // update condition variable
+} while (condition);    // Note: semicolon required
+
+
+Flow Diagram:
+-------------
+        +------+
+    +-->| Body |
+    |   +------+
+    |      |
+    |      v
+    |   +-------------+
+    |   | Condition   |
+    |   +-------------+
+    |         |
+    |   +-----+-----+
+    |   |           |
+    |  TRUE       FALSE
+    |   |           |
+    +---+           v
+                  Exit
+                  Loop
+
+
+Key Difference from while:
+--------------------------
+- while: Checks condition FIRST, may not execute at all
+- do-while: Executes FIRST, then checks condition (runs at least once)
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 8: Basic do-while Loop
+--------------------------------------------------------------------------------
+
+public class DoWhileBasic {
+    public static void main(String[] args) {
+        
+        // Print numbers 1 to 5
+        System.out.println("Numbers 1 to 5:");
+        int i = 1;
+        
+        do {
+            System.out.println("i = " + i);
+            i++;
+        } while (i <= 5);
+        
+        System.out.println("Loop ended");
+    }
+}
+
+OUTPUT:
+-------
+Numbers 1 to 5:
+i = 1
+i = 2
+i = 3
+i = 4
+i = 5
+Loop ended
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 9: do-while vs while (Executes at Least Once)
+--------------------------------------------------------------------------------
+
+public class DoWhileVsWhile {
+    public static void main(String[] args) {
+        
+        int x = 10;
+        
+        // while loop - condition false, never executes
+        System.out.println("=== while loop (x > 100) ===");
+        while (x > 100) {
+            System.out.println("Inside while loop");
+            x++;
+        }
+        System.out.println("while loop completed (body never executed)");
+        
+        System.out.println("");
+        
+        // do-while loop - executes once even though condition is false
+        System.out.println("=== do-while loop (x > 100) ===");
+        x = 10;    // Reset x
+        do {
+            System.out.println("Inside do-while loop, x = " + x);
+            x++;
+        } while (x > 100);
+        System.out.println("do-while loop completed (body executed once)");
+    }
+}
+
+OUTPUT:
+-------
+=== while loop (x > 100) ===
+while loop completed (body never executed)
+
+=== do-while loop (x > 100) ===
+Inside do-while loop, x = 10
+do-while loop completed (body executed once)
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 10: do-while in Automation Context
+--------------------------------------------------------------------------------
+
+public class DoWhileAutomation {
+    public static void main(String[] args) {
+        
+        // Menu-driven test selection
+        System.out.println("=== Test Menu Simulation ===");
+        int choice = 0;
+        int iteration = 0;
+        int maxIterations = 3;    // Simulating user choices
+        
+        do {
+            iteration++;
+            System.out.println("\n--- Menu ---");
+            System.out.println("1. Run Smoke Tests");
+            System.out.println("2. Run Regression Tests");
+            System.out.println("3. Run API Tests");
+            System.out.println("4. Exit");
+            
+            // Simulating user input
+            if (iteration == 1) choice = 1;
+            else if (iteration == 2) choice = 3;
+            else choice = 4;
+            
+            System.out.println("User selected: " + choice);
+            
+            switch (choice) {
+                case 1:
+                    System.out.println("Running Smoke Tests...");
+                    break;
+                case 2:
+                    System.out.println("Running Regression Tests...");
+                    break;
+                case 3:
+                    System.out.println("Running API Tests...");
+                    break;
+                case 4:
+                    System.out.println("Exiting...");
+                    break;
+                default:
+                    System.out.println("Invalid choice");
+            }
+            
+        } while (choice != 4 && iteration < maxIterations);
+        
+        System.out.println("\n");
+        
+        // Retry with at least one attempt
+        System.out.println("=== Retry Mechanism (At Least One Attempt) ===");
+        int attempts = 0;
+        int maxAttempts = 3;
+        boolean success = false;
+        
+        do {
+            attempts++;
+            System.out.println("Attempt " + attempts + ":");
+            
+            // Simulating success on 2nd attempt
+            if (attempts == 2) {
+                success = true;
+                System.out.println("  Operation succeeded!");
+            } else {
+                System.out.println("  Operation failed");
+            }
+            
+        } while (!success && attempts < maxAttempts);
+        
+        System.out.println("Total attempts: " + attempts);
+    }
+}
+
+OUTPUT:
+-------
+=== Test Menu Simulation ===
+
+--- Menu ---
+1. Run Smoke Tests
+2. Run Regression Tests
+3. Run API Tests
+4. Exit
+User selected: 1
+Running Smoke Tests...
+
+--- Menu ---
+1. Run Smoke Tests
+2. Run Regression Tests
+3. Run API Tests
+4. Exit
+User selected: 3
+Running API Tests...
+
+--- Menu ---
+1. Run Smoke Tests
+2. Run Regression Tests
+3. Run API Tests
+4. Exit
+User selected: 4
+Exiting...
+
+
+=== Retry Mechanism (At Least One Attempt) ===
+Attempt 1:
+  Operation failed
+Attempt 2:
+  Operation succeeded!
+Total attempts: 2
+
+
+================================================================================
+                    4. ENHANCED FOR LOOP (FOR-EACH)
+================================================================================
+
+The enhanced for loop (for-each) is used to iterate through arrays and
+collections without using index.
+
+Syntax:
+-------
+for (dataType variable : arrayOrCollection) {
+    // code using variable
+}
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 11: Basic Enhanced for Loop
+--------------------------------------------------------------------------------
+
+public class EnhancedForBasic {
+    public static void main(String[] args) {
+        
+        // Array of integers
+        int[] numbers = {10, 20, 30, 40, 50};
+        
+        System.out.println("=== Using Traditional for Loop ===");
+        for (int i = 0; i < numbers.length; i++) {
+            System.out.println("numbers[" + i + "] = " + numbers[i]);
+        }
+        
+        System.out.println("");
+        
+        System.out.println("=== Using Enhanced for Loop ===");
+        for (int num : numbers) {
+            System.out.println("Value = " + num);
+        }
+    }
+}
+
+OUTPUT:
+-------
+=== Using Traditional for Loop ===
+numbers[0] = 10
+numbers[1] = 20
+numbers[2] = 30
+numbers[3] = 40
+numbers[4] = 50
+
+=== Using Enhanced for Loop ===
+Value = 10
+Value = 20
+Value = 30
+Value = 40
+Value = 50
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 12: Enhanced for Loop with Different Types
+--------------------------------------------------------------------------------
+
+public class EnhancedForTypes {
+    public static void main(String[] args) {
+        
+        // String array
+        System.out.println("=== String Array ===");
+        String[] browsers = {"Chrome", "Firefox", "Edge", "Safari"};
+        for (String browser : browsers) {
+            System.out.println("Browser: " + browser);
+        }
+        
+        System.out.println("");
+        
+        // Double array
+        System.out.println("=== Double Array ===");
+        double[] prices = {99.99, 149.50, 299.00, 49.99};
+        double total = 0;
+        for (double price : prices) {
+            System.out.println("Price: $" + price);
+            total += price;
+        }
+        System.out.println("Total: $" + total);
+        
+        System.out.println("");
+        
+        // Boolean array
+        System.out.println("=== Boolean Array ===");
+        boolean[] testResults = {true, true, false, true, false};
+        int passCount = 0;
+        int failCount = 0;
+        for (boolean result : testResults) {
+            if (result) {
+                passCount++;
+            } else {
+                failCount++;
+            }
+        }
+        System.out.println("Passed: " + passCount + ", Failed: " + failCount);
+    }
+}
+
+OUTPUT:
+-------
+=== String Array ===
+Browser: Chrome
+Browser: Firefox
+Browser: Edge
+Browser: Safari
+
+=== Double Array ===
+Price: $99.99
+Price: $149.5
+Price: $299.0
+Price: $49.99
+Total: $598.48
+
+=== Boolean Array ===
+Passed: 3, Failed: 2
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 13: Enhanced for Loop in Automation Context
+--------------------------------------------------------------------------------
+
+public class EnhancedForAutomation {
+    public static void main(String[] args) {
+        
+        // Test data - usernames
+        System.out.println("=== Testing Multiple Users ===");
+        String[] usernames = {"admin", "user1", "guest", "manager"};
+        
+        for (String username : usernames) {
+            System.out.println("Testing login with: " + username);
+            System.out.println("  - Enter username: " + username);
+            System.out.println("  - Enter password: ****");
+            System.out.println("  - Click login");
+            System.out.println("  - Verify dashboard");
+            System.out.println("");
+        }
+        
+        // Verify multiple elements
+        System.out.println("=== Verifying Navigation Links ===");
+        String[] expectedLinks = {"Home", "Products", "Services", "About", "Contact"};
+        
+        for (String link : expectedLinks) {
+            System.out.println("Verifying link: " + link + " - FOUND");
+        }
+        
+        System.out.println("");
+        
+        // Process API response data
+        System.out.println("=== Processing API Response ===");
+        String[] responseItems = {"item_001", "item_002", "item_003"};
+        
+        int itemNumber = 1;
+        for (String item : responseItems) {
+            System.out.println("Item " + itemNumber + ": " + item);
+            itemNumber++;
+        }
+    }
+}
+
+OUTPUT:
+-------
+=== Testing Multiple Users ===
+Testing login with: admin
+  - Enter username: admin
+  - Enter password: ****
+  - Click login
+  - Verify dashboard
+
+Testing login with: user1
+  - Enter username: user1
+  - Enter password: ****
+  - Click login
+  - Verify dashboard
+
+Testing login with: guest
+  - Enter username: guest
+  - Enter password: ****
+  - Click login
+  - Verify dashboard
+
+Testing login with: manager
+  - Enter username: manager
+  - Enter password: ****
+  - Click login
+  - Verify dashboard
+
+=== Verifying Navigation Links ===
+Verifying link: Home - FOUND
+Verifying link: Products - FOUND
+Verifying link: Services - FOUND
+Verifying link: About - FOUND
+Verifying link: Contact - FOUND
+
+=== Processing API Response ===
+Item 1: item_001
+Item 2: item_002
+Item 3: item_003
+
+
+--------------------------------------------------------------------------------
+TRADITIONAL FOR VS ENHANCED FOR COMPARISON
+--------------------------------------------------------------------------------
+
++------------------------+----------------------------------+----------------------------------+
+| Feature                | Traditional for                  | Enhanced for (for-each)          |
++------------------------+----------------------------------+----------------------------------+
+| Access to index        | Yes (using i)                    | No (need separate counter)       |
+| Modify array elements  | Yes (array[i] = value)           | No (modifies copy only)          |
+| Iterate backwards      | Yes (i--)                        | No                               |
+| Skip elements          | Yes (i += 2)                     | No                               |
+| Readability            | More verbose                     | Cleaner, simpler                 |
+| Use case               | Need index or modify elements    | Simple iteration                 |
++------------------------+----------------------------------+----------------------------------+
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 14: When to Use Traditional vs Enhanced for
+--------------------------------------------------------------------------------
+
+public class TraditionalVsEnhanced {
+    public static void main(String[] args) {
+        
+        int[] numbers = {10, 20, 30, 40, 50};
+        
+        // Use TRADITIONAL for when you need index
+        System.out.println("=== Need Index - Use Traditional ===");
+        for (int i = 0; i < numbers.length; i++) {
+            System.out.println("Index " + i + " = " + numbers[i]);
+        }
+        
+        System.out.println("");
+        
+        // Use TRADITIONAL for when modifying elements
+        System.out.println("=== Modifying Elements - Use Traditional ===");
+        for (int i = 0; i < numbers.length; i++) {
+            numbers[i] = numbers[i] * 2;    // Double each element
+        }
+        System.out.println("After doubling: ");
+        for (int num : numbers) {
+            System.out.println(num);
+        }
+        
+        System.out.println("");
+        
+        // Use ENHANCED for simple iteration
+        System.out.println("=== Simple Iteration - Use Enhanced ===");
+        String[] names = {"Alice", "Bob", "Charlie"};
+        for (String name : names) {
+            System.out.println("Hello, " + name + "!");
+        }
+        
+        System.out.println("");
+        
+        // Use TRADITIONAL for when iterating backwards
+        System.out.println("=== Backwards Iteration - Use Traditional ===");
+        int[] nums = {1, 2, 3, 4, 5};
+        for (int i = nums.length - 1; i >= 0; i--) {
+            System.out.println(nums[i]);
+        }
+    }
+}
+
+OUTPUT:
+-------
+=== Need Index - Use Traditional ===
+Index 0 = 10
+Index 1 = 20
+Index 2 = 30
+Index 3 = 40
+Index 4 = 50
+
+=== Modifying Elements - Use Traditional ===
+After doubling: 
+20
+40
+60
+80
+100
+
+=== Simple Iteration - Use Enhanced ===
+Hello, Alice!
+Hello, Bob!
+Hello, Charlie!
+
+=== Backwards Iteration - Use Traditional ===
+5
+4
+3
+2
+1
+
+
+================================================================================
+                    5. NESTED LOOPS
+================================================================================
+
+A loop inside another loop. The inner loop completes all iterations
+for each iteration of the outer loop.
+
+Syntax:
+-------
+for (int i = 0; i < outer; i++) {
+    for (int j = 0; j < inner; j++) {
+        // code
+    }
+}
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 15: Basic Nested Loops
+--------------------------------------------------------------------------------
+
+public class NestedLoopsBasic {
+    public static void main(String[] args) {
+        
+        System.out.println("=== Nested Loop Execution ===");
+        for (int i = 1; i <= 3; i++) {
+            System.out.println("Outer loop: i = " + i);
+            
+            for (int j = 1; j <= 2; j++) {
+                System.out.println("  Inner loop: j = " + j);
+            }
+            
+            System.out.println("");
+        }
+    }
+}
+
+OUTPUT:
+-------
+=== Nested Loop Execution ===
+Outer loop: i = 1
+  Inner loop: j = 1
+  Inner loop: j = 2
+
+Outer loop: i = 2
+  Inner loop: j = 1
+  Inner loop: j = 2
+
+Outer loop: i = 3
+  Inner loop: j = 1
+  Inner loop: j = 2
+
+
+EXECUTION FLOW:
+---------------
+i=1: j=1, j=2
+i=2: j=1, j=2
+i=3: j=1, j=2
+Total inner loop executions: 3 x 2 = 6
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 16: Nested Loops - Multiplication Table
+--------------------------------------------------------------------------------
+
+public class MultiplicationTable {
+    public static void main(String[] args) {
+        
+        System.out.println("=== Multiplication Table (1 to 5) ===");
+        System.out.println("");
+        
+        // Print header
+        System.out.print("    ");
+        for (int i = 1; i <= 5; i++) {
+            System.out.print(i + "   ");
+        }
+        System.out.println("");
+        System.out.println("   ---------------");
+        
+        // Print table
+        for (int i = 1; i <= 5; i++) {
+            System.out.print(i + " | ");
+            for (int j = 1; j <= 5; j++) {
+                int product = i * j;
+                if (product < 10) {
+                    System.out.print(product + "   ");
+                } else {
+                    System.out.print(product + "  ");
+                }
+            }
+            System.out.println("");
+        }
+    }
+}
+
+OUTPUT:
+-------
+=== Multiplication Table (1 to 5) ===
+
+    1   2   3   4   5   
+   ---------------
+1 | 1   2   3   4   5   
+2 | 2   4   6   8   10  
+3 | 3   6   9   12  15  
+4 | 4   8   12  16  20  
+5 | 5   10  15  20  25  
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 17: Nested Loops - Pattern Printing
+--------------------------------------------------------------------------------
+
+public class PatternPrinting {
+    public static void main(String[] args) {
+        
+        int rows = 5;
+        
+        // Right triangle pattern
+        System.out.println("=== Right Triangle ===");
+        for (int i = 1; i <= rows; i++) {
+            for (int j = 1; j <= i; j++) {
+                System.out.print("* ");
+            }
+            System.out.println("");
+        }
+        
+        System.out.println("");
+        
+        // Inverted right triangle
+        System.out.println("=== Inverted Right Triangle ===");
+        for (int i = rows; i >= 1; i--) {
+            for (int j = 1; j <= i; j++) {
+                System.out.print("* ");
+            }
+            System.out.println("");
+        }
+        
+        System.out.println("");
+        
+        // Number pattern
+        System.out.println("=== Number Pattern ===");
+        for (int i = 1; i <= rows; i++) {
+            for (int j = 1; j <= i; j++) {
+                System.out.print(j + " ");
+            }
+            System.out.println("");
+        }
+        
+        System.out.println("");
+        
+        // Rectangle pattern
+        System.out.println("=== Rectangle (3x5) ===");
+        for (int i = 1; i <= 3; i++) {
+            for (int j = 1; j <= 5; j++) {
+                System.out.print("* ");
+            }
+            System.out.println("");
+        }
+    }
+}
+
+OUTPUT:
+-------
+=== Right Triangle ===
+* 
+* * 
+* * * 
+* * * * 
+* * * * * 
+
+=== Inverted Right Triangle ===
+* * * * * 
+* * * * 
+* * * 
+* * 
+* 
+
+=== Number Pattern ===
+1 
+1 2 
+1 2 3 
+1 2 3 4 
+1 2 3 4 5 
+
+=== Rectangle (3x5) ===
+* * * * * 
+* * * * * 
+* * * * * 
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 18: Nested Loops in Automation Context
+--------------------------------------------------------------------------------
+
+public class NestedLoopsAutomation {
+    public static void main(String[] args) {
+        
+        // Testing multiple browsers with multiple URLs
+        System.out.println("=== Cross Browser Testing ===");
+        String[] browsers = {"Chrome", "Firefox", "Edge"};
+        String[] urls = {"https://google.com", "https://github.com"};
+        
+        for (String browser : browsers) {
+            System.out.println("\nBrowser: " + browser);
+            System.out.println("-".repeat(30));
+            
+            for (String url : urls) {
+                System.out.println("  Testing URL: " + url);
+                System.out.println("    - Open browser");
+                System.out.println("    - Navigate to URL");
+                System.out.println("    - Verify page loaded");
+            }
+        }
+        
+        System.out.println("\n");
+        
+        // Testing table data
+        System.out.println("=== Verifying Table Data ===");
+        String[][] tableData = {
+            {"John", "Developer", "IT"},
+            {"Jane", "Tester", "QA"},
+            {"Bob", "Manager", "HR"}
+        };
+        
+        for (int row = 0; row < tableData.length; row++) {
+            System.out.println("Row " + (row + 1) + ":");
+            for (int col = 0; col < tableData[row].length; col++) {
+                System.out.println("  Column " + (col + 1) + ": " + tableData[row][col]);
+            }
+        }
+        
+        System.out.println("\n");
+        
+        // Data-driven testing
+        System.out.println("=== Data-Driven Test Execution ===");
+        String[][] testData = {
+            {"user1", "pass1", "valid"},
+            {"user2", "pass2", "valid"},
+            {"", "pass3", "invalid"},
+            {"user4", "", "invalid"}
+        };
+        
+        int testNumber = 1;
+        int passed = 0;
+        int failed = 0;
+        
+        for (String[] data : testData) {
+            String username = data[0];
+            String password = data[1];
+            String expectedResult = data[2];
+            
+            System.out.println("Test " + testNumber + ":");
+            System.out.println("  Username: " + (username.isEmpty() ? "[empty]" : username));
+            System.out.println("  Password: " + (password.isEmpty() ? "[empty]" : "****"));
+            System.out.println("  Expected: " + expectedResult);
+            
+            // Simulating test result
+            boolean isValid = !username.isEmpty() && !password.isEmpty();
+            String actualResult = isValid ? "valid" : "invalid";
+            
+            if (actualResult.equals(expectedResult)) {
+                System.out.println("  Result: PASSED");
+                passed++;
+            } else {
+                System.out.println("  Result: FAILED");
+                failed++;
+            }
+            System.out.println("");
+            testNumber++;
+        }
+        
+        System.out.println("Summary: Passed=" + passed + ", Failed=" + failed);
+    }
+}
+
+OUTPUT:
+-------
+=== Cross Browser Testing ===
+
+Browser: Chrome
+------------------------------
+  Testing URL: https://google.com
+    - Open browser
+    - Navigate to URL
+    - Verify page loaded
+  Testing URL: https://github.com
+    - Open browser
+    - Navigate to URL
+    - Verify page loaded
+
+Browser: Firefox
+------------------------------
+  Testing URL: https://google.com
+    - Open browser
+    - Navigate to URL
+    - Verify page loaded
+  Testing URL: https://github.com
+    - Open browser
+    - Navigate to URL
+    - Verify page loaded
+
+Browser: Edge
+------------------------------
+  Testing URL: https://google.com
+    - Open browser
+    - Navigate to URL
+    - Verify page loaded
+  Testing URL: https://github.com
+    - Open browser
+    - Navigate to URL
+    - Verify page loaded
+
+
+=== Verifying Table Data ===
+Row 1:
+  Column 1: John
+  Column 2: Developer
+  Column 3: IT
+Row 2:
+  Column 1: Jane
+  Column 2: Tester
+  Column 3: QA
+Row 3:
+  Column 1: Bob
+  Column 2: Manager
+  Column 3: HR
+
+
+=== Data-Driven Test Execution ===
+Test 1:
+  Username: user1
+  Password: ****
+  Expected: valid
+  Result: PASSED
+
+Test 2:
+  Username: user2
+  Password: ****
+  Expected: valid
+  Result: PASSED
+
+Test 3:
+  Username: [empty]
+  Password: ****
+  Expected: invalid
+  Result: PASSED
+
+Test 4:
+  Username: user4
+  Password: [empty]
+  Expected: invalid
+  Result: PASSED
+
+Summary: Passed=4, Failed=0
+
+
+================================================================================
+                    6. BREAK STATEMENT
+================================================================================
+
+The break statement is used to exit a loop immediately.
+When break is executed, control jumps to the statement after the loop.
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 19: break in for Loop
+--------------------------------------------------------------------------------
+
+public class BreakInForLoop {
+    public static void main(String[] args) {
+        
+        // Exit loop when number is found
+        System.out.println("=== Find Number 5 ===");
+        for (int i = 1; i <= 10; i++) {
+            System.out.println("Checking: " + i);
+            if (i == 5) {
+                System.out.println("Found 5! Breaking out of loop.");
+                break;
+            }
+        }
+        System.out.println("Loop ended");
+        
+        System.out.println("");
+        
+        // Search in array
+        System.out.println("=== Search in Array ===");
+        int[] numbers = {10, 25, 30, 45, 50, 65, 70};
+        int target = 45;
+        boolean found = false;
+        int index = -1;
+        
+        for (int i = 0; i < numbers.length; i++) {
+            System.out.println("Checking index " + i + ": " + numbers[i]);
+            if (numbers[i] == target) {
+                found = true;
+                index = i;
+                break;
+            }
+        }
+        
+        if (found) {
+            System.out.println("Found " + target + " at index " + index);
+        } else {
+            System.out.println(target + " not found");
+        }
+    }
+}
+
+OUTPUT:
+-------
+=== Find Number 5 ===
+Checking: 1
+Checking: 2
+Checking: 3
+Checking: 4
+Checking: 5
+Found 5! Breaking out of loop.
+Loop ended
+
+=== Search in Array ===
+Checking index 0: 10
+Checking index 1: 25
+Checking index 2: 30
+Checking index 3: 45
+Found 45 at index 3
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 20: break in while Loop
+--------------------------------------------------------------------------------
+
+public class BreakInWhileLoop {
+    public static void main(String[] args) {
+        
+        // Exit infinite loop with break
+        System.out.println("=== Controlled Infinite Loop ===");
+        int counter = 0;
+        
+        while (true) {    // Infinite loop
+            counter++;
+            System.out.println("Iteration: " + counter);
+            
+            if (counter >= 5) {
+                System.out.println("Reached 5 iterations, breaking...");
+                break;
+            }
+        }
+        System.out.println("Exited loop");
+    }
+}
+
+OUTPUT:
+-------
+=== Controlled Infinite Loop ===
+Iteration: 1
+Iteration: 2
+Iteration: 3
+Iteration: 4
+Iteration: 5
+Reached 5 iterations, breaking...
+Exited loop
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 21: break in Automation Context
+--------------------------------------------------------------------------------
+
+public class BreakAutomation {
+    public static void main(String[] args) {
+        
+        // Stop on first failure
+        System.out.println("=== Stop on First Failure ===");
+        String[] testCases = {"TC001", "TC002", "TC003", "TC004", "TC005"};
+        boolean[] results = {true, true, false, true, true};    // TC003 fails
+        
+        for (int i = 0; i < testCases.length; i++) {
+            System.out.println("Executing: " + testCases[i]);
+            
+            if (!results[i]) {
+                System.out.println("  FAILED - Stopping execution");
+                break;
+            }
+            System.out.println("  PASSED");
+        }
+        
+        System.out.println("\n");
+        
+        // Find first matching element
+        System.out.println("=== Find Element with Specific Text ===");
+        String[] elementTexts = {"Home", "Products", "Login", "Contact", "About"};
+        String searchText = "Login";
+        
+        for (String text : elementTexts) {
+            System.out.println("Checking element: " + text);
+            
+            if (text.equals(searchText)) {
+                System.out.println("Found '" + searchText + "' - Clicking...");
+                break;
+            }
+        }
+    }
+}
+
+OUTPUT:
+-------
+=== Stop on First Failure ===
+Executing: TC001
+  PASSED
+Executing: TC002
+  PASSED
+Executing: TC003
+  FAILED - Stopping execution
+
+
+=== Find Element with Specific Text ===
+Checking element: Home
+Checking element: Products
+Checking element: Login
+Found 'Login' - Clicking...
+
+
+================================================================================
+                    7. CONTINUE STATEMENT
+================================================================================
+
+The continue statement skips the current iteration and moves to the next.
+Unlike break, it doesn't exit the loop.
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 22: continue in for Loop
+--------------------------------------------------------------------------------
+
+public class ContinueInForLoop {
+    public static void main(String[] args) {
+        
+        // Skip even numbers
+        System.out.println("=== Print Odd Numbers Only ===");
+        for (int i = 1; i <= 10; i++) {
+            if (i % 2 == 0) {
+                continue;    // Skip even numbers
+            }
+            System.out.println(i);
+        }
+        
+        System.out.println("");
+        
+        // Skip specific value
+        System.out.println("=== Skip Number 5 ===");
+        for (int i = 1; i <= 7; i++) {
+            if (i == 5) {
+                System.out.println("Skipping 5...");
+                continue;
+            }
+            System.out.println("Processing: " + i);
+        }
+    }
+}
+
+OUTPUT:
+-------
+=== Print Odd Numbers Only ===
+1
+3
+5
+7
+9
+
+=== Skip Number 5 ===
+Processing: 1
+Processing: 2
+Processing: 3
+Processing: 4
+Skipping 5...
+Processing: 6
+Processing: 7
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 23: continue in Automation Context
+--------------------------------------------------------------------------------
+
+public class ContinueAutomation {
+    public static void main(String[] args) {
+        
+        // Skip disabled elements
+        System.out.println("=== Click Only Enabled Elements ===");
+        String[] elements = {"Button1", "Button2", "Button3", "Button4", "Button5"};
+        boolean[] enabled = {true, false, true, false, true};
+        
+        for (int i = 0; i < elements.length; i++) {
+            if (!enabled[i]) {
+                System.out.println(elements[i] + " is disabled - skipping");
+                continue;
+            }
+            System.out.println("Clicking: " + elements[i]);
+        }
+        
+        System.out.println("\n");
+        
+        // Skip invalid test data
+        System.out.println("=== Process Valid Data Only ===");
+        String[] usernames = {"admin", "", "user1", null, "guest"};
+        
+        for (int i = 0; i < usernames.length; i++) {
+            String username = usernames[i];
+            
+            if (username == null || username.isEmpty()) {
+                System.out.println("Test " + (i + 1) + ": Invalid data - skipping");
+                continue;
+            }
+            
+            System.out.println("Test " + (i + 1) + ": Testing with username '" + username + "'");
+        }
+        
+        System.out.println("\n");
+        
+        // Skip already tested items
+        System.out.println("=== Skip Already Tested Items ===");
+        String[] testItems = {"Login", "Logout", "Search", "Filter", "Sort"};
+        String[] alreadyTested = {"Login", "Search"};
+        
+        for (String item : testItems) {
+            boolean skip = false;
+            
+            for (String tested : alreadyTested) {
+                if (item.equals(tested)) {
+                    skip = true;
+                    break;
+                }
+            }
+            
+            if (skip) {
+                System.out.println(item + " - Already tested, skipping");
+                continue;
+            }
+            
+            System.out.println(item + " - Testing now...");
+        }
+    }
+}
+
+OUTPUT:
+-------
+=== Click Only Enabled Elements ===
+Clicking: Button1
+Button2 is disabled - skipping
+Clicking: Button3
+Button4 is disabled - skipping
+Clicking: Button5
+
+
+=== Process Valid Data Only ===
+Test 1: Testing with username 'admin'
+Test 2: Invalid data - skipping
+Test 3: Testing with username 'user1'
+Test 4: Invalid data - skipping
+Test 5: Testing with username 'guest'
+
+
+=== Skip Already Tested Items ===
+Login - Already tested, skipping
+Logout - Testing now...
+Search - Already tested, skipping
+Filter - Testing now...
+Sort - Testing now...
+
+
+================================================================================
+                    8. LABELED LOOPS (break and continue with Labels)
+================================================================================
+
+Labels are used to break or continue outer loops from inner loops.
+
+Syntax:
+-------
+labelName:
+for (...) {
+    for (...) {
+        break labelName;      // Exits outer loop
+        continue labelName;   // Continues outer loop
+    }
+}
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 24: Labeled break
+--------------------------------------------------------------------------------
+
+public class LabeledBreak {
+    public static void main(String[] args) {
+        
+        System.out.println("=== Without Label (breaks inner loop only) ===");
+        for (int i = 1; i <= 3; i++) {
+            System.out.println("Outer: " + i);
+            for (int j = 1; j <= 3; j++) {
+                if (j == 2) {
+                    break;    // Breaks only inner loop
+                }
+                System.out.println("  Inner: " + j);
+            }
+        }
+        
+        System.out.println("");
+        
+        System.out.println("=== With Label (breaks outer loop) ===");
+        outerLoop:
+        for (int i = 1; i <= 3; i++) {
+            System.out.println("Outer: " + i);
+            for (int j = 1; j <= 3; j++) {
+                if (i == 2 && j == 2) {
+                    System.out.println("  Breaking outer loop!");
+                    break outerLoop;    // Breaks outer loop
+                }
+                System.out.println("  Inner: " + j);
+            }
+        }
+        System.out.println("Exited both loops");
+    }
+}
+
+OUTPUT:
+-------
+=== Without Label (breaks inner loop only) ===
+Outer: 1
+  Inner: 1
+Outer: 2
+  Inner: 1
+Outer: 3
+  Inner: 1
+
+=== With Label (breaks outer loop) ===
+Outer: 1
+  Inner: 1
+  Inner: 2
+  Inner: 3
+Outer: 2
+  Inner: 1
+  Breaking outer loop!
+Exited both loops
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 25: Labeled break in Automation - Search in 2D Array
+--------------------------------------------------------------------------------
+
+public class LabeledBreakAutomation {
+    public static void main(String[] args) {
+        
+        System.out.println("=== Search in Table ===");
+        String[][] table = {
+            {"John", "Developer", "New York"},
+            {"Jane", "Tester", "Chicago"},
+            {"Bob", "Manager", "Boston"},
+            {"Alice", "Designer", "Seattle"}
+        };
+        
+        String searchValue = "Tester";
+        int foundRow = -1;
+        int foundCol = -1;
+        
+        search:
+        for (int row = 0; row < table.length; row++) {
+            for (int col = 0; col < table[row].length; col++) {
+                System.out.println("Checking [" + row + "][" + col + "]: " + table[row][col]);
+                
+                if (table[row][col].equals(searchValue)) {
+                    foundRow = row;
+                    foundCol = col;
+                    break search;    // Exit both loops
+                }
+            }
+        }
+        
+        if (foundRow != -1) {
+            System.out.println("\nFound '" + searchValue + "' at row " + foundRow + ", column " + foundCol);
+        } else {
+            System.out.println("\n'" + searchValue + "' not found");
+        }
+    }
+}
+
+OUTPUT:
+-------
+=== Search in Table ===
+Checking [0][0]: John
+Checking [0][1]: Developer
+Checking [0][2]: New York
+Checking [1][0]: Jane
+Checking [1][1]: Tester
+
+Found 'Tester' at row 1, column 1
+
+
+================================================================================
+                    COMPLETE LOOP COMPARISON
+================================================================================
+
++-------------+------------------+------------------+------------------+
+| Feature     | for              | while            | do-while         |
++-------------+------------------+------------------+------------------+
+| Syntax      | for(init;cond;   | while(condition) | do { } while     |
+|             | inc) { }         | { }              | (condition);     |
++-------------+------------------+------------------+------------------+
+| When to use | Known iterations | Unknown          | At least one     |
+|             |                  | iterations       | iteration needed |
++-------------+------------------+------------------+------------------+
+| Condition   | Before iteration | Before iteration | After iteration  |
+| check       |                  |                  |                  |
++-------------+------------------+------------------+------------------+
+| Minimum     | 0 (may not run)  | 0 (may not run)  | 1 (always runs   |
+| executions  |                  |                  | once)            |
++-------------+------------------+------------------+------------------+
+| Example     | Iterate array    | Wait for         | Menu-driven      |
+| use case    | with index       | condition        | programs         |
++-------------+------------------+------------------+------------------+
+
+
+================================================================================
+                    COMPLETE AUTOMATION EXAMPLE
+================================================================================
+
+public class CompleteLoopAutomation {
+    public static void main(String[] args) {
+        
+        System.out.println("============================================");
+        System.out.println("         AUTOMATION TEST FRAMEWORK          ");
+        System.out.println("============================================");
+        
+        // Test Configuration
+        String[] browsers = {"Chrome", "Firefox"};
+        String[] environments = {"QA", "Staging"};
+        String[][] testData = {
+            {"user1", "pass1"},
+            {"user2", "pass2"},
+            {"admin", "admin123"}
+        };
+        
+        int totalTests = 0;
+        int passedTests = 0;
+        int failedTests = 0;
+        int skippedTests = 0;
+        
+        // Nested loops for cross-browser, cross-environment testing
+        System.out.println("\n--- Starting Test Execution ---\n");
+        
+        browserLoop:
+        for (String browser : browsers) {
+            System.out.println("Browser: " + browser);
+            System.out.println("=".repeat(40));
+            
+            for (String env : environments) {
+                System.out.println("\n  Environment: " + env);
+                System.out.println("  " + "-".repeat(36));
+                
+                // Simulate browser crash in Firefox + Staging
+                if (browser.equals("Firefox") && env.equals("Staging")) {
+                    System.out.println("  Browser crashed! Skipping to next browser...");
+                    skippedTests += testData.length;
+                    continue browserLoop;    // Skip to next browser
+                }
+                
+                for (int i = 0; i < testData.length; i++) {
+                    totalTests++;
+                    String username = testData[i][0];
+                    String password = testData[i][1];
+                    
+                    System.out.println("\n    Test #" + totalTests);
+                    System.out.println("    Username: " + username);
+                    System.out.println("    Password: " + "*".repeat(password.length()));
+                    
+                    // Skip empty credentials
+                    if (username.isEmpty() || password.isEmpty()) {
+                        System.out.println("    Status: SKIPPED (empty credentials)");
+                        skippedTests++;
+                        continue;
+                    }
+                    
+                    // Simulate test execution with retry
+                    boolean testPassed = false;
+                    int maxRetries = 2;
+                    int attempt = 0;
+                    
+                    while (!testPassed && attempt < maxRetries) {
+                        attempt++;
+                        System.out.println("    Attempt: " + attempt);
+                        
+                        // Simulate: admin user fails first attempt
+                        if (username.equals("admin") && attempt == 1) {
+                            System.out.println("    Result: Failed (retrying...)");
+                            continue;
+                        }
+                        
+                        testPassed = true;
+                    }
+                    
+                    if (testPassed) {
+                        System.out.println("    Status: PASSED");
+                        passedTests++;
+                    } else {
+                        System.out.println("    Status: FAILED");
+                        failedTests++;
+                    }
+                }
+            }
+            System.out.println("\n");
+        }
+        
+        // Test Summary
+        System.out.println("============================================");
+        System.out.println("              TEST SUMMARY                  ");
+        System.out.println("============================================");
+        System.out.println("Total Tests Executed: " + totalTests);
+        System.out.println("Passed: " + passedTests);
+        System.out.println("Failed: " + failedTests);
+        System.out.println("Skipped: " + skippedTests);
+        
+        double passRate = (totalTests > 0) ? ((double) passedTests / totalTests * 100) : 0;
+        System.out.println("Pass Rate: " + String.format("%.2f", passRate) + "%");
+        
+        // Final status using loop to print
+        System.out.println("\n--- Test Status per Category ---");
+        String[] categories = {"Passed", "Failed", "Skipped"};
+        int[] counts = {passedTests, failedTests, skippedTests};
+        
+        for (int i = 0; i < categories.length; i++) {
+            System.out.print(categories[i] + ": ");
+            for (int j = 0; j < counts[i]; j++) {
+                System.out.print("*");
+            }
+            System.out.println(" (" + counts[i] + ")");
+        }
+        
+        System.out.println("\n============================================");
+        System.out.println("         EXECUTION COMPLETED                ");
+        System.out.println("============================================");
+    }
+}
+
+OUTPUT:
+-------
+============================================
+         AUTOMATION TEST FRAMEWORK          
+============================================
+
+--- Starting Test Execution ---
+
+Browser: Chrome
+========================================
+
+  Environment: QA
+  ------------------------------------
+
+    Test #1
+    Username: user1
+    Password: *****
+    Attempt: 1
+    Status: PASSED
+
+    Test #2
+    Username: user2
+    Password: [REDACTED:PASSWORD]
+    Attempt: 1
+    Status: PASSED
+
+    Test #3
+    Username: admin
+    Password: ********
+    Attempt: 1
+    Result: Failed (retrying...)
+    Attempt: 2
+    Status: PASSED
+
+  Environment: Staging
+  ------------------------------------
+
+    Test #4
+    Username: user1
+    Password: *****
+    Attempt: 1
+    Status: PASSED
+
+    Test #5
+    Username: user2
+    Password: *****
+    Attempt: 1
+    Status: PASSED
+
+    Test #6
+    Username: admin
+    Password: ********
+    Attempt: 1
+    Result: Failed (retrying...)
+    Attempt: 2
+    Status: PASSED
+
+
+Browser: Firefox
+========================================
+
+  Environment: QA
+  ------------------------------------
+
+    Test #7
+    Username: user1
+    Password: *****
+    Attempt: 1
+    Status: PASSED
+
+    Test #8
+    Username: user2
+    Password: *****
+    Attempt: 1
+    Status: PASSED
+
+    Test #9
+    Username: admin
+    Password: ********
+    Attempt: 1
+    Result: Failed (retrying...)
+    Attempt: 2
+    Status: PASSED
+
+  Environment: Staging
+  ------------------------------------
+  Browser crashed! Skipping to next browser...
+
+
+============================================
+              TEST SUMMARY                  
+============================================
+Total Tests Executed: 9
+Passed: 9
+Failed: 0
+Skipped: 3
+Pass Rate: 100.00%
+
+--- Test Status per Category ---
+Passed: ********* (9)
+Failed:  (0)
+Skipped: *** (3)
+
+============================================
+         EXECUTION COMPLETED                
+============================================
+
+
+================================================================================
+================================================================================
+                    NEGATIVE SCENARIOS - TOPIC 5
+================================================================================
+================================================================================
+
+
+--------------------------------------------------------------------------------
+ERROR 1: INFINITE LOOP (Missing Update)
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE:
+-----------------
+public class InfiniteLoopMissingUpdate {
+    public static void main(String[] args) {
+        
+        int i = 1;
+        
+        while (i <= 5) {
+            System.out.println(i);
+            // Missing i++ - infinite loop!
+        }
+    }
+}
+
+OUTPUT:
+-------
+1
+1
+1
+1
+... (runs forever)
+
+FIX:
+----
+public class InfiniteLoopMissingUpdateFixed {
+    public static void main(String[] args) {
+        
+        int i = 1;
+        
+        while (i <= 5) {
+            System.out.println(i);
+            i++;    // Add increment
+        }
+    }
+}
+
+
+--------------------------------------------------------------------------------
+ERROR 2: INFINITE LOOP (Wrong Condition)
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE:
+-----------------
+public class InfiniteLoopWrongCondition {
+    public static void main(String[] args) {
+        
+        // Counting up but condition checks for less than
+        for (int i = 10; i >= 0; i++) {    // Should be i-- not i++
+            System.out.println(i);
+        }
+    }
+}
+
+OUTPUT:
+-------
+10
+11
+12
+13
+... (runs forever, i keeps increasing)
+
+FIX:
+----
+public class InfiniteLoopWrongConditionFixed {
+    public static void main(String[] args) {
+        
+        // Counting down with correct decrement
+        for (int i = 10; i >= 0; i--) {
+            System.out.println(i);
+        }
+    }
+}
+
+
+--------------------------------------------------------------------------------
+ERROR 3: OFF-BY-ONE ERROR (Fence Post Error)
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE:
+-----------------
+public class OffByOneError {
+    public static void main(String[] args) {
+        
+        int[] numbers = {10, 20, 30, 40, 50};
+        
+        // Error: using <= instead of <
+        for (int i = 0; i <= numbers.length; i++) {
+            System.out.println(numbers[i]);
+        }
+    }
+}
+
+ERROR MESSAGE:
+--------------
+Exception in thread "main" java.lang.ArrayIndexOutOfBoundsException: Index 5 out of bounds for length 5
+
+EXPLANATION:
+------------
+Array has 5 elements with indices 0, 1, 2, 3, 4
+numbers.length = 5
+When i = 5, numbers[5] doesn't exist
+
+FIX:
+----
+public class OffByOneErrorFixed {
+    public static void main(String[] args) {
+        
+        int[] numbers = {10, 20, 30, 40, 50};
+        
+        // Option 1: Use < instead of <=
+        for (int i = 0; i < numbers.length; i++) {
+            System.out.println(numbers[i]);
+        }
+        
+        // Option 2: Use enhanced for loop
+        for (int num : numbers) {
+            System.out.println(num);
+        }
+    }
+}
+
+
+--------------------------------------------------------------------------------
+ERROR 4: STARTING INDEX ERROR
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE:
+-----------------
+public class StartingIndexError {
+    public static void main(String[] args) {
+        
+        String[] names = {"Alice", "Bob", "Charlie"};
+        
+        // Error: Starting from 1 instead of 0
+        for (int i = 1; i < names.length; i++) {
+            System.out.println(names[i]);
+        }
+    }
+}
+
+OUTPUT (Missing first element):
+-------------------------------
+Bob
+Charlie
+
+FIX:
+----
+public class StartingIndexErrorFixed {
+    public static void main(String[] args) {
+        
+        String[] names = {"Alice", "Bob", "Charlie"};
+        
+        // Start from 0
+        for (int i = 0; i < names.length; i++) {
+            System.out.println(names[i]);
+        }
+    }
+}
+
+OUTPUT:
+-------
+Alice
+Bob
+Charlie
+
+
+--------------------------------------------------------------------------------
+ERROR 5: MODIFYING LOOP VARIABLE INSIDE LOOP
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE:
+-----------------
+public class ModifyingLoopVariable {
+    public static void main(String[] args) {
+        
+        // Unexpected behavior
+        for (int i = 0; i < 10; i++) {
+            System.out.println("Before: i = " + i);
+            i = i + 2;    // Modifying loop variable
+            System.out.println("After: i = " + i);
+            System.out.println("");
+        }
+    }
+}
+
+OUTPUT (Skips values):
+----------------------
+Before: i = 0
+After: i = 2
+
+Before: i = 3
+After: i = 5
+
+Before: i = 6
+After: i = 8
+
+Before: i = 9
+After: i = 11
+
+EXPLANATION:
+------------
+i starts at 0, modified to 2, then incremented to 3
+i = 3, modified to 5, then incremented to 6
+etc.
+
+FIX:
+----
+public class ModifyingLoopVariableFixed {
+    public static void main(String[] args) {
+        
+        // If you want to skip values, use continue or adjust increment
+        for (int i = 0; i < 10; i += 3) {
+            System.out.println("i = " + i);
+        }
+    }
+}
+
+
+--------------------------------------------------------------------------------
+ERROR 6: SEMICOLON AFTER FOR LOOP
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE:
+-----------------
+public class SemicolonAfterFor {
+    public static void main(String[] args) {
+        
+        for (int i = 0; i < 5; i++);    // Semicolon makes loop body empty!
+        {
+            System.out.println("This prints only once");
+        }
+    }
+}
+
+OUTPUT:
+-------
+This prints only once
+
+EXPLANATION:
+------------
+The semicolon creates an empty loop body.
+The block {} is independent and executes once after loop completes.
+
+FIX:
+----
+public class SemicolonAfterForFixed {
+    public static void main(String[] args) {
+        
+        for (int i = 0; i < 5; i++) {    // No semicolon
+            System.out.println("Iteration: " + i);
+        }
+    }
+}
+
+OUTPUT:
+-------
+Iteration: 0
+Iteration: 1
+Iteration: 2
+Iteration: 3
+Iteration: 4
+
+
+--------------------------------------------------------------------------------
+ERROR 7: MISSING SEMICOLON IN DO-WHILE
+--------------------------------------------------------------------------------
+
+INVALID CODE:
+-------------
+public class MissingSemicolonDoWhile {
+    public static void main(String[] args) {
+        
+        int i = 0;
+        
+        do {
+            System.out.println(i);
+            i++;
+        } while (i < 5)    // Missing semicolon
+    }
+}
+
+ERROR MESSAGE:
+--------------
+error: ';' expected
+        } while (i < 5)
+                       ^
+
+FIX:
+----
+public class MissingSemicolonDoWhileFixed {
+    public static void main(String[] args) {
+        
+        int i = 0;
+        
+        do {
+            System.out.println(i);
+            i++;
+        } while (i < 5);    // Semicolon required
+    }
+}
+
+
+--------------------------------------------------------------------------------
+ERROR 8: VARIABLE SCOPE ERROR
+--------------------------------------------------------------------------------
+
+INVALID CODE:
+-------------
+public class VariableScopeError {
+    public static void main(String[] args) {
+        
+        for (int i = 0; i < 5; i++) {
+            System.out.println(i);
+        }
+        
+        // Error: i is not accessible outside the loop
+        System.out.println("Final value: " + i);
+    }
+}
+
+ERROR MESSAGE:
+--------------
+error: cannot find symbol
+        System.out.println("Final value: " + i);
+                                             ^
+  symbol: variable i
+
+FIX:
+----
+public class VariableScopeErrorFixed {
+    public static void main(String[] args) {
+        
+        // Option 1: Declare variable before loop
+        int i;
+        for (i = 0; i < 5; i++) {
+            System.out.println(i);
+        }
+        System.out.println("Final value: " + i);
+        
+        // Option 2: Use separate variable to track
+        int lastValue = 0;
+        for (int j = 0; j < 5; j++) {
+            System.out.println(j);
+            lastValue = j;
+        }
+        System.out.println("Last value: " + lastValue);
+    }
+}
+
+
+--------------------------------------------------------------------------------
+ERROR 9: WRONG COMPARISON OPERATOR
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE:
+-----------------
+public class WrongComparisonOperator {
+    public static void main(String[] args) {
+        
+        // Using = instead of ==
+        for (int i = 0; i = 5; i++) {    // Assignment, not comparison
+            System.out.println(i);
+        }
+    }
+}
+
+ERROR MESSAGE:
+--------------
+error: incompatible types: int cannot be converted to boolean
+        for (int i = 0; i = 5; i++) {
+                          ^
+
+FIX:
+----
+public class WrongComparisonOperatorFixed {
+    public static void main(String[] args) {
+        
+        for (int i = 0; i < 5; i++) {    // Use comparison operator
+            System.out.println(i);
+        }
+    }
+}
+
+
+--------------------------------------------------------------------------------
+ERROR 10: BREAK OUTSIDE LOOP
+--------------------------------------------------------------------------------
+
+INVALID CODE:
+-------------
+public class BreakOutsideLoop {
+    public static void main(String[] args) {
+        
+        int x = 5;
+        
+        if (x > 3) {
+            break;    // Error: break outside loop or switch
+        }
+        
+        System.out.println("Done");
+    }
+}
+
+ERROR MESSAGE:
+--------------
+error: break outside switch or loop
+            break;
+            ^
+
+FIX:
+----
+public class Bre[REDACTED:AWS_ACCESS_KEY] {
+    public static void main(String[] args) {
+        
+        int x = 5;
+        
+        // Option 1: Use return instead
+        if (x > 3) {
+            System.out.println("Condition met, exiting");
+            return;
+        }
+        
+        System.out.println("Done");
+    }
+}
+
+
+--------------------------------------------------------------------------------
+ERROR 11: CONTINUE OUTSIDE LOOP
+--------------------------------------------------------------------------------
+
+INVALID CODE:
+-------------
+public class ContinueOutsideLoop {
+    public static void main(String[] args) {
+        
+        int x = 5;
+        
+        if (x > 3) {
+            continue;    // Error: continue outside loop
+        }
+        
+        System.out.println("Done");
+    }
+}
+
+ERROR MESSAGE:
+--------------
+error: continue outside of loop
+            continue;
+            ^
+
+FIX:
+----
+public class ContinueOutsideLoopFixed {
+    public static void main(String[] args) {
+        
+        // continue only works inside loops
+        for (int i = 0; i < 10; i++) {
+            if (i == 5) {
+                continue;    // Valid inside loop
+            }
+            System.out.println(i);
+        }
+    }
+}
+
+
+--------------------------------------------------------------------------------
+ERROR 12: UNREACHABLE CODE AFTER BREAK/CONTINUE
+--------------------------------------------------------------------------------
+
+INVALID CODE:
+-------------
+public class UnreachableAfterBreak {
+    public static void main(String[] args) {
+        
+        for (int i = 0; i < 5; i++) {
+            if (i == 3) {
+                break;
+                System.out.println("This is unreachable");    // Error
+            }
+        }
+    }
+}
+
+ERROR MESSAGE:
+--------------
+error: unreachable statement
+                System.out.println("This is unreachable");
+                ^
+
+FIX:
+----
+public class UnreachableAfterBreakFixed {
+    public static void main(String[] args) {
+        
+        for (int i = 0; i < 5; i++) {
+            if (i == 3) {
+                System.out.println("Breaking at " + i);
+                break;    // break should be last statement
+            }
+        }
+    }
+}
+
+
+--------------------------------------------------------------------------------
+ERROR 13: MODIFYING ARRAY ELEMENT WITH ENHANCED FOR LOOP
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE:
+-----------------
+public class ModifyArrayEnhancedFor {
+    public static void main(String[] args) {
+        
+        int[] numbers = {1, 2, 3, 4, 5};
+        
+        // This does NOT modify the original array
+        for (int num : numbers) {
+            num = num * 2;    // Only modifies local copy
+        }
+        
+        System.out.println("After 'modification':");
+        for (int num : numbers) {
+            System.out.println(num);    // Still original values
+        }
+    }
+}
+
+OUTPUT:
+-------
+After 'modification':
+1
+2
+3
+4
+5
+
+EXPLANATION:
+------------
+Enhanced for loop creates a copy of each element.
+Modifying the copy doesn't affect the original array.
+
+FIX:
+----
+public class ModifyArrayEnhancedForFixed {
+    public static void main(String[] args) {
+        
+        int[] numbers = {1, 2, 3, 4, 5};
+        
+        // Use traditional for loop to modify array
+        for (int i = 0; i < numbers.length; i++) {
+            numbers[i] = numbers[i] * 2;
+        }
+        
+        System.out.println("After modification:");
+        for (int num : numbers) {
+            System.out.println(num);
+        }
+    }
+}
+
+OUTPUT:
+-------
+After modification:
+2
+4
+6
+8
+10
+
+
+--------------------------------------------------------------------------------
+ERROR 14: EMPTY LOOP BODY
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE:
+-----------------
+public class EmptyLoopBody {
+    public static void main(String[] args) {
+        
+        int sum = 0;
+        
+        for (int i = 1; i <= 10; i++) {
+            // Empty body - sum never changes
+        }
+        
+        System.out.println("Sum: " + sum);
+    }
+}
+
+OUTPUT:
+-------
+Sum: 0
+
+FIX:
+----
+public class EmptyLoopBodyFixed {
+    public static void main(String[] args) {
+        
+        int sum = 0;
+        
+        for (int i = 1; i <= 10; i++) {
+            sum += i;    // Add logic to body
+        }
+        
+        System.out.println("Sum: " + sum);
+    }
+}
+
+OUTPUT:
+-------
+Sum: 55
+
+
+--------------------------------------------------------------------------------
+ERROR 15: NULL ARRAY IN ENHANCED FOR LOOP
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE:
+-----------------
+public class NullArrayEnhancedFor {
+    public static void main(String[] args) {
+        
+        String[] names = null;
+        
+        for (String name : names) {    // NullPointerException
+            System.out.println(name);
+        }
+    }
+}
+
+ERROR MESSAGE (Runtime):
+------------------------
+Exception in thread "main" java.lang.NullPointerException
+
+FIX:
+----
+public class NullArrayEnhancedForFixed {
+    public static void main(String[] args) {
+        
+        String[] names = null;
+        
+        // Check for null before iterating
+        if (names != null) {
+            for (String name : names) {
+                System.out.println(name);
+            }
+        } else {
+            System.out.println("Array is null");
+        }
+        
+        // Or initialize the array
+        String[] names2 = new String[0];    // Empty but not null
+        System.out.println("Array length: " + names2.length);
+    }
+}
+
+
+--------------------------------------------------------------------------------
+ERROR 16: WRONG LABEL NAME
+--------------------------------------------------------------------------------
+
+INVALID CODE:
+-------------
+public class WrongLabelName {
+    public static void main(String[] args) {
+        
+        outerLoop:
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                if (j == 1) {
+                    break outer;    // Wrong label name
+                }
+            }
+        }
+    }
+}
+
+ERROR MESSAGE:
+--------------
+error: undefined label: outer
+                    break outer;
+                          ^
+
+FIX:
+----
+public class WrongLabelNameFixed {
+    public static void main(String[] args) {
+        
+        outerLoop:
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                if (j == 1) {
+                    break outerLoop;    // Correct label name
+                }
+                System.out.println("i=" + i + ", j=" + j);
+            }
+        }
+    }
+}
+
+
+================================================================================
+                    QUICK REFERENCE SUMMARY
+================================================================================
+
+LOOP TYPES:
+-----------
++-------------+------------------------+---------------------------+
+| Loop Type   | Syntax                 | Use Case                  |
++-------------+------------------------+---------------------------+
+| for         | for(init;cond;inc){}   | Known iterations          |
+| while       | while(cond){}          | Unknown iterations        |
+| do-while    | do{}while(cond);       | At least one iteration    |
+| for-each    | for(type var:array){}  | Simple array iteration    |
++-------------+------------------------+---------------------------+
+
+
+LOOP CONTROL:
+-------------
++-------------+--------------------------------+
+| Statement   | Description                    |
++-------------+--------------------------------+
+| break       | Exit loop immediately          |
+| continue    | Skip current iteration         |
+| break label | Exit outer loop from inner     |
+| continue label | Continue outer loop from inner |
++-------------+--------------------------------+
+
+
+NEGATIVE SCENARIOS SUMMARY:
+---------------------------
+1. Infinite loop (missing update)
+   PROBLEM: Loop never ends
+   FIX: Add increment/decrement statement
+
+2. Infinite loop (wrong condition)
+   PROBLEM: Condition never becomes false
+   FIX: Check condition logic
+
+3. Off-by-one error
+   PROBLEM: ArrayIndexOutOfBoundsException
+   FIX: Use < instead of <= with array.length
+
+4. Starting index error
+   PROBLEM: Missing first element
+   FIX: Start from 0 for arrays
+
+5. Modifying loop variable
+   PROBLEM: Unexpected iterations
+   FIX: Avoid modifying loop variable inside body
+
+6. Semicolon after for loop

@@ -1,0 +1,515 @@
+Topic 2: Variables and Data Types
+
+Excellent progress! Let's learn how to store data in Java.
+
+What is a Variable?
+
+A variable is a container that stores data in memory.
+
+Think of it like a labeled box:
+
+┌─────────────────┐
+│                 │
+│       25        │   ← Value stored inside
+│                 │
+└─────────────────┘
+       age            ← Label (variable name)
+
+How to Create a Variable
+
+Syntax:
+
+dataType variableName = value;
+
+Example:
+
+int age = 25;
+
+Part
+	
+
+Meaning
+
+int
+	
+
+Data type (integer/whole number)
+
+age
+	
+
+Variable name
+
+=
+	
+
+Assignment operator
+
+25
+	
+
+Value
+
+Data Types in Java
+
+Java has two categories of data types:
+
+┌─────────────────────────────────────────────────────┐
+│                   DATA TYPES                        │
+├─────────────────────┬───────────────────────────────┤
+│     PRIMITIVE       │       NON-PRIMITIVE           │
+│   (Basic types)     │    (Reference types)          │
+├─────────────────────┼───────────────────────────────┤
+│ • byte              │ • String                      │
+│ • short             │ • Array                       │
+│ • int               │ • Class                       │
+│ • long              │ • Object                      │
+│ • float             │ • Interface                   │
+│ • double            │                               │
+│ • char              │                               │
+│ • boolean           │                               │
+└─────────────────────┴───────────────────────────────┘
+
+Primitive Data Types (8 Types)
+
+1️⃣ Integer Types (Whole Numbers)
+
+Type
+	
+
+Size
+	
+
+Range
+	
+
+Example
+
+byte
+	
+
+1 byte
+	
+
+-128 to 127
+	
+
+byte a = 100;
+
+short
+	
+
+2 bytes
+	
+
+-32,768 to 32,767
+	
+
+short b = 5000;
+
+int
+	
+
+4 bytes
+	
+
+-2 billion to 2 billion
+	
+
+int c = 100000;
+
+long
+	
+
+8 bytes
+	
+
+Very large numbers
+	
+
+long d = 999999999L;
+
+public class IntegerTypes {
+    public static void main(String[] args) {
+        
+        byte smallNumber = 100;
+        short mediumNumber = 5000;
+        int regularNumber = 100000;
+        long bigNumber = 9999999999L;  // Note: L at the end
+        
+        System.out.println("byte: " + smallNumber);
+        System.out.println("short: " + mediumNumber);
+        System.out.println("int: " + regularNumber);
+        System.out.println("long: " + bigNumber);
+    }
+}
+
+Output:
+
+byte: 100
+short: 5000
+int: 100000
+long: 9999999999
+
+    💡 For Automation: We mostly use int for counts, loops, and indices.
+
+2️⃣ Decimal Types (Floating Point Numbers)
+
+Type
+	
+
+Size
+	
+
+Precision
+	
+
+Example
+
+float
+	
+
+4 bytes
+	
+
+6-7 decimal digits
+	
+
+float a = 5.75f;
+
+double
+	
+
+8 bytes
+	
+
+15 decimal digits
+	
+
+double b = 19.99;
+
+public class DecimalTypes {
+    public static void main(String[] args) {
+        
+        float price = 99.99f;          // Note: f at the end
+        double accountBalance = 15000.50;
+        
+        System.out.println("Price: " + price);
+        System.out.println("Balance: " + accountBalance);
+    }
+}
+
+Output:
+
+Price: 99.99
+Balance: 15000.5
+
+    💡 For Automation: Use double for prices, percentages in test data.
+
+3️⃣ Character Type
+
+Type
+	
+
+Size
+	
+
+Description
+	
+
+Example
+
+char
+	
+
+2 bytes
+	
+
+Single character
+	
+
+char grade = 'A';
+
+public class CharType {
+    public static void main(String[] args) {
+        
+        char grade = 'A';
+        char symbol = '@';
+        
+        System.out.println("Grade: " + grade);
+        System.out.println("Symbol: " + symbol);
+    }
+}
+
+Output:
+
+Grade: A
+Symbol: @
+
+    ⚠️ Note: Use single quotes ' ' for char
+
+4️⃣ Boolean Type
+
+Type
+	
+
+Size
+	
+
+Values
+	
+
+Example
+
+boolean
+	
+
+1 bit
+	
+
+true or false
+	
+
+boolean isActive = true;
+
+public class BooleanType {
+    public static void main(String[] args) {
+        
+        boolean isLoggedIn = true;
+        boolean isTestPassed = false;
+        
+        System.out.println("Is Logged In: " + isLoggedIn);
+        System.out.println("Is Test Passed: " + isTestPassed);
+    }
+}
+
+Output:
+
+Is Logged In: true
+Is Test Passed: false
+
+    💡 For Automation: Very important! Used for test conditions and validations.
+
+Non-Primitive Type: String
+
+String stores text (sequence of characters).
+
+public class StringType {
+    public static void main(String[] args) {
+        
+        String name = "John";
+        String url = "https://google.com";
+        String testCaseName = "Verify Login Functionality";
+        
+        System.out.println("Name: " + name);
+        System.out.println("URL: " + url);
+        System.out.println("Test Case: " + testCaseName);
+    }
+}
+
+Output:
+
+Name: John
+URL: https://google.com
+Test Case: Verify Login Functionality
+
+    ⚠️ Note: Use double quotes " " for String
+
+Quick Comparison: char vs String
+
+char singleLetter = 'A';        // Single quotes - ONE character
+String text = "Automation";     // Double quotes - Multiple characters
+
+Variable Naming Rules
+
+✅ Valid Names:
+
+int age;
+int myAge;
+int my_age;
+int _age;
+int age2;
+int myVariableName;    // camelCase (Recommended)
+
+❌ Invalid Names:
+
+int 2age;       // Cannot start with number
+int my-age;     // No hyphens
+int my age;     // No spaces
+int class;      // Cannot use reserved keywords
+
+Naming Convention (Best Practice)
+
+Use camelCase for variables:
+
+// Good ✅
+String firstName = "John";
+int totalTestCases = 50;
+boolean isElementDisplayed = true;
+
+// Bad ❌
+String firstname = "John";
+String FIRSTNAME = "John";
+String first_name = "John";
+
+Complete Example for Automation Context
+
+public class AutomationVariables {
+    public static void main(String[] args) {
+        
+        // Test Configuration
+        String browserName = "Chrome";
+        String baseUrl = "https://example.com";
+        int implicitWait = 10;
+        
+        // Test Data
+        String username = "testuser@email.com";
+        String password = [REDACTED:PASSWORD]3";
+        
+        // Test Results
+        boolean isTestPassed = true;
+        int totalTests = 50;
+        int passedTests = 45;
+        int failedTests = 5;
+        double passPercentage = 90.0;
+        
+        // Print all
+        System.out.println("=== Test Configuration ===");
+        System.out.println("Browser: " + browserName);
+        System.out.println("URL: " + baseUrl);
+        System.out.println("Wait Time: " + implicitWait + " seconds");
+        
+        System.out.println("\n=== Test Results ===");
+        System.out.println("Total Tests: " + totalTests);
+        System.out.println("Passed: " + passedTests);
+        System.out.println("Failed: " + failedTests);
+        System.out.println("Pass %: " + passPercentage + "%");
+    }
+}
+
+Output:
+
+=== Test Configuration ===
+Browser: Chrome
+URL: https://example.com
+Wait Time: 10 seconds
+
+=== Test Results ===
+Total Tests: 50
+Passed: 45
+Failed: 5
+Pass %: 90.0%
+
+📝 Quick Practice Exercise
+
+What data type would you use for:
+
+Data
+	
+
+Your Answer
+
+User's age
+	
+
+?
+
+Website URL
+	
+
+?
+
+Is button clickable?
+	
+
+?
+
+Product price (99.99)
+	
+
+?
+
+Grade (A, B, C)
+	
+
+?
+
+Number of test cases
+	
+
+?
+
+✅ Topic 2 Summary
+
+Data Type
+	
+
+Used For
+	
+
+Example
+
+int
+	
+
+Whole numbers
+	
+
+int count = 10;
+
+long
+	
+
+Large numbers
+	
+
+long id = 999999L;
+
+double
+	
+
+Decimals
+	
+
+double price = 99.99;
+
+char
+	
+
+Single character
+	
+
+char grade = 'A';
+
+boolean
+	
+
+True/False
+	
+
+boolean isValid = true;
+
+String
+	
+
+Text
+	
+
+String name = "Test";
+
+🎯 What's Next?
+
+Topic 3: Operators in Java
+
+    Arithmetic operators (+, -, *, /)
+    Comparison operators (==, !=, >, <)
+    Logical operators (&&, ||, !)
+    Assignment operators
+
+Ready for Topic 3?
+
+Please reply with:
+
+    ✅ "Next" - if you understood Topic 2
+    ❓ Any questions - if you need clarification
+    📝 Share your answers to the practice exercise if you'd like me to check!

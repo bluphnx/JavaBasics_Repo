@@ -1,0 +1,1559 @@
+================================================================================
+                    TOPIC 3: OPERATORS IN JAVA
+================================================================================
+
+What are Operators?
+-------------------
+Operators are special symbols that perform operations on variables and values.
+
+Example: In the expression 10 + 20, the '+' is an operator.
+
+
+Types of Operators in Java:
+---------------------------
+1. Arithmetic Operators
+2. Assignment Operators
+3. Comparison (Relational) Operators
+4. Logical Operators
+5. Increment/Decrement Operators
+6. Ternary Operator
+
+
+================================================================================
+                    1. ARITHMETIC OPERATORS
+================================================================================
+
+Used to perform mathematical calculations.
+
++-------+---------------+-------------+----------+
+| Operator | Name       | Example     | Result   |
++-------+---------------+-------------+----------+
+|    +     | Addition      | 10 + 5      | 15       |
+|    -     | Subtraction   | 10 - 5      | 5        |
+|    *     | Multiplication| 10 * 5      | 50       |
+|    /     | Division      | 10 / 5      | 2        |
+|    %     | Modulus       | 10 % 3      | 1        |
++-------+---------------+-------------+----------+
+
+Note: Modulus (%) gives the remainder after division.
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 1: Basic Arithmetic Operations
+--------------------------------------------------------------------------------
+
+public class ArithmeticOperators {
+    public static void main(String[] args) {
+        
+        int a = 20;
+        int b = 6;
+        
+        // Addition
+        int sum = a + b;
+        System.out.println("Addition: " + a + " + " + b + " = " + sum);
+        
+        // Subtraction
+        int difference = a - b;
+        System.out.println("Subtraction: " + a + " - " + b + " = " + difference);
+        
+        // Multiplication
+        int product = a * b;
+        System.out.println("Multiplication: " + a + " * " + b + " = " + product);
+        
+        // Division
+        int quotient = a / b;
+        System.out.println("Division: " + a + " / " + b + " = " + quotient);
+        
+        // Modulus (Remainder)
+        int remainder = a % b;
+        System.out.println("Modulus: " + a + " % " + b + " = " + remainder);
+    }
+}
+
+OUTPUT:
+-------
+Addition: 20 + 6 = 26
+Subtraction: 20 - 6 = 14
+Multiplication: 20 * 6 = 120
+Division: 20 / 6 = 3
+Modulus: 20 % 6 = 2
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 2: Integer Division vs Decimal Division
+--------------------------------------------------------------------------------
+
+public class DivisionExample {
+    public static void main(String[] args) {
+        
+        // Integer Division (both operands are int)
+        int a = 10;
+        int b = 4;
+        int intResult = a / b;
+        System.out.println("Integer Division: 10 / 4 = " + intResult);
+        
+        // Decimal Division (at least one operand is double)
+        double c = 10;
+        double d = 4;
+        double doubleResult = c / d;
+        System.out.println("Decimal Division: 10.0 / 4.0 = " + doubleResult);
+        
+        // Mixed Division
+        int e = 10;
+        double f = 4;
+        double mixedResult = e / f;
+        System.out.println("Mixed Division: 10 / 4.0 = " + mixedResult);
+    }
+}
+
+OUTPUT:
+-------
+Integer Division: 10 / 4 = 2
+Decimal Division: 10.0 / 4.0 = 2.5
+Mixed Division: 10 / 4.0 = 2.5
+
+IMPORTANT:
+----------
+- int / int = int (decimal part is lost)
+- double / double = double (decimal part is kept)
+- int / double = double (decimal part is kept)
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 3: Modulus Operator Use Cases
+--------------------------------------------------------------------------------
+
+public class ModulusExample {
+    public static void main(String[] args) {
+        
+        // Check if number is even or odd
+        int number1 = 10;
+        int number2 = 7;
+        
+        System.out.println(number1 + " % 2 = " + (number1 % 2));  // 0 means even
+        System.out.println(number2 + " % 2 = " + (number2 % 2));  // 1 means odd
+        
+        // Get last digit of a number
+        int num = 12345;
+        int lastDigit = num % 10;
+        System.out.println("Last digit of " + num + " is: " + lastDigit);
+    }
+}
+
+OUTPUT:
+-------
+10 % 2 = 0
+7 % 2 = 1
+Last digit of 12345 is: 5
+
+USE IN AUTOMATION:
+------------------
+- Check if test case number is even/odd
+- Pagination calculations
+- Distributing test data
+
+
+================================================================================
+                    2. ASSIGNMENT OPERATORS
+================================================================================
+
+Used to assign values to variables.
+
++----------+-------------+---------------+----------+
+| Operator | Name        | Example       | Same As  |
++----------+-------------+---------------+----------+
+|    =     | Assign      | x = 10        | x = 10   |
+|    +=    | Add & Assign| x += 5        | x = x + 5|
+|    -=    | Sub & Assign| x -= 5        | x = x - 5|
+|    *=    | Mul & Assign| x *= 5        | x = x * 5|
+|    /=    | Div & Assign| x /= 5        | x = x / 5|
+|    %=    | Mod & Assign| x %= 5        | x = x % 5|
++----------+-------------+---------------+----------+
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 4: Assignment Operators
+--------------------------------------------------------------------------------
+
+public class AssignmentOperators {
+    public static void main(String[] args) {
+        
+        int x = 10;
+        System.out.println("Initial value: x = " + x);
+        
+        // Add and assign
+        x += 5;    // Same as: x = x + 5
+        System.out.println("After x += 5: x = " + x);
+        
+        // Subtract and assign
+        x -= 3;    // Same as: x = x - 3
+        System.out.println("After x -= 3: x = " + x);
+        
+        // Multiply and assign
+        x *= 2;    // Same as: x = x * 2
+        System.out.println("After x *= 2: x = " + x);
+        
+        // Divide and assign
+        x /= 4;    // Same as: x = x / 4
+        System.out.println("After x /= 4: x = " + x);
+        
+        // Modulus and assign
+        x %= 3;    // Same as: x = x % 3
+        System.out.println("After x %= 3: x = " + x);
+    }
+}
+
+OUTPUT:
+-------
+Initial value: x = 10
+After x += 5: x = 15
+After x -= 3: x = 12
+After x *= 2: x = 24
+After x /= 4: x = 6
+After x %= 3: x = 0
+
+USE IN AUTOMATION:
+------------------
+- Counting test cases: count += 1;
+- Accumulating scores: totalScore += testScore;
+- Updating retry counts: retryCount -= 1;
+
+
+================================================================================
+                    3. COMPARISON (RELATIONAL) OPERATORS
+================================================================================
+
+Used to compare two values. Always returns boolean (true or false).
+
++----------+-------------------------+-------------+----------+
+| Operator | Name                    | Example     | Result   |
++----------+-------------------------+-------------+----------+
+|    ==    | Equal to                | 10 == 10    | true     |
+|    !=    | Not equal to            | 10 != 5     | true     |
+|    >     | Greater than            | 10 > 5      | true     |
+|    <     | Less than               | 10 < 5      | false    |
+|    >=    | Greater than or equal   | 10 >= 10    | true     |
+|    <=    | Less than or equal      | 10 <= 5     | false    |
++----------+-------------------------+-------------+----------+
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 5: Comparison Operators
+--------------------------------------------------------------------------------
+
+public class ComparisonOperators {
+    public static void main(String[] args) {
+        
+        int a = 10;
+        int b = 20;
+        int c = 10;
+        
+        // Equal to
+        System.out.println("a == b: " + (a == b));    // false
+        System.out.println("a == c: " + (a == c));    // true
+        
+        // Not equal to
+        System.out.println("a != b: " + (a != b));    // true
+        System.out.println("a != c: " + (a != c));    // false
+        
+        // Greater than
+        System.out.println("a > b: " + (a > b));      // false
+        System.out.println("b > a: " + (b > a));      // true
+        
+        // Less than
+        System.out.println("a < b: " + (a < b));      // true
+        System.out.println("b < a: " + (b < a));      // false
+        
+        // Greater than or equal to
+        System.out.println("a >= c: " + (a >= c));    // true
+        System.out.println("a >= b: " + (a >= b));    // false
+        
+        // Less than or equal to
+        System.out.println("a <= c: " + (a <= c));    // true
+        System.out.println("b <= a: " + (b <= a));    // false
+    }
+}
+
+OUTPUT:
+-------
+a == b: false
+a == c: true
+a != b: true
+a != c: false
+a > b: false
+b > a: true
+a < b: true
+b < a: false
+a >= c: true
+a >= b: false
+a <= c: true
+b <= a: false
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 6: Comparison in Automation Context
+--------------------------------------------------------------------------------
+
+public class AutomationComparison {
+    public static void main(String[] args) {
+        
+        int expectedCount = 10;
+        int actualCount = 10;
+        
+        int expectedPrice = 100;
+        int actualPrice = 95;
+        
+        // Verify counts match
+        boolean countMatches = (expectedCount == actualCount);
+        System.out.println("Count matches: " + countMatches);
+        
+        // Verify price is within range
+        boolean priceValid = (actualPrice >= 90 && actualPrice <= 110);
+        System.out.println("Price within range: " + priceValid);
+        
+        // Check if test failed
+        int passedTests = 45;
+        int totalTests = 50;
+        boolean hasFailures = (passedTests < totalTests);
+        System.out.println("Has failures: " + hasFailures);
+    }
+}
+
+OUTPUT:
+-------
+Count matches: true
+Price within range: true
+Has failures: true
+
+
+================================================================================
+                    4. LOGICAL OPERATORS
+================================================================================
+
+Used to combine multiple conditions. Returns boolean (true or false).
+
++----------+-------------+-----------------------------------+
+| Operator | Name        | Description                       |
++----------+-------------+-----------------------------------+
+|    &&    | Logical AND | true if BOTH conditions are true  |
+|    ||    | Logical OR  | true if ANY condition is true     |
+|    !     | Logical NOT | Reverses the boolean value        |
++----------+-------------+-----------------------------------+
+
+
+TRUTH TABLE FOR && (AND):
+-------------------------
++-------+-------+----------+
+|   A   |   B   | A && B   |
++-------+-------+----------+
+| true  | true  | true     |
+| true  | false | false    |
+| false | true  | false    |
+| false | false | false    |
++-------+-------+----------+
+
+Rule: Both must be true for result to be true.
+
+
+TRUTH TABLE FOR || (OR):
+------------------------
++-------+-------+----------+
+|   A   |   B   | A || B   |
++-------+-------+----------+
+| true  | true  | true     |
+| true  | false | true     |
+| false | true  | true     |
+| false | false | false    |
++-------+-------+----------+
+
+Rule: At least one must be true for result to be true.
+
+
+TRUTH TABLE FOR ! (NOT):
+------------------------
++-------+-------+
+|   A   |  !A   |
++-------+-------+
+| true  | false |
+| false | true  |
++-------+-------+
+
+Rule: Reverses the value.
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 7: Logical AND Operator (&&)
+--------------------------------------------------------------------------------
+
+public class LogicalAndOperator {
+    public static void main(String[] args) {
+        
+        int age = 25;
+        boolean hasLicense = true;
+        
+        // Both conditions must be true
+        boolean canDrive = (age >= 18) && (hasLicense == true);
+        System.out.println("Can drive: " + canDrive);
+        
+        // Test with different values
+        int age2 = 16;
+        boolean hasLicense2 = true;
+        boolean canDrive2 = (age2 >= 18) && (hasLicense2 == true);
+        System.out.println("Can drive (age 16): " + canDrive2);
+        
+        // Automation example
+        boolean isElementDisplayed = true;
+        boolean isElementEnabled = true;
+        boolean canClick = isElementDisplayed && isElementEnabled;
+        System.out.println("Can click element: " + canClick);
+    }
+}
+
+OUTPUT:
+-------
+Can drive: true
+Can drive (age 16): false
+Can click element: true
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 8: Logical OR Operator (||)
+--------------------------------------------------------------------------------
+
+public class LogicalOrOperator {
+    public static void main(String[] args) {
+        
+        boolean hasCard = false;
+        boolean hasCash = true;
+        
+        // At least one condition must be true
+        boolean canPay = hasCard || hasCash;
+        System.out.println("Can pay: " + canPay);
+        
+        // Test with both false
+        boolean hasCard2 = false;
+        boolean hasCash2 = false;
+        boolean canPay2 = hasCard2 || hasCash2;
+        System.out.println("Can pay (both false): " + canPay2);
+        
+        // Automation example
+        String browser = "Chrome";
+        boolean isSupported = (browser == "Chrome") || (browser == "Firefox");
+        System.out.println("Browser supported: " + isSupported);
+    }
+}
+
+OUTPUT:
+-------
+Can pay: true
+Can pay (both false): false
+Browser supported: true
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 9: Logical NOT Operator (!)
+--------------------------------------------------------------------------------
+
+public class LogicalNotOperator {
+    public static void main(String[] args) {
+        
+        boolean isLoggedIn = true;
+        boolean isNotLoggedIn = !isLoggedIn;
+        
+        System.out.println("Is logged in: " + isLoggedIn);
+        System.out.println("Is NOT logged in: " + isNotLoggedIn);
+        
+        // Automation example
+        boolean isElementDisplayed = false;
+        
+        if (!isElementDisplayed) {
+            System.out.println("Element is not displayed - Test might fail");
+        }
+        
+        // Double negation
+        boolean value = true;
+        System.out.println("Original: " + value);
+        System.out.println("Single NOT: " + !value);
+        System.out.println("Double NOT: " + !!value);
+    }
+}
+
+OUTPUT:
+-------
+Is logged in: true
+Is NOT logged in: false
+Element is not displayed - Test might fail
+Original: true
+Single NOT: false
+Double NOT: true
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 10: Combining Multiple Logical Operators
+--------------------------------------------------------------------------------
+
+public class CombinedLogicalOperators {
+    public static void main(String[] args) {
+        
+        // User eligibility check
+        int age = 25;
+        boolean isEmployee = true;
+        boolean hasGoodCredit = true;
+        
+        // Complex condition
+        boolean isEligible = (age >= 21) && (isEmployee || hasGoodCredit);
+        System.out.println("Is eligible: " + isEligible);
+        
+        // Automation: Test execution condition
+        String environment = "QA";
+        boolean isDataReady = true;
+        boolean isWeekday = true;
+        
+        boolean canRunTests = (environment == "QA" || environment == "DEV") 
+                              && isDataReady 
+                              && isWeekday;
+        System.out.println("Can run tests: " + canRunTests);
+    }
+}
+
+OUTPUT:
+-------
+Is eligible: true
+Can run tests: true
+
+
+================================================================================
+                    5. INCREMENT AND DECREMENT OPERATORS
+================================================================================
+
+Used to increase or decrease a value by 1.
+
++----------+-------------+-----------------------------------+
+| Operator | Name        | Description                       |
++----------+-------------+-----------------------------------+
+|   ++x    | Pre-increment  | Increment BEFORE using value   |
+|   x++    | Post-increment | Increment AFTER using value    |
+|   --x    | Pre-decrement  | Decrement BEFORE using value   |
+|   x--    | Post-decrement | Decrement AFTER using value    |
++----------+-------------+-----------------------------------+
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 11: Basic Increment and Decrement
+--------------------------------------------------------------------------------
+
+public class IncrementDecrement {
+    public static void main(String[] args) {
+        
+        int a = 10;
+        int b = 10;
+        
+        // Increment
+        a++;    // Same as: a = a + 1
+        System.out.println("After a++: " + a);
+        
+        ++b;    // Same as: b = b + 1
+        System.out.println("After ++b: " + b);
+        
+        // Decrement
+        int c = 10;
+        int d = 10;
+        
+        c--;    // Same as: c = c - 1
+        System.out.println("After c--: " + c);
+        
+        --d;    // Same as: d = d - 1
+        System.out.println("After --d: " + d);
+    }
+}
+
+OUTPUT:
+-------
+After a++: 11
+After ++b: 11
+After c--: 9
+After --d: 9
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 12: Pre vs Post Increment (IMPORTANT)
+--------------------------------------------------------------------------------
+
+public class PrePostIncrement {
+    public static void main(String[] args) {
+        
+        System.out.println("===== POST INCREMENT (x++) =====");
+        int a = 10;
+        int resultA = a++;    // First: assign 10 to resultA, Then: increment a
+        System.out.println("a++ scenario:");
+        System.out.println("resultA = " + resultA);    // 10 (old value)
+        System.out.println("a = " + a);                // 11 (incremented)
+        
+        System.out.println("");
+        
+        System.out.println("===== PRE INCREMENT (++x) =====");
+        int b = 10;
+        int resultB = ++b;    // First: increment b, Then: assign 11 to resultB
+        System.out.println("++b scenario:");
+        System.out.println("resultB = " + resultB);    // 11 (new value)
+        System.out.println("b = " + b);                // 11 (incremented)
+    }
+}
+
+OUTPUT:
+-------
+===== POST INCREMENT (x++) =====
+a++ scenario:
+resultA = 10
+a = 11
+
+===== PRE INCREMENT (++x) =====
+++b scenario:
+resultB = 11
+b = 11
+
+
+VISUAL EXPLANATION:
+-------------------
+
+POST INCREMENT (a++):
+---------------------
+Step 1: Use the current value (10)
+Step 2: Then increment (10 -> 11)
+
+int a = 10;
+int result = a++;
+         |
+         +-> result gets 10 (old value)
+         +-> a becomes 11
+
+
+PRE INCREMENT (++a):
+--------------------
+Step 1: First increment (10 -> 11)
+Step 2: Then use the new value (11)
+
+int a = 10;
+int result = ++a;
+          |
+          +-> a becomes 11 first
+          +-> result gets 11 (new value)
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 13: Increment in Automation Context
+--------------------------------------------------------------------------------
+
+public class AutomationIncrement {
+    public static void main(String[] args) {
+        
+        // Counting passed and failed tests
+        int passCount = 0;
+        int failCount = 0;
+        
+        // Simulating test results
+        passCount++;    // Test 1 passed
+        passCount++;    // Test 2 passed
+        failCount++;    // Test 3 failed
+        passCount++;    // Test 4 passed
+        
+        System.out.println("Passed: " + passCount);
+        System.out.println("Failed: " + failCount);
+        
+        // Retry mechanism
+        int maxRetries = 3;
+        int retryCount = 0;
+        
+        System.out.println("\nRetry simulation:");
+        while (retryCount < maxRetries) {
+            retryCount++;
+            System.out.println("Attempt: " + retryCount);
+        }
+    }
+}
+
+OUTPUT:
+-------
+Passed: 3
+Failed: 1
+
+Retry simulation:
+Attempt: 1
+Attempt: 2
+Attempt: 3
+
+
+================================================================================
+                    6. TERNARY OPERATOR
+================================================================================
+
+A shorthand for if-else statement. Also called conditional operator.
+
+Syntax:
+-------
+variable = (condition) ? valueIfTrue : valueIfFalse;
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 14: Basic Ternary Operator
+--------------------------------------------------------------------------------
+
+public class TernaryOperator {
+    public static void main(String[] args) {
+        
+        int age = 20;
+        
+        // Using ternary operator
+        String result = (age >= 18) ? "Adult" : "Minor";
+        System.out.println("Result: " + result);
+        
+        // Equivalent if-else
+        String result2;
+        if (age >= 18) {
+            result2 = "Adult";
+        } else {
+            result2 = "Minor";
+        }
+        System.out.println("Result2: " + result2);
+    }
+}
+
+OUTPUT:
+-------
+Result: Adult
+Result2: Adult
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 15: Ternary Operator Examples
+--------------------------------------------------------------------------------
+
+public class TernaryExamples {
+    public static void main(String[] args) {
+        
+        // Example 1: Find maximum
+        int a = 10;
+        int b = 20;
+        int max = (a > b) ? a : b;
+        System.out.println("Maximum: " + max);
+        
+        // Example 2: Check even or odd
+        int number = 15;
+        String evenOdd = (number % 2 == 0) ? "Even" : "Odd";
+        System.out.println(number + " is " + evenOdd);
+        
+        // Example 3: Pass or Fail
+        int marks = 75;
+        String status = (marks >= 40) ? "Pass" : "Fail";
+        System.out.println("Status: " + status);
+        
+        // Example 4: Automation - Test status
+        boolean isTestPassed = true;
+        String testStatus = isTestPassed ? "PASSED" : "FAILED";
+        System.out.println("Test Status: " + testStatus);
+    }
+}
+
+OUTPUT:
+-------
+Maximum: 20
+15 is Odd
+Status: Pass
+Test Status: PASSED
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 16: Nested Ternary Operator
+--------------------------------------------------------------------------------
+
+public class NestedTernary {
+    public static void main(String[] args) {
+        
+        int marks = 85;
+        
+        // Nested ternary (use sparingly - can be hard to read)
+        String grade = (marks >= 90) ? "A" :
+                       (marks >= 80) ? "B" :
+                       (marks >= 70) ? "C" :
+                       (marks >= 60) ? "D" : "F";
+        
+        System.out.println("Marks: " + marks);
+        System.out.println("Grade: " + grade);
+        
+        // Another example
+        int number = 0;
+        String sign = (number > 0) ? "Positive" :
+                      (number < 0) ? "Negative" : "Zero";
+        System.out.println(number + " is " + sign);
+    }
+}
+
+OUTPUT:
+-------
+Marks: 85
+Grade: B
+0 is Zero
+
+
+================================================================================
+                    7. STRING CONCATENATION OPERATOR
+================================================================================
+
+The + operator is also used to join (concatenate) strings.
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 17: String Concatenation
+--------------------------------------------------------------------------------
+
+public class StringConcatenation {
+    public static void main(String[] args) {
+        
+        // Basic concatenation
+        String firstName = "John";
+        String lastName = "Doe";
+        String fullName = firstName + " " + lastName;
+        System.out.println("Full Name: " + fullName);
+        
+        // Concatenating strings with numbers
+        String message = "Total: " + 100;
+        System.out.println(message);
+        
+        // Multiple concatenations
+        int passed = 45;
+        int failed = 5;
+        String report = "Passed: " + passed + ", Failed: " + failed;
+        System.out.println(report);
+        
+        // Concatenation in print statement
+        String browser = "Chrome";
+        String version = "120";
+        System.out.println("Browser: " + browser + " Version: " + version);
+    }
+}
+
+OUTPUT:
+-------
+Full Name: John Doe
+Total: 100
+Passed: 45, Failed: 5
+Browser: Chrome Version: 120
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 18: String Concatenation Behavior with Numbers
+--------------------------------------------------------------------------------
+
+public class ConcatenationBehavior {
+    public static void main(String[] args) {
+        
+        // Important: Order matters!
+        
+        // String first - everything becomes concatenation
+        System.out.println("Result: " + 10 + 20);    // Result: 1020
+        
+        // Numbers first with parentheses - addition happens first
+        System.out.println("Result: " + (10 + 20));  // Result: 30
+        
+        // Numbers before string - addition happens
+        System.out.println(10 + 20 + " is the result");  // 30 is the result
+        
+        // Mixed
+        System.out.println(10 + 20 + " and " + 30 + 40);  // 30 and 3040
+    }
+}
+
+OUTPUT:
+-------
+Result: 1020
+Result: 30
+30 is the result
+30 and 3040
+
+EXPLANATION:
+------------
+Java evaluates left to right:
+- "Result: " + 10 = "Result: 10" (String)
+- "Result: 10" + 20 = "Result: 1020" (String)
+
+With parentheses:
+- (10 + 20) = 30 (calculated first)
+- "Result: " + 30 = "Result: 30"
+
+
+================================================================================
+                    COMPLETE EXAMPLE: ALL OPERATORS
+================================================================================
+
+public class AllOperatorsDemo {
+    public static void main(String[] args) {
+        
+        System.out.println("========== ARITHMETIC OPERATORS ==========");
+        int a = 15, b = 4;
+        System.out.println("a = " + a + ", b = " + b);
+        System.out.println("a + b = " + (a + b));
+        System.out.println("a - b = " + (a - b));
+        System.out.println("a * b = " + (a * b));
+        System.out.println("a / b = " + (a / b));
+        System.out.println("a % b = " + (a % b));
+        
+        System.out.println("\n========== ASSIGNMENT OPERATORS ==========");
+        int x = 10;
+        System.out.println("Initial x = " + x);
+        x += 5;
+        System.out.println("After x += 5: " + x);
+        x -= 3;
+        System.out.println("After x -= 3: " + x);
+        x *= 2;
+        System.out.println("After x *= 2: " + x);
+        
+        System.out.println("\n========== COMPARISON OPERATORS ==========");
+        int p = 10, q = 20;
+        System.out.println("p = " + p + ", q = " + q);
+        System.out.println("p == q: " + (p == q));
+        System.out.println("p != q: " + (p != q));
+        System.out.println("p > q: " + (p > q));
+        System.out.println("p < q: " + (p < q));
+        
+        System.out.println("\n========== LOGICAL OPERATORS ==========");
+        boolean m = true, n = false;
+        System.out.println("m = " + m + ", n = " + n);
+        System.out.println("m && n: " + (m && n));
+        System.out.println("m || n: " + (m || n));
+        System.out.println("!m: " + (!m));
+        
+        System.out.println("\n========== INCREMENT/DECREMENT ==========");
+        int count = 5;
+        System.out.println("Initial count: " + count);
+        System.out.println("count++: " + count++);
+        System.out.println("After post-increment: " + count);
+        System.out.println("++count: " + (++count));
+        
+        System.out.println("\n========== TERNARY OPERATOR ==========");
+        int marks = 75;
+        String result = (marks >= 40) ? "PASS" : "FAIL";
+        System.out.println("Marks: " + marks + ", Result: " + result);
+    }
+}
+
+OUTPUT:
+-------
+========== ARITHMETIC OPERATORS ==========
+a = 15, b = 4
+a + b = 19
+a - b = 11
+a * b = 60
+a / b = 3
+a % b = 3
+
+========== ASSIGNMENT OPERATORS ==========
+Initial x = 10
+After x += 5: 15
+After x -= 3: 12
+After x *= 2: 24
+
+========== COMPARISON OPERATORS ==========
+p = 10, q = 20
+p == q: false
+p != q: true
+p > q: false
+p < q: true
+
+========== LOGICAL OPERATORS ==========
+m = true, n = false
+m && n: false
+m || n: true
+!m: false
+
+========== INCREMENT/DECREMENT ==========
+Initial count: 5
+count++: 5
+After post-increment: 6
+++count: 7
+
+========== TERNARY OPERATOR ==========
+Marks: 75, Result: PASS
+
+
+================================================================================
+================================================================================
+                    NEGATIVE SCENARIOS - TOPIC 3
+================================================================================
+================================================================================
+
+
+--------------------------------------------------------------------------------
+ERROR 1: DIVISION BY ZERO (INTEGER)
+--------------------------------------------------------------------------------
+
+INVALID CODE:
+-------------
+public class DivisionByZero {
+    public static void main(String[] args) {
+        int a = 10;
+        int b = 0;
+        int result = a / b;    // Division by zero
+        System.out.println(result);
+    }
+}
+
+ERROR MESSAGE:
+--------------
+Exception in thread "main" java.lang.ArithmeticException: / by zero
+
+FIX:
+----
+public class DivisionByZeroFixed {
+    public static void main(String[] args) {
+        int a = 10;
+        int b = 0;
+        
+        // Check before dividing
+        if (b != 0) {
+            int result = a / b;
+            System.out.println(result);
+        } else {
+            System.out.println("Cannot divide by zero");
+        }
+    }
+}
+
+NOTE:
+-----
+Division by zero with double does NOT throw exception:
+- double result = 10.0 / 0;  // Results in Infinity
+- double result = 0.0 / 0;   // Results in NaN (Not a Number)
+
+
+--------------------------------------------------------------------------------
+ERROR 2: USING = INSTEAD OF == FOR COMPARISON
+--------------------------------------------------------------------------------
+
+INVALID CODE:
+-------------
+public class WrongComparisonOperator {
+    public static void main(String[] args) {
+        int a = 10;
+        int b = 10;
+        
+        // Using = instead of ==
+        if (a = b) {    // Assignment, not comparison
+            System.out.println("Equal");
+        }
+    }
+}
+
+ERROR MESSAGE:
+--------------
+error: incompatible types: int cannot be converted to boolean
+        if (a = b) {
+              ^
+
+FIX:
+----
+public class WrongComparisonOperatorFixed {
+    public static void main(String[] args) {
+        int a = 10;
+        int b = 10;
+        
+        // Use == for comparison
+        if (a == b) {    // Correct comparison operator
+            System.out.println("Equal");
+        }
+    }
+}
+
+RULE:
+-----
+=   --> Assignment operator (assigns value)
+==  --> Comparison operator (compares values)
+
+int x = 10;     // Assigns 10 to x
+x == 10         // Checks if x equals 10 (returns true/false)
+
+
+--------------------------------------------------------------------------------
+ERROR 3: COMPARING STRINGS WITH ==
+--------------------------------------------------------------------------------
+
+INVALID CODE (Logical Error - May not work correctly):
+------------------------------------------------------
+public class StringComparison {
+    public static void main(String[] args) {
+        String s1 = new String("Hello");
+        String s2 = new String("Hello");
+        
+        // Using == to compare strings
+        if (s1 == s2) {
+            System.out.println("Strings are equal");
+        } else {
+            System.out.println("Strings are not equal");
+        }
+    }
+}
+
+OUTPUT (Unexpected):
+--------------------
+Strings are not equal
+
+EXPLANATION:
+------------
+== compares references (memory addresses), not content.
+s1 and s2 point to different objects in memory.
+
+FIX:
+----
+public class StringComparisonFixed {
+    public static void main(String[] args) {
+        String s1 = new String("Hello");
+        String s2 = new String("Hello");
+        
+        // Use .equals() to compare string content
+        if (s1.equals(s2)) {
+            System.out.println("Strings are equal");
+        } else {
+            System.out.println("Strings are not equal");
+        }
+    }
+}
+
+OUTPUT:
+-------
+Strings are equal
+
+RULE:
+-----
+For String comparison:
+- ==        --> Compares references (memory addresses)
+- .equals() --> Compares actual content (USE THIS)
+
+
+--------------------------------------------------------------------------------
+ERROR 4: WRONG OPERATOR PRECEDENCE
+--------------------------------------------------------------------------------
+
+INVALID CODE (Logical Error):
+-----------------------------
+public class OperatorPrecedence {
+    public static void main(String[] args) {
+        int result = 10 + 5 * 2;
+        System.out.println("10 + 5 * 2 = " + result);
+        // Expected: 30 (if left to right)
+        // Actual: 20 (multiplication happens first)
+    }
+}
+
+OUTPUT:
+-------
+10 + 5 * 2 = 20
+
+FIX:
+----
+public class OperatorPrecedenceFixed {
+    public static void main(String[] args) {
+        // Use parentheses to control order
+        int result1 = (10 + 5) * 2;    // Addition first
+        System.out.println("(10 + 5) * 2 = " + result1);
+        
+        int result2 = 10 + (5 * 2);    // Multiplication first (default)
+        System.out.println("10 + (5 * 2) = " + result2);
+    }
+}
+
+OUTPUT:
+-------
+(10 + 5) * 2 = 30
+10 + (5 * 2) = 20
+
+OPERATOR PRECEDENCE (High to Low):
+----------------------------------
+1. () Parentheses
+2. ++, -- (increment/decrement)
+3. *, /, % (multiplication, division, modulus)
+4. +, - (addition, subtraction)
+5. <, >, <=, >= (comparison)
+6. ==, != (equality)
+7. && (logical AND)
+8. || (logical OR)
+9. = (assignment)
+
+
+--------------------------------------------------------------------------------
+ERROR 5: MISSING PARENTHESES IN PRINT WITH OPERATORS
+--------------------------------------------------------------------------------
+
+INVALID CODE (Unexpected Output):
+---------------------------------
+public class PrintWithOperators {
+    public static void main(String[] args) {
+        int a = 10;
+        int b = 20;
+        
+        // Missing parentheses
+        System.out.println("Sum: " + a + b);
+    }
+}
+
+OUTPUT (Unexpected):
+--------------------
+Sum: 1020
+
+EXPLANATION:
+------------
+String concatenation happens left to right:
+"Sum: " + 10 = "Sum: 10"
+"Sum: 10" + 20 = "Sum: 1020"
+
+FIX:
+----
+public class PrintWithOperatorsFixed {
+    public static void main(String[] args) {
+        int a = 10;
+        int b = 20;
+        
+        // Add parentheses for calculation
+        System.out.println("Sum: " + (a + b));
+    }
+}
+
+OUTPUT:
+-------
+Sum: 30
+
+
+--------------------------------------------------------------------------------
+ERROR 6: LOGICAL OPERATOR MISTAKES - USING & INSTEAD OF &&
+--------------------------------------------------------------------------------
+
+EXPLANATION:
+------------
+&   --> Bitwise AND (evaluates both sides always)
+&&  --> Logical AND (short-circuit - stops if first is false)
+
+PROBLEMATIC CODE:
+-----------------
+public class BitwiseVsLogical {
+    public static void main(String[] args) {
+        int x = 0;
+        
+        // Using & (bitwise) - second condition always evaluated
+        if (x != 0 & (10 / x) > 0) {    // Division by zero occurs!
+            System.out.println("Valid");
+        }
+    }
+}
+
+ERROR:
+------
+Exception in thread "main" java.lang.ArithmeticException: / by zero
+
+FIX:
+----
+public class BitwiseVsLogicalFixed {
+    public static void main(String[] args) {
+        int x = 0;
+        
+        // Using && (logical) - short-circuit evaluation
+        // Second condition NOT evaluated if first is false
+        if (x != 0 && (10 / x) > 0) {
+            System.out.println("Valid");
+        } else {
+            System.out.println("Invalid - x is zero");
+        }
+    }
+}
+
+OUTPUT:
+-------
+Invalid - x is zero
+
+RULE:
+-----
+Always use:
+- && for logical AND (not &)
+- || for logical OR (not |)
+
+
+--------------------------------------------------------------------------------
+ERROR 7: INCREMENT OPERATOR CONFUSION
+--------------------------------------------------------------------------------
+
+CONFUSING CODE:
+---------------
+public class IncrementConfusion {
+    public static void main(String[] args) {
+        int a = 5;
+        int b = a++ + ++a;
+        
+        System.out.println("a = " + a);
+        System.out.println("b = " + b);
+    }
+}
+
+OUTPUT:
+-------
+a = 7
+b = 12
+
+EXPLANATION:
+------------
+Step by step:
+1. a = 5
+2. a++ : Use 5, then a becomes 6
+3. ++a : a becomes 7, then use 7
+4. b = 5 + 7 = 12
+5. Final a = 7
+
+FIX (Write Clear Code):
+-----------------------
+public class IncrementClear {
+    public static void main(String[] args) {
+        int a = 5;
+        
+        // Clear and readable
+        int temp1 = a;    // temp1 = 5
+        a++;              // a = 6
+        a++;              // a = 7
+        int temp2 = a;    // temp2 = 7
+        int b = temp1 + temp2;    // b = 12
+        
+        System.out.println("a = " + a);
+        System.out.println("b = " + b);
+    }
+}
+
+RULE:
+-----
+Avoid using multiple increment/decrement in single expression.
+Write clear, readable code.
+
+
+--------------------------------------------------------------------------------
+ERROR 8: ASSIGNING COMPARISON RESULT TO WRONG TYPE
+--------------------------------------------------------------------------------
+
+INVALID CODE:
+-------------
+public class ComparisonResult {
+    public static void main(String[] args) {
+        int a = 10;
+        int b = 20;
+        
+        int result = a > b;    // Comparison returns boolean, not int
+    }
+}
+
+ERROR MESSAGE:
+--------------
+error: incompatible types: boolean cannot be converted to int
+        int result = a > b;
+                       ^
+
+FIX:
+----
+public class ComparisonResultFixed {
+    public static void main(String[] args) {
+        int a = 10;
+        int b = 20;
+        
+        boolean result = a > b;    // Use boolean type
+        System.out.println("a > b: " + result);
+    }
+}
+
+
+--------------------------------------------------------------------------------
+ERROR 9: MODULUS WITH ZERO
+--------------------------------------------------------------------------------
+
+INVALID CODE:
+-------------
+public class ModulusZero {
+    public static void main(String[] args) {
+        int a = 10;
+        int b = 0;
+        int result = a % b;    // Modulus by zero
+    }
+}
+
+ERROR MESSAGE:
+--------------
+Exception in thread "main" java.lang.ArithmeticException: / by zero
+
+FIX:
+----
+public class ModulusZeroFixed {
+    public static void main(String[] args) {
+        int a = 10;
+        int b = 0;
+        
+        if (b != 0) {
+            int result = a % b;
+            System.out.println("Result: " + result);
+        } else {
+            System.out.println("Cannot perform modulus with zero");
+        }
+    }
+}
+
+
+--------------------------------------------------------------------------------
+ERROR 10: TERNARY OPERATOR TYPE MISMATCH
+--------------------------------------------------------------------------------
+
+INVALID CODE:
+-------------
+public class TernaryTypeMismatch {
+    public static void main(String[] args) {
+        int age = 20;
+        
+        // Returning different types
+        int result = (age >= 18) ? "Adult" : 0;    // String vs int
+    }
+}
+
+ERROR MESSAGE:
+--------------
+error: incompatible types: bad type in conditional expression
+        int result = (age >= 18) ? "Adult" : 0;
+                                   ^
+
+FIX:
+----
+public class TernaryTypeMismatchFixed {
+    public static void main(String[] args) {
+        int age = 20;
+        
+        // Option 1: Return same types
+        String result1 = (age >= 18) ? "Adult" : "Minor";
+        System.out.println(result1);
+        
+        // Option 2: Return compatible numeric types
+        int result2 = (age >= 18) ? 1 : 0;
+        System.out.println(result2);
+    }
+}
+
+RULE:
+-----
+Both values in ternary operator should be same or compatible types.
+condition ? value1 : value2
+            |         |
+            +---------+-- Must be same/compatible types
+
+
+--------------------------------------------------------------------------------
+ERROR 11: FLOATING POINT COMPARISON PRECISION
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE:
+-----------------
+public class FloatComparison {
+    public static void main(String[] args) {
+        double a = 0.1 + 0.2;
+        double b = 0.3;
+        
+        System.out.println("a = " + a);
+        System.out.println("b = " + b);
+        System.out.println("a == b: " + (a == b));    // May be false!
+    }
+}
+
+OUTPUT:
+-------
+a = 0.30000000000000004
+b = 0.3
+a == b: false
+
+EXPLANATION:
+------------
+Floating point numbers have precision issues.
+0.1 + 0.2 is not exactly 0.3 in binary.
+
+FIX:
+----
+public class FloatComparisonFixed {
+    public static void main(String[] args) {
+        double a = 0.1 + 0.2;
+        double b = 0.3;
+        double tolerance = 0.0001;
+        
+        // Compare with tolerance
+        boolean areEqual = Math.abs(a - b) < tolerance;
+        System.out.println("Are approximately equal: " + areEqual);
+    }
+}
+
+OUTPUT:
+-------
+Are approximately equal: true
+
+
+================================================================================
+                    QUICK REFERENCE SUMMARY
+================================================================================
+
+OPERATORS SUMMARY:
+------------------
++----------+------------------------+-------------------------+
+| Category | Operators              | Example                 |
++----------+------------------------+-------------------------+
+| Arithmetic| +, -, *, /, %         | 10 + 5 = 15            |
+| Assignment| =, +=, -=, *=, /=, %= | x += 5 (x = x + 5)     |
+| Comparison| ==, !=, >, <, >=, <=  | 10 == 10 (true)        |
+| Logical   | &&, ||, !             | true && false (false)  |
+| Increment | ++, --                | x++ or ++x             |
+| Ternary   | ? :                   | (a>b) ? a : b          |
++----------+------------------------+-------------------------+
+
+
+NEGATIVE SCENARIOS SUMMARY:
+---------------------------
+1. Division by zero
+   INVALID: int x = 10 / 0;
+   FIX: Check if divisor is not zero before dividing
+
+2. Using = instead of ==
+   INVALID: if (a = b)
+   FIX: if (a == b)
+
+3. Comparing strings with ==
+   INVALID: if (str1 == str2)
+   FIX: if (str1.equals(str2))
+
+4. Wrong operator precedence
+   INVALID: 10 + 5 * 2 expecting 30
+   FIX: (10 + 5) * 2 = 30
+
+5. Missing parentheses in print
+   INVALID: "Sum: " + a + b gives "Sum: 1020"
+   FIX: "Sum: " + (a + b) gives "Sum: 30"
+
+6. Using & instead of &&
+   INVALID: if (x != 0 & 10/x > 0)
+   FIX: if (x != 0 && 10/x > 0)
+
+7. Increment confusion
+   INVALID: int b = a++ + ++a;
+   FIX: Write separate statements for clarity
+
+8. Comparison result to wrong type
+   INVALID: int result = a > b;
+   FIX: boolean result = a > b;
+
+9. Modulus with zero
+   INVALID: int x = 10 % 0;
+   FIX: Check if divisor is not zero
+
+10. Ternary type mismatch
+    INVALID: int x = (cond) ? "text" : 0;
+    FIX: String x = (cond) ? "text" : "other";
+
+11. Float comparison precision
+    INVALID: if (0.1 + 0.2 == 0.3)
+    FIX: if (Math.abs(a - b) < tolerance)
+
+
+================================================================================
+                    END OF TOPIC 3
+================================================================================

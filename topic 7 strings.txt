@@ -1,0 +1,3703 @@
+Thinking:
+The user wants to learn Topic 7: Strings and String Methods in Java. I need to cover:
+
+1. What is a String
+2. Creating Strings
+3. String immutability
+4. String methods (length, charAt, substring, indexOf, contains, equals, equalsIgnoreCase, compareTo, toLowerCase, toUpperCase, trim, replace, split, concat, startsWith, endsWith, isEmpty, isBlank, format, valueOf, etc.)
+5. String comparison
+6. String concatenation
+7. StringBuilder and StringBuffer
+8. String in automation context
+9. Negative scenarios
+
+I'll provide comprehensive coverage with examples, automation context, and negative scenarios as requested.
+
+Let me structure this properly with ASCII formatting as requested.
+
+================================================================================
+                    TOPIC 7: STRINGS AND STRING METHODS
+================================================================================
+
+What is a String?
+-----------------
+A String is a sequence of characters. In Java, String is an object that
+represents a sequence of characters. It is one of the most commonly used
+data types in Java programming and automation testing.
+
+Key Characteristics:
+--------------------
+- String is a class in java.lang package
+- Strings are immutable (cannot be changed once created)
+- Strings are stored in String Pool for memory optimization
+- String can be created using literal or new keyword
+
+
+Why Important for Automation?
+-----------------------------
+- Store and validate page titles
+- Handle URLs
+- Process text from web elements
+- Validate error messages
+- Handle API request/response data
+- Work with XPath and CSS selectors
+- Process test data
+- Generate dynamic test data
+- Log messages and reports
+
+
+================================================================================
+                    1. CREATING STRINGS
+================================================================================
+
+There are two ways to create a String:
+
+1. String Literal (Recommended)
+2. Using new keyword
+
+
+String Pool Concept:
+--------------------
+When you create a String literal, Java checks the String Pool.
+If the same string exists, it returns reference to existing string.
+If not, it creates new string in the pool.
+
++--------------------------------------------------+
+|                    HEAP MEMORY                    |
+|  +--------------------------------------------+  |
+|  |              STRING POOL                   |  |
+|  |                                            |  |
+|  |    +--------+    +--------+    +--------+  |  |
+|  |    |"Hello" |    |"World" |    |"Java"  |  |  |
+|  |    +--------+    +--------+    +--------+  |  |
+|  |        ^             ^                     |  |
+|  |        |             |                     |  |
+|  +--------------------------------------------+  |
+|           |             |                        |
+|        s1, s2          s3                        |
+|                                                  |
+|  +--------------------------------------------+  |
+|  |           OUTSIDE STRING POOL              |  |
+|  |                                            |  |
+|  |    +--------+                              |  |
+|  |    |"Hello" |  <-- s4 (created with new)   |  |
+|  |    +--------+                              |  |
+|  +--------------------------------------------+  |
++--------------------------------------------------+
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 1: Creating Strings - Different Methods
+--------------------------------------------------------------------------------
+
+public class StringCreation {
+    public static void main(String[] args) {
+        
+        // Method 1: String Literal (Recommended)
+        System.out.println("=== Method 1: String Literal ===");
+        String s1 = "Hello";
+        String s2 = "Hello";
+        String s3 = "World";
+        
+        System.out.println("s1 = " + s1);
+        System.out.println("s2 = " + s2);
+        System.out.println("s3 = " + s3);
+        
+        // s1 and s2 point to same object in String Pool
+        System.out.println("s1 == s2: " + (s1 == s2));    // true
+        
+        System.out.println("");
+        
+        // Method 2: Using new keyword
+        System.out.println("=== Method 2: Using new Keyword ===");
+        String s4 = new String("Hello");
+        String s5 = new String("Hello");
+        
+        System.out.println("s4 = " + s4);
+        System.out.println("s5 = " + s5);
+        
+        // s4 and s5 are different objects (outside String Pool)
+        System.out.println("s4 == s5: " + (s4 == s5));    // false
+        System.out.println("s4.equals(s5): " + s4.equals(s5));    // true
+        
+        System.out.println("");
+        
+        // Method 3: From character array
+        System.out.println("=== Method 3: From Character Array ===");
+        char[] charArray = {'J', 'a', 'v', 'a'};
+        String s6 = new String(charArray);
+        System.out.println("s6 = " + s6);
+        
+        System.out.println("");
+        
+        // Method 4: Empty and blank strings
+        System.out.println("=== Method 4: Empty and Blank Strings ===");
+        String empty = "";
+        String blank = "   ";
+        String nullString = null;
+        
+        System.out.println("Empty string length: " + empty.length());
+        System.out.println("Blank string length: " + blank.length());
+        System.out.println("Null string: " + nullString);
+    }
+}
+
+OUTPUT:
+-------
+=== Method 1: String Literal ===
+s1 = Hello
+s2 = Hello
+s3 = World
+s1 == s2: true
+
+=== Method 2: Using new Keyword ===
+s4 = Hello
+s5 = Hello
+s4 == s5: false
+s4.equals(s5): true
+
+=== Method 3: From Character Array ===
+s6 = Java
+
+=== Method 4: Empty and Blank Strings ===
+Empty string length: 0
+Blank string length: 3
+Null string: null
+
+
+================================================================================
+                    2. STRING IMMUTABILITY
+================================================================================
+
+Strings in Java are immutable - once created, they cannot be changed.
+Any operation that appears to modify a String actually creates a new String.
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 2: String Immutability Demonstration
+--------------------------------------------------------------------------------
+
+public class StringImmutability {
+    public static void main(String[] args) {
+        
+        String original = "Hello";
+        System.out.println("Original string: " + original);
+        System.out.println("Original hashCode: " + original.hashCode());
+        
+        // This creates a NEW string, doesn't modify original
+        String modified = original.concat(" World");
+        
+        System.out.println("");
+        System.out.println("After concat operation:");
+        System.out.println("Original string: " + original);    // Still "Hello"
+        System.out.println("Original hashCode: " + original.hashCode());
+        System.out.println("Modified string: " + modified);    // "Hello World"
+        System.out.println("Modified hashCode: " + modified.hashCode());
+        
+        System.out.println("");
+        
+        // Another example
+        String s = "Java";
+        System.out.println("Before toUpperCase: " + s);
+        
+        String upper = s.toUpperCase();
+        
+        System.out.println("After toUpperCase:");
+        System.out.println("s = " + s);           // Still "Java"
+        System.out.println("upper = " + upper);   // "JAVA"
+        
+        System.out.println("");
+        
+        // To actually change the value, reassign
+        System.out.println("=== Reassigning to Change Value ===");
+        String name = "John";
+        System.out.println("Before: " + name);
+        
+        name = name + " Doe";    // Creates new string, assigns to same variable
+        System.out.println("After: " + name);
+    }
+}
+
+OUTPUT:
+-------
+Original string: Hello
+Original hashCode: 69609650
+
+After concat operation:
+Original string: Hello
+Original hashCode: 69609650
+Modified string: Hello World
+Modified hashCode: -862545276
+
+Before toUpperCase: Java
+After toUpperCase:
+s = Java
+upper = JAVA
+
+=== Reassigning to Change Value ===
+Before: John
+After: John Doe
+
+
+Visual Explanation of Immutability:
+-----------------------------------
+
+Step 1: String s = "Hello";
++--------+
+|"Hello" | <-- s points here
++--------+
+
+Step 2: s.concat(" World");
++--------+      +--------------+
+|"Hello" |      |"Hello World" |  <-- New string created
++--------+      +--------------+
+    ^
+    |
+    s (still points to "Hello")
+
+Step 3: s = s.concat(" World");
++--------+      +--------------+
+|"Hello" |      |"Hello World" | <-- s now points here
++--------+      +--------------+
+(orphaned, will be garbage collected)
+
+
+================================================================================
+                    3. STRING METHODS - COMPLETE REFERENCE
+================================================================================
+
+String class provides many useful methods. Here is the complete list with
+categories:
+
+
++---------------------------+------------------------------------------------+
+| Category                  | Methods                                        |
++---------------------------+------------------------------------------------+
+| Length & Empty Check      | length(), isEmpty(), isBlank()                 |
+| Character Access          | charAt(), toCharArray()                        |
+| Searching                 | indexOf(), lastIndexOf(), contains()           |
+| Comparison                | equals(), equalsIgnoreCase(), compareTo(),     |
+|                           | compareToIgnoreCase()                          |
+| Case Conversion           | toLowerCase(), toUpperCase()                   |
+| Trimming                  | trim(), strip(), stripLeading(), stripTrailing()|
+| Substring                 | substring()                                    |
+| Replace                   | replace(), replaceAll(), replaceFirst()        |
+| Split & Join              | split(), join()                                |
+| Start & End Check         | startsWith(), endsWith()                       |
+| Concatenation             | concat(), + operator                           |
+| Formatting                | format(), formatted()                          |
+| Conversion                | valueOf(), toString()                          |
+| Miscellaneous             | repeat(), intern(), matches()                  |
++---------------------------+------------------------------------------------+
+
+
+================================================================================
+                    3.1 LENGTH AND EMPTY CHECK METHODS
+================================================================================
+
+--------------------------------------------------------------------------------
+EXAMPLE 3: length(), isEmpty(), isBlank()
+--------------------------------------------------------------------------------
+
+public class StringLengthMethods {
+    public static void main(String[] args) {
+        
+        String text = "Hello World";
+        String empty = "";
+        String blank = "   ";
+        String whitespace = "  Hello  ";
+        
+        // length() - Returns number of characters
+        System.out.println("=== length() Method ===");
+        System.out.println("\"" + text + "\".length() = " + text.length());
+        System.out.println("\"" + empty + "\".length() = " + empty.length());
+        System.out.println("\"" + blank + "\".length() = " + blank.length());
+        System.out.println("\"" + whitespace + "\".length() = " + whitespace.length());
+        
+        System.out.println("");
+        
+        // isEmpty() - Returns true if length is 0
+        System.out.println("=== isEmpty() Method ===");
+        System.out.println("\"" + text + "\".isEmpty() = " + text.isEmpty());
+        System.out.println("\"" + empty + "\".isEmpty() = " + empty.isEmpty());
+        System.out.println("\"" + blank + "\".isEmpty() = " + blank.isEmpty());
+        
+        System.out.println("");
+        
+        // isBlank() - Returns true if empty or contains only whitespace (Java 11+)
+        System.out.println("=== isBlank() Method (Java 11+) ===");
+        System.out.println("\"" + text + "\".isBlank() = " + text.isBlank());
+        System.out.println("\"" + empty + "\".isBlank() = " + empty.isBlank());
+        System.out.println("\"" + blank + "\".isBlank() = " + blank.isBlank());
+        
+        System.out.println("");
+        
+        // Practical comparison
+        System.out.println("=== isEmpty() vs isBlank() Comparison ===");
+        System.out.println("+----------------+----------+----------+");
+        System.out.println("| String         | isEmpty  | isBlank  |");
+        System.out.println("+----------------+----------+----------+");
+        System.out.println("| \"\"             | true     | true     |");
+        System.out.println("| \"   \"          | false    | true     |");
+        System.out.println("| \"Hello\"        | false    | false    |");
+        System.out.println("+----------------+----------+----------+");
+    }
+}
+
+OUTPUT:
+-------
+=== length() Method ===
+"Hello World".length() = 11
+"".length() = 0
+"   ".length() = 3
+"  Hello  ".length() = 9
+
+=== isEmpty() Method ===
+"Hello World".isEmpty() = false
+"".isEmpty() = true
+"   ".isEmpty() = false
+
+=== isBlank() Method (Java 11+) ===
+"Hello World".isBlank() = false
+"".isBlank() = true
+"   ".isBlank() = true
+
+=== isEmpty() vs isBlank() Comparison ===
++----------------+----------+----------+
+| String         | isEmpty  | isBlank  |
++----------------+----------+----------+
+| ""             | true     | true     |
+| "   "          | false    | true     |
+| "Hello"        | false    | false    |
++----------------+----------+----------+
+
+
+================================================================================
+                    3.2 CHARACTER ACCESS METHODS
+================================================================================
+
+--------------------------------------------------------------------------------
+EXAMPLE 4: charAt(), toCharArray()
+--------------------------------------------------------------------------------
+
+public class StringCharacterAccess {
+    public static void main(String[] args) {
+        
+        String text = "Selenium";
+        
+        // charAt(index) - Returns character at specified index
+        System.out.println("=== charAt() Method ===");
+        System.out.println("String: " + text);
+        System.out.println("Index:  01234567");
+        System.out.println("");
+        
+        System.out.println("charAt(0) = " + text.charAt(0));    // S
+        System.out.println("charAt(3) = " + text.charAt(3));    // e
+        System.out.println("charAt(7) = " + text.charAt(7));    // m
+        
+        // Get last character
+        System.out.println("Last char = " + text.charAt(text.length() - 1));
+        
+        System.out.println("");
+        
+        // toCharArray() - Converts string to character array
+        System.out.println("=== toCharArray() Method ===");
+        char[] chars = text.toCharArray();
+        
+        System.out.println("Character array:");
+        for (int i = 0; i < chars.length; i++) {
+            System.out.println("chars[" + i + "] = " + chars[i]);
+        }
+        
+        System.out.println("");
+        
+        // Practical use: Count specific characters
+        System.out.println("=== Practical: Count Vowels ===");
+        String sentence = "Hello World";
+        int vowelCount = 0;
+        
+        for (char c : sentence.toLowerCase().toCharArray()) {
+            if (c == 'a' || c == 'e' || c == 'i' || c == 'o' || c == 'u') {
+                vowelCount++;
+            }
+        }
+        System.out.println("Vowels in \"" + sentence + "\": " + vowelCount);
+    }
+}
+
+OUTPUT:
+-------
+=== charAt() Method ===
+String: Selenium
+Index:  01234567
+
+charAt(0) = S
+charAt(3) = e
+charAt(7) = m
+Last char = m
+
+=== toCharArray() Method ===
+Character array:
+chars[0] = S
+chars[1] = e
+chars[2] = l
+chars[3] = e
+chars[4] = n
+chars[5] = i
+chars[6] = u
+chars[7] = m
+
+=== Practical: Count Vowels ===
+Vowels in "Hello World": 3
+
+
+================================================================================
+                    3.3 SEARCHING METHODS
+================================================================================
+
+--------------------------------------------------------------------------------
+EXAMPLE 5: indexOf(), lastIndexOf(), contains()
+--------------------------------------------------------------------------------
+
+public class StringSearchMethods {
+    public static void main(String[] args) {
+        
+        String text = "Welcome to Selenium WebDriver Automation";
+        
+        System.out.println("String: \"" + text + "\"");
+        System.out.println("Length: " + text.length());
+        System.out.println("");
+        
+        // indexOf() - Returns first occurrence index, -1 if not found
+        System.out.println("=== indexOf() Method ===");
+        System.out.println("indexOf('e') = " + text.indexOf('e'));
+        System.out.println("indexOf(\"to\") = " + text.indexOf("to"));
+        System.out.println("indexOf(\"Selenium\") = " + text.indexOf("Selenium"));
+        System.out.println("indexOf(\"xyz\") = " + text.indexOf("xyz"));
+        
+        // indexOf with start position
+        System.out.println("indexOf('e', 5) = " + text.indexOf('e', 5));
+        
+        System.out.println("");
+        
+        // lastIndexOf() - Returns last occurrence index
+        System.out.println("=== lastIndexOf() Method ===");
+        System.out.println("lastIndexOf('e') = " + text.lastIndexOf('e'));
+        System.out.println("lastIndexOf('o') = " + text.lastIndexOf('o'));
+        System.out.println("lastIndexOf(\"to\") = " + text.lastIndexOf("to"));
+        
+        System.out.println("");
+        
+        // contains() - Returns true if substring exists
+        System.out.println("=== contains() Method ===");
+        System.out.println("contains(\"Selenium\") = " + text.contains("Selenium"));
+        System.out.println("contains(\"selenium\") = " + text.contains("selenium"));
+        System.out.println("contains(\"WebDriver\") = " + text.contains("WebDriver"));
+        System.out.println("contains(\"Python\") = " + text.contains("Python"));
+        
+        System.out.println("");
+        
+        // Practical: Find all occurrences
+        System.out.println("=== Practical: Find All Occurrences of 'e' ===");
+        String sample = "Selenium WebDriver";
+        System.out.println("String: " + sample);
+        
+        int index = sample.indexOf('e');
+        while (index != -1) {
+            System.out.println("Found 'e' at index: " + index);
+            index = sample.indexOf('e', index + 1);
+        }
+    }
+}
+
+OUTPUT:
+-------
+String: "Welcome to Selenium WebDriver Automation"
+Length: 41
+
+=== indexOf() Method ===
+indexOf('e') = 1
+indexOf("to") = 8
+indexOf("Selenium") = 11
+indexOf("xyz") = -1
+indexOf('e', 5) = 13
+
+=== lastIndexOf() Method ===
+lastIndexOf('e') = 26
+lastIndexOf('o') = 38
+lastIndexOf("to") = 8
+
+=== contains() Method ===
+contains("Selenium") = true
+contains("selenium") = false
+contains("WebDriver") = true
+contains("Python") = false
+
+=== Practical: Find All Occurrences of 'e' ===
+String: Selenium WebDriver
+Found 'e' at index: 1
+Found 'e' at index: 3
+Found 'e' at index: 11
+Found 'e' at index: 16
+
+
+================================================================================
+                    3.4 COMPARISON METHODS
+================================================================================
+
+--------------------------------------------------------------------------------
+EXAMPLE 6: equals(), equalsIgnoreCase(), compareTo()
+--------------------------------------------------------------------------------
+
+public class StringComparisonMethods {
+    public static void main(String[] args) {
+        
+        String s1 = "Hello";
+        String s2 = "Hello";
+        String s3 = "hello";
+        String s4 = new String("Hello");
+        String s5 = "World";
+        String s6 = "Apple";
+        
+        // equals() - Compares content (case-sensitive)
+        System.out.println("=== equals() Method ===");
+        System.out.println("\"Hello\".equals(\"Hello\") = " + s1.equals(s2));
+        System.out.println("\"Hello\".equals(\"hello\") = " + s1.equals(s3));
+        System.out.println("\"Hello\".equals(new String(\"Hello\")) = " + s1.equals(s4));
+        
+        System.out.println("");
+        
+        // equalsIgnoreCase() - Compares content (case-insensitive)
+        System.out.println("=== equalsIgnoreCase() Method ===");
+        System.out.println("\"Hello\".equalsIgnoreCase(\"hello\") = " + s1.equalsIgnoreCase(s3));
+        System.out.println("\"Hello\".equalsIgnoreCase(\"HELLO\") = " + s1.equalsIgnoreCase("HELLO"));
+        System.out.println("\"Hello\".equalsIgnoreCase(\"World\") = " + s1.equalsIgnoreCase(s5));
+        
+        System.out.println("");
+        
+        // == vs equals()
+        System.out.println("=== == vs equals() ===");
+        System.out.println("s1 == s2 (both literals): " + (s1 == s2));
+        System.out.println("s1 == s4 (literal vs new): " + (s1 == s4));
+        System.out.println("s1.equals(s4): " + s1.equals(s4));
+        
+        System.out.println("");
+        
+        // compareTo() - Lexicographical comparison
+        // Returns: negative if s1 < s2, 0 if equal, positive if s1 > s2
+        System.out.println("=== compareTo() Method ===");
+        System.out.println("\"Hello\".compareTo(\"Hello\") = " + s1.compareTo(s2));
+        System.out.println("\"Hello\".compareTo(\"World\") = " + s1.compareTo(s5));
+        System.out.println("\"Hello\".compareTo(\"Apple\") = " + s1.compareTo(s6));
+        System.out.println("\"Apple\".compareTo(\"Hello\") = " + s6.compareTo(s1));
+        
+        System.out.println("");
+        
+        // Explanation of compareTo
+        System.out.println("=== compareTo() Explanation ===");
+        System.out.println("Negative: First string comes before second alphabetically");
+        System.out.println("Zero: Strings are equal");
+        System.out.println("Positive: First string comes after second alphabetically");
+        
+        System.out.println("");
+        
+        // compareToIgnoreCase()
+        System.out.println("=== compareToIgnoreCase() Method ===");
+        System.out.println("\"Hello\".compareToIgnoreCase(\"hello\") = " + s1.compareToIgnoreCase(s3));
+        System.out.println("\"Hello\".compareToIgnoreCase(\"WORLD\") = " + s1.compareToIgnoreCase("WORLD"));
+    }
+}
+
+OUTPUT:
+-------
+=== equals() Method ===
+"Hello".equals("Hello") = true
+"Hello".equals("hello") = false
+"Hello".equals(new String("Hello")) = true
+
+=== equalsIgnoreCase() Method ===
+"Hello".equalsIgnoreCase("hello") = true
+"Hello".equalsIgnoreCase("HELLO") = true
+"Hello".equalsIgnoreCase("World") = false
+
+=== == vs equals() ===
+s1 == s2 (both literals): true
+s1 == s4 (literal vs new): false
+s1.equals(s4): true
+
+=== compareTo() Method ===
+"Hello".compareTo("Hello") = 0
+"Hello".compareTo("World") = -15
+"Hello".compareTo("Apple") = 7
+"Apple".compareTo("Hello") = -7
+
+=== compareTo() Explanation ===
+Negative: First string comes before second alphabetically
+Zero: Strings are equal
+Positive: First string comes after second alphabetically
+
+=== compareToIgnoreCase() Method ===
+"Hello".compareToIgnoreCase("hello") = 0
+"Hello".compareToIgnoreCase("WORLD") = -15
+
+
+IMPORTANT RULE:
+---------------
++------------------------------------------------------------------+
+|  ALWAYS use .equals() to compare String content                  |
+|  NEVER use == to compare String content                          |
+|                                                                  |
+|  == compares references (memory addresses)                       |
+|  .equals() compares actual content                               |
++------------------------------------------------------------------+
+
+
+================================================================================
+                    3.5 CASE CONVERSION METHODS
+================================================================================
+
+--------------------------------------------------------------------------------
+EXAMPLE 7: toLowerCase(), toUpperCase()
+--------------------------------------------------------------------------------
+
+public class StringCaseConversion {
+    public static void main(String[] args) {
+        
+        String mixed = "Hello World";
+        String upper = "JAVA SELENIUM";
+        String lower = "automation testing";
+        
+        // toLowerCase() - Converts all characters to lowercase
+        System.out.println("=== toLowerCase() Method ===");
+        System.out.println("\"" + mixed + "\".toLowerCase() = " + mixed.toLowerCase());
+        System.out.println("\"" + upper + "\".toLowerCase() = " + upper.toLowerCase());
+        
+        System.out.println("");
+        
+        // toUpperCase() - Converts all characters to uppercase
+        System.out.println("=== toUpperCase() Method ===");
+        System.out.println("\"" + mixed + "\".toUpperCase() = " + mixed.toUpperCase());
+        System.out.println("\"" + lower + "\".toUpperCase() = " + lower.toUpperCase());
+        
+        System.out.println("");
+        
+        // Original string is unchanged (immutability)
+        System.out.println("=== Original Unchanged ===");
+        System.out.println("Original: " + mixed);
+        
+        System.out.println("");
+        
+        // Practical: Case-insensitive comparison
+        System.out.println("=== Practical: Case-Insensitive Search ===");
+        String pageTitle = "Welcome to Google Search";
+        String searchText = "GOOGLE";
+        
+        boolean found = pageTitle.toLowerCase().contains(searchText.toLowerCase());
+        System.out.println("Page Title: " + pageTitle);
+        System.out.println("Search for: " + searchText);
+        System.out.println("Found (case-insensitive): " + found);
+        
+        System.out.println("");
+        
+        // Practical: Convert to Title Case
+        System.out.println("=== Practical: Title Case Conversion ===");
+        String input = "john doe";
+        String[] words = input.split(" ");
+        StringBuilder titleCase = new StringBuilder();
+        
+        for (String word : words) {
+            if (word.length() > 0) {
+                titleCase.append(word.substring(0, 1).toUpperCase());
+                titleCase.append(word.substring(1).toLowerCase());
+                titleCase.append(" ");
+            }
+        }
+        
+        System.out.println("Input: " + input);
+        System.out.println("Title Case: " + titleCase.toString().trim());
+    }
+}
+
+OUTPUT:
+-------
+=== toLowerCase() Method ===
+"Hello World".toLowerCase() = hello world
+"JAVA SELENIUM".toLowerCase() = java selenium
+
+=== toUpperCase() Method ===
+"Hello World".toUpperCase() = HELLO WORLD
+"automation testing".toUpperCase() = AUTOMATION TESTING
+
+=== Original Unchanged ===
+Original: Hello World
+
+=== Practical: Case-Insensitive Search ===
+Page Title: Welcome to Google Search
+Search for: GOOGLE
+Found (case-insensitive): true
+
+=== Practical: Title Case Conversion ===
+Input: john doe
+Title Case: John Doe
+
+
+================================================================================
+                    3.6 TRIMMING METHODS
+================================================================================
+
+--------------------------------------------------------------------------------
+EXAMPLE 8: trim(), strip(), stripLeading(), stripTrailing()
+--------------------------------------------------------------------------------
+
+public class StringTrimMethods {
+    public static void main(String[] args) {
+        
+        String text = "   Hello World   ";
+        String leadingSpace = "   Hello";
+        String trailingSpace = "Hello   ";
+        
+        System.out.println("=== Original Strings ===");
+        System.out.println("text: \"" + text + "\" (length: " + text.length() + ")");
+        
+        System.out.println("");
+        
+        // trim() - Removes leading and trailing whitespace (ASCII spaces)
+        System.out.println("=== trim() Method ===");
+        String trimmed = text.trim();
+        System.out.println("trim(): \"" + trimmed + "\" (length: " + trimmed.length() + ")");
+        
+        System.out.println("");
+        
+        // strip() - Removes leading and trailing whitespace (Unicode-aware) - Java 11+
+        System.out.println("=== strip() Method (Java 11+) ===");
+        String stripped = text.strip();
+        System.out.println("strip(): \"" + stripped + "\" (length: " + stripped.length() + ")");
+        
+        System.out.println("");
+        
+        // stripLeading() - Removes only leading whitespace - Java 11+
+        System.out.println("=== stripLeading() Method (Java 11+) ===");
+        String stripLead = text.stripLeading();
+        System.out.println("stripLeading(): \"" + stripLead + "\" (length: " + stripLead.length() + ")");
+        
+        System.out.println("");
+        
+        // stripTrailing() - Removes only trailing whitespace - Java 11+
+        System.out.println("=== stripTrailing() Method (Java 11+) ===");
+        String stripTrail = text.stripTrailing();
+        System.out.println("stripTrailing(): \"" + stripTrail + "\" (length: " + stripTrail.length() + ")");
+        
+        System.out.println("");
+        
+        // trim() vs strip() difference
+        System.out.println("=== trim() vs strip() ===");
+        System.out.println("trim() - Removes ASCII whitespace (space, tab, newline)");
+        System.out.println("strip() - Removes Unicode whitespace (more comprehensive)");
+        System.out.println("For most cases, both work the same.");
+        
+        System.out.println("");
+        
+        // Practical: Clean user input
+        System.out.println("=== Practical: Clean User Input ===");
+        String userInput = "  admin@email.com  ";
+        String cleanInput = userInput.trim().toLowerCase();
+        System.out.println("Raw input: \"" + userInput + "\"");
+        System.out.println("Cleaned: \"" + cleanInput + "\"");
+    }
+}
+
+OUTPUT:
+-------
+=== Original Strings ===
+text: "   Hello World   " (length: 17)
+
+=== trim() Method ===
+trim(): "Hello World" (length: 11)
+
+=== strip() Method (Java 11+) ===
+strip(): "Hello World" (length: 11)
+
+=== stripLeading() Method (Java 11+) ===
+stripLeading(): "Hello World   " (length: 14)
+
+=== stripTrailing() Method (Java 11+) ===
+stripTrailing(): "   Hello World" (length: 14)
+
+=== trim() vs strip() ===
+trim() - Removes ASCII whitespace (space, tab, newline)
+strip() - Removes Unicode whitespace (more comprehensive)
+For most cases, both work the same.
+
+=== Practical: Clean User Input ===
+Raw input: "  admin@email.com  "
+Cleaned: "admin@email.com"
+
+
+================================================================================
+                    3.7 SUBSTRING METHODS
+================================================================================
+
+--------------------------------------------------------------------------------
+EXAMPLE 9: substring()
+--------------------------------------------------------------------------------
+
+public class StringSubstringMethods {
+    public static void main(String[] args) {
+        
+        String text = "Hello World";
+        //             01234567890
+        //             0         1
+        
+        System.out.println("String: \"" + text + "\"");
+        System.out.println("Index:   01234567890");
+        System.out.println("");
+        
+        // substring(beginIndex) - From beginIndex to end
+        System.out.println("=== substring(beginIndex) ===");
+        System.out.println("substring(0) = \"" + text.substring(0) + "\"");
+        System.out.println("substring(6) = \"" + text.substring(6) + "\"");
+        System.out.println("substring(10) = \"" + text.substring(10) + "\"");
+        
+        System.out.println("");
+        
+        // substring(beginIndex, endIndex) - From beginIndex to endIndex-1
+        System.out.println("=== substring(beginIndex, endIndex) ===");
+        System.out.println("substring(0, 5) = \"" + text.substring(0, 5) + "\"");
+        System.out.println("substring(6, 11) = \"" + text.substring(6, 11) + "\"");
+        System.out.println("substring(0, 1) = \"" + text.substring(0, 1) + "\"");
+        
+        System.out.println("");
+        
+        // Note: endIndex is exclusive
+        System.out.println("=== Important: endIndex is EXCLUSIVE ===");
+        System.out.println("substring(0, 5) returns characters at index 0,1,2,3,4");
+        System.out.println("It does NOT include character at index 5");
+        
+        System.out.println("");
+        
+        // Practical examples
+        System.out.println("=== Practical Examples ===");
+        
+        // Extract first name from full name
+        String fullName = "John Doe";
+        int spaceIndex = fullName.indexOf(" ");
+        String firstName = fullName.substring(0, spaceIndex);
+        String lastName = fullName.substring(spaceIndex + 1);
+        System.out.println("Full Name: " + fullName);
+        System.out.println("First Name: " + firstName);
+        System.out.println("Last Name: " + lastName);
+        
+        System.out.println("");
+        
+        // Extract domain from email
+        String email = "user@example.com";
+        int atIndex = email.indexOf("@");
+        String username = email.substring(0, atIndex);
+        String domain = email.substring(atIndex + 1);
+        System.out.println("Email: " + email);
+        System.out.println("Username: " + username);
+        System.out.println("Domain: " + domain);
+        
+        System.out.println("");
+        
+        // Extract file extension
+        String filename = "report.pdf";
+        int dotIndex = filename.lastIndexOf(".");
+        String name = filename.substring(0, dotIndex);
+        String extension = filename.substring(dotIndex + 1);
+        System.out.println("Filename: " + filename);
+        System.out.println("Name: " + name);
+        System.out.println("Extension: " + extension);
+    }
+}
+
+OUTPUT:
+-------
+String: "Hello World"
+Index:   01234567890
+
+=== substring(beginIndex) ===
+substring(0) = "Hello World"
+substring(6) = "World"
+substring(10) = "d"
+
+=== substring(beginIndex, endIndex) ===
+substring(0, 5) = "Hello"
+substring(6, 11) = "World"
+substring(0, 1) = "H"
+
+=== Important: endIndex is EXCLUSIVE ===
+substring(0, 5) returns characters at index 0,1,2,3,4
+It does NOT include character at index 5
+
+=== Practical Examples ===
+Full Name: John Doe
+First Name: John
+Last Name: Doe
+
+Email: user@example.com
+Username: user
+Domain: example.com
+
+Filename: report.pdf
+Name: report
+Extension: pdf
+
+
+================================================================================
+                    3.8 REPLACE METHODS
+================================================================================
+
+--------------------------------------------------------------------------------
+EXAMPLE 10: replace(), replaceAll(), replaceFirst()
+--------------------------------------------------------------------------------
+
+public class StringReplaceMethods {
+    public static void main(String[] args) {
+        
+        String text = "Hello World World";
+        
+        // replace(oldChar, newChar) - Replace all occurrences of character
+        System.out.println("=== replace(char, char) ===");
+        System.out.println("Original: " + text);
+        System.out.println("replace('o', '0'): " + text.replace('o', '0'));
+        System.out.println("replace('l', 'L'): " + text.replace('l', 'L'));
+        
+        System.out.println("");
+        
+        // replace(oldString, newString) - Replace all occurrences of string
+        System.out.println("=== replace(String, String) ===");
+        System.out.println("replace(\"World\", \"Java\"): " + text.replace("World", "Java"));
+        System.out.println("replace(\"o\", \"00\"): " + text.replace("o", "00"));
+        
+        System.out.println("");
+        
+        // replaceAll(regex, replacement) - Replace using regular expression
+        System.out.println("=== replaceAll(regex, replacement) ===");
+        String numbers = "Phone: 123-456-7890";
+        System.out.println("Original: " + numbers);
+        System.out.println("Remove all digits: " + numbers.replaceAll("[0-9]", "X"));
+        System.out.println("Remove all non-digits: " + numbers.replaceAll("[^0-9]", ""));
+        
+        String multiSpace = "Hello    World   Java";
+        System.out.println("Original: \"" + multiSpace + "\"");
+        System.out.println("Single space: \"" + multiSpace.replaceAll("\\s+", " ") + "\"");
+        
+        System.out.println("");
+        
+        // replaceFirst(regex, replacement) - Replace only first occurrence
+        System.out.println("=== replaceFirst(regex, replacement) ===");
+        System.out.println("Original: " + text);
+        System.out.println("replaceFirst(\"World\", \"Java\"): " + text.replaceFirst("World", "Java"));
+        
+        System.out.println("");
+        
+        // Practical examples
+        System.out.println("=== Practical Examples ===");
+        
+        // Mask credit card number
+        String creditCard = "[REDACTED:CREDIT_DEBIT_NUMBER]";
+        String masked = creditCard.substring(0, creditCard.length() - 4)
+                                  .replaceAll("[0-9]", "*") 
+                        + creditCard.substring(creditCard.length() - 4);
+        System.out.println("Original: " + creditCard);
+        System.out.println("Masked: " + masked);
+        
+        System.out.println("");
+        
+        // Clean phone number
+        String phone = "(123) 456-7890";
+        String cleanPhone = phone.replaceAll("[^0-9]", "");
+        System.out.println("Original: " + phone);
+        System.out.println("Clean: " + cleanPhone);
+        
+        System.out.println("");
+        
+        // Replace HTML tags
+        String html = "<p>Hello <b>World</b></p>";
+        String plainText = html.replaceAll("<[^>]*>", "");
+        System.out.println("HTML: " + html);
+        System.out.println("Plain text: " + plainText);
+    }
+}
+
+OUTPUT:
+-------
+=== replace(char, char) ===
+Original: Hello World World
+replace('o', '0'): Hell0 W0rld W0rld
+replace('l', 'L'): HeLLo WorLd WorLd
+
+=== replace(String, String) ===
+replace("World", "Java"): Hello Java Java
+replace("o", "00"): Hell00 W00rld W00rld
+
+=== replaceAll(regex, replacement) ===
+Original: Phone: 123-456-7890
+Remove all digits: Phone: XXX-XXX-XXXX
+Remove all non-digits: 1234567890
+Original: "Hello    World   Java"
+Single space: "Hello World Java"
+
+=== replaceFirst(regex, replacement) ===
+Original: Hello World World
+replaceFirst("World", "Java"): Hello Java World
+
+=== Practical Examples ===
+Original: 1234-5678-9012-3456
+Masked: ****-****-****-3456
+
+Original: (123) 456-7890
+Clean: 1234567890
+
+HTML: <p>Hello <b>World</b></p>
+Plain text: Hello World
+
+
+================================================================================
+                    3.9 SPLIT AND JOIN METHODS
+================================================================================
+
+--------------------------------------------------------------------------------
+EXAMPLE 11: split(), join()
+--------------------------------------------------------------------------------
+
+import java.util.Arrays;
+
+public class StringSplitJoin {
+    public static void main(String[] args) {
+        
+        // split(delimiter) - Splits string into array
+        System.out.println("=== split() Method ===");
+        
+        // Split by space
+        String sentence = "Hello World Java Selenium";
+        String[] words = sentence.split(" ");
+        System.out.println("Original: " + sentence);
+        System.out.println("Split by space: " + Arrays.toString(words));
+        
+        System.out.println("");
+        
+        // Split by comma
+        String csv = "apple,banana,cherry,date";
+        String[] fruits = csv.split(",");
+        System.out.println("Original: " + csv);
+        System.out.println("Split by comma: " + Arrays.toString(fruits));
+        
+        System.out.println("");
+        
+        // Split by multiple delimiters using regex
+        String data = "apple;banana,cherry:date";
+        String[] items = data.split("[;,:]");
+        System.out.println("Original: " + data);
+        System.out.println("Split by ; , or : " + Arrays.toString(items));
+        
+        System.out.println("");
+        
+        // Split with limit
+        String text = "one-two-three-four-five";
+        String[] parts = text.split("-", 3);
+        System.out.println("Original: " + text);
+        System.out.println("Split with limit 3: " + Arrays.toString(parts));
+        
+        System.out.println("");
+        
+        // join() - Joins array elements into string
+        System.out.println("=== String.join() Method ===");
+        
+        String[] array = {"Java", "Selenium", "TestNG"};
+        String joined = String.join(", ", array);
+        System.out.println("Array: " + Arrays.toString(array));
+        System.out.println("Joined with ', ': " + joined);
+        
+        String joined2 = String.join("-", array);
+        System.out.println("Joined with '-': " + joined2);
+        
+        System.out.println("");
+        
+        // Practical: Parse CSV line
+        System.out.println("=== Practical: Parse CSV Line ===");
+        String csvLine = "John,Doe,john@email.com,Developer";
+        String[] fields = csvLine.split(",");
+        
+        System.out.println("CSV: " + csvLine);
+        System.out.println("First Name: " + fields[0]);
+        System.out.println("Last Name: " + fields[1]);
+        System.out.println("Email: " + fields[2]);
+        System.out.println("Role: " + fields[3]);
+        
+        System.out.println("");
+        
+        // Practical: Parse URL parameters
+        System.out.println("=== Practical: Parse URL Parameters ===");
+        String url = "https://example.com?name=John&age=25&city=NYC";
+        String queryString = url.split("\\?")[1];
+        String[] params = queryString.split("&");
+        
+        System.out.println("URL: " + url);
+        System.out.println("Parameters:");
+        for (String param : params) {
+            String[] keyValue = param.split("=");
+            System.out.println("  " + keyValue[0] + " = " + keyValue[1]);
+        }
+    }
+}
+
+OUTPUT:
+-------
+=== split() Method ===
+Original: Hello World Java Selenium
+Split by space: [Hello, World, Java, Selenium]
+
+Original: apple,banana,cherry,date
+Split by comma: [apple, banana, cherry, date]
+
+Original: apple;banana,cherry:date
+Split by ; , or : [apple, banana, cherry, date]
+
+Original: one-two-three-four-five
+Split with limit 3: [one, two, three-four-five]
+
+=== String.join() Method ===
+Array: [Java, Selenium, TestNG]
+Joined with ', ': Java, Selenium, TestNG
+Joined with '-': Java-Selenium-TestNG
+
+=== Practical: Parse CSV Line ===
+CSV: John,Doe,john@email.com,Developer
+First Name: John
+Last Name: Doe
+Email: john@email.com
+Role: Developer
+
+=== Practical: Parse URL Parameters ===
+URL: https://example.com?name=John&age=25&city=NYC
+Parameters:
+  name = John
+  age = 25
+  city = NYC
+
+
+================================================================================
+                    3.10 START AND END CHECK METHODS
+================================================================================
+
+--------------------------------------------------------------------------------
+EXAMPLE 12: startsWith(), endsWith()
+--------------------------------------------------------------------------------
+
+public class StringStartEndMethods {
+    public static void main(String[] args) {
+        
+        String url = "https://www.selenium.dev/documentation";
+        String filename = "test_report.pdf";
+        String email = "user@example.com";
+        
+        // startsWith() - Check if string starts with specified prefix
+        System.out.println("=== startsWith() Method ===");
+        System.out.println("URL: " + url);
+        System.out.println("startsWith(\"https\"): " + url.startsWith("https"));
+        System.out.println("startsWith(\"http\"): " + url.startsWith("http"));
+        System.out.println("startsWith(\"ftp\"): " + url.startsWith("ftp"));
+        
+        // startsWith with offset
+        System.out.println("startsWith(\"www\", 8): " + url.startsWith("www", 8));
+        
+        System.out.println("");
+        
+        // endsWith() - Check if string ends with specified suffix
+        System.out.println("=== endsWith() Method ===");
+        System.out.println("Filename: " + filename);
+        System.out.println("endsWith(\".pdf\"): " + filename.endsWith(".pdf"));
+        System.out.println("endsWith(\".doc\"): " + filename.endsWith(".doc"));
+        System.out.println("endsWith(\".PDF\"): " + filename.endsWith(".PDF"));
+        
+        System.out.println("");
+        
+        // Practical: Validate URL protocol
+        System.out.println("=== Practical: Validate URL Protocol ===");
+        String[] urls = {
+            "https://secure.com",
+            "http://insecure.com",
+            "ftp://files.com",
+            "www.noprotocol.com"
+        };
+        
+        for (String u : urls) {
+            String protocol;
+            if (u.startsWith("https://")) {
+                protocol = "HTTPS (Secure)";
+            } else if (u.startsWith("http://")) {
+                protocol = "HTTP (Insecure)";
+            } else if (u.startsWith("ftp://")) {
+                protocol = "FTP";
+            } else {
+                protocol = "Unknown/Missing";
+            }
+            System.out.println(u + " -> " + protocol);
+        }
+        
+        System.out.println("");
+        
+        // Practical: Validate file types
+        System.out.println("=== Practical: Validate File Types ===");
+        String[] files = {"report.pdf", "image.png", "data.xlsx", "script.js"};
+        String[] allowedExtensions = {".pdf", ".xlsx", ".doc"};
+        
+        for (String file : files) {
+            boolean allowed = false;
+            for (String ext : allowedExtensions) {
+                if (file.endsWith(ext)) {
+                    allowed = true;
+                    break;
+                }
+            }
+            System.out.println(file + " -> " + (allowed ? "ALLOWED" : "NOT ALLOWED"));
+        }
+        
+        System.out.println("");
+        
+        // Practical: Email validation
+        System.out.println("=== Practical: Basic Email Validation ===");
+        String[] emails = {"user@email.com", "invalid.email", "test@", "@domain.com"};
+        
+        for (String e : emails) {
+            boolean valid = e.contains("@") && 
+                           !e.startsWith("@") && 
+                           !e.endsWith("@") &&
+                           e.indexOf("@") == e.lastIndexOf("@");
+            System.out.println(e + " -> " + (valid ? "VALID" : "INVALID"));
+        }
+    }
+}
+
+OUTPUT:
+-------
+=== startsWith() Method ===
+URL: https://www.selenium.dev/documentation
+startsWith("https"): true
+startsWith("http"): true
+startsWith("ftp"): false
+startsWith("www", 8): true
+
+=== endsWith() Method ===
+Filename: test_report.pdf
+endsWith(".pdf"): true
+endsWith(".doc"): false
+endsWith(".PDF"): false
+
+=== Practical: Validate URL Protocol ===
+https://secure.com -> HTTPS (Secure)
+http://insecure.com -> HTTP (Insecure)
+ftp://files.com -> FTP
+www.noprotocol.com -> Unknown/Missing
+
+=== Practical: Validate File Types ===
+report.pdf -> ALLOWED
+image.png -> NOT ALLOWED
+data.xlsx -> ALLOWED
+script.js -> NOT ALLOWED
+
+=== Practical: Basic Email Validation ===
+user@email.com -> VALID
+invalid.email -> INVALID
+test@ -> INVALID
+@domain.com -> INVALID
+
+
+================================================================================
+                    3.11 CONCATENATION METHODS
+================================================================================
+
+--------------------------------------------------------------------------------
+EXAMPLE 13: concat(), + operator, StringBuilder
+--------------------------------------------------------------------------------
+
+public class StringConcatenation {
+    public static void main(String[] args) {
+        
+        String first = "Hello";
+        String second = "World";
+        
+        // Method 1: concat() method
+        System.out.println("=== concat() Method ===");
+        String result1 = first.concat(" ").concat(second);
+        System.out.println("first.concat(\" \").concat(second) = " + result1);
+        
+        System.out.println("");
+        
+        // Method 2: + operator (most common)
+        System.out.println("=== + Operator ===");
+        String result2 = first + " " + second;
+        System.out.println("first + \" \" + second = " + result2);
+        
+        // Concatenating with other types
+        int number = 42;
+        String result3 = "Number: " + number;
+        System.out.println("\"Number: \" + 42 = " + result3);
+        
+        System.out.println("");
+        
+        // Method 3: StringBuilder (efficient for multiple concatenations)
+        System.out.println("=== StringBuilder ===");
+        StringBuilder sb = new StringBuilder();
+        sb.append("Hello");
+        sb.append(" ");
+        sb.append("World");
+        sb.append(" ");
+        sb.append(2024);
+        String result4 = sb.toString();
+        System.out.println("StringBuilder result: " + result4);
+        
+        System.out.println("");
+        
+        // Performance comparison
+        System.out.println("=== Performance Comparison ===");
+        
+        // Using + in loop (INEFFICIENT)
+        long start1 = System.currentTimeMillis();
+        String inefficient = "";
+        for (int i = 0; i < 10000; i++) {
+            inefficient = inefficient + "a";    // Creates new String each time!
+        }
+        long end1 = System.currentTimeMillis();
+        System.out.println("Using + operator (10000 iterations): " + (end1 - start1) + " ms");
+        
+        // Using StringBuilder (EFFICIENT)
+        long start2 = System.currentTimeMillis();
+        StringBuilder efficient = new StringBuilder();
+        for (int i = 0; i < 10000; i++) {
+            efficient.append("a");    // Modifies same object
+        }
+        String efficientResult = efficient.toString();
+        long end2 = System.currentTimeMillis();
+        System.out.println("Using StringBuilder (10000 iterations): " + (end2 - start2) + " ms");
+        
+        System.out.println("");
+        
+        // Method 4: String.format()
+        System.out.println("=== String.format() ===");
+        String name = "John";
+        int age = 25;
+        String formatted = String.format("Name: %s, Age: %d", name, age);
+        System.out.println(formatted);
+        
+        // Method 5: String.join()
+        System.out.println("=== String.join() ===");
+        String joined = String.join("-", "2024", "01", "15");
+        System.out.println("Date: " + joined);
+    }
+}
+
+OUTPUT:
+-------
+=== concat() Method ===
+first.concat(" ").concat(second) = Hello World
+
+=== + Operator ===
+first + " " + second = Hello World
+"Number: " + 42 = Number: 42
+
+=== StringBuilder ===
+StringBuilder result: Hello World 2024
+
+=== Performance Comparison ===
+Using + operator (10000 iterations): 187 ms
+Using StringBuilder (10000 iterations): 1 ms
+
+=== String.format() ===
+Name: John, Age: 25
+
+=== String.join() ===
+Date: 2024-01-15
+
+
+WHEN TO USE WHAT:
+-----------------
++-------------------+------------------------------------------+
+| Method            | When to Use                              |
++-------------------+------------------------------------------+
+| + operator        | Simple concatenation, few strings        |
+| concat()          | Concatenating two strings                |
+| StringBuilder     | Loop concatenation, many strings         |
+| String.format()   | Formatted output with placeholders       |
+| String.join()     | Joining array elements with delimiter    |
++-------------------+------------------------------------------+
+
+
+================================================================================
+                    3.12 FORMATTING METHODS
+================================================================================
+
+--------------------------------------------------------------------------------
+EXAMPLE 14: String.format(), formatted()
+--------------------------------------------------------------------------------
+
+public class StringFormatMethods {
+    public static void main(String[] args) {
+        
+        // String.format() - Create formatted strings
+        System.out.println("=== String.format() Method ===");
+        
+        // Basic format specifiers
+        // %s - String
+        // %d - Integer
+        // %f - Floating point
+        // %b - Boolean
+        // %c - Character
+        // %n - New line
+        
+        String name = "John";
+        int age = 25;
+        double salary = 50000.75;
+        boolean active = true;
+        
+        String result = String.format("Name: %s, Age: %d", name, age);
+        System.out.println(result);
+        
+        result = String.format("Salary: $%.2f", salary);
+        System.out.println(result);
+        
+        result = String.format("Active: %b", active);
+        System.out.println(result);
+        
+        System.out.println("");
+        
+        // Width and alignment
+        System.out.println("=== Width and Alignment ===");
+        
+        // Right align with width
+        System.out.println(String.format("|%10s|", "Java"));      // Right align
+        System.out.println(String.format("|%-10s|", "Java"));     // Left align
+        System.out.println(String.format("|%10d|", 42));          // Right align number
+        System.out.println(String.format("|%-10d|", 42));         // Left align number
+        
+        System.out.println("");
+        
+        // Padding with zeros
+        System.out.println("=== Zero Padding ===");
+        System.out.println(String.format("%05d", 42));            // 00042
+        System.out.println(String.format("%08d", 12345));         // 00012345
+        
+        System.out.println("");
+        
+        // Floating point precision
+        System.out.println("=== Floating Point Precision ===");
+        double pi = 3.14159265359;
+        System.out.println(String.format("Default: %f", pi));
+        System.out.println(String.format("2 decimals: %.2f", pi));
+        System.out.println(String.format("4 decimals: %.4f", pi));
+        System.out.println(String.format("Width 10, 2 decimals: %10.2f", pi));
+        
+        System.out.println("");
+        
+        // Practical: Generate report table
+        System.out.println("=== Practical: Report Table ===");
+        String header = String.format("| %-10s | %-15s | %10s |", "ID", "Name", "Score");
+        String separator = String.format("+%s+%s+%s+", "-".repeat(12), "-".repeat(17), "-".repeat(12));
+        
+        System.out.println(separator);
+        System.out.println(header);
+        System.out.println(separator);
+        System.out.println(String.format("| %-10s | %-15s | %10.2f |", "TC001", "Login Test", 95.50));
+        System.out.println(String.format("| %-10s | %-15s | %10.2f |", "TC002", "Search Test", 88.75));
+        System.out.println(String.format("| %-10s | %-15s | %10.2f |", "TC003", "Checkout Test", 92.00));
+        System.out.println(separator);
+        
+        System.out.println("");
+        
+        // printf() - Print formatted directly
+        System.out.println("=== printf() Method ===");
+        System.out.printf("Name: %s%n", "Alice");
+        System.out.printf("Age: %d years%n", 30);
+        System.out.printf("Height: %.1f cm%n", 165.5);
+        
+        System.out.println("");
+        
+        // formatted() - Java 15+ instance method
+        System.out.println("=== formatted() Method (Java 15+) ===");
+        String template = "Hello, %s! You have %d messages.";
+        String output = template.formatted("User", 5);
+        System.out.println(output);
+    }
+}
+
+OUTPUT:
+-------
+=== String.format() Method ===
+Name: John, Age: 25
+Salary: $50000.75
+Active: true
+
+=== Width and Alignment ===
+|      Java|
+|Java      |
+|        42|
+|42        |
+
+=== Zero Padding ===
+00042
+00012345
+
+=== Floating Point Precision ===
+Default: 3.141593
+2 decimals: 3.14
+4 decimals: 3.1416
+Width 10, 2 decimals:       3.14
+
+=== Practical: Report Table ===
++------------+-----------------+------------+
+| ID         | Name            |      Score |
++------------+-----------------+------------+
+| TC001      | Login Test      |      95.50 |
+| TC002      | Search Test     |      88.75 |
+| TC003      | Checkout Test   |      92.00 |
++------------+-----------------+------------+
+
+=== printf() Method ===
+Name: Alice
+Age: 30 years
+Height: 165.5 cm
+
+=== formatted() Method (Java 15+) ===
+Hello, User! You have 5 messages.
+
+
+FORMAT SPECIFIER REFERENCE:
+---------------------------
++------------+------------------+---------------------------+
+| Specifier  | Type             | Example                   |
++------------+------------------+---------------------------+
+| %s         | String           | String.format("%s", "Hi") |
+| %d         | Integer          | String.format("%d", 42)   |
+| %f         | Float/Double     | String.format("%f", 3.14) |
+| %.2f       | 2 decimal places | String.format("%.2f", 3.14159) |
+| %b         | Boolean          | String.format("%b", true) |
+| %c         | Character        | String.format("%c", 'A')  |
+| %n         | New line         | String.format("Hi%nBye")  |
+| %10s       | Width 10, right  | String.format("%10s", "Hi") |
+| %-10s      | Width 10, left   | String.format("%-10s", "Hi") |
+| %05d       | Zero-padded      | String.format("%05d", 42) |
++------------+------------------+---------------------------+
+
+
+================================================================================
+                    3.13 OTHER USEFUL METHODS
+================================================================================
+
+--------------------------------------------------------------------------------
+EXAMPLE 15: valueOf(), repeat(), matches(), intern()
+--------------------------------------------------------------------------------
+
+public class StringOtherMethods {
+    public static void main(String[] args) {
+        
+        // valueOf() - Convert other types to String
+        System.out.println("=== String.valueOf() ===");
+        int num = 42;
+        double decimal = 3.14;
+        boolean flag = true;
+        char ch = 'A';
+        char[] chars = {'H', 'e', 'l', 'l', 'o'};
+        
+        System.out.println("int to String: " + String.valueOf(num));
+        System.out.println("double to String: " + String.valueOf(decimal));
+        System.out.println("boolean to String: " + String.valueOf(flag));
+        System.out.println("char to String: " + String.valueOf(ch));
+        System.out.println("char[] to String: " + String.valueOf(chars));
+        
+        System.out.println("");
+        
+        // repeat() - Repeat string n times (Java 11+)
+        System.out.println("=== repeat() Method (Java 11+) ===");
+        String dash = "-";
+        System.out.println("dash.repeat(20): " + dash.repeat(20));
+        
+        String star = "*";
+        System.out.println("star.repeat(10): " + star.repeat(10));
+        
+        String word = "Ha";
+        System.out.println("\"Ha\".repeat(5): " + word.repeat(5));
+        
+        System.out.println("");
+        
+        // matches() - Check if string matches regex
+        System.out.println("=== matches() Method ===");
+        
+        // Check if string is all digits
+        String digits = "12345";
+        String mixed = "123abc";
+        System.out.println("\"12345\".matches(\"\\\\d+\"): " + digits.matches("\\d+"));
+        System.out.println("\"123abc\".matches(\"\\\\d+\"): " + mixed.matches("\\d+"));
+        
+        // Check email pattern (basic)
+        String email1 = "user@example.com";
+        String email2 = "invalid-email";
+        String emailPattern = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
+        System.out.println("\"user@example.com\" valid: " + email1.matches(emailPattern));
+        System.out.println("\"invalid-email\" valid: " + email2.matches(emailPattern));
+        
+        System.out.println("");
+        
+        // intern() - Return canonical representation from String Pool
+        System.out.println("=== intern() Method ===");
+        String s1 = new String("Hello");
+        String s2 = "Hello";
+        String s3 = s1.intern();
+        
+        System.out.println("s1 == s2: " + (s1 == s2));        // false
+        System.out.println("s3 == s2: " + (s3 == s2));        // true
+        System.out.println("s1.intern() returns String Pool reference");
+        
+        System.out.println("");
+        
+        // lines() - Split into stream of lines (Java 11+)
+        System.out.println("=== lines() Method (Java 11+) ===");
+        String multiline = "Line 1\nLine 2\nLine 3";
+        System.out.println("Original:");
+        System.out.println(multiline);
+        System.out.println("\nUsing lines():");
+        multiline.lines().forEach(line -> System.out.println("  -> " + line));
+        
+        System.out.println("");
+        
+        // indent() - Add indentation (Java 12+)
+        System.out.println("=== indent() Method (Java 12+) ===");
+        String text = "Hello\nWorld";
+        System.out.println("Original:");
+        System.out.println(text);
+        System.out.println("\nWith indent(4):");
+        System.out.println(text.indent(4));
+    }
+}
+
+OUTPUT:
+-------
+=== String.valueOf() ===
+int to String: 42
+double to String: 3.14
+boolean to String: true
+char to String: A
+char[] to String: Hello
+
+=== repeat() Method (Java 11+) ===
+dash.repeat(20): --------------------
+star.repeat(10): **********
+"Ha".repeat(5): HaHaHaHaHa
+
+=== matches() Method ===
+"12345".matches("\\d+"): true
+"123abc".matches("\\d+"): false
+"user@example.com" valid: true
+"invalid-email" valid: false
+
+=== intern() Method ===
+s1 == s2: false
+s3 == s2: true
+s1.intern() returns String Pool reference
+
+=== lines() Method (Java 11+) ===
+Original:
+Line 1
+Line 2
+Line 3
+
+Using lines():
+  -> Line 1
+  -> Line 2
+  -> Line 3
+
+=== indent() Method (Java 12+) ===
+Original:
+Hello
+World
+
+With indent(4):
+    Hello
+    World
+
+
+================================================================================
+                    4. STRINGBUILDER AND STRINGBUFFER
+================================================================================
+
+Since Strings are immutable, Java provides StringBuilder and StringBuffer
+for mutable string operations.
+
++---------------+-------------+------------------------------------------+
+| Class         | Thread Safe | Use Case                                 |
++---------------+-------------+------------------------------------------+
+| String        | Yes         | When string won't change                 |
+| StringBuilder | No          | Single-threaded, multiple modifications  |
+| StringBuffer  | Yes         | Multi-threaded, multiple modifications   |
++---------------+-------------+------------------------------------------+
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 16: StringBuilder Methods
+--------------------------------------------------------------------------------
+
+public class StringBuilderExample {
+    public static void main(String[] args) {
+        
+        // Creating StringBuilder
+        System.out.println("=== Creating StringBuilder ===");
+        StringBuilder sb1 = new StringBuilder();           // Empty
+        StringBuilder sb2 = new StringBuilder("Hello");    // With initial value
+        StringBuilder sb3 = new StringBuilder(50);         // With initial capacity
+        
+        System.out.println("sb1: \"" + sb1 + "\" (length: " + sb1.length() + ")");
+        System.out.println("sb2: \"" + sb2 + "\" (length: " + sb2.length() + ")");
+        
+        System.out.println("");
+        
+        // append() - Add to end
+        System.out.println("=== append() Method ===");
+        StringBuilder sb = new StringBuilder("Hello");
+        System.out.println("Initial: " + sb);
+        
+        sb.append(" ");
+        sb.append("World");
+        sb.append(2024);
+        sb.append(true);
+        System.out.println("After appends: " + sb);
+        
+        // Method chaining
+        StringBuilder sb4 = new StringBuilder();
+        sb4.append("A").append("B").append("C").append("D");
+        System.out.println("Chained appends: " + sb4);
+        
+        System.out.println("");
+        
+        // insert() - Insert at specific position
+        System.out.println("=== insert() Method ===");
+        StringBuilder sb5 = new StringBuilder("Hello World");
+        System.out.println("Before: " + sb5);
+        
+        sb5.insert(6, "Beautiful ");
+        System.out.println("After insert(6, \"Beautiful \"): " + sb5);
+        
+        System.out.println("");
+        
+        // delete() and deleteCharAt()
+        System.out.println("=== delete() Methods ===");
+        StringBuilder sb6 = new StringBuilder("Hello World");
+        System.out.println("Before: " + sb6);
+        
+        sb6.delete(5, 11);    // Delete " World"
+        System.out.println("After delete(5, 11): " + sb6);
+        
+        sb6 = new StringBuilder("Hello");
+        sb6.deleteCharAt(0);
+        System.out.println("After deleteCharAt(0): " + sb6);
+        
+        System.out.println("");
+        
+        // replace()
+        System.out.println("=== replace() Method ===");
+        StringBuilder sb7 = new StringBuilder("Hello World");
+        System.out.println("Before: " + sb7);
+        
+        sb7.replace(6, 11, "Java");
+        System.out.println("After replace(6, 11, \"Java\"): " + sb7);
+        
+        System.out.println("");
+        
+        // reverse()
+        System.out.println("=== reverse() Method ===");
+        StringBuilder sb8 = new StringBuilder("Hello");
+        System.out.println("Before: " + sb8);
+        
+        sb8.reverse();
+        System.out.println("After reverse(): " + sb8);
+        
+        System.out.println("");
+        
+        // setCharAt()
+        System.out.println("=== setCharAt() Method ===");
+        StringBuilder sb9 = new StringBuilder("Hello");
+        System.out.println("Before: " + sb9);
+        
+        sb9.setCharAt(0, 'J');
+        System.out.println("After setCharAt(0, 'J'): " + sb9);
+        
+        System.out.println("");
+        
+        // toString() - Convert to String
+        System.out.println("=== toString() Method ===");
+        StringBuilder sb10 = new StringBuilder("Final Result");
+        String result = sb10.toString();
+        System.out.println("StringBuilder: " + sb10);
+        System.out.println("String: " + result);
+        
+        System.out.println("");
+        
+        // Practical: Build dynamic query
+        System.out.println("=== Practical: Build Dynamic SQL Query ===");
+        StringBuilder query = new StringBuilder("SELECT * FROM users WHERE 1=1");
+        
+        String name = "John";
+        Integer minAge = 18;
+        String status = "active";
+        
+        if (name != null) {
+            query.append(" AND name = '").append(name).append("'");
+        }
+        if (minAge != null) {
+            query.append(" AND age >= ").append(minAge);
+        }
+        if (status != null) {
+            query.append(" AND status = '").append(status).append("'");
+        }
+        
+        System.out.println("Query: " + query);
+    }
+}
+
+OUTPUT:
+-------
+=== Creating StringBuilder ===
+sb1: "" (length: 0)
+sb2: "Hello" (length: 5)
+
+=== append() Method ===
+Initial: Hello
+After appends: Hello World2024true
+Chained appends: ABCD
+
+=== insert() Method ===
+Before: Hello World
+After insert(6, "Beautiful "): Hello Beautiful World
+
+=== delete() Methods ===
+Before: Hello World
+After delete(5, 11): Hello
+After deleteCharAt(0): ello
+
+=== replace() Method ===
+Before: Hello World
+After replace(6, 11, "Java"): Hello Java
+
+=== reverse() Method ===
+Before: Hello
+After reverse(): olleH
+
+=== setCharAt() Method ===
+Before: Hello
+After setCharAt(0, 'J'): Jello
+
+=== toString() Method ===
+StringBuilder: Final Result
+String: Final Result
+
+=== Practical: Build Dynamic SQL Query ===
+Query: SELECT * FROM users WHERE 1=1 AND name = 'John' AND age >= 18 AND status = 'active'
+
+
+================================================================================
+                    5. STRINGS IN AUTOMATION CONTEXT
+================================================================================
+
+--------------------------------------------------------------------------------
+EXAMPLE 17: URL Handling
+--------------------------------------------------------------------------------
+
+public class StringAutomationURL {
+    public static void main(String[] args) {
+        
+        System.out.println("=== URL Handling in Automation ===");
+        System.out.println("");
+        
+        // Base URL and endpoint concatenation
+        String baseUrl = "https://api.example.com";
+        String endpoint = "/users";
+        String fullUrl = baseUrl + endpoint;
+        System.out.println("Full URL: " + fullUrl);
+        
+        System.out.println("");
+        
+        // Parse URL components
+        String url = "https://www.example.com:8080/path/page?name=John&age=25#section";
+        
+        System.out.println("URL: " + url);
+        System.out.println("");
+        
+        // Extract protocol
+        String protocol = url.substring(0, url.indexOf("://"));
+        System.out.println("Protocol: " + protocol);
+        
+        // Extract domain
+        int domainStart = url.indexOf("://") + 3;
+        int domainEnd = url.indexOf(":", domainStart);
+        if (domainEnd == -1) {
+            domainEnd = url.indexOf("/", domainStart);
+        }
+        String domain = url.substring(domainStart, domainEnd);
+        System.out.println("Domain: " + domain);
+        
+        // Extract port
+        int portStart = url.indexOf(":", domainStart) + 1;
+        int portEnd = url.indexOf("/", portStart);
+        String port = url.substring(portStart, portEnd);
+        System.out.println("Port: " + port);
+        
+        // Extract path
+        int pathStart = url.indexOf("/", domainStart);
+        int pathEnd = url.indexOf("?");
+        String path = url.substring(pathStart, pathEnd);
+        System.out.println("Path: " + path);
+        
+        // Extract query string
+        int queryStart = url.indexOf("?") + 1;
+        int queryEnd = url.indexOf("#");
+        String queryString = url.substring(queryStart, queryEnd);
+        System.out.println("Query: " + queryString);
+        
+        // Extract fragment
+        String fragment = url.substring(url.indexOf("#") + 1);
+        System.out.println("Fragment: " + fragment);
+        
+        System.out.println("");
+        
+        // Build URL with parameters
+        System.out.println("=== Building URL with Parameters ===");
+        String base = "https://example.com/search";
+        String param1 = "query=selenium";
+        String param2 = "page=1";
+        String param3 = "sort=date";
+        
+        String searchUrl = base + "?" + param1 + "&" + param2 + "&" + param3;
+        System.out.println("Search URL: " + searchUrl);
+        
+        // Using StringBuilder for multiple parameters
+        StringBuilder urlBuilder = new StringBuilder(base);
+        urlBuilder.append("?");
+        urlBuilder.append("query=").append("selenium");
+        urlBuilder.append("&page=").append(1);
+        urlBuilder.append("&sort=").append("date");
+        System.out.println("Built URL: " + urlBuilder);
+    }
+}
+
+OUTPUT:
+-------
+=== URL Handling in Automation ===
+
+Full URL: https://api.example.com/users
+
+URL: https://www.example.com:8080/path/page?name=John&age=25#section
+
+Protocol: https
+Domain: www.example.com
+Port: 8080
+Path: /path/page
+Query: name=John&age=25
+Fragment: section
+
+=== Building URL with Parameters ===
+Search URL: https://example.com/search?query=selenium&page=1&sort=date
+Built URL: https://example.com/search?query=selenium&page=1&sort=date
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 18: XPath and CSS Selector Building
+--------------------------------------------------------------------------------
+
+public class StringAutomationLocators {
+    public static void main(String[] args) {
+        
+        System.out.println("=== Building Dynamic XPath ===");
+        
+        // XPath with variable
+        String username = "testuser";
+        String xpathById = "//input[@id='" + username + "']";
+        System.out.println("XPath by ID: " + xpathById);
+        
+        // XPath with contains
+        String partialText = "Submit";
+        String xpathContains = "//button[contains(text(),'" + partialText + "')]";
+        System.out.println("XPath contains: " + xpathContains);
+        
+        // XPath with multiple attributes
+        String type = "submit";
+        String name = "login";
+        String xpathMultiple = "//input[@type='" + type + "' and @name='" + name + "']";
+        System.out.println("XPath multiple: " + xpathMultiple);
+        
+        // Using String.format for XPath
+        String xpathFormat = String.format("//div[@class='%s']//a[text()='%s']", "menu", "Home");
+        System.out.println("XPath formatted: " + xpathFormat);
+        
+        System.out.println("");
+        
+        System.out.println("=== Building Dynamic CSS Selectors ===");
+        
+        // CSS by ID
+        String elementId = "username";
+        String cssById = "#" + elementId;
+        System.out.println("CSS by ID: " + cssById);
+        
+        // CSS by class
+        String className = "btn-primary";
+        String cssByClass = "." + className;
+        System.out.println("CSS by class: " + cssByClass);
+        
+        // CSS with attribute
+        String attrName = "data-test";
+        String attrValue = "login-button";
+        String cssAttr = String.format("[%s='%s']", attrName, attrValue);
+        System.out.println("CSS by attribute: " + cssAttr);
+        
+        // Complex CSS selector
+        String cssComplex = String.format("div.%s > ul > li:nth-child(%d) > a", "navigation", 3);
+        System.out.println("CSS complex: " + cssComplex);
+        
+        System.out.println("");
+        
+        // Practical: Locator builder method
+        System.out.println("=== Practical: Dynamic Locator Methods ===");
+        
+        // Simulate method outputs
+        System.out.println("getXPathByText(\"Login\"): " + getXPathByText("Login"));
+        System.out.println("getXPathById(\"email\"): " + getXPathById("email"));
+        System.out.println("getCssById(\"password\"): " + getCssById("password"));
+    }
+    
+    public static String getXPathByText(String text) {
+        return String.format("//*[text()='%s']", text);
+    }
+    
+    public static String getXPathById(String id) {
+        return String.format("//*[@id='%s']", id);
+    }
+    
+    public static String getCssById(String id) {
+        return "#" + id;
+    }
+}
+
+OUTPUT:
+-------
+=== Building Dynamic XPath ===
+XPath by ID: //input[@id='testuser']
+XPath contains: //button[contains(text(),'Submit')]
+XPath multiple: //input[@type='submit' and @name='login']
+XPath formatted: //div[@class='menu']//a[text()='Home']
+
+=== Building Dynamic CSS Selectors ===
+CSS by ID: #username
+CSS by class: .btn-primary
+CSS by attribute: [data-test='login-button']
+CSS complex: div.navigation > ul > li:nth-child(3) > a
+
+=== Practical: Dynamic Locator Methods ===
+getX
+
+--------------------------------------------------------------------------------
+EXAMPLE 18: XPath and CSS Selector Building (CONTINUED)
+--------------------------------------------------------------------------------
+
+OUTPUT:
+-------
+=== Building Dynamic XPath ===
+XPath by ID: //input[@id='testuser']
+XPath contains: //button[contains(text(),'Submit')]
+XPath multiple: //input[@type='submit' and @name='login']
+XPath formatted: //div[@class='menu']//a[text()='Home']
+
+=== Building Dynamic CSS Selectors ===
+CSS by ID: #username
+CSS by class: .btn-primary
+CSS by attribute: [data-test='login-button']
+CSS complex: div.navigation > ul > li:nth-child(3) > a
+
+=== Practical: Dynamic Locator Methods ===
+getXPathByText("Login"): //*[text()='Login']
+getXPathById("email"): //*[@id='email']
+getCssById("password"): #password
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 19: Test Data Validation
+--------------------------------------------------------------------------------
+
+public class StringAutomationValidation {
+    public static void main(String[] args) {
+        
+        System.out.println("=== Input Validation Examples ===");
+        System.out.println("");
+        
+        // Email validation
+        System.out.println("--- Email Validation ---");
+        String[] emails = {
+            "user@example.com",
+            "invalid.email",
+            "user@.com",
+            "@example.com",
+            "user@example",
+            "user.name@example.co.uk"
+        };
+        
+        for (String email : emails) {
+            boolean valid = isValidEmail(email);
+            System.out.println(email + " -> " + (valid ? "VALID" : "INVALID"));
+        }
+        
+        System.out.println("");
+        
+        // Phone number validation
+        System.out.println("--- Phone Number Validation ---");
+        String[] phones = {
+            "1234567890",
+            "123-456-7890",
+            "(123) 456-7890",
+            "12345",
+            "abcdefghij"
+        };
+        
+        for (String phone : phones) {
+            String cleaned = phone.replaceAll("[^0-9]", "");
+            boolean valid = cleaned.length() == 10;
+            System.out.println(phone + " -> " + (valid ? "VALID" : "INVALID") + 
+                             " (digits: " + cleaned + ")");
+        }
+        
+        System.out.println("");
+        
+        // Password strength validation
+        System.out.println("--- Password Strength Validation ---");
+        String[] passwords = {
+            "abc",
+            "abcdefgh",
+            "Abcdefgh",
+            "Abcdefg1",
+            "Abcdef1!"
+        };
+        
+        for (String password : passwords) {
+            String strength = checkPasswordStrength(password);
+            System.out.println(password + " -> " + strength);
+        }
+        
+        System.out.println("");
+        
+        // Username validation
+        System.out.println("--- Username Validation ---");
+        String[] usernames = {
+            "john_doe",
+            "john.doe",
+            "john-doe",
+            "jo",
+            "john doe",
+            "john@doe"
+        };
+        
+        for (String username : usernames) {
+            boolean valid = isValidUsername(username);
+            System.out.println(username + " -> " + (valid ? "VALID" : "INVALID"));
+        }
+    }
+    
+    public static boolean isValidEmail(String email) {
+        if (email == null || email.isEmpty()) {
+            return false;
+        }
+        
+        // Basic validation
+        boolean hasAtSymbol = email.contains("@");
+        boolean hasDot = email.contains(".");
+        boolean notStartWithAt = !email.startsWith("@");
+        boolean notEndWithAt = !email.endsWith("@");
+        boolean notEndWithDot = !email.endsWith(".");
+        boolean singleAt = email.indexOf("@") == email.lastIndexOf("@");
+        boolean atBeforeDot = email.indexOf("@") < email.lastIndexOf(".");
+        
+        return hasAtSymbol && hasDot && notStartWithAt && notEndWithAt && 
+               notEndWithDot && singleAt && atBeforeDot;
+    }
+    
+    public static String checkPasswordStrength(String password) {
+        if (password.length() < 6) {
+            return "WEAK (too short)";
+        }
+        
+        boolean hasUpper = !password.equals(password.toLowerCase());
+        boolean hasLower = !password.equals(password.toUpperCase());
+        boolean hasDigit = password.matches(".*\\d.*");
+        boolean hasSpecial = password.matches(".*[!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>\\/?].*");
+        
+        int score = 0;
+        if (hasUpper) score++;
+        if (hasLower) score++;
+        if (hasDigit) score++;
+        if (hasSpecial) score++;
+        
+        if (score <= 1) return "WEAK";
+        if (score == 2) return "MEDIUM";
+        if (score == 3) return "STRONG";
+        return "VERY STRONG";
+    }
+    
+    public static boolean isValidUsername(String username) {
+        if (username == null || username.length() < 3) {
+            return false;
+        }
+        
+        // Only allow alphanumeric, underscore, and dot
+        return username.matches("^[a-zA-Z0-9_.]+$");
+    }
+}
+
+OUTPUT:
+-------
+=== Input Validation Examples ===
+
+--- Email Validation ---
+user@example.com -> VALID
+invalid.email -> INVALID
+user@.com -> INVALID
+@example.com -> INVALID
+user@example -> INVALID
+user.name@example.co.uk -> VALID
+
+--- Phone Number Validation ---
+1234567890 -> VALID (digits: 1234567890)
+123-456-7890 -> VALID (digits: 1234567890)
+(123) 456-7890 -> VALID (digits: 1234567890)
+12345 -> INVALID (digits: 12345)
+abcdefghij -> INVALID (digits: )
+
+--- Password Strength Validation ---
+abc -> WEAK (too short)
+abcdefgh -> WEAK
+Abcdefgh -> MEDIUM
+Abcdefg1 -> STRONG
+Abcdef1! -> VERY STRONG
+
+--- Username Validation ---
+john_doe -> VALID
+john.doe -> VALID
+john-doe -> INVALID
+jo -> INVALID
+john doe -> INVALID
+john@doe -> INVALID
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 20: API Response Processing
+--------------------------------------------------------------------------------
+
+public class StringAutomationAPI {
+    public static void main(String[] args) {
+        
+        System.out.println("=== API Response Processing ===");
+        System.out.println("");
+        
+        // Simulated JSON response (as string)
+        String jsonResponse = "{\"status\":\"success\",\"code\":200,\"data\":{\"id\":123,\"name\":\"John Doe\",\"email\":\"john@example.com\"}}";
+        
+        System.out.println("JSON Response:");
+        System.out.println(jsonResponse);
+        System.out.println("");
+        
+        // Extract values (simple approach without JSON library)
+        System.out.println("--- Extracting Values ---");
+        
+        // Extract status
+        String status = extractJsonValue(jsonResponse, "status");
+        System.out.println("Status: " + status);
+        
+        // Extract code
+        String code = extractJsonValue(jsonResponse, "code");
+        System.out.println("Code: " + code);
+        
+        // Extract name
+        String name = extractJsonValue(jsonResponse, "name");
+        System.out.println("Name: " + name);
+        
+        // Extract email
+        String email = extractJsonValue(jsonResponse, "email");
+        System.out.println("Email: " + email);
+        
+        System.out.println("");
+        
+        // Validate response
+        System.out.println("--- Validating Response ---");
+        boolean isSuccess = status.equals("success");
+        boolean isCode200 = code.equals("200");
+        boolean hasValidEmail = email.contains("@");
+        
+        System.out.println("Is Success: " + isSuccess);
+        System.out.println("Is Code 200: " + isCode200);
+        System.out.println("Has Valid Email: " + hasValidEmail);
+        System.out.println("Overall Valid: " + (isSuccess && isCode200 && hasValidEmail));
+        
+        System.out.println("");
+        
+        // XML Response processing
+        System.out.println("=== XML Response Processing ===");
+        String xmlResponse = "<response><status>success</status><user><name>John</name><age>25</age></user></response>";
+        
+        System.out.println("XML Response:");
+        System.out.println(xmlResponse);
+        System.out.println("");
+        
+        // Extract XML values
+        String xmlStatus = extractXmlValue(xmlResponse, "status");
+        String xmlName = extractXmlValue(xmlResponse, "name");
+        String xmlAge = extractXmlValue(xmlResponse, "age");
+        
+        System.out.println("Status: " + xmlStatus);
+        System.out.println("Name: " + xmlName);
+        System.out.println("Age: " + xmlAge);
+    }
+    
+    // Simple JSON value extractor (for demonstration)
+    public static String extractJsonValue(String json, String key) {
+        String searchKey = "\"" + key + "\":";
+        int keyIndex = json.indexOf(searchKey);
+        
+        if (keyIndex == -1) {
+            return null;
+        }
+        
+        int valueStart = keyIndex + searchKey.length();
+        char firstChar = json.charAt(valueStart);
+        
+        if (firstChar == '"') {
+            // String value
+            int valueEnd = json.indexOf("\"", valueStart + 1);
+            return json.substring(valueStart + 1, valueEnd);
+        } else if (firstChar == '{') {
+            // Object value - skip for simplicity
+            return "[object]";
+        } else {
+            // Number or boolean
+            int valueEnd = valueStart;
+            while (valueEnd < json.length() && 
+                   json.charAt(valueEnd) != ',' && 
+                   json.charAt(valueEnd) != '}') {
+                valueEnd++;
+            }
+            return json.substring(valueStart, valueEnd);
+        }
+    }
+    
+    // Simple XML value extractor (for demonstration)
+    public static String extractXmlValue(String xml, String tag) {
+        String openTag = "<" + tag + ">";
+        String closeTag = "</" + tag + ">";
+        
+        int startIndex = xml.indexOf(openTag);
+        int endIndex = xml.indexOf(closeTag);
+        
+        if (startIndex == -1 || endIndex == -1) {
+            return null;
+        }
+        
+        return xml.substring(startIndex + openTag.length(), endIndex);
+    }
+}
+
+OUTPUT:
+-------
+=== API Response Processing ===
+
+JSON Response:
+{"status":"success","code":200,"data":{"id":123,"name":"John Doe","email":"john@example.com"}}
+
+--- Extracting Values ---
+Status: success
+Code: 200
+Name: John Doe
+Email: john@example.com
+
+--- Validating Response ---
+Is Success: true
+Is Code 200: true
+Has Valid Email: true
+Overall Valid: true
+
+=== XML Response Processing ===
+XML Response:
+<response><status>success</status><user><name>John</name><age>25</age></user></response>
+
+Status: success
+Name: John
+Age: 25
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 21: Test Report Generation
+--------------------------------------------------------------------------------
+
+public class StringAutomationReport {
+    public static void main(String[] args) {
+        
+        // Test results data
+        String[] testNames = {"Login Test", "Search Test", "Checkout Test", "Profile Test"};
+        String[] statuses = {"PASSED", "PASSED", "FAILED", "PASSED"};
+        double[] durations = {2.5, 1.8, 3.2, 1.5};
+        String[] errorMessages = {"", "", "Element not found: checkout-button", ""};
+        
+        // Generate report
+        StringBuilder report = new StringBuilder();
+        
+        // Header
+        report.append("=".repeat(70)).append("\n");
+        report.append(String.format("%35s%n", "TEST EXECUTION REPORT"));
+        report.append("=".repeat(70)).append("\n\n");
+        
+        // Summary section
+        int passed = 0, failed = 0;
+        double totalDuration = 0;
+        
+        for (int i = 0; i < statuses.length; i++) {
+            if (statuses[i].equals("PASSED")) passed++;
+            else failed++;
+            totalDuration += durations[i];
+        }
+        
+        report.append("SUMMARY:\n");
+        report.append("-".repeat(30)).append("\n");
+        report.append(String.format("Total Tests: %d%n", testNames.length));
+        report.append(String.format("Passed: %d%n", passed));
+        report.append(String.format("Failed: %d%n", failed));
+        report.append(String.format("Pass Rate: %.1f%%%n", (double) passed / testNames.length * 100));
+        report.append(String.format("Total Duration: %.1f seconds%n", totalDuration));
+        report.append("\n");
+        
+        // Detailed results
+        report.append("DETAILED RESULTS:\n");
+        report.append("-".repeat(70)).append("\n");
+        report.append(String.format("| %-20s | %-10s | %-10s | %-20s |%n", 
+                     "Test Name", "Status", "Duration", "Error"));
+        report.append("-".repeat(70)).append("\n");
+        
+        for (int i = 0; i < testNames.length; i++) {
+            String error = errorMessages[i].isEmpty() ? "-" : 
+                          (errorMessages[i].length() > 18 ? 
+                           errorMessages[i].substring(0, 18) + ".." : errorMessages[i]);
+            
+            report.append(String.format("| %-20s | %-10s | %7.1f s | %-20s |%n",
+                         testNames[i], statuses[i], durations[i], error));
+        }
+        report.append("-".repeat(70)).append("\n\n");
+        
+        // Failed tests details
+        report.append("FAILED TESTS DETAILS:\n");
+        report.append("-".repeat(30)).append("\n");
+        
+        boolean hasFailures = false;
+        for (int i = 0; i < testNames.length; i++) {
+            if (statuses[i].equals("FAILED")) {
+                hasFailures = true;
+                report.append(String.format("Test: %s%n", testNames[i]));
+                report.append(String.format("Error: %s%n", errorMessages[i]));
+                report.append("\n");
+            }
+        }
+        
+        if (!hasFailures) {
+            report.append("No failures!\n");
+        }
+        
+        // Footer
+        report.append("=".repeat(70)).append("\n");
+        report.append(String.format("%35s%n", "END OF REPORT"));
+        report.append("=".repeat(70)).append("\n");
+        
+        // Print report
+        System.out.println(report.toString());
+    }
+}
+
+OUTPUT:
+-------
+======================================================================
+                      TEST EXECUTION REPORT
+======================================================================
+
+SUMMARY:
+------------------------------
+Total Tests: 4
+Passed: 3
+Failed: 1
+Pass Rate: 75.0%
+Total Duration: 9.0 seconds
+
+DETAILED RESULTS:
+----------------------------------------------------------------------
+| Test Name            | Status     | Duration   | Error                |
+----------------------------------------------------------------------
+| Login Test           | PASSED     |     2.5 s | -                    |
+| Search Test          | PASSED     |     1.8 s | -                    |
+| Checkout Test        | FAILED     |     3.2 s | Element not found:.. |
+| Profile Test         | PASSED     |     1.5 s | -                    |
+----------------------------------------------------------------------
+
+FAILED TESTS DETAILS:
+------------------------------
+Test: Checkout Test
+Error: Element not found: checkout-button
+
+======================================================================
+                        END OF REPORT
+======================================================================
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 22: Log Message Formatting
+--------------------------------------------------------------------------------
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
+public class StringAutomationLogging {
+    public static void main(String[] args) {
+        
+        System.out.println("=== Log Message Examples ===");
+        System.out.println("");
+        
+        // Log with timestamp
+        log("INFO", "Test execution started");
+        log("INFO", "Browser launched: Chrome");
+        log("INFO", "Navigating to: https://example.com");
+        log("DEBUG", "Element found: #username");
+        log("INFO", "Entering username: testuser");
+        log("WARN", "Element took longer than expected to load");
+        log("ERROR", "Failed to click element: #submit-btn");
+        log("INFO", "Test execution completed");
+        
+        System.out.println("");
+        
+        // Formatted log messages
+        System.out.println("=== Formatted Log Messages ===");
+        System.out.println("");
+        
+        logFormatted("INFO", "Test %d of %d started: %s", 1, 10, "Login Test");
+        logFormatted("INFO", "User '%s' logged in successfully", "admin");
+        logFormatted("DEBUG", "Response time: %.2f ms", 125.75);
+        logFormatted("WARN", "Retry attempt %d/%d for element: %s", 2, 3, "#button");
+        logFormatted("ERROR", "Assertion failed: Expected '%s', Got '%s'", "Success", "Error");
+    }
+    
+    public static void log(String level, String message) {
+        LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
+        String timestamp = now.format(formatter);
+        
+        String logEntry = String.format("[%s] [%-5s] %s", timestamp, level, message);
+        System.out.println(logEntry);
+    }
+    
+    public static void logFormatted(String level, String format, Object... args) {
+        String message = String.format(format, args);
+        log(level, message);
+    }
+}
+
+OUTPUT:
+-------
+=== Log Message Examples ===
+
+[2024-01-15 10:30:45.123] [INFO ] Test execution started
+[2024-01-15 10:30:45.125] [INFO ] Browser launched: Chrome
+[2024-01-15 10:30:45.126] [INFO ] Navigating to: https://example.com
+[2024-01-15 10:30:45.127] [DEBUG] Element found: #username
+[2024-01-15 10:30:45.128] [INFO ] Entering username: testuser
+[2024-01-15 10:30:45.129] [WARN ] Element took longer than expected to load
+[2024-01-15 10:30:45.130] [ERROR] Failed to click element: #submit-btn
+[2024-01-15 10:30:45.131] [INFO ] Test execution completed
+
+=== Formatted Log Messages ===
+
+[2024-01-15 10:30:45.132] [INFO ] Test 1 of 10 started: Login Test
+[2024-01-15 10:30:45.133] [INFO ] User 'admin' logged in successfully
+[2024-01-15 10:30:45.134] [DEBUG] Response time: 125.75 ms
+[2024-01-15 10:30:45.135] [WARN ] Retry attempt 2/3 for element: #button
+[2024-01-15 10:30:45.136] [ERROR] Assertion failed: Expected 'Success', Got 'Error'
+
+
+================================================================================
+================================================================================
+                    NEGATIVE SCENARIOS - STRINGS
+================================================================================
+================================================================================
+
+
+--------------------------------------------------------------------------------
+ERROR 1: NullPointerException - Calling Methods on Null String
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE:
+-----------------
+public class StringNullPointer {
+    public static void main(String[] args) {
+        
+        String str = null;
+        
+        // Calling method on null string
+        int length = str.length();    // Error!
+        System.out.println("Length: " + length);
+    }
+}
+
+ERROR MESSAGE:
+--------------
+Exception in thread "main" java.lang.NullPointerException
+
+FIX:
+----
+public class StringNullPointerFixed {
+    public static void main(String[] args) {
+        
+        String str = null;
+        
+        // Option 1: Check for null before using
+        if (str != null) {
+            int length = str.length();
+            System.out.println("Length: " + length);
+        } else {
+            System.out.println("String is null");
+        }
+        
+        // Option 2: Use ternary operator
+        int length = (str != null) ? str.length() : 0;
+        System.out.println("Length: " + length);
+        
+        // Option 3: Use Objects.requireNonNullElse (Java 9+)
+        String safeStr = java.util.Objects.requireNonNullElse(str, "");
+        System.out.println("Safe length: " + safeStr.length());
+    }
+}
+
+OUTPUT:
+-------
+String is null
+Length: 0
+Safe length: 0
+
+
+--------------------------------------------------------------------------------
+ERROR 2: NullPointerException - Comparing with null.equals()
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE:
+-----------------
+public class StringNullComparison {
+    public static void main(String[] args) {
+        
+        String userInput = null;
+        
+        // This will throw NullPointerException
+        if (userInput.equals("admin")) {
+            System.out.println("Admin user");
+        }
+    }
+}
+
+ERROR MESSAGE:
+--------------
+Exception in thread "main" java.lang.NullPointerException
+
+FIX:
+----
+public class StringNullComparisonFixed {
+    public static void main(String[] args) {
+        
+        String userInput = null;
+        
+        // Option 1: Put literal first (RECOMMENDED)
+        if ("admin".equals(userInput)) {
+            System.out.println("Admin user");
+        } else {
+            System.out.println("Not admin or null");
+        }
+        
+        // Option 2: Check null first
+        if (userInput != null && userInput.equals("admin")) {
+            System.out.println("Admin user");
+        } else {
+            System.out.println("Not admin or null");
+        }
+        
+        // Option 3: Use Objects.equals()
+        if (java.util.Objects.equals(userInput, "admin")) {
+            System.out.println("Admin user");
+        } else {
+            System.out.println("Not admin or null");
+        }
+    }
+}
+
+OUTPUT:
+-------
+Not admin or null
+Not admin or null
+Not admin or null
+
+BEST PRACTICE:
+--------------
+Always put the known non-null value (literal) first in equals():
+    "expected".equals(actualValue)    // Safe - returns false if actualValue is null
+    actualValue.equals("expected")    // Dangerous - NPE if actualValue is null
+
+
+--------------------------------------------------------------------------------
+ERROR 3: StringIndexOutOfBoundsException - charAt() with Invalid Index
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE:
+-----------------
+public class StringCharAtError {
+    public static void main(String[] args) {
+        
+        String text = "Hello";    // Indices: 0,1,2,3,4
+        
+        // Invalid index
+        char ch = text.charAt(10);    // Error!
+        System.out.println("Character: " + ch);
+    }
+}
+
+ERROR MESSAGE:
+--------------
+Exception in thread "main" java.lang.StringIndexOutOfBoundsException: 
+String index out of range: 10
+
+FIX:
+----
+public class StringCharAtFixed {
+    public static void main(String[] args) {
+        
+        String text = "Hello";
+        int index = 10;
+        
+        // Check index before accessing
+        if (index >= 0 && index < text.length()) {
+            char ch = text.charAt(index);
+            System.out.println("Character at " + index + ": " + ch);
+        } else {
+            System.out.println("Invalid index: " + index);
+            System.out.println("Valid range: 0 to " + (text.length() - 1));
+        }
+        
+        // Safe access
+        int safeIndex = 2;
+        if (safeIndex < text.length()) {
+            System.out.println("Character at " + safeIndex + ": " + text.charAt(safeIndex));
+        }
+    }
+}
+
+OUTPUT:
+-------
+Invalid index: 10
+Valid range: 0 to 4
+Character at 2: l
+
+
+--------------------------------------------------------------------------------
+ERROR 4: StringIndexOutOfBoundsException - substring() with Invalid Indices
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE:
+-----------------
+public class StringSubstringError {
+    public static void main(String[] args) {
+        
+        String text = "Hello";    // Length: 5, Indices: 0-4
+        
+        // Error 1: Begin index greater than length
+        String sub1 = text.substring(10);    // Error!
+        
+        // Error 2: Begin index greater than end index
+        String sub2 = text.substring(3, 1);    // Error!
+        
+        // Error 3: Negative index
+        String sub3 = text.substring(-1);    // Error!
+    }
+}
+
+ERROR MESSAGE:
+--------------
+Exception in thread "main" java.lang.StringIndexOutOfBoundsException
+
+FIX:
+----
+public class StringSubstringFixed {
+    public static void main(String[] args) {
+        
+        String text = "Hello";
+        
+        // Safe substring with validation
+        System.out.println("=== Safe Substring Operations ===");
+        
+        // Validate begin index
+        int begin = 10;
+        if (begin >= 0 && begin <= text.length()) {
+            System.out.println("substring(" + begin + "): " + text.substring(begin));
+        } else {
+            System.out.println("Invalid begin index: " + begin);
+        }
+        
+        // Validate begin and end indices
+        int start = 1;
+        int end = 4;
+        if (start >= 0 && end <= text.length() && start <= end) {
+            System.out.println("substring(" + start + ", " + end + "): " + text.substring(start, end));
+        } else {
+            System.out.println("Invalid indices: start=" + start + ", end=" + end);
+        }
+        
+        // Safe substring method
+        System.out.println("");
+        System.out.println("=== Using Safe Method ===");
+        System.out.println(safeSubstring(text, 0, 3));
+        System.out.println(safeSubstring(text, 0, 100));
+        System.out.println(safeSubstring(text, -1, 3));
+    }
+    
+    public static String safeSubstring(String str, int begin, int end) {
+        if (str == null) return "";
+        if (begin < 0) begin = 0;
+        if (end > str.length()) end = str.length();
+        if (begin > end) return "";
+        return str.substring(begin, end);
+    }
+}
+
+OUTPUT:
+-------
+=== Safe Substring Operations ===
+Invalid begin index: 10
+substring(1, 4): ell
+
+=== Using Safe Method ===
+Hel
+Hello
+
+
+
+--------------------------------------------------------------------------------
+ERROR 5: Comparing Strings with == Instead of equals()
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE:
+-----------------
+public class StringCompareError {
+    public static void main(String[] args) {
+        
+        String s1 = new String("Hello");
+        String s2 = new String("Hello");
+        
+        // Using == (compares references)
+        if (s1 == s2) {
+            System.out.println("Strings are equal");
+        } else {
+            System.out.println("Strings are not equal");    // This prints!
+        }
+    }
+}
+
+OUTPUT (Unexpected):
+--------------------
+Strings are not equal
+
+EXPLANATION:
+------------
+== compares object references (memory addresses)
+s1 and s2 are different objects in heap memory
+Even though content is same, references are different
+
+FIX:
+----
+public class StringCompareFixed {
+    public static void main(String[] args) {
+        
+        String s1 = new String("Hello");
+        String s2 = new String("Hello");
+        
+        // Using equals() (compares content)
+        if (s1.equals(s2)) {
+            System.out.println("Strings are equal");
+        } else {
+            System.out.println("Strings are not equal");
+        }
+        
+        // For case-insensitive comparison
+        String s3 = "HELLO";
+        if (s1.equalsIgnoreCase(s3)) {
+            System.out.println("Strings are equal (ignoring case)");
+        }
+    }
+}
+
+OUTPUT:
+-------
+Strings are equal
+Strings are equal (ignoring case)
+
+
+IMPORTANT RULE:
+---------------
++----------------------------------------------------------+
+|  == compares REFERENCES (memory addresses)               |
+|  .equals() compares CONTENT (actual characters)          |
+|                                                          |
+|  ALWAYS use .equals() for String comparison              |
++----------------------------------------------------------+
+
+
+--------------------------------------------------------------------------------
+ERROR 6: Case Sensitivity Issues
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE:
+-----------------
+public class StringCaseSensitivity {
+    public static void main(String[] args) {
+        
+        String expected = "Success";
+        String actual = "success";
+        
+        // Case-sensitive comparison fails
+        if (expected.equals(actual)) {
+            System.out.println("Test PASSED");
+        } else {
+            System.out.println("Test FAILED");    // This prints!
+        }
+        
+        // Case-sensitive contains fails
+        String message = "Login successful";
+        if (message.contains("SUCCESS")) {
+            System.out.println("Found success message");
+        } else {
+            System.out.println("Success message not found");    // This prints!
+        }
+    }
+}
+
+OUTPUT:
+-------
+Test FAILED
+Success message not found
+
+FIX:
+----
+public class StringCaseSensitivityFixed {
+    public static void main(String[] args) {
+        
+        String expected = "Success";
+        String actual = "success";
+        
+        // Option 1: Use equalsIgnoreCase()
+        if (expected.equalsIgnoreCase(actual)) {
+            System.out.println("Test PASSED (using equalsIgnoreCase)");
+        }
+        
+        // Option 2: Convert both to same case
+        if (expected.toLowerCase().equals(actual.toLowerCase())) {
+            System.out.println("Test PASSED (using toLowerCase)");
+        }
+        
+        // Case-insensitive contains
+        String message = "Login successful";
+        if (message.toLowerCase().contains("success")) {
+            System.out.println("Found success message");
+        }
+        
+        // Case-insensitive startsWith/endsWith
+        String url = "HTTPS://example.com";
+        if (url.toLowerCase().startsWith("https")) {
+            System.out.println("URL uses HTTPS");
+        }
+    }
+}
+
+OUTPUT:
+-------
+Test PASSED (using equalsIgnoreCase)
+Test PASSED (using toLowerCase)
+Found success message
+URL uses HTTPS
+
+
+--------------------------------------------------------------------------------
+ERROR 7: Forgetting String Immutability
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE:
+-----------------
+public class StringImmutabilityError {
+    public static void main(String[] args) {
+        
+        String text = "  hello world  ";
+        
+        // These operations do NOT modify original string
+        text.trim();
+        text.toUpperCase();
+        text.replace("hello", "hi");
+        
+        System.out.println("Text: '" + text + "'");
+        // Still prints: '  hello world  '
+    }
+}
+
+OUTPUT (Unexpected):
+--------------------
+Text: '  hello world  '
+
+FIX:
+----
+public class StringImmutabilityFixed {
+    public static void main(String[] args) {
+        
+        String text = "  hello world  ";
+        System.out.println("Original: '" + text + "'");
+        
+        // Assign result back to variable
+        text = text.trim();
+        System.out.println("After trim: '" + text + "'");
+        
+        text = text.toUpperCase();
+        System.out.println("After toUpperCase: '" + text + "'");
+        
+        text = text.replace("HELLO", "HI");
+        System.out.println("After replace: '" + text + "'");
+        
+        // Or chain operations
+        String original = "  hello world  ";
+        String processed = original.trim().toUpperCase().replace("HELLO", "HI");
+        System.out.println("Chained: '" + processed + "'");
+    }
+}
+
+OUTPUT:
+-------
+Original: '  hello world  '
+After trim: 'hello world'
+After toUpperCase: 'HELLO WORLD'
+After replace: 'HI WORLD'
+Chained: 'HI WORLD'
+
+
+--------------------------------------------------------------------------------
+ERROR 8: split() with Special Regex Characters
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE:
+-----------------
+public class StringSplitError {
+    public static void main(String[] args) {
+        
+        // Split by dot (.)
+        String filename = "report.test.pdf";
+        String[] parts = filename.split(".");    // Error - . is regex wildcard
+        System.out.println("Parts: " + parts.length);
+        
+        // Split by pipe (|)
+        String data = "a|b|c";
+        String[] items = data.split("|");    // Error - | is regex OR
+        System.out.println("Items: " + items.length);
+    }
+}
+
+OUTPUT (Unexpected):
+--------------------
+Parts: 0
+Items: 6
+
+EXPLANATION:
+------------
+split() uses regular expressions
+. (dot) matches any character in regex
+| (pipe) means OR in regex
+These need to be escaped
+
+FIX:
+----
+public class StringSplitFixed {
+    public static void main(String[] args) {
+        
+        // Escape special characters with \\
+        String filename = "report.test.pdf";
+        String[] parts = filename.split("\\.");    // Escaped dot
+        System.out.println("Parts by dot: " + java.util.Arrays.toString(parts));
+        
+        // Escape pipe
+        String data = "a|b|c";
+        String[] items = data.split("\\|");    // Escaped pipe
+        System.out.println("Items by pipe: " + java.util.Arrays.toString(items));
+        
+        // Other special characters that need escaping:
+        // . ^ $ * + ? { } [ ] \ | ( )
+        
+        // Alternative: Use Pattern.quote()
+        String path = "C:\\Users\\test";
+        String[] folders = path.split(java.util.regex.Pattern.quote("\\"));
+        System.out.println("Folders: " + java.util.Arrays.toString(folders));
+        
+        // Common escape patterns
+        System.out.println("");
+        System.out.println("=== Common Escape Patterns ===");
+        System.out.println("Dot (.): \\\\.     or Pattern.quote(\".\")");
+        System.out.println("Pipe (|): \\\\|    or Pattern.quote(\"|\")");
+        System.out.println("Backslash (\\\\): \\\\\\\\ or Pattern.quote(\"\\\\\")");
+        System.out.println("Dollar ($): \\\\$   or Pattern.quote(\"$\")");
+    }
+}
+
+OUTPUT:
+-------
+Parts by dot: [report, test, pdf]
+Items by pipe: [a, b, c]
+Folders: [C:, Users, test]
+
+=== Common Escape Patterns ===
+Dot (.): \\.     or Pattern.quote(".")
+Pipe (|): \\|    or Pattern.quote("|")
+Backslash (\\): \\\\ or Pattern.quote("\\")
+Dollar ($): \\$   or Pattern.quote("$")
+
+
+--------------------------------------------------------------------------------
+ERROR 9: Empty String After split()
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE:
+-----------------
+public class StringSplitEmptyError {
+    public static void main(String[] args) {
+        
+        String csv = "a,,b,c,,";
+        String[] parts = csv.split(",");
+        
+        System.out.println("Length: " + parts.length);
+        for (int i = 0; i < parts.length; i++) {
+            System.out.println("[" + i + "]: '" + parts[i] + "'");
+        }
+        // Trailing empty strings are removed by default!
+    }
+}
+
+OUTPUT (May be unexpected):
+---------------------------
+Length: 4
+[0]: 'a'
+[1]: ''
+[2]: 'b'
+[3]: 'c'
+
+FIX:
+----
+public class StringSplitEmptyFixed {
+    public static void main(String[] args) {
+        
+        String csv = "a,,b,c,,";
+        
+        // Use -1 limit to keep trailing empty strings
+        String[] parts = csv.split(",", -1);
+        
+        System.out.println("Length: " + parts.length);
+        for (int i = 0; i < parts.length; i++) {
+            String display = parts[i].isEmpty() ? "[empty]" : parts[i];
+            System.out.println("[" + i + "]: '" + display + "'");
+        }
+        
+        // Filter out empty strings if needed
+        System.out.println("");
+        System.out.println("=== Non-empty values only ===");
+        for (String part : parts) {
+            if (!part.isEmpty()) {
+                System.out.println(part);
+            }
+        }
+    }
+}
+
+OUTPUT:
+-------
+Length: 6
+[0]: 'a'
+[1]: '[empty]'
+[2]: 'b'
+[3]: 'c'
+[4]: '[empty]'
+[5]: '[empty]'
+
+=== Non-empty values only ===
+a
+b
+c
+
+
+--------------------------------------------------------------------------------
+ERROR 10: indexOf() Returns -1 When Not Found
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE:
+-----------------
+public class StringIndexOfError {
+    public static void main(String[] args) {
+        
+        String text = "Hello World";
+        
+        // indexOf returns -1 if not found
+        int index = text.indexOf("Java");
+        
+        // Using -1 in substring causes error
+        String result = text.substring(index);    // Error!
+    }
+}
+
+ERROR MESSAGE:
+--------------
+Exception in thread "main" java.lang.StringIndexOutOfBoundsException: 
+String index out of range: -1
+
+FIX:
+----
+public class StringIndexOfFixed {
+    public static void main(String[] args) {
+        
+        String text = "Hello World";
+        String search = "Java";
+        
+        int index = text.indexOf(search);
+        
+        // Always check if found before using
+        if (index != -1) {
+            String result = text.substring(index);
+            System.out.println("Found! Substring: " + result);
+        } else {
+            System.out.println("'" + search + "' not found in text");
+        }
+        
+        // Alternative: Use contains() first
+        if (text.contains(search)) {
+            int idx = text.indexOf(search);
+            System.out.println("Index: " + idx);
+        } else {
+            System.out.println("Search string not found");
+        }
+        
+        // Practical example: Extract domain from email
+        String email = "user@example.com";
+        int atIndex = email.indexOf("@");
+        
+        if (atIndex != -1) {
+            String domain = email.substring(atIndex + 1);
+            System.out.println("Domain: " + domain);
+        } else {
+            System.out.println("Invalid email format");
+        }
+    }
+}
+
+OUTPUT:
+-------
+'Java' not found in text
+Search string not found
+Domain: example.com
+
+
+--------------------------------------------------------------------------------
+ERROR 11: String Concatenation in Loop (Performance Issue)
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE:
+-----------------
+public class StringConcatLoop {
+    public static void main(String[] args) {
+        
+        // Inefficient - creates new String object each iteration
+        String result = "";
+        
+        long start = System.currentTimeMillis();
+        for (int i = 0; i < 50000; i++) {
+            result = result + "a";    // Creates new String each time!
+        }
+        long end = System.currentTimeMillis();
+        
+        System.out.println("Using + operator: " + (end - start) + " ms");
+        System.out.println("Result length: " + result.length());
+    }
+}
+
+OUTPUT:
+-------
+Using + operator: 2500 ms (approximately - very slow!)
+Result length: 50000
+
+FIX:
+----
+public class StringConcatLoopFixed {
+    public static void main(String[] args) {
+        
+        // Efficient - uses StringBuilder
+        StringBuilder sb = new StringBuilder();
+        
+        long start = System.currentTimeMillis();
+        for (int i = 0; i < 50000; i++) {
+            sb.append("a");    // Modifies same object
+        }
+        String result = sb.toString();
+        long end = System.currentTimeMillis();
+        
+        System.out.println("Using StringBuilder: " + (end - start) + " ms");
+        System.out.println("Result length: " + result.length());
+        
+        // Comparison
+        System.out.println("");
+        System.out.println("=== Performance Comparison ===");
+        System.out.println("+ operator in loop: ~2500 ms (creates 50000 objects)");
+        System.out.println("StringBuilder: ~5 ms (creates 1 object)");
+        System.out.println("");
+        System.out.println("RULE: Use StringBuilder for loop concatenation");
+    }
+}
+
+OUTPUT:
+-------
+Using StringBuilder: 3 ms
+Result length: 50000
+
+=== Performance Comparison ===
++ operator in loop: ~2500 ms (creates 50000 objects)
+StringBuilder: ~5 ms (creates 1 object)
+
+RULE: Use StringBuilder for loop concatenation
+
+
+--------------------------------------------------------------------------------
+ERROR 12: NumberFormatException - Invalid String to Number Conversion
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE:
+-----------------
+public class StringNumberError {
+    public static void main(String[] args) {
+        
+        String numStr = "123abc";
+        
+        int num = Integer.parseInt(numStr);    // Error!
+        System.out.println("Number: " + num);
+    }
+}
+
+ERROR MESSAGE:
+--------------
+Exception in thread "main" java.lang.NumberFormatException: 
+For input string: "123abc"
+
+FIX:
+----
+public class StringNumberFixed {
+    public static void main(String[] args) {
+        
+        String[] testValues = {"123", "123abc", "  456  ", "", null, "12.34"};
+        
+        for (String value : testValues) {
+            System.out.println("Input: " + (value == null ? "null" : "'" + value + "'"));
+            
+            Integer result = safeParseInt(value);
+            
+            if (result != null) {
+                System.out.println("  Parsed: " + result);
+            } else {
+                System.out.println("  Could not parse");
+            }
+        }
+    }
+    
+    public static Integer safeParseInt(String str) {
+        if (str == null || str.trim().isEmpty()) {
+            return null;
+        }
+        
+        try {
+            return Integer.parseInt(str.trim());
+        } catch (NumberFormatException e) {
+            return null;
+        }
+    }
+}
+
+OUTPUT:
+-------
+Input: '123'
+  Parsed: 123
+Input: '123abc'
+  Could not parse
+Input: '  456  '
+  Parsed: 456
+Input: ''
+  Could not parse
+Input: null
+  Could not parse
+Input: '12.34'
+  Could not parse
+
+
+--------------------------------------------------------------------------------
+ERROR 13: format() with Wrong Number of Arguments
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE:
+-----------------
+public class StringFormatError {
+    public static void main(String[] args) {
+        
+        // More placeholders than arguments
+        String result1 = String.format("Name: %s, Age: %d, City: %s", "John", 25);
+        // Error: MissingFormatArgumentException
+        
+        // Wrong type for placeholder
+        String result2 = String.format("Age: %d", "twenty-five");
+        // Error: IllegalFormatConversionException
+    }
+}
+
+ERROR MESSAGE:
+--------------
+Exception in thread "main" java.util.MissingFormatArgumentException
+Exception in thread "main" java.util.IllegalFormatConversionException
+
+FIX:
+----
+public class StringFormatFixed {
+    public static void main(String[] args) {
+        
+        // Correct number of arguments
+        String result1 = String.format("Name: %s, Age: %d, City: %s", "John", 25, "NYC");
+        System.out.println(result1);
+        
+        // Correct types
+        String result2 = String.format("Age: %d", 25);
+        System.out.println(result2);
+        
+        // Use %s for any type (safest)
+        String result3 = String.format("Value: %s", 25);
+        System.out.println(result3);
+        
+        // Safe formatting method
+        System.out.println("");
+        System.out.println("=== Safe Formatting ===");
+        System.out.println(safeFormat("Hello %s", "World"));
+        System.out.println(safeFormat("Number: %d", 42));
+        System.out.println(safeFormat("Too few: %s %s", "only one"));
+    }
+    
+    public static String safeFormat(String format, Object... args) {
+        try {
+            return String.format(format, args);
+        } catch (Exception e) {
+            return "Format error: " + e.getMessage();
+        }
+    }
+}
+
+OUTPUT:
+-------
+Name: John, Age: 25, City: NYC
+Age: 25
+Value: 25
+
+=== Safe Formatting ===
+Hello World
+Number: 42
+Format error: Format specifier '%s'
+
+
+--------------------------------------------------------------------------------
+ERROR 14: Whitespace Issues in Comparison
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE:
+-----------------
+public class StringWhitespaceError {
+    public static void main(String[] args) {
+        
+        String expected = "Success";
+        String actual = "Success ";    // Has trailing space
+        
+        if (expected.equals(actual)) {
+            System.out.println("Match!");
+        } else {
+            System.out.println("No match!");    // This prints!
+        }
+        
+        String input = "  admin  ";
+        if (input.equals("admin")) {
+            System.out.println("Admin user");
+        } else {
+            System.out.println("Not admin");    // This prints!
+        }
+    }
+}
+
+OUTPUT:
+-------
+No match!
+Not admin
+
+FIX:
+----
+public class StringWhitespaceFixed {
+    public static void main(String[] args) {
+        
+        String expected = "Success";
+        String actual = "Success ";
+        
+        // Always trim before comparison
+        if (expected.trim().equals(actual.trim())) {
+            System.out.println("Match (after trim)!");
+        }
+        
+        String input = "  admin  ";
+        if (input.trim().equals("admin")) {
+            System.out.println("Admin user (after trim)");
+        }
+        
+        // Best practice: Trim and normalize
+        String userInput = "  ADMIN  ";
+        String normalized = userInput.trim().toLowerCase();
+        
+        if (normalized.equals("admin")) {
+            System.out.println("Admin user (normalized)");
+        }
+        
+        // Debug whitespace issues
+        System.out.println("");
+        System.out.println("=== Debugging Whitespace ===");
+        String problematic = "Test ";
+        System.out.println("Value: '" + problematic + "'");
+        System.out.println("Length: " + problematic.length());
+        System.out.println("After trim length: " + problematic.trim().length());
+    }
+}
+
+OUTPUT:
+-------
+Match (after trim)!
+Admin user (after trim)
+Admin user (normalized)
+
+=== Debugging Whitespace ===
+Value: 'Test '
+Length: 5
+After trim length: 4
+
+
+================================================================================
+                    QUICK REFERENCE SUMMARY
+================================================================================
+
+STRING CREATION:
+----------------
++----------------------------------+------------------------------------------+
+| Method                           | Example                                  |
++----------------------------------+------------------------------------------+
+| String literal                   | String s = "Hello";                      |
+| Using new                        | String s = new String("Hello");          |
+| From char array                  | String s = new String(charArray);        |
+| Empty string                     | String s = "";                           |
++----------------------------------+------------------------------------------+
+
+
+STRING METHODS QUICK REFERENCE:
+-------------------------------
++---------------------------+-----------------------------+------------------+
+| Category                  | Method                      | Example          |
++---------------------------+-----------------------------+------------------+
+| Length                    | length()                    | str.length()     |
+|                           | isEmpty()                   | str.isEmpty()    |
+|                           | isBlank()                   | str.isBlank()    |
++---------------------------+-----------------------------+------------------+
+| Character Access          | charAt(index)               | str.charAt(0)    |
+|                           | toCharArray()               | str.toCharArray()|
++---------------------------+-----------------------------+------------------+
+| Search                    | indexOf(str)                | str.indexOf("a") |
+|                           | lastIndexOf(str)            | str.lastIndexOf()|
+|                           | contains(str)               | str.contains("x")|
++---------------------------+-----------------------------+------------------+
+| Compare                   | equals(str)                 | s1.equals(s2)    |
+|                           | equalsIgnoreCase(str)       | s1.equalsIgnore..|
+|                           | compareTo(str)              | s1.compareTo(s2) |
++---------------------------+-----------------------------+------------------+
+| Case                      | toLowerCase()               | str.toLowerCase()|
+|                           | toUpperCase()               | str.toUpperCase()|
++---------------------------+-----------------------------+------------------+
+| Trim                      | trim()                      | str.trim()       |
+|                           | strip()                     | str.strip()      |
++---------------------------+-----------------------------+------------------+
+| Substring                 | substring(begin)            | str.substring(2) |
+|                           | substring(begin, end)       | str.substring(0,3)|
++---------------------------+-----------------------------+------------------+
+| Replace                   | replace(old, new)           | str.replace("a","b")|
+|                           | replaceAll(regex, new)      | str.replaceAll() |
++---------------------------+-----------------------------+------------------+
+| Split/Join                | split(delimiter)            | str.split(",")   |
+|                           | String.join(delim, array)   | String.join("-") |
++---------------------------+-----------------------------+------------------+
+| Start/End                 | startsWith(prefix)          | str.startsWith() |
+|                           | endsWith(suffix)            | str.endsWith()   |
++---------------------------+-----------------------------+------------------+
+| Format                    | String.format(fmt, args)    | String.format()  |
++---------------------------+-----------------------------+------------------+
+
+
+NEGATIVE SCENARIOS SUMMARY:
+---------------------------
++----+----------------------------------+------------------------------------+
+| #  | Error                            | Fix                                |
++----+----------------------------------+------------------------------------+
+| 1  | NullPointerException (method)    | Check str != null before calling   |
+| 2  | NullPointerException (equals)    | Put literal first: "x".equals(str) |
+| 3  | StringIndexOutOfBounds (charAt)  | Check index < length               |
+| 4  | StringIndexOutOfBounds (substr)  | Validate begin and end indices     |
+| 5  | Using == instead of equals()     | Always use .equals() for content   |
+| 6  | Case sensitivity issues          | Use equalsIgnoreCase() or toLower()|
+| 7  | Forgetting immutability          | Assign result: str = str.trim()    |
+| 8  | split() regex characters         | Escape with \\\\ or Pattern.quote()|
+| 9  | Empty strings after split()      | Use split(delim, -1) to keep them  |
+| 10 | indexOf() returns -1             | Check index != -1 before using     |
+| 11 | Concat in loop (performance)     | Use StringBuilder instead          |
+| 12 | NumberFormatException            | Use try-catch for parsing          |
+| 13 | format() wrong arguments         | Match placeholders with arguments  |
+| 14 | Whitespace issues                | Always trim() before comparison    |
++----+----------------------------------+------------------------------------+
+
+
+BEST PRACTICES:
+---------------
+1. Always use .equals() for String comparison, never ==
+2. Put literal first in equals(): "expected".equals(variable)
+3. Always check for null before calling String methods
+4. Use trim() to clean user input
+5. Use StringBuilder for loop concatenation
+6. Use equalsIgnoreCase() for case-insensitive comparison
+7. Remember String is immutable - assign results back
+8. Escape special characters in split() regex
+9. Check indexOf() result before using in substring()
+10. Use String.format() for complex string building
+
+
+================================================================================
+                    END OF TOPIC 7: STRINGS AND STRING METHODS
+================================================================================
+
+This completes Topic 7: Strings and String Methods.
+
+Let me know when you are ready for the next topic. The upcoming topics would be:
+
+    Topic 8: Methods/Functions in Java
+    Topic 9: Object-Oriented Programming (Classes and Objects)
+    Topic 10: Inheritance
+    Topic 11: Polymorphism
+    Topic 12: Abstraction and Interfaces
+    Topic 13: Exception Handling
+
+Which topic would you like to learn next?

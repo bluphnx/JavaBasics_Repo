@@ -1,0 +1,4275 @@
+Thinking:
+The user wants me to continue with Topic 16: File Handling. I need to cover:
+- Reading files (text files, CSV files)
+- Writing files
+- Properties files (important for automation configuration)
+- Working with JSON files (important for API testing)
+- File operations in Selenium and REST Assured automation
+
+I should include:
+- Positive scenarios with examples
+- Negative scenarios with common errors and fixes
+- Use cases in Selenium automation
+- Use cases in REST Assured automation
+
+Let me create a comprehensive topic covering all these aspects with simple ASCII formatting.
+
+
+```
+================================================================================
+                    TOPIC 16: FILE HANDLING IN JAVA
+================================================================================
+
+What is File Handling?
+----------------------
+File handling refers to reading from and writing to files on the file system.
+It allows programs to:
+- Store data permanently (persistence)
+- Read configuration settings
+- Process data from external sources
+- Generate reports and logs
+- Exchange data between systems
+
+
+Why is File Handling Important for Automation?
+----------------------------------------------
+1. Read test data from files (CSV, Excel, JSON)
+2. Store configuration (URLs, credentials, timeouts)
+3. Generate test reports
+4. Capture logs
+5. Store test results
+6. Read locators from external files
+7. Handle API request/response data
+
+
+File Handling Classes in Java:
+------------------------------
++----------------------+--------------------------------------------------+
+| Class                | Description                                      |
++----------------------+--------------------------------------------------+
+| File                 | Represents file/directory path                   |
+| FileReader           | Reads characters from file                       |
+| FileWriter           | Writes characters to file                        |
+| BufferedReader       | Reads text efficiently (buffered)                |
+| BufferedWriter       | Writes text efficiently (buffered)               |
+| FileInputStream      | Reads bytes from file                            |
+| FileOutputStream     | Writes bytes to file                             |
+| Scanner              | Reads formatted input from file                  |
+| PrintWriter          | Writes formatted output to file                  |
+| Files (NIO)          | Modern file operations (Java 7+)                 |
+| Path (NIO)           | Represents file path (Java 7+)                   |
++----------------------+--------------------------------------------------+
+
+
+================================================================================
+                    PART 1: FILE CLASS BASICS
+================================================================================
+
+The File class represents a file or directory path. It doesn't actually
+contain file content - it's just a reference to a location in the file system.
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 1: File Class Operations
+--------------------------------------------------------------------------------
+
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+public class FileClassDemo {
+    public static void main(String[] args) {
+        
+        System.out.println("================================================");
+        System.out.println("              FILE CLASS DEMO");
+        System.out.println("================================================\n");
+        
+        // ========== CREATING FILE OBJECT ==========
+        System.out.println("--- Creating File Objects ---");
+        
+        // File object (doesn't create actual file yet)
+        File file1 = new File("test.txt");
+        File file2 = new File("C:/temp/data.txt");
+        File file3 = new File("src", "main.java");
+        
+        System.out.println("File 1: " + file1.getPath());
+        System.out.println("File 2: " + file2.getPath());
+        System.out.println("File 3: " + file3.getPath());
+        
+        // ========== FILE INFORMATION ==========
+        System.out.println("\n--- File Information ---");
+        
+        File currentDir = new File(".");
+        System.out.println("Current directory: " + currentDir.getAbsolutePath());
+        
+        File testFile = new File("testfile.txt");
+        System.out.println("\nFile: " + testFile.getName());
+        System.out.println("Absolute path: " + testFile.getAbsolutePath());
+        System.out.println("Parent: " + testFile.getParent());
+        System.out.println("Exists: " + testFile.exists());
+        
+        // ========== CREATING FILES AND DIRECTORIES ==========
+        System.out.println("\n--- Creating Files and Directories ---");
+        
+        // Create a new file
+        File newFile = new File("created_file.txt");
+        try {
+            if (newFile.createNewFile()) {
+                System.out.println("File created: " + newFile.getName());
+            } else {
+                System.out.println("File already exists: " + newFile.getName());
+            }
+        } catch (IOException e) {
+            System.out.println("Error creating file: " + e.getMessage());
+        }
+        
+        // Create a directory
+        File newDir = new File("test_directory");
+        if (newDir.mkdir()) {
+            System.out.println("Directory created: " + newDir.getName());
+        } else {
+            System.out.println("Directory already exists or couldn't be created");
+        }
+        
+        // Create nested directories
+        File nestedDirs = new File("parent/child/grandchild");
+        if (nestedDirs.mkdirs()) {
+            System.out.println("Nested directories created: " + nestedDirs.getPath());
+        } else {
+            System.out.println("Nested directories already exist");
+        }
+        
+        // ========== FILE PROPERTIES ==========
+        System.out.println("\n--- File Properties ---");
+        
+        if (newFile.exists()) {
+            System.out.println("Name: " + newFile.getName());
+            System.out.println("Path: " + newFile.getPath());
+            System.out.println("Absolute Path: " + newFile.getAbsolutePath());
+            System.out.println("Is File: " + newFile.isFile());
+            System.out.println("Is Directory: " + newFile.isDirectory());
+            System.out.println("Can Read: " + newFile.canRead());
+            System.out.println("Can Write: " + newFile.canWrite());
+            System.out.println("Can Execute: " + newFile.canExecute());
+            System.out.println("Is Hidden: " + newFile.isHidden());
+            System.out.println("Size: " + newFile.length() + " bytes");
+            
+            // Last modified
+            long lastModified = newFile.lastModified();
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            System.out.println("Last Modified: " + sdf.format(new Date(lastModified)));
+        }
+        
+        // ========== LISTING DIRECTORY CONTENTS ==========
+        System.out.println("\n--- Listing Directory Contents ---");
+        
+        File dir = new File(".");
+        
+        // List all files and directories
+        String[] contents = dir.list();
+        if (contents != null) {
+            System.out.println("Contents of current directory:");
+            for (String name : contents) {
+                System.out.println("  " + name);
+            }
+        }
+        
+        // List with filter (only .txt files)
+        System.out.println("\nOnly .txt files:");
+        String[] txtFiles = dir.list((d, name) -> name.endsWith(".txt"));
+        if (txtFiles != null) {
+            for (String name : txtFiles) {
+                System.out.println("  " + name);
+            }
+        }
+        
+        // List as File objects
+        System.out.println("\nFiles with details:");
+        File[] files = dir.listFiles();
+        if (files != null) {
+            for (File f : files) {
+                String type = f.isDirectory() ? "[DIR]" : "[FILE]";
+                System.out.printf("  %s %s (%d bytes)%n", type, f.getName(), f.length());
+            }
+        }
+        
+        // ========== RENAMING AND DELETING ==========
+        System.out.println("\n--- Renaming and Deleting ---");
+        
+        // Rename file
+        File oldName = new File("created_file.txt");
+        File newName = new File("renamed_file.txt");
+        
+        if (oldName.exists()) {
+            if (oldName.renameTo(newName)) {
+                System.out.println("File renamed to: " + newName.getName());
+            } else {
+                System.out.println("Failed to rename file");
+            }
+        }
+        
+        // Delete file
+        if (newName.exists()) {
+            if (newName.delete()) {
+                System.out.println("File deleted: " + newName.getName());
+            }
+        }
+        
+        // Delete directory (must be empty)
+        if (newDir.exists()) {
+            if (newDir.delete()) {
+                System.out.println("Directory deleted: " + newDir.getName());
+            }
+        }
+        
+        // Delete nested directories
+        deleteDirectory(new File("parent"));
+        
+        System.out.println("\n--- Cleanup Complete ---");
+    }
+    
+    // Helper method to delete directory recursively
+    public static void deleteDirectory(File dir) {
+        if (dir.exists()) {
+            File[] files = dir.listFiles();
+            if (files != null) {
+                for (File file : files) {
+                    if (file.isDirectory()) {
+                        deleteDirectory(file);
+                    } else {
+                        file.delete();
+                    }
+                }
+            }
+            if (dir.delete()) {
+                System.out.println("Deleted: " + dir.getPath());
+            }
+        }
+    }
+}
+
+OUTPUT:
+-------
+================================================
+              FILE CLASS DEMO
+================================================
+
+--- Creating File Objects ---
+File 1: test.txt
+File 2: C:\temp\data.txt
+File 3: src\main.java
+
+--- File Information ---
+Current directory: C:\projects\java\.
+
+File: testfile.txt
+Absolute path: C:\projects\java\testfile.txt
+Parent: null
+Exists: false
+
+--- Creating Files and Directories ---
+File created: created_file.txt
+Directory created: test_directory
+Nested directories created: parent\child\grandchild
+
+--- File Properties ---
+Name: created_file.txt
+Path: created_file.txt
+Absolute Path: C:\projects\java\created_file.txt
+Is File: true
+Is Directory: false
+Can Read: true
+Can Write: true
+Can Execute: true
+Is Hidden: false
+Size: 0 bytes
+Last Modified: 2024-01-15 10:30:45
+
+--- Listing Directory Contents ---
+Contents of current directory:
+  created_file.txt
+  test_directory
+  parent
+
+Only .txt files:
+  created_file.txt
+
+Files with details:
+  [FILE] created_file.txt (0 bytes)
+  [DIR] test_directory (0 bytes)
+  [DIR] parent (0 bytes)
+
+--- Renaming and Deleting ---
+File renamed to: renamed_file.txt
+File deleted: renamed_file.txt
+Directory deleted: test_directory
+Deleted: parent\child\grandchild
+Deleted: parent\child
+Deleted: parent
+
+--- Cleanup Complete ---
+
+
+================================================================================
+                    PART 2: READING FILES
+================================================================================
+
+Methods to Read Files:
+----------------------
+1. FileReader + BufferedReader (character streams)
+2. Scanner (formatted input)
+3. Files.readAllLines() (Java 7+ NIO)
+4. Files.readString() (Java 11+)
+5. FileInputStream (byte streams)
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 2: Reading Text Files
+--------------------------------------------------------------------------------
+
+import java.io.*;
+import java.nio.file.*;
+import java.util.*;
+
+public class ReadingFilesDemo {
+    public static void main(String[] args) {
+        
+        System.out.println("================================================");
+        System.out.println("            READING FILES DEMO");
+        System.out.println("================================================\n");
+        
+        // First, create a sample file to read
+        createSampleFile();
+        
+        // ========== METHOD 1: BufferedReader ==========
+        System.out.println("--- Method 1: BufferedReader ---");
+        
+        try (BufferedReader reader = new BufferedReader(new FileReader("sample.txt"))) {
+            String line;
+            int lineNumber = 1;
+            
+            while ((line = reader.readLine()) != null) {
+                System.out.println(lineNumber + ": " + line);
+                lineNumber++;
+            }
+        } catch (IOException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+        
+        // ========== METHOD 2: Scanner ==========
+        System.out.println("\n--- Method 2: Scanner ---");
+        
+        try (Scanner scanner = new Scanner(new File("sample.txt"))) {
+            while (scanner.hasNextLine()) {
+                String line = scanner.nextLine();
+                System.out.println(line);
+            }
+        } catch (FileNotFoundException e) {
+            System.out.println("File not found: " + e.getMessage());
+        }
+        
+        // ========== METHOD 3: Files.readAllLines() (Java 7+) ==========
+        System.out.println("\n--- Method 3: Files.readAllLines() ---");
+        
+        try {
+            List<String> lines = Files.readAllLines(Paths.get("sample.txt"));
+            
+            System.out.println("Total lines: " + lines.size());
+            for (String line : lines) {
+                System.out.println(line);
+            }
+        } catch (IOException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+        
+        // ========== METHOD 4: Files.readString() (Java 11+) ==========
+        System.out.println("\n--- Method 4: Files.readString() ---");
+        
+        try {
+            String content = Files.readString(Path.of("sample.txt"));
+            System.out.println("File content:");
+            System.out.println(content);
+        } catch (IOException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+        
+        // ========== METHOD 5: Read as Stream (Java 8+) ==========
+        System.out.println("\n--- Method 5: Files.lines() Stream ---");
+        
+        try (var stream = Files.lines(Path.of("sample.txt"))) {
+            stream.filter(line -> !line.isEmpty())
+                  .map(String::toUpperCase)
+                  .forEach(System.out::println);
+        } catch (IOException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+        
+        // ========== METHOD 6: Read Bytes ==========
+        System.out.println("\n--- Method 6: Read Bytes ---");
+        
+        try {
+            byte[] bytes = Files.readAllBytes(Path.of("sample.txt"));
+            System.out.println("File size: " + bytes.length + " bytes");
+            System.out.println("Content: " + new String(bytes));
+        } catch (IOException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+        
+        // ========== READING SPECIFIC LINES ==========
+        System.out.println("\n--- Reading Specific Lines ---");
+        
+        try {
+            List<String> allLines = Files.readAllLines(Path.of("sample.txt"));
+            
+            // First line
+            if (!allLines.isEmpty()) {
+                System.out.println("First line: " + allLines.get(0));
+            }
+            
+            // Last line
+            if (!allLines.isEmpty()) {
+                System.out.println("Last line: " + allLines.get(allLines.size() - 1));
+            }
+            
+            // Line at specific index
+            int index = 2;
+            if (allLines.size() > index) {
+                System.out.println("Line " + (index + 1) + ": " + allLines.get(index));
+            }
+            
+        } catch (IOException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+        
+        // Cleanup
+        new File("sample.txt").delete();
+    }
+    
+    private static void createSampleFile() {
+        try (PrintWriter writer = new PrintWriter("sample.txt")) {
+            writer.println("Line 1: Hello, World!");
+            writer.println("Line 2: This is a sample file.");
+            writer.println("Line 3: Used for demonstrating file reading.");
+            writer.println("Line 4: Java File Handling is powerful!");
+            writer.println("Line 5: End of file.");
+        } catch (FileNotFoundException e) {
+            System.out.println("Error creating file: " + e.getMessage());
+        }
+        System.out.println("Sample file created.\n");
+    }
+}
+
+OUTPUT:
+-------
+================================================
+            READING FILES DEMO
+================================================
+
+Sample file created.
+
+--- Method 1: BufferedReader ---
+1: Line 1: Hello, World!
+2: Line 2: This is a sample file.
+3: Line 3: Used for demonstrating file reading.
+4: Line 4: Java File Handling is powerful!
+5: Line 5: End of file.
+
+--- Method 2: Scanner ---
+Line 1: Hello, World!
+Line 2: This is a sample file.
+Line 3: Used for demonstrating file reading.
+Line 4: Java File Handling is powerful!
+Line 5: End of file.
+
+--- Method 3: Files.readAllLines() ---
+Total lines: 5
+Line 1: Hello, World!
+Line 2: This is a sample file.
+Line 3: Used for demonstrating file reading.
+Line 4: Java File Handling is powerful!
+Line 5: End of file.
+
+--- Method 4: Files.readString() ---
+File content:
+Line 1: Hello, World!
+Line 2: This is a sample file.
+Line 3: Used for demonstrating file reading.
+Line 4: Java File Handling is powerful!
+Line 5: End of file.
+
+--- Method 5: Files.lines() Stream ---
+LINE 1: HELLO, WORLD!
+LINE 2: THIS IS A SAMPLE FILE.
+LINE 3: USED FOR DEMONSTRATING FILE READING.
+LINE 4: JAVA FILE HANDLING IS POWERFUL!
+LINE 5: END OF FILE.
+
+--- Method 6: Read Bytes ---
+File size: 156 bytes
+Content: Line 1: Hello, World!
+Line 2: This is a sample file.
+...
+
+--- Reading Specific Lines ---
+First line: Line 1: Hello, World!
+Last line: Line 5: End of file.
+Line 3: Line 3: Used for demonstrating file reading.
+
+
+================================================================================
+                    PART 3: WRITING FILES
+================================================================================
+
+Methods to Write Files:
+-----------------------
+1. FileWriter + BufferedWriter (character streams)
+2. PrintWriter (formatted output)
+3. Files.write() (Java 7+ NIO)
+4. Files.writeString() (Java 11+)
+5. FileOutputStream (byte streams)
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 3: Writing Text Files
+--------------------------------------------------------------------------------
+
+import java.io.*;
+import java.nio.file.*;
+import java.util.*;
+
+public class WritingFilesDemo {
+    public static void main(String[] args) {
+        
+        System.out.println("================================================");
+        System.out.println("            WRITING FILES DEMO");
+        System.out.println("================================================\n");
+        
+        // ========== METHOD 1: FileWriter ==========
+        System.out.println("--- Method 1: FileWriter ---");
+        
+        try (FileWriter writer = new FileWriter("output1.txt")) {
+            writer.write("Hello, World!\n");
+            writer.write("This is written using FileWriter.\n");
+            writer.write("Line 3 of the file.\n");
+            System.out.println("File written: output1.txt");
+        } catch (IOException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+        
+        // Read and display
+        displayFileContent("output1.txt");
+        
+        // ========== METHOD 2: BufferedWriter ==========
+        System.out.println("\n--- Method 2: BufferedWriter ---");
+        
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter("output2.txt"))) {
+            writer.write("Line 1: BufferedWriter is efficient");
+            writer.newLine();    // Platform-independent newline
+            writer.write("Line 2: It buffers the output");
+            writer.newLine();
+            writer.write("Line 3: Reduces I/O operations");
+            System.out.println("File written: output2.txt");
+        } catch (IOException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+        
+        displayFileContent("output2.txt");
+        
+        // ========== METHOD 3: PrintWriter ==========
+        System.out.println("\n--- Method 3: PrintWriter ---");
+        
+        try (PrintWriter writer = new PrintWriter("output3.txt")) {
+            writer.println("PrintWriter is convenient!");
+            writer.println("It has print() and println() methods.");
+            writer.printf("Formatted output: %d + %d = %d%n", 5, 3, 8);
+            writer.printf("Price: $%.2f%n", 19.99);
+            System.out.println("File written: output3.txt");
+        } catch (FileNotFoundException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+        
+        displayFileContent("output3.txt");
+        
+        // ========== METHOD 4: Files.write() (Java 7+) ==========
+        System.out.println("\n--- Method 4: Files.write() ---");
+        
+        try {
+            List<String> lines = Arrays.asList(
+                "Line 1: Using Files.write()",
+                "Line 2: Modern NIO approach",
+                "Line 3: Very concise"
+            );
+            
+            Files.write(Path.of("output4.txt"), lines);
+            System.out.println("File written: output4.txt");
+        } catch (IOException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+        
+        displayFileContent("output4.txt");
+        
+        // ========== METHOD 5: Files.writeString() (Java 11+) ==========
+        System.out.println("\n--- Method 5: Files.writeString() ---");
+        
+        try {
+            String content = "Single string content.\nLine 2.\nLine 3.";
+            Files.writeString(Path.of("output5.txt"), content);
+            System.out.println("File written: output5.txt");
+        } catch (IOException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+        
+        displayFileContent("output5.txt");
+        
+        // ========== APPENDING TO FILE ==========
+        System.out.println("\n--- Appending to File ---");
+        
+        // Create initial file
+        try (PrintWriter writer = new PrintWriter("append_test.txt")) {
+            writer.println("Original line 1");
+            writer.println("Original line 2");
+        } catch (FileNotFoundException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+        
+        System.out.println("Before append:");
+        displayFileContent("append_test.txt");
+        
+        // Append to file (note: true parameter)
+        try (FileWriter writer = new FileWriter("append_test.txt", true)) {
+            writer.write("Appended line 3\n");
+            writer.write("Appended line 4\n");
+        } catch (IOException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+        
+        System.out.println("\nAfter append:");
+        displayFileContent("append_test.txt");
+        
+        // Append using Files.write()
+        try {
+            Files.write(
+                Path.of("append_test.txt"),
+                Arrays.asList("Appended line 5", "Appended line 6"),
+                StandardOpenOption.APPEND
+            );
+        } catch (IOException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+        
+        System.out.println("\nAfter second append:");
+        displayFileContent("append_test.txt");
+        
+        // ========== WRITING BYTES ==========
+        System.out.println("\n--- Writing Bytes ---");
+        
+        try {
+            byte[] data = "Binary data content".getBytes();
+            Files.write(Path.of("binary.dat"), data);
+            System.out.println("Binary file written: binary.dat");
+            System.out.println("Size: " + data.length + " bytes");
+        } catch (IOException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+        
+        // Cleanup
+        cleanupFiles();
+    }
+    
+    private static void displayFileContent(String filename) {
+        try {
+            System.out.println("Content of " + filename + ":");
+            Files.readAllLines(Path.of(filename)).forEach(line -> 
+                System.out.println("  " + line));
+        } catch (IOException e) {
+            System.out.println("Error reading file: " + e.getMessage());
+        }
+    }
+    
+    private static void cleanupFiles() {
+        String[] files = {"output1.txt", "output2.txt", "output3.txt", 
+                         "output4.txt", "output5.txt", "append_test.txt", "binary.dat"};
+        System.out.println("\n--- Cleanup ---");
+        for (String file : files) {
+            if (new File(file).delete()) {
+                System.out.println("Deleted: " + file);
+            }
+        }
+    }
+}
+
+OUTPUT:
+-------
+================================================
+            WRITING FILES DEMO
+================================================
+
+--- Method 1: FileWriter ---
+File written: output1.txt
+Content of output1.txt:
+  Hello, World!
+  This is written using FileWriter.
+  Line 3 of the file.
+
+--- Method 2: BufferedWriter ---
+File written: output2.txt
+Content of output2.txt:
+  Line 1: BufferedWriter is efficient
+  Line 2: It buffers the output
+  Line 3: Reduces I/O operations
+
+--- Method 3: PrintWriter ---
+File written: output3.txt
+Content of output3.txt:
+  PrintWriter is convenient!
+  It has print() and println() methods.
+  Formatted output: 5 + 3 = 8
+  Price: $19.99
+
+--- Method 4: Files.write() ---
+File written: output4.txt
+Content of output4.txt:
+  Line 1: Using Files.write()
+  Line 2: Modern NIO approach
+  Line 3: Very concise
+
+--- Method 5: Files.writeString() ---
+File written: output5.txt
+Content of output5.txt:
+  Single string content.
+  Line 2.
+  Line 3.
+
+--- Appending to File ---
+Before append:
+Content of append_test.txt:
+  Original line 1
+  Original line 2
+
+After append:
+Content of append_test.txt:
+  Original line 1
+  Original line 2
+  Appended line 3
+  Appended line 4
+
+After second append:
+Content of append_test.txt:
+  Original line 1
+  Original line 2
+  Appended line 3
+  Appended line 4
+  Appended line 5
+  Appended line 6
+
+--- Writing Bytes ---
+Binary file written: binary.dat
+Size: 19 bytes
+
+--- Cleanup ---
+Deleted: output1.txt
+Deleted: output2.txt
+...
+
+
+================================================================================
+                    PART 4: PROPERTIES FILES
+================================================================================
+
+What are Properties Files?
+--------------------------
+- Simple key=value pair configuration files
+- Extension: .properties
+- Used for storing configuration settings
+- Very common in Java applications and test automation
+- Can be loaded at runtime without recompiling code
+
+
+Properties File Format:
+-----------------------
+# This is a comment
+! This is also a comment
+
+key1=value1
+key2 = value2
+key3: value3
+
+# Multi-line values use backslash
+long.text = This is a very long \
+            value that spans multiple lines
+
+# Special characters need escaping
+path = C:\\Users\\Admin\\Documents
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 4: Working with Properties Files
+--------------------------------------------------------------------------------
+
+import java.io.*;
+import java.util.*;
+
+public class PropertiesFileDemo {
+    public static void main(String[] args) {
+        
+        System.out.println("================================================");
+        System.out.println("          PROPERTIES FILE DEMO");
+        System.out.println("================================================\n");
+        
+        // ========== CREATING PROPERTIES FILE ==========
+        System.out.println("--- Creating Properties File ---");
+        
+        Properties props = new Properties();
+        
+        // Set properties
+        props.setProperty("app.name", "Test Automation Framework");
+        props.setProperty("app.version", "1.0.0");
+        props.setProperty("browser", "chrome");
+        props.setProperty("base.url", "https://www.example.com");
+        props.setProperty("implicit.wait", "10");
+        props.setProperty("explicit.wait", "30");
+        props.setProperty("username", "testuser");
+        props.setProperty("password", "[REDACTED:PASSWORD]");
+        props.setProperty("headless", "false");
+        props.setProperty("screenshot.on.failure", "true");
+        
+        // Save to file
+        try (FileOutputStream fos = new FileOutputStream("config.properties")) {
+            props.store(fos, "Test Automation Configuration");
+            System.out.println("Properties file created: config.properties");
+        } catch (IOException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+        
+        // Display file content
+        System.out.println("\nFile content:");
+        displayFileContent("config.properties");
+        
+        // ========== READING PROPERTIES FILE ==========
+        System.out.println("\n--- Reading Properties File ---");
+        
+        Properties loadedProps = new Properties();
+        
+        try (FileInputStream fis = new FileInputStream("config.properties")) {
+            loadedProps.load(fis);
+            System.out.println("Properties loaded successfully!");
+        } catch (IOException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+        
+        // Get individual properties
+        System.out.println("\nIndividual properties:");
+        System.out.println("App Name: " + loadedProps.getProperty("app.name"));
+        System.out.println("Browser: " + loadedProps.getProperty("browser"));
+        System.out.println("Base URL: " + loadedProps.getProperty("base.url"));
+        System.out.println("Implicit Wait: " + loadedProps.getProperty("implicit.wait"));
+        
+        // Get property with default value
+        String timeout = loadedProps.getProperty("page.load.timeout", "60");
+        System.out.println("Page Load Timeout (with default): " + timeout);
+        
+        // Get non-existent property
+        String nonExistent = loadedProps.getProperty("non.existent");
+        System.out.println("Non-existent property: " + nonExistent);
+        
+        // ========== ITERATING ALL PROPERTIES ==========
+        System.out.println("\n--- All Properties ---");
+        
+        // Method 1: Using stringPropertyNames()
+        Set<String> propertyNames = loadedProps.stringPropertyNames();
+        for (String name : propertyNames) {
+            System.out.println("  " + name + " = " + loadedProps.getProperty(name));
+        }
+        
+        // Method 2: Using forEach
+        System.out.println("\nUsing forEach:");
+        loadedProps.forEach((key, value) -> 
+            System.out.println("  " + key + " = " + value));
+        
+        // ========== UPDATING PROPERTIES ==========
+        System.out.println("\n--- Updating Properties ---");
+        
+        // Update existing property
+        loadedProps.setProperty("browser", "firefox");
+        System.out.println("Updated browser to: " + loadedProps.getProperty("browser"));
+        
+        // Add new property
+        loadedProps.setProperty("new.property", "new value");
+        System.out.println("Added new property: " + loadedProps.getProperty("new.property"));
+        
+        // Save updated properties
+        try (FileOutputStream fos = new FileOutputStream("config.properties")) {
+            loadedProps.store(fos, "Updated Configuration");
+            System.out.println("Properties file updated!");
+        } catch (IOException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+        
+        // ========== REMOVING PROPERTIES ==========
+        System.out.println("\n--- Removing Properties ---");
+        
+        Object removed = loadedProps.remove("new.property");
+        System.out.println("Removed: " + removed);
+        System.out.println("Property exists after removal: " + 
+                          loadedProps.containsKey("new.property"));
+        
+        // ========== LOADING FROM CLASSPATH ==========
+        System.out.println("\n--- Loading from Classpath ---");
+        
+        Properties classpathProps = new Properties();
+        try (InputStream is = PropertiesFileDemo.class.getClassLoader()
+                .getResourceAsStream("config.properties")) {
+            if (is != null) {
+                classpathProps.load(is);
+                System.out.println("Loaded from classpath!");
+            } else {
+                System.out.println("File not found in classpath");
+            }
+        } catch (IOException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+        
+        // ========== CONVERTING PROPERTY VALUES ==========
+        System.out.println("\n--- Converting Property Values ---");
+        
+        // String to int
+        int implicitWait = Integer.parseInt(loadedProps.getProperty("implicit.wait", "10"));
+        System.out.println("Implicit Wait (int): " + implicitWait);
+        
+        // String to boolean
+        boolean headless = Boolean.parseBoolean(loadedProps.getProperty("headless", "false"));
+        System.out.println("Headless (boolean): " + headless);
+        
+        // String to boolean with default
+        boolean screenshotOnFailure = Boolean.parseBoolean(
+            loadedProps.getProperty("screenshot.on.failure", "true"));
+        System.out.println("Screenshot on Failure (boolean): " + screenshotOnFailure);
+        
+        // Cleanup
+        new File("config.properties").delete();
+        System.out.println("\n--- Cleanup Complete ---");
+    }
+    
+    private static void displayFileContent(String filename) {
+        try {
+            java.nio.file.Files.readAllLines(java.nio.file.Path.of(filename))
+                .forEach(line -> System.out.println("  " + line));
+        } catch (IOException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+    }
+}
+
+OUTPUT:
+-------
+================================================
+          PROPERTIES FILE DEMO
+================================================
+
+--- Creating Properties File ---
+Properties file created: config.properties
+
+File content:
+  #Test Automation Configuration
+  #Mon Jan 15 10:30:45 UTC 2024
+  app.name=Test Automation Framework
+  app.version=1.0.0
+  browser=chrome
+  base.url=https://www.example.com
+  implicit.wait=10
+  explicit.wait=30
+  username=testuser
+  password=[REDACTED:PASSWORD]
+  headless=false
+  screenshot.on.failure=true
+
+--- Reading Properties File ---
+Properties loaded successfully!
+
+Individual properties:
+App Name: Test Automation Framework
+Browser: chrome
+Base URL: https://www.example.com
+Implicit Wait: 10
+Page Load Timeout (with default): 60
+Non-existent property: null
+
+--- All Properties ---
+  app.name = Test Automation Framework
+  app.version = 1.0.0
+  browser = chrome
+  base.url = https://www.example.com
+  implicit.wait = 10
+  explicit.wait = 30
+  username = testuser
+  password = [REDACTED:PASSWORD]
+  headless = false
+  screenshot.on.failure = true
+
+Using forEach:
+  app.name = Test Automation Framework
+  ...
+
+--- Updating Properties ---
+Updated browser to: firefox
+Added new property: new value
+Properties file updated!
+
+--- Removing Properties ---
+Removed: new value
+Property exists after removal: false
+
+--- Loading from Classpath ---
+File not found in classpath
+
+--- Converting Property Values ---
+Implicit Wait (int): 10
+Headless (boolean): false
+Screenshot on Failure (boolean): true
+
+--- Cleanup Complete ---
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 5: Configuration Manager for Automation
+--------------------------------------------------------------------------------
+
+import java.io.*;
+import java.util.*;
+
+// Singleton Configuration Manager
+class ConfigManager {
+    
+    private static ConfigManager instance;
+    private Properties properties;
+    private String configFilePath;
+    
+    // Private constructor for singleton
+    private ConfigManager() {
+        properties = new Properties();
+    }
+    
+    // Get singleton instance
+    public static ConfigManager getInstance() {
+        if (instance == null) {
+            synchronized (ConfigManager.class) {
+                if (instance == null) {
+                    instance = new ConfigManager();
+                }
+            }
+        }
+        return instance;
+    }
+    
+    // Load configuration from file
+    public void loadConfig(String filePath) {
+        this.configFilePath = filePath;
+        
+        try (FileInputStream fis = new FileInputStream(filePath)) {
+            properties.load(fis);
+            System.out.println("[ConfigManager] Configuration loaded from: " + filePath);
+        } catch (FileNotFoundException e) {
+            System.out.println("[ConfigManager] Config file not found: " + filePath);
+            System.out.println("[ConfigManager] Using default configuration");
+            loadDefaultConfig();
+        } catch (IOException e) {
+            System.out.println("[ConfigManager] Error loading config: " + e.getMessage());
+            loadDefaultConfig();
+        }
+    }
+    
+    // Load default configuration
+    private void loadDefaultConfig() {
+        properties.setProperty("browser", "chrome");
+        properties.setProperty("base.url", "http://localhost:8080");
+        properties.setProperty("implicit.wait", "10");
+        properties.setProperty("explicit.wait", "30");
+        properties.setProperty("headless", "false");
+        System.out.println("[ConfigManager] Default configuration loaded");
+    }
+    
+    // Get string property
+    public String getProperty(String key) {
+        return properties.getProperty(key);
+    }
+    
+    // Get string property with default
+    public String getProperty(String key, String defaultValue) {
+        return properties.getProperty(key, defaultValue);
+    }
+    
+    // Get integer property
+    public int getIntProperty(String key, int defaultValue) {
+        String value = properties.getProperty(key);
+        if (value != null) {
+            try {
+                return Integer.parseInt(value.trim());
+            } catch (NumberFormatException e) {
+                System.out.println("[ConfigManager] Invalid int value for " + key + 
+                                  ", using default: " + defaultValue);
+            }
+        }
+        return defaultValue;
+    }
+    
+    // Get boolean property
+    public boolean getBooleanProperty(String key, boolean defaultValue) {
+        String value = properties.getProperty(key);
+        if (value != null) {
+            return Boolean.parseBoolean(value.trim());
+        }
+        return defaultValue;
+    }
+    
+    // Get double property
+    public double getDoubleProperty(String key, double defaultValue) {
+        String value = properties.getProperty(key);
+        if (value != null) {
+            try {
+                return Double.parseDouble(value.trim());
+            } catch (NumberFormatException e) {
+                System.out.println("[ConfigManager] Invalid double value for " + key);
+            }
+        }
+        return defaultValue;
+    }
+    
+    // Set property
+    public void setProperty(String key, String value) {
+        properties.setProperty(key, value);
+    }
+    
+    // Save configuration to file
+    public void saveConfig() {
+        if (configFilePath != null) {
+            try (FileOutputStream fos = new FileOutputStream(configFilePath)) {
+                properties.store(fos, "Test Automation Configuration");
+                System.out.println("[ConfigManager] Configuration saved to: " + configFilePath);
+            } catch (IOException e) {
+                System.out.println("[ConfigManager] Error saving config: " + e.getMessage());
+            }
+        }
+    }
+    
+    // Get all properties
+    public Properties getAllProperties() {
+        return new Properties(properties);
+    }
+    
+    // Display all configuration
+    public void displayConfig() {
+        System.out.println("\n========== CONFIGURATION ==========");
+        properties.forEach((key, value) -> {
+            // Mask sensitive data
+            String displayValue = key.toString().toLowerCase().contains("password") 
+                                  ? "********" : value.toString();
+            System.out.println("  " + key + " = " + displayValue);
+        });
+        System.out.println("====================================\n");
+    }
+    
+    // Specific getters for common properties
+    public String getBrowser() {
+        return getProperty("browser", "chrome");
+    }
+    
+    public String getBaseUrl() {
+        return getProperty("base.url", "http://localhost");
+    }
+    
+    public int getImplicitWait() {
+        return getIntProperty("implicit.wait", 10);
+    }
+    
+    public int getExplicitWait() {
+        return getIntProperty("explicit.wait", 30);
+    }
+    
+    public boolean isHeadless() {
+        return getBooleanProperty("headless", false);
+    }
+    
+    public String getUsername() {
+        return getProperty("username", "");
+    }
+    
+    public String getPassword() {
+        return getProperty("password", "");
+    }
+}
+
+public class ConfigManagerDemo {
+    public static void main(String[] args) {
+        
+        System.out.println("================================================");
+        System.out.println("         CONFIGURATION MANAGER DEMO");
+        System.out.println("================================================\n");
+        
+        // Create sample config file
+        createSampleConfigFile();
+        
+        // Get ConfigManager instance
+        ConfigManager config = ConfigManager.getInstance();
+        
+        // Load configuration
+        config.loadConfig("test-config.properties");
+        
+        // Display all configuration
+        config.displayConfig();
+        
+        // Use configuration values
+        System.out.println("--- Using Configuration Values ---");
+        System.out.println("Browser: " + config.getBrowser());
+        System.out.println("Base URL: " + config.getBaseUrl());
+        System.out.println("Implicit Wait: " + config.getImplicitWait() + " seconds");
+        System.out.println("Explicit Wait: " + config.getExplicitWait() + " seconds");
+        System.out.println("Headless: " + config.isHeadless());
+        System.out.println("Username: " + config.getUsername());
+        System.out.println("Password: " + (config.getPassword().isEmpty() ? "[not set]" : "********"));
+        
+        // Get custom properties
+        System.out.println("\n--- Custom Properties ---");
+        System.out.println("API URL: " + config.getProperty("api.url", "not configured"));
+        System.out.println("Retry Count: " + config.getIntProperty("retry.count", 3));
+        System.out.println("Timeout: " + config.getDoubleProperty("timeout.seconds", 30.0));
+        
+        // Update configuration at runtime
+        System.out.println("\n--- Runtime Configuration Update ---");
+        config.setProperty("browser", "firefox");
+        config.setProperty("headless", "true");
+        System.out.println("Updated browser to: " + config.getBrowser());
+        System.out.println("Updated headless to: " + config.isHeadless());
+        
+        // Save updated configuration
+        config.saveConfig();
+        
+        // Test with non-existent file
+        System.out.println("\n--- Loading Non-existent File ---");
+        ConfigManager config2 = ConfigManager.getInstance();
+        config2.loadConfig("non-existent.properties");
+        
+        // Cleanup
+        new File("test-config.properties").delete();
+        System.out.println("\n--- Demo Complete ---");
+    }
+    
+    private static void createSampleConfigFile() {
+        Properties props = new Properties();
+        props.setProperty("browser", "chrome");
+        props.setProperty("base.url", "https://www.example.com");
+        props.setProperty("implicit.wait", "10");
+        props.setProperty("explicit.wait", "30");
+        props.setProperty("headless", "false");
+        props.setProperty("username", "testuser");
+        props.setProperty("password", "[REDACTED:PASSWORD]");
+        props.setProperty("api.url", "https://api.example.com");
+        props.setProperty("retry.count", "3");
+        props.setProperty("timeout.seconds", "45.5");
+        
+        try (FileOutputStream fos = new FileOutputStream("test-config.properties")) {
+            props.store(fos, "Sample Test Configuration");
+            System.out.println("Sample config file created.\n");
+        } catch (IOException e) {
+            System.out.println("Error creating config file: " + e.getMessage());
+        }
+    }
+}
+
+OUTPUT:
+-------
+================================================
+         CONFIGURATION MANAGER DEMO
+================================================
+
+Sample config file created.
+
+[ConfigManager] Configuration loaded from: test-config.properties
+
+========== CONFIGURATION ==========
+  browser = chrome
+  base.url = https://www.example.com
+  implicit.wait = 10
+  explicit.wait = 30
+  headless = false
+  username = testuser
+  password = ********
+  api.url = https://api.example.com
+  retry.count = 3
+  timeout.seconds = 45.5
+====================================
+
+--- Using Configuration Values ---
+Browser: chrome
+Base URL: https://www.example.com
+Implicit Wait: 10 seconds
+Explicit Wait: 30 seconds
+Headless: false
+Username: testuser
+Password: ********
+
+--- Custom Properties ---
+API URL: https://api.example.com
+Retry Count: 3
+Timeout: 45.5
+
+--- Runtime Configuration Update ---
+Updated browser to: firefox
+Updated headless to: true
+[ConfigManager] Configuration saved to: test-config.properties
+
+--- Loading Non-existent File ---
+[ConfigManager] Config file not found: non-existent.properties
+[ConfigManager] Using default configuration
+[ConfigManager] Default configuration loaded
+
+--- Demo Complete ---
+
+
+================================================================================
+                    PART 5: CSV FILE HANDLING
+================================================================================
+
+CSV (Comma-Separated Values) files are commonly used for:
+- Test data storage
+- Data-driven testing
+- Exporting/importing data
+- Reports
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 6: Reading and Writing CSV Files
+--------------------------------------------------------------------------------
+
+import java.io.*;
+import java.nio.file.*;
+import java.util.*;
+
+public class CSVFileDemo {
+    public static void main(String[] args) {
+        
+        System.out.println("================================================");
+        System.out.println("              CSV FILE DEMO");
+        System.out.println("================================================\n");
+        
+        // ========== WRITING CSV FILE ==========
+        System.out.println("--- Writing CSV File ---");
+        
+        List<String[]> data = new ArrayList<>();
+        data.add(new String[]{"ID", "Name", "Email", "Age", "City"});
+        data.add(new String[]{"1", "John Doe", "john@example.com", "30", "New York"});
+        data.add(new String[]{"2", "Jane Smith", "jane@example.com", "25", "Los Angeles"});
+        data.add(new String[]{"3", "Bob Wilson", "bob@example.com", "35", "Chicago"});
+        data.add(new String[]{"4", "Alice Brown", "alice@example.com", "28", "Houston"});
+        data.add(new String[]{"5", "Charlie Davis", "charlie@example.com", "32", "Phoenix"});
+        
+        writeCSV("users.csv", data);
+        System.out.println("CSV file written: users.csv\n");
+        
+        // Display file content
+        System.out.println("File content:");
+        displayFileContent("users.csv");
+        
+        // ========== READING CSV FILE ==========
+        System.out.println("\n--- Reading CSV File ---");
+        
+        List<String[]> readData = readCSV("users.csv");
+        
+        System.out.println("Total rows: " + readData.size());
+        System.out.println("\nFormatted output:");
+        
+        // Print as table
+        printAsTable(readData);
+        
+        // ========== READING CSV WITH HEADER ==========
+        System.out.println("\n--- Reading CSV with Header ---");
+        
+        List<Map<String, String>> dataWithHeader = readCSVWithHeader("users.csv");
+        
+        System.out.println("Records (excluding header): " + dataWithHeader.size());
+        
+        for (Map<String, String> record : dataWithHeader) {
+            System.out.println("  " + record);
+        }
+        
+        // ========== FILTERING DATA ==========
+        System.out.println("\n--- Filtering Data ---");
+        
+        // Find users older than 30
+        System.out.println("Users older than 30:");
+        for (Map<String, String> record : dataWithHeader) {
+            int age = Integer.parseInt(record.get("Age"));
+            if (age > 30) {
+                System.out.println("  " + record.get("Name") + " - Age: " + age);
+            }
+        }
+        
+        // Find user by email
+        String searchEmail = "jane@example.com";
+        System.out.println("\nSearching for: " + searchEmail);
+        for (Map<String, String> record : dataWithHeader) {
+            if (record.get("Email").equals(searchEmail)) {
+                System.out.println("  Found: " + record);
+            }
+        }
+        
+        // ========== ADDING NEW ROW ==========
+        System.out.println("\n--- Adding New Row ---");
+        
+        String[] newRow = {"6", "Eve Johnson", "eve@example.com", "27", "Seattle"};
+        appendToCSV("users.csv", newRow);
+        
+        System.out.println("New row added. Updated file:");
+        displayFileContent("users.csv");
+        
+        // ========== UPDATING DATA ==========
+        System.out.println("\n--- Updating Data ---");
+        
+        // Read all data
+        List<String[]> allData = readCSV("users.csv");
+        
+        // Update user with ID 2
+        for (int i = 1; i < allData.size(); i++) {
+            if (allData.get(i)[0].equals("2")) {
+                allData.get(i)[4] = "San Francisco";    // Update city
+                System.out.println("Updated user 2's city to San Francisco");
+            }
+        }
+        
+        // Write back
+        writeCSV("users.csv", allData);
+        
+        System.out.println("\nUpdated file:");
+        displayFileContent("users.csv");
+        
+        // ========== CSV WITH SPECIAL CHARACTERS ==========
+        System.out.println("\n--- CSV with Special Characters ---");
+        
+        List<String[]> specialData = new ArrayList<>();
+        specialData.add(new String[]{"Name", "Description", "Price"});
+        specialData.add(new String[]{"Product A", "Simple product", "10.99"});
+        specialData.add(new String[]{"Product B", "Product with, comma", "20.99"});
+        specialData.add(new String[]{"Product C", "Product with \"quotes\"", "30.99"});
+        specialData.add(new String[]{"Product D", "Multi\nline", "40.99"});
+        
+        writeCSVWithEscaping("special.csv", specialData);
+        System.out.println("Special CSV written.");
+        displayFileContent("special.csv");
+        
+        // Cleanup
+        new File("users.csv").delete();
+        new File("special.csv").delete();
+        System.out.println("\n--- Cleanup Complete ---");
+    }
+    
+    // Write CSV file
+    public static void writeCSV(String filename, List<String[]> data) {
+        try (PrintWriter writer = new PrintWriter(filename)) {
+            for (String[] row : data) {
+                writer.println(String.join(",", row));
+            }
+        } catch (FileNotFoundException e) {
+            System.out.println("Error writing CSV: " + e.getMessage());
+        }
+    }
+    
+    // Write CSV with proper escaping
+    public static void writeCSVWithEscaping(String filename, List<String[]> data) {
+        try (PrintWriter writer = new PrintWriter(filename)) {
+            for (String[] row : data) {
+                List<String> escapedRow = new ArrayList<>();
+                for (String cell : row) {
+                    escapedRow.add(escapeCSV(cell));
+                }
+                writer.println(String.join(",", escapedRow));
+            }
+        } catch (FileNotFoundException e) {
+            System.out.println("Error writing CSV: " + e.getMessage());
+        }
+    }
+    
+    // Escape CSV cell
+    private static String escapeCSV(String cell) {
+        if (cell.contains(",") || cell.contains("\"") || cell.contains("\n")) {
+            return "\"" + cell.replace("\"", "\"\"") + "\"";
+        }
+        return cell;
+    }
+    
+    // Read CSV file
+    public static List<String[]> readCSV(String filename) {
+        List<String[]> data = new ArrayList<>();
+        
+        try (BufferedReader reader = new BufferedReader(new FileReader(filename))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] row = line.split(",");
+                data.add(row);
+            }
+        } catch (IOException e) {
+            System.out.println("Error reading CSV: " + e.getMessage());
+        }
+        
+        return data;
+    }
+    
+    // Read CSV with header as Map
+    public static List<Map<String, String>> readCSVWithHeader(String filename) {
+        List<Map<String, String>> data = new ArrayList<>();
+        
+        try (BufferedReader reader = new BufferedReader(new FileReader(filename))) {
+            String headerLine = reader.readLine();
+            if (headerLine == null) return data;
+            
+            String[] headers = headerLine.split(",");
+            
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] values = line.split(",");
+                Map<String, String> record = new LinkedHashMap<>();
+                
+                for (int i = 0; i < headers.length && i < values.length; i++) {
+                    record.put(headers[i], values[i]);
+                }
+                
+                data.add(record);
+            }
+        } catch (IOException e) {
+            System.out.println("Error reading CSV: " + e.getMessage());
+        }
+        
+        return data;
+    }
+    
+    // Append row to CSV
+    public static void appendToCSV(String filename, String[] row) {
+        try (FileWriter writer = new FileWriter(filename, true)) {
+            writer.write(String.join(",", row) + "\n");
+        } catch (IOException e) {
+            System.out.println("Error appending to CSV: " + e.getMessage());
+        }
+    }
+    
+    // Print data as table
+    public static void printAsTable(List<String[]> data) {
+        if (data.isEmpty()) return;
+        
+        // Calculate column widths
+        int[] widths = new int[data.get(0).length];
+        for (String[] row : data) {
+            for (int i = 0; i < row.length; i++) {
+                widths[i] = Math.max(widths[i], row[i].length());
+            }
+        }
+        
+        // Print separator
+        StringBuilder separator = new StringBuilder("+");
+        for (int width : widths) {
+            separator.append("-".repeat(width + 2)).append("+");
+        }
+        
+        // Print rows
+        System.out.println(separator);
+        for (int r = 0; r < data.size(); r++) {
+            String[] row = data.get(r);
+            StringBuilder line = new StringBuilder("|");
+            for (int i = 0; i < row.length; i++) {
+                line.append(" ").append(String.format("%-" + widths[i] + "s", row[i])).append(" |");
+            }
+            System.out.println(line);
+            
+            if (r == 0) {
+                System.out.println(separator);
+            }
+        }
+        System.out.println(separator);
+    }
+    
+    // Display file content
+    private static void displayFileContent(String filename) {
+        try {
+            Files.readAllLines(Path.of(filename)).forEach(System.out::println);
+        } catch (IOException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+    }
+}
+
+OUTPUT:
+-------
+================================================
+              CSV FILE DEMO
+================================================
+
+--- Writing CSV File ---
+CSV file written: users.csv
+
+File content:
+ID,Name,Email,Age,City
+1,John Doe,john@example.com,30,New York
+2,Jane Smith,jane@example.com,25,Los Angeles
+3,Bob Wilson,bob@example.com,35,Chicago
+4,Alice Brown,alice@example.com,28,Houston
+5,Charlie Davis,charlie@example.com,32,Phoenix
+
+--- Reading CSV File ---
+Total rows: 6
+
+Formatted output:
++----+---------------+----------------------+-----+-------------+
+| ID | Name          | Email                | Age | City        |
++----+---------------+----------------------+-----+-------------+
+| 1  | John Doe      | john@example.com     | 30  | New York    |
+| 2  | Jane Smith    | jane@example.com     | 25  | Los Angeles |
+| 3  | Bob Wilson    | bob@example.com      | 35  | Chicago     |
+| 4  | Alice Brown   | alice@example.com    | 28  | Houston     |
+| 5  | Charlie Davis | charlie@example.com  | 32  | Phoenix     |
++----+---------------+----------------------+-----+-------------+
+
+--- Reading CSV with Header ---
+Records (excluding header): 5
+  {ID=1, Name=John Doe, Email=john@example.com, Age=30, City=New York}
+  {ID=2, Name=Jane Smith, Email=jane@example.com, Age=25, City=Los Angeles}
+  {ID=3, Name=Bob Wilson, Email=bob@example.com, Age=35, City=Chicago}
+  {ID=4, Name=Alice Brown, Email=alice@example.com, Age=28, City=Houston}
+  {ID=5, Name=Charlie Davis, Email=charlie@example.com, Age=32, City=Phoenix}
+
+--- Filtering Data ---
+Users older than 30:
+  Bob Wilson - Age: 35
+  Charlie Davis - Age: 32
+
+Searching for: jane@example.com
+  Found: {ID=2, Name=Jane Smith, Email=jane@example.com, Age=25, City=Los Angeles}
+
+--- Adding New Row ---
+New row added. Updated file:
+ID,Name,Email,Age,City
+1,John Doe,john@example.com,30,New York
+2,Jane Smith,jane@example.com,25,Los Angeles
+3,Bob Wilson,bob@example.com,35,Chicago
+4,Alice Brown,alice@example.com,28,Houston
+5,Charlie Davis,charlie@example.com,32,Phoenix
+6,Eve Johnson,eve@example.com,27,Seattle
+
+--- Updating Data ---
+Updated user 2's city to San Francisco
+
+Updated file:
+ID,Name,Email,Age,City
+1,John Doe,john@example.com,30,New York
+2,Jane Smith,jane@example.com,25,San Francisco
+3,Bob Wilson,bob@example.com,35,Chicago
+4,Alice Brown,alice@example.com,28,Houston
+5,Charlie Davis,charlie@example.com,32,Phoenix
+6,Eve Johnson,eve@example.com,27,Seattle
+
+--- CSV with Special Characters ---
+Special CSV written.
+Name,Description,Price
+Product A,Simple product,10.99
+"Product B","Product with, comma",20.99
+"Product C","Product with ""quotes""",30.99
+"Product D","Multi
+line",40.99
+
+--- Cleanup Complete ---
+
+
+================================================================================
+                    PART 6: JSON FILE HANDLING
+================================================================================
+
+JSON (JavaScript Object Notation) is commonly used for:
+- API request/response data
+- Configuration files
+- Test data
+- Data exchange between systems
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 7: Reading and Writing JSON Files (Without External Library)
+--------------------------------------------------------------------------------
+
+import java.io.*;
+import java.nio.file.*;
+import java.util.*;
+import java.util.regex.*;
+
+public class JSONFileDemo {
+    public static void main(String[] args) {
+        
+        System.out.println("================================================");
+        System.out.println("              JSON FILE DEMO");
+        System.out.println("================================================\n");
+        
+        // ========== WRITING JSON FILE ==========
+        System.out.println("--- Writing JSON File ---");
+        
+        // Create JSON structure using Maps and Lists
+        Map<String, Object> user = new LinkedHashMap<>();
+        user.put("id", 1);
+        user.put("name", "John Doe");
+        user.put("email", "john@example.com");
+        user.put("age", 30);
+        user.put("active", true);
+        
+        // Nested object
+        Map<String, String> address = new LinkedHashMap<>();
+        address.put("street", "123 Main St");
+        address.put("city", "New York");
+        address.put("zipCode", "10001");
+        user.put("address", address);
+        
+        // Array
+        List<String> roles = Arrays.asList("admin", "user", "manager");
+        user.put("roles", roles);
+        
+        // Write to file
+        String json = mapToJson(user, 0);
+        writeToFile("user.json", json);
+        
+        System.out.println("JSON file written: user.json\n");
+        displayFileContent("user.json");
+        
+        // ========== WRITING JSON ARRAY ==========
+        System.out.println("\n--- Writing JSON Array ---");
+        
+        List<Map<String, Object>> users = new ArrayList<>();
+        
+        Map<String, Object> user1 = new LinkedHashMap<>();
+        user1.put("id", 1);
+        user1.put("name", "John Doe");
+        user1.put("email", "john@example.com");
+        users.add(user1);
+        
+        Map<String, Object> user2 = new LinkedHashMap<>();
+        user2.put("id", 2);
+        user2.put("name", "Jane Smith");
+        user2.put("email", "jane@example.com");
+        users.add(user2);
+        
+        Map<String, Object> user3 = new LinkedHashMap<>();
+        user3.put("id", 3);
+        user3.put("name", "Bob Wilson");
+        user3.put("email", "bob@example.com");
+        users.add(user3);
+        
+        String jsonArray = listToJson(users, 0);
+        writeToFile("users.json", jsonArray);
+        
+        System.out.println("JSON array file written: users.json\n");
+        displayFileContent("users.json");
+        
+        // ========== READING JSON FILE ==========
+        System.out.println("\n--- Reading JSON File ---");
+        
+        String content = readFromFile("user.json");
+        System.out.println("File content read successfully.");
+        System.out.println("Content length: " + content.length() + " characters");
+        
+        // Simple JSON parsing (for demonstration)
+        System.out.println("\n--- Simple JSON Value Extraction ---");
+        
+        System.out.println("Name: " + extractJsonValue(content, "name"));
+        System.out.println("Email: " + extractJsonValue(content, "email"));
+        System.out.println("Age: " + extractJsonValue(content, "age"));
+        System.out.println("Active: " + extractJsonValue(content, "active"));
+        
+        // ========== API REQUEST/RESPONSE JSON ==========
+        System.out.println("\n--- API Request/Response JSON ---");
+        
+        // Create API request body
+        Map<String, Object> requestBody = new LinkedHashMap<>();
+        requestBody.put("username", "testuser");
+        requestBody.put("password", "[REDACTED:PASSWORD]");
+        requestBody.put("rememberMe", true);
+        
+        String requestJson = mapToJson(requestBody, 0);
+        System.out.println("Request Body:");
+        System.out.println(requestJson);
+        
+        // Create API response
+        Map<String, Object> response = new LinkedHashMap<>();
+        response.put("success", true);
+        response.put("message", "Login successful");
+        response.put("token", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...");
+        
+        Map<String, Object> userData = new LinkedHashMap<>();
+        userData.put("id", 123);
+        userData.put("username", "testuser");
+        userData.put("roles", Arrays.asList("user", "admin"));
+        response.put("data", userData);
+        
+        String responseJson = mapToJson(response, 0);
+        System.out.println("\nResponse Body:");
+        System.out.println(responseJson);
+        
+        // ========== TEST DATA JSON ==========
+        System.out.println("\n--- Test Data JSON ---");
+        
+        List<Map<String, Object>> testCases = new ArrayList<>();
+        
+        Map<String, Object> tc1 = new LinkedHashMap<>();
+        tc1.put("testName", "Valid Login");
+        tc1.put("username", "validuser");
+        tc1.put("password", "ValidPass123");
+        tc1.put("expectedResult", "success");
+        tc1.put("expectedStatusCode", 200);
+        testCases.add(tc1);
+        
+        Map<String, Object> tc2 = new LinkedHashMap<>();
+        tc2.put("testName", "Invalid Password");
+        tc2.put("username", "validuser");
+        tc2.put("password", "wrongpass");
+        tc2.put("expectedResult", "failure");
+        tc2.put("expectedStatusCode", 401);
+        testCases.add(tc2);
+        
+        Map<String, Object> tc3 = new LinkedHashMap<>();
+        tc3.put("testName", "Empty Username");
+        tc3.put("username", "");
+        tc3.put("password", "somepass");
+        tc3.put("expectedResult", "validation_error");
+        tc3.put("expectedStatusCode", 400);
+        testCases.add(tc3);
+        
+        String testDataJson = listToJson(testCases, 0);
+        writeToFile("testdata.json", testDataJson);
+        
+        System.out.println("Test data JSON written: testdata.json\n");
+        displayFileContent("testdata.json");
+        
+        // Cleanup
+        new File("user.json").delete();
+        new File("users.json").delete();
+        new File("testdata.json").delete();
+        System.out.println("\n--- Cleanup Complete ---");
+    }
+    
+    // Convert Map to JSON string
+    @SuppressWarnings("unchecked")
+    public static String mapToJson(Map<String, Object> map, int indent) {
+        StringBuilder sb = new StringBuilder();
+        String indentStr = "  ".repeat(indent);
+        String indentStrInner = "  ".repeat(indent + 1);
+        
+        sb.append("{\n");
+        
+        int count = 0;
+        for (Map.Entry<String, Object> entry : map.entrySet()) {
+            sb.append(indentStrInner).append("\"").append(entry.getKey()).append("\": ");
+            sb.append(valueToJson(entry.getValue(), indent + 1));
+            
+            if (++count < map.size()) {
+                sb.append(",");
+            }
+            sb.append("\n");
+        }
+        
+        sb.append(indentStr).append("}");
+        return sb.toString();
+    }
+    
+    // Convert List to JSON string
+    @SuppressWarnings("unchecked")
+    public static String listToJson(List<?> list, int indent) {
+        StringBuilder sb = new StringBuilder();
+        String indentStr = "  ".repeat(indent);
+        String indentStrInner = "  ".repeat(indent + 1);
+        
+        sb.append("[\n");
+        
+        for (int i = 0; i < list.size(); i++) {
+            sb.append(indentStrInner);
+            sb.append(valueToJson(list.get(i), indent + 1));
+            
+            if (i < list.size() - 1) {
+                sb.append(",");
+            }
+            sb.append("\n");
+        }
+        
+        sb.append(indentStr).append("]");
+        return sb.toString();
+    }
+    
+    // Convert value to JSON representation
+    @SuppressWarnings("unchecked")
+    private static String valueToJson(Object value, int indent) {
+        if (value == null) {
+            return "null";
+        } else if (value instanceof String) {
+            return "\"" + escapeJson((String) value) + "\"";
+        } else if (value instanceof Number || value instanceof Boolean) {
+            return value.toString();
+        } else if (value instanceof Map) {
+            return mapToJson((Map<String, Object>) value, indent);
+        } else if (value instanceof List) {
+            return listToJson((List<?>) value, indent);
+        } else {
+            return "\"" + value.toString() + "\"";
+        }
+    }
+    
+    // Escape special characters in JSON string
+    private static String escapeJson(String str) {
+        return str.replace("\\", "\\\\")
+                  .replace("\"", "\\\"")
+                  .replace("\n", "\\n")
+                  .replace("\r", "\\r")
+                  .replace("\t", "\\t");
+    }
+    
+    // Simple JSON value extraction (for demonstration)
+    public static String extractJsonValue(String json, String key) {
+        Pattern pattern = Pattern.compile("\"" + key + "\"\\s*:\\s*(\"[^\"]*\"|\\d+|true|false|null)");
+        Matcher matcher = pattern.matcher(json);
+        
+        if (matcher.find()) {
+            String value = matcher.group(1);
+            // Remove quotes from string values
+            if (value.startsWith("\"") && value.endsWith("\"")) {
+                return value.substring(1, value.length() - 1);
+            }
+            return value;
+        }
+        return null;
+    }
+    
+    // Write string to file
+    public static void writeToFile(String filename, String content) {
+        try (PrintWriter writer = new PrintWriter(filename)) {
+            writer.print(content);
+        } catch (FileNotFoundException e) {
+            System.out.println("Error writing file: " + e.getMessage());
+        }
+    }
+    
+    // Read file to string
+    public static String readFromFile(String filename) {
+        try {
+            return Files.readString(Path.of(filename));
+        } catch (IOException e) {
+            System.out.println("Error reading file: " + e.getMessage());
+            return "";
+        }
+    }
+    
+    // Display file content
+    private static void displayFileContent(String filename) {
+        try {
+            System.out.println(Files.readString(Path.of(filename)));
+        } catch (IOException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+    }
+}
+
+OUTPUT:
+-------
+================================================
+              JSON FILE DEMO
+================================================
+
+--- Writing JSON File ---
+JSON file written: user.json
+
+{
+  "id": 1,
+  "name": "John Doe",
+  "email": "john@example.com",
+  "age": 30,
+  "active": true,
+  "address": {
+    "street": "123 Main St",
+    "city": "New York",
+    "zipCode": "10001"
+  },
+  "roles": [
+    "admin",
+    "user",
+    "manager"
+  ]
+}
+
+--- Writing JSON Array ---
+JSON array file written: users.json
+
+[
+  {
+    "id": 1,
+    "name": "John Doe",
+    "email": "john@example.com"
+  },
+  {
+    "id": 2,
+    "name": "Jane Smith",
+    "email": "jane@example.com"
+  },
+  {
+    "id": 3,
+    "name": "Bob Wilson",
+    "email": "bob@example.com"
+  }
+]
+
+--- Reading JSON File ---
+File content read successfully.
+Content length: 245 characters
+
+--- Simple JSON Value Extraction ---
+Name: John Doe
+Email: john@example.com
+Age: 30
+Active: true
+
+--- API Request/Response JSON ---
+Request Body:
+{
+  "username": "testuser",
+  "password": "[REDACTED:PASSWORD]",
+  "rememberMe": true
+}
+
+Response Body:
+{
+  "success": true,
+  "message": "Login successful",
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "data": {
+    "id": 123,
+    "username": "testuser",
+    "roles": [
+      "user",
+      "admin"
+    ]
+  }
+}
+
+--- Test Data JSON ---
+Test data JSON written: testdata.json
+
+[
+  {
+    "testName": "Valid Login",
+    "username": "validuser",
+    "password": "[REDACTED:PASSWORD]",
+    "expectedResult": "success",
+    "expectedStatusCode": 200
+  },
+  {
+    "testName": "Invalid Password",
+    "username": "validuser",
+    "password": "[REDACTED:PASSWORD]",
+    "expectedResult": "failure",
+    "expectedStatusCode": 401
+  },
+  {
+    "testName": "Empty Username",
+    "username": "",
+    "password": "[REDACTED:PASSWORD]",
+    "expectedResult": "validation_error",
+    "expectedStatusCode": 400
+  }
+]
+
+--- Cleanup Complete ---
+
+
+================================================================================
+                    PART 7: FILE HANDLING IN SELENIUM AUTOMATION
+================================================================================
+
+--------------------------------------------------------------------------------
+EXAMPLE 8: Selenium Test with File-Based Configuration and Data
+--------------------------------------------------------------------------------
+
+import java.io.*;
+import java.nio.file.*;
+import java.util.*;
+
+// Simulated WebDriver
+class WebDriver {
+    private String browser;
+    private boolean headless;
+    
+    public WebDriver(String browser, boolean headless) {
+        this.browser = browser;
+        this.headless = headless;
+        System.out.println("[WebDriver] Initialized: " + browser + 
+                          (headless ? " (headless)" : ""));
+    }
+    
+    public void get(String url) {
+        System.out.println("[WebDriver] Navigating to: " + url);
+    }
+    
+    public void quit() {
+        System.out.println("[WebDriver] Browser closed");
+    }
+    
+    public String getTitle() {
+        return "Page Title";
+    }
+}
+
+// Simulated WebElement
+class WebElement {
+    private String locator;
+    
+    public WebElement(String locator) {
+        this.locator = locator;
+    }
+    
+    public void sendKeys(String text) {
+        System.out.println("[WebElement] Typing into " + locator + ": " + text);
+    }
+    
+    public void click() {
+        System.out.println("[WebElement] Clicking: " + locator);
+    }
+    
+    public String getText() {
+        return "Element Text";
+    }
+}
+
+// ========== LOCATOR MANAGER ==========
+class LocatorManager {
+    private Properties locators;
+    
+    public LocatorManager() {
+        locators = new Properties();
+    }
+    
+    public void loadLocators(String filePath) {
+        try (FileInputStream fis = new FileInputStream(filePath)) {
+            locators.load(fis);
+            System.out.println("[LocatorManager] Loaded " + locators.size() + " locators from: " + filePath);
+        } catch (IOException e) {
+            System.out.println("[LocatorManager] Error loading locators: " + e.getMessage());
+        }
+    }
+    
+    public String getLocator(String key) {
+        return locators.getProperty(key);
+    }
+    
+    public String getLocator(String key, String defaultValue) {
+        return locators.getProperty(key, defaultValue);
+    }
+}
+
+// ========== TEST DATA PROVIDER ==========
+class TestDataProvider {
+    
+    // Load test data from CSV
+    public static List<Map<String, String>> loadFromCSV(String filePath) {
+        List<Map<String, String>> data = new ArrayList<>();
+        
+        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+            String headerLine = reader.readLine();
+            if (headerLine == null) return data;
+            
+            String[] headers = headerLine.split(",");
+            
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] values = line.split(",");
+                Map<String, String> record = new LinkedHashMap<>();
+                
+                for (int i = 0; i < headers.length && i < values.length; i++) {
+                    record.put(headers[i].trim(), values[i].trim());
+                }
+                data.add(record);
+            }
+            
+            System.out.println("[TestDataProvider] Loaded " + data.size() + " records from: " + filePath);
+        } catch (IOException e) {
+            System.out.println("[TestDataProvider] Error loading CSV: " + e.getMessage());
+        }
+        
+        return data;
+    }
+    
+    // Load test data from properties file
+    public static Map<String, String> loadFromProperties(String filePath) {
+        Map<String, String> data = new LinkedHashMap<>();
+        Properties props = new Properties();
+        
+        try (FileInputStream fis = new FileInputStream(filePath)) {
+            props.load(fis);
+            props.forEach((key, value) -> data.put(key.toString(), value.toString()));
+            System.out.println("[TestDataProvider] Loaded " + data.size() + " properties from: " + filePath);
+        } catch (IOException e) {
+            System.out.println("[TestDataProvider] Error loading properties: " + e.getMessage());
+        }
+        
+        return data;
+    }
+}
+
+// ========== SCREENSHOT MANAGER ==========
+class ScreenshotManager {
+    private String screenshotDir;
+    
+    public ScreenshotManager(String directory) {
+        this.screenshotDir = directory;
+        createDirectory(directory);
+    }
+    
+    private void createDirectory(String path) {
+        File dir = new File(path);
+        if (!dir.exists()) {
+            dir.mkdirs();
+            System.out.println("[ScreenshotManager] Created directory: " + path);
+        }
+    }
+    
+    public String takeScreenshot(String testName) {
+        String timestamp = String.valueOf(System.currentTimeMillis());
+        String filename = screenshotDir + "/" + testName + "_" + timestamp + ".png";
+        
+        // Simulate screenshot capture
+        try (PrintWriter writer = new PrintWriter(filename)) {
+            writer.println("[SCREENSHOT PLACEHOLDER]");
+            writer.println("Test: " + testName);
+            writer.println("Time: " + new Date());
+        } catch (FileNotFoundException e) {
+            System.out.println("[ScreenshotManager] Error: " + e.getMessage());
+            return null;
+        }
+        
+        System.out.println("[ScreenshotManager] Screenshot saved: " + filename);
+        return filename;
+    }
+}
+
+// ========== TEST REPORT GENERATOR ==========
+class TestReportGenerator {
+    private List<Map<String, Object>> results;
+    private String reportDir;
+    
+    public TestReportGenerator(String directory) {
+        this.results = new ArrayList<>();
+        this.reportDir = directory;
+        new File(directory).mkdirs();
+    }
+    
+    public void addResult(String testName, String status, long duration, String errorMessage) {
+        Map<String, Object> result = new LinkedHashMap<>();
+        result.put("testName", testName);
+        result.put("status", status);
+        result.put("duration", duration + "ms");
+        result.put("timestamp", new Date().toString());
+        if (errorMessage != null) {
+            result.put("error", errorMessage);
+        }
+        results.add(result);
+    }
+    
+    public void generateReport() {
+        // Generate CSV report
+        generateCSVReport();
+        
+        // Generate HTML report
+        
+--- ai stopped ---
+
+
+        // Generate HTML report
+        generateHTMLReport();
+        
+        // Generate summary
+        generateSummary();
+    }
+    
+    private void generateCSVReport() {
+        String filename = reportDir + "/test_report.csv";
+        
+        try (PrintWriter writer = new PrintWriter(filename)) {
+            // Header
+            writer.println("Test Name,Status,Duration,Timestamp,Error");
+            
+            // Data rows
+            for (Map<String, Object> result : results) {
+                writer.printf("%s,%s,%s,%s,%s%n",
+                    result.get("testName"),
+                    result.get("status"),
+                    result.get("duration"),
+                    result.get("timestamp"),
+                    result.getOrDefault("error", ""));
+            }
+            
+            System.out.println("[TestReportGenerator] CSV report generated: " + filename);
+        } catch (FileNotFoundException e) {
+            System.out.println("[TestReportGenerator] Error: " + e.getMessage());
+        }
+    }
+    
+    private void generateHTMLReport() {
+        String filename = reportDir + "/test_report.html";
+        
+        try (PrintWriter writer = new PrintWriter(filename)) {
+            writer.println("<!DOCTYPE html>");
+            writer.println("<html>");
+            writer.println("<head>");
+            writer.println("  <title>Test Report</title>");
+            writer.println("  <style>");
+            writer.println("    body { font-family: Arial, sans-serif; margin: 20px; }");
+            writer.println("    table { border-collapse: collapse; width: 100%; }");
+            writer.println("    th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }");
+            writer.println("    th { background-color: #4CAF50; color: white; }");
+            writer.println("    .pass { color: green; font-weight: bold; }");
+            writer.println("    .fail { color: red; font-weight: bold; }");
+            writer.println("    .skip { color: orange; font-weight: bold; }");
+            writer.println("  </style>");
+            writer.println("</head>");
+            writer.println("<body>");
+            writer.println("  <h1>Test Execution Report</h1>");
+            writer.println("  <p>Generated: " + new Date() + "</p>");
+            writer.println("  <table>");
+            writer.println("    <tr><th>Test Name</th><th>Status</th><th>Duration</th><th>Error</th></tr>");
+            
+            for (Map<String, Object> result : results) {
+                String status = result.get("status").toString();
+                String statusClass = status.equalsIgnoreCase("PASS") ? "pass" : 
+                                    status.equalsIgnoreCase("FAIL") ? "fail" : "skip";
+                
+                writer.printf("    <tr><td>%s</td><td class='%s'>%s</td><td>%s</td><td>%s</td></tr>%n",
+                    result.get("testName"),
+                    statusClass,
+                    status,
+                    result.get("duration"),
+                    result.getOrDefault("error", "-"));
+            }
+            
+            writer.println("  </table>");
+            writer.println("</body>");
+            writer.println("</html>");
+            
+            System.out.println("[TestReportGenerator] HTML report generated: " + filename);
+        } catch (FileNotFoundException e) {
+            System.out.println("[TestReportGenerator] Error: " + e.getMessage());
+        }
+    }
+    
+    private void generateSummary() {
+        int total = results.size();
+        int passed = 0;
+        int failed = 0;
+        int skipped = 0;
+        
+        for (Map<String, Object> result : results) {
+            String status = result.get("status").toString();
+            if (status.equalsIgnoreCase("PASS")) passed++;
+            else if (status.equalsIgnoreCase("FAIL")) failed++;
+            else skipped++;
+        }
+        
+        System.out.println("\n========== TEST SUMMARY ==========");
+        System.out.println("Total Tests: " + total);
+        System.out.println("Passed: " + passed);
+        System.out.println("Failed: " + failed);
+        System.out.println("Skipped: " + skipped);
+        System.out.println("Pass Rate: " + (total > 0 ? (passed * 100 / total) : 0) + "%");
+        System.out.println("==================================");
+    }
+}
+
+// ========== BASE TEST CLASS ==========
+class BaseTest {
+    protected WebDriver driver;
+    protected Properties config;
+    protected LocatorManager locatorManager;
+    protected ScreenshotManager screenshotManager;
+    protected static TestReportGenerator reportGenerator;
+    
+    public void setUp() {
+        System.out.println("\n--- Test Setup ---");
+        
+        // Load configuration
+        config = new Properties();
+        try (FileInputStream fis = new FileInputStream("test-config.properties")) {
+            config.load(fis);
+        } catch (IOException e) {
+            System.out.println("Using default configuration");
+            config.setProperty("browser", "chrome");
+            config.setProperty("headless", "false");
+            config.setProperty("base.url", "http://localhost");
+        }
+        
+        // Initialize WebDriver
+        String browser = config.getProperty("browser", "chrome");
+        boolean headless = Boolean.parseBoolean(config.getProperty("headless", "false"));
+        driver = new WebDriver(browser, headless);
+        
+        // Initialize managers
+        locatorManager = new LocatorManager();
+        screenshotManager = new ScreenshotManager("screenshots");
+        
+        if (reportGenerator == null) {
+            reportGenerator = new TestReportGenerator("reports");
+        }
+    }
+    
+    public void tearDown() {
+        System.out.println("\n--- Test Teardown ---");
+        if (driver != null) {
+            driver.quit();
+        }
+    }
+    
+    public void runTest(String testName, Runnable test) {
+        long startTime = System.currentTimeMillis();
+        String status = "PASS";
+        String errorMessage = null;
+        
+        System.out.println("\n" + "=".repeat(50));
+        System.out.println("TEST: " + testName);
+        System.out.println("=".repeat(50));
+        
+        try {
+            setUp();
+            test.run();
+        } catch (AssertionError e) {
+            status = "FAIL";
+            errorMessage = e.getMessage();
+            screenshotManager.takeScreenshot(testName);
+        } catch (Exception e) {
+            status = "FAIL";
+            errorMessage = e.getClass().getSimpleName() + ": " + e.getMessage();
+            screenshotManager.takeScreenshot(testName);
+        } finally {
+            tearDown();
+        }
+        
+        long duration = System.currentTimeMillis() - startTime;
+        reportGenerator.addResult(testName, status, duration, errorMessage);
+        
+        System.out.println("\nSTATUS: " + status);
+        if (errorMessage != null) {
+            System.out.println("ERROR: " + errorMessage);
+        }
+        System.out.println("DURATION: " + duration + "ms");
+    }
+}
+
+// ========== LOGIN PAGE ==========
+class LoginPage {
+    private WebDriver driver;
+    private LocatorManager locators;
+    
+    public LoginPage(WebDriver driver, LocatorManager locators) {
+        this.driver = driver;
+        this.locators = locators;
+    }
+    
+    public void enterUsername(String username) {
+        String locator = locators.getLocator("login.username", "//input[@id='username']");
+        new WebElement(locator).sendKeys(username);
+    }
+    
+    public void enterPassword(String password) {
+        String locator = locators.getLocator("login.password", "//input[@id='password']");
+        new WebElement(locator).sendKeys("****");
+    }
+    
+    public void clickLogin() {
+        String locator = locators.getLocator("login.button", "//button[@id='login']");
+        new WebElement(locator).click();
+    }
+    
+    public void login(String username, String password) {
+        enterUsername(username);
+        enterPassword(password);
+        clickLogin();
+    }
+}
+
+// ========== MAIN TEST CLASS ==========
+public class SeleniumFileHandlingDemo {
+    public static void main(String[] args) {
+        
+        System.out.println("========================================================");
+        System.out.println("    SELENIUM FILE HANDLING DEMO");
+        System.out.println("========================================================");
+        
+        // Create configuration files
+        createConfigFiles();
+        
+        BaseTest baseTest = new BaseTest();
+        
+        // ========== TEST 1: Login with Config File ==========
+        baseTest.runTest("Login_With_Config", () -> {
+            baseTest.driver.get(baseTest.config.getProperty("base.url"));
+            
+            baseTest.locatorManager.loadLocators("locators.properties");
+            
+            LoginPage loginPage = new LoginPage(baseTest.driver, baseTest.locatorManager);
+            loginPage.login(
+                baseTest.config.getProperty("username", "testuser"),
+                baseTest.config.getProperty("password", "password")
+            );
+            
+            System.out.println("Login test completed successfully!");
+        });
+        
+        // ========== TEST 2: Data-Driven Test from CSV ==========
+        baseTest.runTest("DataDriven_CSV_Login", () -> {
+            List<Map<String, String>> testData = TestDataProvider.loadFromCSV("login_data.csv");
+            
+            baseTest.locatorManager.loadLocators("locators.properties");
+            LoginPage loginPage = new LoginPage(baseTest.driver, baseTest.locatorManager);
+            
+            for (Map<String, String> data : testData) {
+                System.out.println("\n--- Testing: " + data.get("testcase") + " ---");
+                baseTest.driver.get(baseTest.config.getProperty("base.url"));
+                loginPage.login(data.get("username"), data.get("password"));
+                System.out.println("Expected: " + data.get("expected"));
+            }
+        });
+        
+        // ========== TEST 3: Test with External Locators ==========
+        baseTest.runTest("External_Locators_Test", () -> {
+            baseTest.locatorManager.loadLocators("locators.properties");
+            
+            String usernameLocator = baseTest.locatorManager.getLocator("login.username");
+            String passwordLocator = baseTest.locatorManager.getLocator("login.password");
+            String loginButtonLocator = baseTest.locatorManager.getLocator("login.button");
+            
+            System.out.println("Username locator: " + usernameLocator);
+            System.out.println("Password locator: " + passwordLocator);
+            System.out.println("Login button locator: " + loginButtonLocator);
+            
+            baseTest.driver.get(baseTest.config.getProperty("base.url"));
+            new WebElement(usernameLocator).sendKeys("testuser");
+            new WebElement(passwordLocator).sendKeys("****");
+            new WebElement(loginButtonLocator).click();
+        });
+        
+        // ========== TEST 4: Failing Test (for screenshot) ==========
+        baseTest.runTest("Failing_Test_Example", () -> {
+            baseTest.driver.get(baseTest.config.getProperty("base.url"));
+            
+            // Simulate failure
+            throw new AssertionError("Expected element not found!");
+        });
+        
+        // ========== TEST 5: Another Passing Test ==========
+        baseTest.runTest("Navigation_Test", () -> {
+            baseTest.driver.get(baseTest.config.getProperty("base.url") + "/home");
+            System.out.println("Page title: " + baseTest.driver.getTitle());
+            System.out.println("Navigation test passed!");
+        });
+        
+        // Generate final report
+        BaseTest.reportGenerator.generateReport();
+        
+        // Cleanup
+        cleanupFiles();
+    }
+    
+    private static void createConfigFiles() {
+        System.out.println("\n--- Creating Test Files ---\n");
+        
+        // Create config properties
+        try (PrintWriter writer = new PrintWriter("test-config.properties")) {
+            writer.println("# Test Configuration");
+            writer.println("browser=chrome");
+            writer.println("headless=false");
+            writer.println("base.url=https://www.example.com");
+            writer.println("implicit.wait=10");
+            writer.println("explicit.wait=30");
+            writer.println("username=testuser");
+            writer.println("password=[REDACTED:PASSWORD]");
+            System.out.println("Created: test-config.properties");
+        } catch (FileNotFoundException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+        
+        // Create locators properties
+        try (PrintWriter writer = new PrintWriter("locators.properties")) {
+            writer.println("# Login Page Locators");
+            writer.println("login.username=//input[@id='username']");
+            writer.println("login.password=//input[@id='password']");
+            writer.println("login.button=//button[@type='submit']");
+            writer.println("login.error=//div[@class='error-message']");
+            writer.println("");
+            writer.println("# Home Page Locators");
+            writer.println("home.welcome=//h1[@id='welcome']");
+            writer.println("home.logout=//button[@id='logout']");
+            System.out.println("Created: locators.properties");
+        } catch (FileNotFoundException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+        
+        // Create CSV test data
+        try (PrintWriter writer = new PrintWriter("login_data.csv")) {
+            writer.println("testcase,username,password,expected");
+            writer.println("valid_login,validuser,ValidPass123,success");
+            writer.println("invalid_password,validuser,wrongpass,failure");
+            writer.println("empty_username,,somepass,validation_error");
+            writer.println("empty_password,someuser,,validation_error");
+            System.out.println("Created: login_data.csv");
+        } catch (FileNotFoundException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+    }
+    
+    private static void cleanupFiles() {
+        System.out.println("\n--- Cleanup ---");
+        
+        // Delete created files
+        String[] files = {"test-config.properties", "locators.properties", "login_data.csv"};
+        for (String file : files) {
+            new File(file).delete();
+        }
+        
+        // Delete directories
+        deleteDirectory(new File("screenshots"));
+        deleteDirectory(new File("reports"));
+        
+        System.out.println("Cleanup complete!");
+    }
+    
+    private static void deleteDirectory(File dir) {
+        if (dir.exists()) {
+            File[] files = dir.listFiles();
+            if (files != null) {
+                for (File file : files) {
+                    file.delete();
+                }
+            }
+            dir.delete();
+        }
+    }
+}
+
+OUTPUT:
+-------
+========================================================
+    SELENIUM FILE HANDLING DEMO
+========================================================
+
+--- Creating Test Files ---
+
+Created: test-config.properties
+Created: locators.properties
+Created: login_data.csv
+
+==================================================
+TEST: Login_With_Config
+==================================================
+
+--- Test Setup ---
+[WebDriver] Initialized: chrome
+[ScreenshotManager] Created directory: screenshots
+[LocatorManager] Loaded 7 locators from: locators.properties
+[WebDriver] Navigating to: https://www.example.com
+[WebElement] Typing into //input[@id='username']: testuser
+[WebElement] Typing into //input[@id='password']: ****
+[WebElement] Clicking: //button[@type='submit']
+Login test completed successfully!
+
+--- Test Teardown ---
+[WebDriver] Browser closed
+
+STATUS: PASS
+DURATION: 150ms
+
+==================================================
+TEST: DataDriven_CSV_Login
+==================================================
+
+--- Test Setup ---
+[WebDriver] Initialized: chrome
+[TestDataProvider] Loaded 4 records from: login_data.csv
+[LocatorManager] Loaded 7 locators from: locators.properties
+
+--- Testing: valid_login ---
+[WebDriver] Navigating to: https://www.example.com
+[WebElement] Typing into //input[@id='username']: validuser
+[WebElement] Typing into //input[@id='password']: ****
+[WebElement] Clicking: //button[@type='submit']
+Expected: success
+
+--- Testing: invalid_password ---
+[WebDriver] Navigating to: https://www.example.com
+[WebElement] Typing into //input[@id='username']: validuser
+[WebElement] Typing into //input[@id='password']: ****
+[WebElement] Clicking: //button[@type='submit']
+Expected: failure
+
+--- Testing: empty_username ---
+[WebDriver] Navigating to: https://www.example.com
+[WebElement] Typing into //input[@id='username']: 
+[WebElement] Typing into //input[@id='password']: ****
+[WebElement] Clicking: //button[@type='submit']
+Expected: validation_error
+
+--- Testing: empty_password ---
+[WebDriver] Navigating to: https://www.example.com
+[WebElement] Typing into //input[@id='username']: someuser
+[WebElement] Typing into //input[@id='password']: ****
+[WebElement] Clicking: //button[@type='submit']
+Expected: validation_error
+
+--- Test Teardown ---
+[WebDriver] Browser closed
+
+STATUS: PASS
+DURATION: 280ms
+
+==================================================
+TEST: External_Locators_Test
+==================================================
+
+--- Test Setup ---
+[WebDriver] Initialized: chrome
+[LocatorManager] Loaded 7 locators from: locators.properties
+Username locator: //input[@id='username']
+Password locator: //input[@id='password']
+Login button locator: //button[@type='submit']
+[WebDriver] Navigating to: https://www.example.com
+[WebElement] Typing into //input[@id='username']: testuser
+[WebElement] Typing into //input[@id='password']: ****
+[WebElement] Clicking: //button[@type='submit']
+
+--- Test Teardown ---
+[WebDriver] Browser closed
+
+STATUS: PASS
+DURATION: 120ms
+
+==================================================
+TEST: Failing_Test_Example
+==================================================
+
+--- Test Setup ---
+[WebDriver] Initialized: chrome
+[WebDriver] Navigating to: https://www.example.com
+[ScreenshotManager] Screenshot saved: screenshots/Failing_Test_Example_1705312245678.png
+
+--- Test Teardown ---
+[WebDriver] Browser closed
+
+STATUS: FAIL
+ERROR: Expected element not found!
+DURATION: 95ms
+
+==================================================
+TEST: Navigation_Test
+==================================================
+
+--- Test Setup ---
+[WebDriver] Initialized: chrome
+[WebDriver] Navigating to: https://www.example.com/home
+Page title: Page Title
+Navigation test passed!
+
+--- Test Teardown ---
+[WebDriver] Browser closed
+
+STATUS: PASS
+DURATION: 85ms
+
+[TestReportGenerator] CSV report generated: reports/test_report.csv
+[TestReportGenerator] HTML report generated: reports/test_report.html
+
+========== TEST SUMMARY ==========
+Total Tests: 5
+Passed: 4
+Failed: 1
+Skipped: 0
+Pass Rate: 80%
+==================================
+
+--- Cleanup ---
+Cleanup complete!
+
+
+================================================================================
+                    PART 8: FILE HANDLING IN REST ASSURED AUTOMATION
+================================================================================
+
+--------------------------------------------------------------------------------
+EXAMPLE 9: REST Assured with File-Based Configuration and Data
+--------------------------------------------------------------------------------
+
+import java.io.*;
+import java.nio.file.*;
+import java.util.*;
+
+// Simulated API Response
+class ApiResponse {
+    private int statusCode;
+    private String body;
+    private long responseTime;
+    
+    public ApiResponse(int statusCode, String body, long responseTime) {
+        this.statusCode = statusCode;
+        this.body = body;
+        this.responseTime = responseTime;
+    }
+    
+    public int getStatusCode() { return statusCode; }
+    public String getBody() { return body; }
+    public long getResponseTime() { return responseTime; }
+}
+
+// ========== API CONFIGURATION MANAGER ==========
+class ApiConfigManager {
+    private static ApiConfigManager instance;
+    private Properties config;
+    private Properties endpoints;
+    
+    private ApiConfigManager() {
+        config = new Properties();
+        endpoints = new Properties();
+    }
+    
+    public static ApiConfigManager getInstance() {
+        if (instance == null) {
+            instance = new ApiConfigManager();
+        }
+        return instance;
+    }
+    
+    public void loadConfig(String configFile) {
+        try (FileInputStream fis = new FileInputStream(configFile)) {
+            config.load(fis);
+            System.out.println("[ApiConfig] Loaded config from: " + configFile);
+        } catch (IOException e) {
+            System.out.println("[ApiConfig] Error loading config: " + e.getMessage());
+            loadDefaultConfig();
+        }
+    }
+    
+    public void loadEndpoints(String endpointsFile) {
+        try (FileInputStream fis = new FileInputStream(endpointsFile)) {
+            endpoints.load(fis);
+            System.out.println("[ApiConfig] Loaded " + endpoints.size() + " endpoints from: " + endpointsFile);
+        } catch (IOException e) {
+            System.out.println("[ApiConfig] Error loading endpoints: " + e.getMessage());
+        }
+    }
+    
+    private void loadDefaultConfig() {
+        config.setProperty("base.url", "http://localhost:8080/api");
+        config.setProperty("timeout", "30");
+        config.setProperty("content.type", "application/json");
+    }
+    
+    public String getBaseUrl() {
+        return config.getProperty("base.url");
+    }
+    
+    public String getEndpoint(String key) {
+        return endpoints.getProperty(key, "");
+    }
+    
+    public String getFullUrl(String endpointKey) {
+        return getBaseUrl() + getEndpoint(endpointKey);
+    }
+    
+    public int getTimeout() {
+        return Integer.parseInt(config.getProperty("timeout", "30"));
+    }
+    
+    public String getAuthToken() {
+        return config.getProperty("auth.token", "");
+    }
+    
+    public String getProperty(String key) {
+        return config.getProperty(key);
+    }
+    
+    public String getProperty(String key, String defaultValue) {
+        return config.getProperty(key, defaultValue);
+    }
+}
+
+// ========== REQUEST BODY BUILDER FROM FILE ==========
+class RequestBodyBuilder {
+    
+    // Load JSON request body from file
+    public static String loadFromFile(String filePath) {
+        try {
+            String content = Files.readString(Path.of(filePath));
+            System.out.println("[RequestBody] Loaded from: " + filePath);
+            return content;
+        } catch (IOException e) {
+            System.out.println("[RequestBody] Error: " + e.getMessage());
+            return "{}";
+        }
+    }
+    
+    // Load JSON template and replace placeholders
+    public static String loadWithPlaceholders(String filePath, Map<String, String> values) {
+        try {
+            String content = Files.readString(Path.of(filePath));
+            
+            for (Map.Entry<String, String> entry : values.entrySet()) {
+                content = content.replace("${" + entry.getKey() + "}", entry.getValue());
+            }
+            
+            System.out.println("[RequestBody] Loaded template with " + values.size() + " replacements");
+            return content;
+        } catch (IOException e) {
+            System.out.println("[RequestBody] Error: " + e.getMessage());
+            return "{}";
+        }
+    }
+    
+    // Build JSON from Map
+    public static String buildFromMap(Map<String, Object> data) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("{\n");
+        
+        int count = 0;
+        for (Map.Entry<String, Object> entry : data.entrySet()) {
+            sb.append("  \"").append(entry.getKey()).append("\": ");
+            
+            Object value = entry.getValue();
+            if (value instanceof String) {
+                sb.append("\"").append(value).append("\"");
+            } else if (value instanceof Number || value instanceof Boolean) {
+                sb.append(value);
+            } else {
+                sb.append("\"").append(value).append("\"");
+            }
+            
+            if (++count < data.size()) {
+                sb.append(",");
+            }
+            sb.append("\n");
+        }
+        
+        sb.append("}");
+        return sb.toString();
+    }
+}
+
+// ========== API RESPONSE LOGGER ==========
+class ApiResponseLogger {
+    private String logDir;
+    private PrintWriter logWriter;
+    
+    public ApiResponseLogger(String directory) {
+        this.logDir = directory;
+        new File(directory).mkdirs();
+        
+        try {
+            String logFile = logDir + "/api_log_" + System.currentTimeMillis() + ".log";
+            logWriter = new PrintWriter(new FileWriter(logFile, true));
+            System.out.println("[ApiLogger] Log file: " + logFile);
+        } catch (IOException e) {
+            System.out.println("[ApiLogger] Error creating log: " + e.getMessage());
+        }
+    }
+    
+    public void logRequest(String method, String url, String body, Map<String, String> headers) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("\n========== REQUEST ==========\n");
+        sb.append("Timestamp: ").append(new Date()).append("\n");
+        sb.append("Method: ").append(method).append("\n");
+        sb.append("URL: ").append(url).append("\n");
+        
+        if (headers != null && !headers.isEmpty()) {
+            sb.append("Headers:\n");
+            for (Map.Entry<String, String> header : headers.entrySet()) {
+                String value = header.getKey().toLowerCase().contains("auth") ? "****" : header.getValue();
+                sb.append("  ").append(header.getKey()).append(": ").append(value).append("\n");
+            }
+        }
+        
+        if (body != null && !body.isEmpty()) {
+            sb.append("Body:\n").append(body).append("\n");
+        }
+        
+        log(sb.toString());
+    }
+    
+    public void logResponse(ApiResponse response) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("\n========== RESPONSE ==========\n");
+        sb.append("Status Code: ").append(response.getStatusCode()).append("\n");
+        sb.append("Response Time: ").append(response.getResponseTime()).append("ms\n");
+        sb.append("Body:\n").append(response.getBody()).append("\n");
+        sb.append("==============================\n");
+        
+        log(sb.toString());
+    }
+    
+    private void log(String message) {
+        System.out.print(message);
+        if (logWriter != null) {
+            logWriter.print(message);
+            logWriter.flush();
+        }
+    }
+    
+    public void close() {
+        if (logWriter != null) {
+            logWriter.close();
+        }
+    }
+}
+
+// ========== TEST DATA MANAGER FOR API ==========
+class ApiTestDataManager {
+    
+    // Load test cases from CSV
+    public static List<Map<String, String>> loadTestCasesFromCSV(String filePath) {
+        List<Map<String, String>> testCases = new ArrayList<>();
+        
+        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+            String headerLine = reader.readLine();
+            if (headerLine == null) return testCases;
+            
+            String[] headers = headerLine.split(",");
+            
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] values = line.split(",", -1);    // -1 to keep empty values
+                Map<String, String> testCase = new LinkedHashMap<>();
+                
+                for (int i = 0; i < headers.length; i++) {
+                    testCase.put(headers[i].trim(), i < values.length ? values[i].trim() : "");
+                }
+                testCases.add(testCase);
+            }
+            
+            System.out.println("[TestData] Loaded " + testCases.size() + " test cases from: " + filePath);
+        } catch (IOException e) {
+            System.out.println("[TestData] Error: " + e.getMessage());
+        }
+        
+        return testCases;
+    }
+    
+    // Load expected responses from properties
+    public static Map<String, String> loadExpectedResponses(String filePath) {
+        Map<String, String> responses = new LinkedHashMap<>();
+        Properties props = new Properties();
+        
+        try (FileInputStream fis = new FileInputStream(filePath)) {
+            props.load(fis);
+            props.forEach((key, value) -> responses.put(key.toString(), value.toString()));
+            System.out.println("[TestData] Loaded " + responses.size() + " expected responses");
+        } catch (IOException e) {
+            System.out.println("[TestData] Error: " + e.getMessage());
+        }
+        
+        return responses;
+    }
+}
+
+// ========== SIMULATED API CLIENT ==========
+class ApiClient {
+    private ApiConfigManager config;
+    private ApiResponseLogger logger;
+    private Map<String, String> defaultHeaders;
+    
+    public ApiClient(ApiConfigManager config, ApiResponseLogger logger) {
+        this.config = config;
+        this.logger = logger;
+        this.defaultHeaders = new LinkedHashMap<>();
+        defaultHeaders.put("Content-Type", "application/json");
+        defaultHeaders.put("Accept", "application/json");
+    }
+    
+    public void setAuthToken(String token) {
+        defaultHeaders.put("Authorization", "Bearer " + token);
+    }
+    
+    public ApiResponse get(String endpoint) {
+        String url = config.getBaseUrl() + endpoint;
+        logger.logRequest("GET", url, null, defaultHeaders);
+        
+        // Simulate response
+        ApiResponse response = new ApiResponse(200, 
+            "{\"status\": \"success\", \"data\": []}", 150);
+        logger.logResponse(response);
+        
+        return response;
+    }
+    
+    public ApiResponse post(String endpoint, String body) {
+        String url = config.getBaseUrl() + endpoint;
+        logger.logRequest("POST", url, body, defaultHeaders);
+        
+        // Simulate response
+        ApiResponse response = new ApiResponse(201, 
+            "{\"status\": \"created\", \"id\": 123}", 200);
+        logger.logResponse(response);
+        
+        return response;
+    }
+    
+    public ApiResponse put(String endpoint, String body) {
+        String url = config.getBaseUrl() + endpoint;
+        logger.logRequest("PUT", url, body, defaultHeaders);
+        
+        // Simulate response
+        ApiResponse response = new ApiResponse(200, 
+            "{\"status\": \"updated\"}", 180);
+        logger.logResponse(response);
+        
+        return response;
+    }
+    
+    public ApiResponse delete(String endpoint) {
+        String url = config.getBaseUrl() + endpoint;
+        logger.logRequest("DELETE", url, null, defaultHeaders);
+        
+        // Simulate response
+        ApiResponse response = new ApiResponse(204, "", 100);
+        logger.logResponse(response);
+        
+        return response;
+    }
+}
+
+// ========== API TEST REPORT GENERATOR ==========
+class ApiTestReportGenerator {
+    private List<Map<String, Object>> results;
+    private String reportDir;
+    
+    public ApiTestReportGenerator(String directory) {
+        this.results = new ArrayList<>();
+        this.reportDir = directory;
+        new File(directory).mkdirs();
+    }
+    
+    public void addResult(String testName, String endpoint, String method,
+                         int expectedStatus, int actualStatus, 
+                         long responseTime, boolean passed, String error) {
+        Map<String, Object> result = new LinkedHashMap<>();
+        result.put("testName", testName);
+        result.put("endpoint", endpoint);
+        result.put("method", method);
+        result.put("expectedStatus", expectedStatus);
+        result.put("actualStatus", actualStatus);
+        result.put("responseTime", responseTime);
+        result.put("passed", passed);
+        result.put("error", error != null ? error : "");
+        result.put("timestamp", new Date().toString());
+        results.add(result);
+    }
+    
+    public void generateReport() {
+        generateCSVReport();
+        generateSummary();
+    }
+    
+    private void generateCSVReport() {
+        String filename = reportDir + "/api_test_report.csv";
+        
+        try (PrintWriter writer = new PrintWriter(filename)) {
+            writer.println("Test Name,Endpoint,Method,Expected Status,Actual Status,Response Time,Passed,Error");
+            
+            for (Map<String, Object> result : results) {
+                writer.printf("%s,%s,%s,%s,%s,%sms,%s,%s%n",
+                    result.get("testName"),
+                    result.get("endpoint"),
+                    result.get("method"),
+                    result.get("expectedStatus"),
+                    result.get("actualStatus"),
+                    result.get("responseTime"),
+                    result.get("passed"),
+                    result.get("error"));
+            }
+            
+            System.out.println("\n[Report] CSV report generated: " + filename);
+        } catch (FileNotFoundException e) {
+            System.out.println("[Report] Error: " + e.getMessage());
+        }
+    }
+    
+    private void generateSummary() {
+        int total = results.size();
+        int passed = 0;
+        long totalTime = 0;
+        
+        for (Map<String, Object> result : results) {
+            if ((Boolean) result.get("passed")) passed++;
+            totalTime += (Long) result.get("responseTime");
+        }
+        
+        System.out.println("\n========== API TEST SUMMARY ==========");
+        System.out.println("Total Tests: " + total);
+        System.out.println("Passed: " + passed);
+        System.out.println("Failed: " + (total - passed));
+        System.out.println("Pass Rate: " + (total > 0 ? (passed * 100 / total) : 0) + "%");
+        System.out.println("Average Response Time: " + (total > 0 ? (totalTime / total) : 0) + "ms");
+        System.out.println("======================================");
+    }
+}
+
+public class RestAssuredFileHandlingDemo {
+    public static void main(String[] args) {
+        
+        System.out.println("========================================================");
+        System.out.println("    REST ASSURED FILE HANDLING DEMO");
+        System.out.println("========================================================");
+        
+        // Create test files
+        createTestFiles();
+        
+        // Initialize components
+        ApiConfigManager config = ApiConfigManager.getInstance();
+        config.loadConfig("api-config.properties");
+        config.loadEndpoints("api-endpoints.properties");
+        
+        ApiResponseLogger logger = new ApiResponseLogger("api-logs");
+        ApiClient apiClient = new ApiClient(config, logger);
+        ApiTestReportGenerator reportGenerator = new ApiTestReportGenerator("api-reports");
+        
+        // Set auth token from config
+        String token = config.getAuthToken();
+        if (!token.isEmpty()) {
+            apiClient.setAuthToken(token);
+        }
+        
+        // ========== TEST 1: GET Users ==========
+        System.out.println("\n" + "=".repeat(50));
+        System.out.println("TEST 1: GET Users");
+        System.out.println("=".repeat(50));
+        
+        String endpoint = config.getEndpoint("users.list");
+        ApiResponse response = apiClient.get(endpoint);
+        
+        boolean passed = response.getStatusCode() == 200;
+        reportGenerator.addResult("GET_Users", endpoint, "GET", 
+            200, response.getStatusCode(), response.getResponseTime(), passed, null);
+        
+        // ========== TEST 2: POST Create User with JSON File ==========
+        System.out.println("\n" + "=".repeat(50));
+        System.out.println("TEST 2: POST Create User (JSON from file)");
+        System.out.println("=".repeat(50));
+        
+        String requestBody = RequestBodyBuilder.loadFromFile("create_user.json");
+        endpoint = config.getEndpoint("users.create");
+        response = apiClient.post(endpoint, requestBody);
+        
+        passed = response.getStatusCode() == 201;
+        reportGenerator.addResult("POST_CreateUser", endpoint, "POST",
+            201, response.getStatusCode(), response.getResponseTime(), passed, null);
+        
+        // ========== TEST 3: POST with Template Placeholders ==========
+        System.out.println("\n" + "=".repeat(50));
+        System.out.println("TEST 3: POST with Template");
+        System.out.println("=".repeat(50));
+        
+        Map<String, String> placeholders = new LinkedHashMap<>();
+        placeholders.put("name", "Jane Doe");
+        placeholders.put("email", "jane@example.com");
+        placeholders.put("role", "admin");
+        
+        requestBody = RequestBodyBuilder.loadWithPlaceholders("user_template.json", placeholders);
+        System.out.println("Request body with placeholders:");
+        System.out.println(requestBody);
+        
+        response = apiClient.post(endpoint, requestBody);
+        
+        passed = response.getStatusCode() == 201;
+        reportGenerator.addResult("POST_CreateUser_Template", endpoint, "POST",
+            201, response.getStatusCode(), response.getResponseTime(), passed, null);
+        
+        // ========== TEST 4: Data-Driven API Tests ==========
+        System.out.println("\n" + "=".repeat(50));
+        System.out.println("TEST 4: Data-Driven API Tests");
+        System.out.println("=".repeat(50));
+        
+        List<Map<String, String>> testCases = ApiTestDataManager.loadTestCasesFromCSV("api_testdata.csv");
+        
+        for (Map<String, String> testCase : testCases) {
+            System.out.println("\n--- " + testCase.get("testName") + " ---");
+            
+            String method = testCase.get("method");
+            endpoint = testCase.get("endpoint");
+            int expectedStatus = Integer.parseInt(testCase.get("expectedStatus"));
+            
+            // Build request body from test data
+            Map<String, Object> bodyData = new LinkedHashMap<>();
+            if (!testCase.get("username").isEmpty()) {
+                bodyData.put("username", testCase.get("username"));
+            }
+            if (!testCase.get("password").isEmpty()) {
+                bodyData.put("password", testCase.get("password"));
+            }
+            
+            String body = bodyData.isEmpty() ? null : RequestBodyBuilder.buildFromMap(bodyData);
+            
+            // Execute request
+            if (method.equals("POST")) {
+                response = apiClient.post(endpoint, body);
+            } else if (method.equals("GET")) {
+                response = apiClient.get(endpoint);
+            } else {
+                continue;
+            }
+            
+            passed = response.getStatusCode() == expectedStatus;
+            String error = passed ? null : "Expected " + expectedStatus + " but got " + response.getStatusCode();
+            
+            reportGenerator.addResult(testCase.get("testName"), endpoint, method,
+                expectedStatus, response.getStatusCode(), response.getResponseTime(), passed, error);
+            
+            System.out.println("Status: " + (passed ? "PASS" : "FAIL"));
+        }
+        
+        // ========== TEST 5: PUT Update User ==========
+        System.out.println("\n" + "=".repeat(50));
+        System.out.println("TEST 5: PUT Update User");
+        System.out.println("=".repeat(50));
+        
+        Map<String, Object> updateData = new LinkedHashMap<>();
+        updateData.put("name", "John Updated");
+        updateData.put("email", "john.updated@example.com");
+        
+        requestBody = RequestBodyBuilder.buildFromMap(updateData);
+        endpoint = config.getEndpoint("users.update").replace("{id}", "123");
+        response = apiClient.put(endpoint, requestBody);
+        
+        passed = response.getStatusCode() == 200;
+        reportGenerator.addResult("PUT_UpdateUser", endpoint, "PUT",
+            200, response.getStatusCode(), response.getResponseTime(), passed, null);
+        
+        // ========== TEST 6: DELETE User ==========
+        System.out.println("\n" + "=".repeat(50));
+        System.out.println("TEST 6: DELETE User");
+        System.out.println("=".repeat(50));
+        
+        endpoint = config.getEndpoint("users.delete").replace("{id}", "123");
+        response = apiClient.delete(endpoint);
+        
+        passed = response.getStatusCode() == 204;
+        reportGenerator.addResult("DELETE_User", endpoint, "DELETE",
+            204, response.getStatusCode(), response.getResponseTime(), passed, null);
+        
+        // Generate final report
+        reportGenerator.generateReport();
+        
+        // Close logger
+        logger.close();
+        
+        // Cleanup
+        cleanupFiles();
+    }
+    
+    private static void createTestFiles() {
+        System.out.println("\n--- Creating Test Files ---\n");
+        
+        // API Config
+        try (PrintWriter writer = new PrintWriter("api-config.properties")) {
+            writer.println("# API Configuration");
+            writer.println("base.url=https://api.example.com");
+            writer.println("timeout=30");
+            writer.println("auth.token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...");
+            writer.println("content.type=application/json");
+            System.out.println("Created: api-config.properties");
+        } catch (FileNotFoundException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+        
+        // API Endpoints
+        try (PrintWriter writer = new PrintWriter("api-endpoints.properties")) {
+            writer.println("# API Endpoints");
+            writer.println("users.list=/v1/users");
+            writer.println("users.get=/v1/users/{id}");
+            writer.println("users.create=/v1/users");
+            writer.println("users.update=/v1/users/{id}");
+            writer.println("users.delete=/v1/users/{id}");
+            writer.println("auth.login=/v1/auth/login");
+            writer.println("auth.logout=/v1/auth/logout");
+            System.out.println("Created: api-endpoints.properties");
+        } catch (FileNotFoundException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+        
+        // Create User JSON
+        try (PrintWriter writer = new PrintWriter("create_user.json")) {
+            writer.println("{");
+            writer.println("  \"name\": \"John Doe\",");
+            writer.println("  \"email\": \"john@example.com\",");
+            writer.println("  \"password\": \"[REDACTED:PASSWORD]\",");
+            writer.println("  \"role\": \"user\"");
+            writer.println("}");
+            System.out.println("Created: create_user.json");
+        } catch (FileNotFoundException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+        
+        // User Template JSON
+        try (PrintWriter writer = new PrintWriter("user_template.json")) {
+            writer.println("{");
+            writer.println("  \"name\": \"${name}\",");
+            writer.println("  \"email\": \"${email}\",");
+            writer.println("  \"role\": \"${role}\"");
+            writer.println("}");
+            System.out.println("Created: user_template.json");
+        } catch (FileNotFoundException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+        
+        // API Test Data CSV
+        try (PrintWriter writer = new PrintWriter("api_testdata.csv")) {
+            writer.println("testName,method,endpoint,username,password,expectedStatus");
+            writer.println("Valid_Login,POST,/v1/auth/login,validuser,ValidPass123,201");
+            writer.println("Invalid_Password,POST,/v1/auth/login,validuser,wrongpass,201");
+            writer.println("Empty_Username,POST,/v1/auth/login,,somepass,201");
+            writer.println("Get_Users,GET,/v1/users,,,200");
+            System.out.println("Created: api_testdata.csv");
+        } catch (FileNotFoundException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+    }
+    
+    private static void cleanupFiles() {
+        System.out.println("\n--- Cleanup ---");
+        
+        String[] files = {
+            "api-config.properties", "api-endpoints.properties",
+            "create_user.json", "user_template.json", "api_testdata.csv"
+        };
+        
+        for (String file : files) {
+            new File(file).delete();
+        }
+        
+        deleteDirectory(new File("api-logs"));
+        deleteDirectory(new File("api-reports"));
+        
+        System.out.println("Cleanup complete!");
+    }
+    
+    private static void deleteDirectory(File dir) {
+        if (dir.exists()) {
+            File[] files = dir.listFiles();
+            if (files != null) {
+                for (File file : files) {
+                    file.delete();
+                }
+            }
+            dir.delete();
+        }
+    }
+}
+
+
+================================================================================
+                    NEGATIVE SCENARIOS - FILE HANDLING
+================================================================================
+
+
+--------------------------------------------------------------------------------
+ERROR 1: FileNotFoundException
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE:
+-----------------
+import java.io.*;
+
+public class FileNotFoundError {
+    public static void main(String[] args) {
+        FileReader reader = new FileReader("nonexistent.txt");    // ERROR!
+    }
+}
+
+ERROR MESSAGE:
+--------------
+Exception in thread "main" java.io.FileNotFoundException: nonexistent.txt (No such file or directory)
+
+FIX:
+----
+import java.io.*;
+import java.nio.file.*;
+
+public class FileNotFoundFixed {
+    public static void main(String[] args) {
+        
+        // Option 1: Check if file exists first
+        File file = new File("nonexistent.txt");
+        if (file.exists()) {
+            try (FileReader reader = new FileReader(file)) {
+                // Read file
+            } catch (IOException e) {
+                System.out.println("Error reading file: " + e.getMessage());
+            }
+        } else {
+            System.out.println("File does not exist: " + file.getAbsolutePath());
+        }
+        
+        // Option 2: Use try-catch
+        try (FileReader reader = new FileReader("nonexistent.txt")) {
+            // Read file
+        } catch (FileNotFoundException e) {
+            System.out.println("File not found: " + e.getMessage());
+        } catch (IOException e) {
+            System.out.println("IO Error: " + e.getMessage());
+        }
+        
+        // Option 3: Use Files.exists() (NIO)
+        Path path = Path.of("nonexistent.txt");
+        if (Files.exists(path)) {
+            try {
+                String content = Files.readString(path);
+            } catch (IOException e) {
+                System.out.println("Error: " + e.getMessage());
+            }
+        } else {
+            System.out.println("File not found: " + path);
+        }
+    }
+}
+
+
+--------------------------------------------------------------------------------
+ERROR 2: IOException - Permission Denied
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE:
+-----------------
+import java.io.*;
+
+public class PermissionError {
+    public static void main(String[] args) throws IOException {
+        // Trying to write to a read-only location or file
+        FileWriter writer = new FileWriter("/root/protected.txt");    // ERROR!
+        writer.write("Test");
+        writer.close();
+    }
+}
+
+ERROR MESSAGE:
+--------------
+java.io.IOException: Permission denied
+
+FIX:
+----
+import java.io.*;
+import java.nio.file.*;
+
+public class PermissionFixed {
+    public static void main(String[] args) {
+        
+        Path filePath = Path.of("output.txt");
+        
+        // Check if we can write to the directory
+        Path parentDir = filePath.getParent();
+        if (parentDir == null) {
+            parentDir = Path.of(".");
+        }
+        
+        if (Files.isWritable(parentDir)) {
+            try (FileWriter writer = new FileWriter(filePath.toString())) {
+                writer.write("Test content");
+                System.out.println("File written successfully");
+            } catch (IOException e) {
+                System.out.println("Error writing file: " + e.getMessage());
+            }
+        } else {
+            System.out.println("Cannot write to directory: " + parentDir);
+        }
+        
+        // Check file permissions before reading
+        if (Files.exists(filePath)) {
+            if (Files.isReadable(filePath)) {
+                try {
+                    String content = Files.readString(filePath);
+                    System.out.println("Content: " + content);
+                } catch (IOException e) {
+                    System.out.println("Error reading: " + e.getMessage());
+                }
+            } else {
+                System.out.println("File is not readable");
+            }
+        }
+        
+        // Cleanup
+        try { Files.deleteIfExists(filePath); } catch (IOException e) {}
+    }
+}
+
+
+--------------------------------------------------------------------------------
+ERROR 3: Not Closing Resources (Resource Leak)
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE:
+-----------------
+import java.io.*;
+
+public class ResourceLeakError {
+    public static void main(String[] args) throws IOException {
+        FileWriter writer = new FileWriter("output.txt");
+        writer.write("Some content");
+        
+        // If exception occurs before close(), file handle is leaked!
+        if (true) {
+            throw new RuntimeException("Error occurred!");
+        }
+        
+        writer.close();    // Never reached!
+    }
+}
+
+FIX:
+----
+import java.io.*;
+
+public class ResourceLeakFixed {
+    public static void main(String[] args) {
+        
+        // Option 1: try-with-resources (BEST)
+        try (FileWriter writer = new FileWriter("output.txt")) {
+            writer.write("Some content");
+            // writer is automatically closed, even if exception occurs
+        } catch (IOException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+        
+        // Option 2: try-finally (traditional)
+        FileWriter writer = null;
+        try {
+            writer = new FileWriter("output2.txt");
+            writer.write("Some content");
+        } catch (IOException e) {
+            System.out.println("Error: " + e.getMessage());
+        } finally {
+            if (writer != null) {
+                try {
+                    writer.close();
+                } catch (IOException e) {
+                    System.out.println("Error closing: " + e.getMessage());
+                }
+            }
+        }
+        
+        // Option 3: Multiple resources
+        try (FileReader reader = new FileReader("input.txt");
+             FileWriter writerMulti = new FileWriter("output3.txt")) {
+            
+            int ch;
+            while ((ch = reader.read()) != -1) {
+                writerMulti.write(ch);
+            }
+        } catch (IOException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+        
+        // Cleanup
+        new File("output.txt").delete();
+        new File("output2.txt").delete();
+        new File("output3.txt").delete();
+    }
+}
+
+
+--------------------------------------------------------------------------------
+ERROR 4: NullPointerException with Properties
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE:
+-----------------
+import java.util.*;
+import java.io.*;
+
+public class PropertiesNullError {
+    public static void main(String[] args) throws IOException {
+        Properties props = new Properties();
+        props.load(new FileInputStream("config.properties"));
+        
+        // Property might not exist
+        String value = props.getProperty("non.existent.key");
+        int number = Integer.parseInt(value);    // NullPointerException!
+    }
+}
+
+ERROR MESSAGE:
+--------------
+Exception in thread "main" java.lang.NullPointerException: Cannot invoke "String.length()" because "value" is null
+
+FIX:
+----
+import java.util.*;
+import java.io.*;
+
+public class PropertiesNullFixed {
+    public static void main(String[] args) {
+        
+        // Create sample properties file
+        try (PrintWriter writer = new PrintWriter("config.properties")) {
+            writer.println("existing.key=100");
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        
+        Properties props = new Properties();
+        
+        try (FileInputStream fis = new FileInputStream("config.properties")) {
+            props.load(fis);
+        } catch (IOException e) {
+            System.out.println("Error loading properties: " + e.getMessage());
+        }
+        
+        // Option 1: Check for null
+        String value = props.getProperty("non.existent.key");
+        if (value != null) {
+            int number = Integer.parseInt(value);
+            System.out.println("Value: " + number);
+        } else {
+            System.out.println("Property not found!");
+        }
+        
+        // Option 2: Use getProperty with default value
+        String valueWithDefault = props.getProperty("non.existent.key", "0");
+        int number = Integer.parseInt(valueWithDefault);
+        System.out.println("Value with default: " + number);
+        
+        // Option 3: Create helper method
+        int safeValue = getIntProperty(props, "non.existent.key", 50);
+        System.out.println("Safe value: " + safeValue);
+        
+        // Option 4: Check if key exists
+        if (props.containsKey("existing.key")) {
+            System.out.println("Existing key value: " + props.getProperty("existing.key"));
+        }
+        
+        // Cleanup
+        new File("config.properties").delete();
+    }
+    
+    public static int getIntProperty(Properties props, String key, int defaultValue) {
+        String value = props.getProperty(key);
+        if (value != null) {
+            try {
+                return Integer.parseInt(value.trim());
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid number format for " + key + ", using default");
+            }
+        }
+        return defaultValue;
+    }
+}
+
+
+--------------------------------------------------------------------------------
+ERROR 5: NumberFormatException When Reading from File
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE:
+-----------------
+import java.io.*;
+import java.util.*;
+
+public class NumberFormatError {
+    public static void main(String[] args) throws IOException {
+        Properties props = new Properties();
+        props.setProperty("timeout", "thirty");    // String instead of number
+        
+        int timeout = Integer.parseInt(props.getProperty("timeout"));    // ERROR!
+    }
+}
+
+ERROR MESSAGE:
+--------------
+Exception in thread "main" java.lang.NumberFormatException: For input string: "thirty"
+
+FIX:
+----
+import java.io.*;
+import java.util.*;
+
+public class NumberFormatFixed {
+    public static void main(String[] args) {
+        
+        Properties props = new Properties();
+        props.setProperty("valid.number", "100");
+        props.setProperty("invalid.number", "thirty");
+        props.setProperty("decimal.number", "3.14");
+        props.setProperty("number.with.spaces", "  50  ");
+        
+        // Option 1: Try-catch with default value
+        int timeout;
+        try {
+            timeout = Integer.parseInt(props.getProperty("invalid.number"));
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid number, using default: 30");
+            timeout = 30;
+        }
+        System.out.println("Timeout: " + timeout);
+        
+        // Option 2: Helper method with validation
+        System.out.println("Valid: " + safeParseInt(props.getProperty("valid.number"), 0));
+        System.out.println("Invalid: " + safeParseInt(props.getProperty("invalid.number"), 0));
+        System.out.println("With spaces: " + safeParseInt(props.getProperty("number.with.spaces"), 0));
+        
+        // Option 3: Validate before parsing
+        String value = props.getProperty("decimal.number");
+        if (isValidInteger(value)) {
+            System.out.println("Decimal as int: " + Integer.parseInt(value));
+        } else {
+            System.out.println("Not a valid integer: " + value);
+            // Try parsing as double
+            try {
+                double d = Double.parseDouble(value);
+                System.out.println("Parsed as double: " + d);
+            } catch (NumberFormatException e) {
+                System.out.println("Not a valid number at all");
+            }
+        }
+    }
+    
+    public static int safeParseInt(String value, int defaultValue) {
+        if (value == null || value.trim().isEmpty()) {
+            return defaultValue;
+        }
+        try {
+            return Integer.parseInt(value.trim());
+        } catch (NumberFormatException e) {
+            return defaultValue;
+        }
+    }
+    
+    public static boolean isValidInteger(String value) {
+        if (value == null) return false;
+        try {
+            Integer.parseInt(value.trim());
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+}
+
+
+--------------------------------------------------------------------------------
+ERROR 6: File Encoding Issues
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE:
+-----------------
+import java.io.*;
+
+public class EncodingError {
+    public static void main(String[] args) throws IOException {
+        // Writing with default encoding
+        FileWriter writer = new FileWriter("data.txt");
+        writer.write("Hello, 世界! Привет!");    // Non-ASCII characters
+        writer.close();
+        
+        // Reading might produce garbled text on different systems
+        FileReader reader = new FileReader("data.txt");
+        // ...
+    }
+}
+
+FIX:
+----
+import java.io.*;
+import java.nio.charset.*;
+import java.nio.file.*;
+
+public class EncodingFixed {
+    public static void main(String[] args) {
+        
+        String content = "Hello, 世界! Привет! こんにちは!";
+        
+        // Option 1: Specify encoding with OutputStreamWriter
+        try (OutputStreamWriter writer = new OutputStreamWriter(
+                new FileOutputStream("data_utf8.txt"), StandardCharsets.UTF_8)) {
+            writer.write(content);
+            System.out.println("Written with UTF-8 encoding");
+        } catch (IOException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+        
+        // Option 2: Use Files.write() with charset
+        try {
+            Files.writeString(Path.of("data_nio.txt"), content, StandardCharsets.UTF_8);
+            System.out.println("Written using Files.writeString with UTF-8");
+        } catch (IOException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+        
+        // Option 3: Read with specific encoding
+        try (InputStreamReader reader = new InputStreamReader(
+                new FileInputStream("data_utf8.txt"), StandardCharsets.UTF_8)) {
+            
+            char[] buffer = new char[1024];
+            int length = reader.read(buffer);
+            String readContent = new String(buffer, 0, length);
+            System.out.println("Read content: " + readContent);
+        } catch (IOException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+        
+        // Option 4: Read using Files.readString with charset
+        try {
+            String readContent = Files.readString(Path.of("data_nio.txt"), StandardCharsets.UTF_8);
+            System.out.println("Read using Files.readString: " + readContent);
+        } catch (IOException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+        
+        // Cleanup
+        new File("data_utf8.txt").delete();
+        new File("data_nio.txt").delete();
+    }
+}
+
+
+--------------------------------------------------------------------------------
+ERROR 7: Path Issues (Cross-Platform)
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE:
+-----------------
+import java.io.*;
+
+public class PathError {
+    public static void main(String[] args) throws IOException {
+        // Hardcoded path separator - works only on Windows
+        String path = "folder\\subfolder\\file.txt";
+        
+        // Or hardcoded for Unix
+        String path2 = "folder/subfolder/file.txt";
+        
+        File file = new File(path);    // May not work on all platforms
+    }
+}
+
+FIX:
+----
+import java.io.*;
+import java.nio.file.*;
+
+public class PathFixed {
+    public static void main(String[] args) {
+        
+        // Option 1: Use File.separator
+        String path1 = "folder" + File.separator + "subfolder" + File.separator + "file.txt";
+        System.out.println("Path 1: " + path1);
+        
+        // Option 2: Use Path.of() (recommended)
+        Path path2 = Path.of("folder", "subfolder", "file.txt");
+        System.out.println("Path 2: " + path2);
+        
+        // Option 3: Use Paths.get()
+        Path path3 = Paths.get("folder", "subfolder", "file.txt");
+        System.out.println("Path 3: " + path3);
+        
+        // Option 4: Use File constructor with multiple parts
+        File file = new File(new File("folder", "subfolder"), "file.txt");
+        System.out.println("File path: " + file.getPath());
+        
+        // Working with absolute vs relative paths
+        System.out.println("\n--- Path Information ---");
+        Path relativePath = Path.of("folder", "file.txt");
+        System.out.println("Relative: " + relativePath);
+        System.out.println("Absolute: " + relativePath.toAbsolutePath());
+        System.out.println("Normalized: " + Path.of("folder/../folder/./file.txt").normalize());
+        
+        // Combining paths
+        Path basePath = Path.of("base", "directory");
+        Path fullPath = basePath.resolve("file.txt");
+        System.out.println("Combined: " + fullPath);
+        
+        // Get parent, filename, etc.
+        System.out.println("Parent: " + fullPath.getParent());
+        System.out.println("Filename: " + fullPath.getFileName());
+    }
+}
+
+
+--------------------------------------------------------------------------------
+ERROR 8: Directory Not Exists When Writing
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE:
+-----------------
+import java.io.*;
+
+public class DirectoryNotExistsError {
+    public static void main(String[] args) throws IOException {
+        // Directory doesn't exist
+        FileWriter writer = new FileWriter("nonexistent/folder/file.txt");    // ERROR!
+        writer.write("Content");
+        writer.close();
+    }
+}
+
+ERROR MESSAGE:
+--------------
+java.io.FileNotFoundException: nonexistent/folder/file.txt (No such file or directory)
+
+FIX:
+----
+import java.io.*;
+import java.nio.file.*;
+
+public class DirectoryNotExistsFixed {
+    public static void main(String[] args) {
+        
+        Path filePath = Path.of("nonexistent", "folder", "file.txt");
+        
+        // Option 1: Create directories before writing
+        try {
+            // Create parent directories if they don't exist
+            Files.createDirectories(filePath.getParent());
+            
+            // Now write the file
+            Files.writeString(filePath, "Content");
+            System.out.println("File created: " + filePath);
+        } catch (IOException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+        
+        // Option 2: Using File class
+        File file = new File("another", "nested", "path", "file.txt");
+        File parentDir = file.getParentFile();
+        
+        if (!parentDir.exists()) {
+            if (parentDir.mkdirs()) {
+                System.out.println("Created directories: " + parentDir);
+            } else {
+                System.out.println("Failed to create directories");
+            }
+        }
+        
+        try (FileWriter writer = new FileWriter(file)) {
+            writer.write("Content");
+            System.out.println("File written: " + file.getPath());
+        } catch (IOException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+        
+        // Helper method for safe file writing
+        safeWriteFile(Path.of("safe", "path", "file.txt"), "Safe content");
+        
+        // Cleanup
+        deleteDirectory(new File("nonexistent"));
+        deleteDirectory(new File("another"));
+        deleteDirectory(new File("safe"));
+    }
+    
+    public static void safeWriteFile(Path filePath, String content) {
+        try {
+            Path parent = filePath.getParent();
+            if (parent != null && !Files.exists(parent)) {
+                Files.createDirectories(parent);
+            }
+            Files.writeString(filePath, content);
+            System.out.println("Safely written: " + filePath);
+        } catch (IOException e) {
+            System.out.println("Error writing file: " + e.getMessage());
+        }
+    }
+    
+    private static void deleteDirectory(File dir) {
+        if (dir.exists()) {
+            File[] files = dir.listFiles();
+            if (files != null) {
+                for (File file : files) {
+                    if (file.isDirectory()) {
+                        deleteDirectory(file);
+                    } else {
+                        file.delete();
+                    }
+                }
+            }
+            dir.delete();
+        }
+    }
+}
+
+
+================================================================================
+                    FILE HANDLING - QUICK REFERENCE
+================================================================================
+
+FILE READING METHODS:
+---------------------
++---------------------------+----------------------------------------------+
+| Method                    | Use Case                                     |
++---------------------------+----------------------------------------------+
+| BufferedReader            | Reading line by line                         |
+| Scanner                   | Reading formatted input                      |
+| Files.readAllLines()      | Small files, need all lines as List          |
+| Files.readString()        | Small files, need entire content as String   |
+| Files.lines()             | Large files, streaming with Java 8 Streams   |
+| Files.readAllBytes()      | Binary files                                 |
++---------------------------+----------------------------------------------+
+
+
+FILE WRITING METHODS:
+---------------------
++---------------------------+----------------------------------------------+
+| Method                    | Use Case                                     |
++---------------------------+----------------------------------------------+
+| BufferedWriter            | Writing text efficiently                     |
+| PrintWriter               | Formatted output (println, printf)           |
+| FileWriter                | Simple text writing                          |
+| Files.write()             | Writing lines or bytes                       |
+| Files.writeString()       | Writing entire string content                |
+| FileOutputStream          | Binary files                                 |
++---------------------------+----------------------------------------------+
+
+
+COMMON FILE OPERATIONS:
+-----------------------
++---------------------------+----------------------------------------------+
+| Operation                 | Code                                         |
++---------------------------+----------------------------------------------+
+| Check exists              | Files.exists(path) or file.exists()          |
+| Create file               | Files.createFile(path) or file.createNewFile()|
+| Create directory          | Files.createDirectories(path) or file.mkdirs()|
+| Delete file               | Files.delete(path) or file.delete()          |
+| Copy file                 | Files.copy(source, target)                   |
+| Move/rename               | Files.move(source, target)                   |
+| Get size                  | Files.size(path) or file.length()            |
+| List directory            | Files.list(path) or file.listFiles()         |
++---------------------------+----------------------------------------------+
+
+
+AUTOMATION USE CASES:
+---------------------
++---------------------------+----------------------------------------------+
+| Use Case                  | File Type                                    |
++---------------------------+----------------------------------------------+
+| Test configuration        | .properties files                            |
+| Test data                 | CSV, JSON, Excel files                       |
+| Locators storage          | .properties or JSON files                    |
+| API request bodies        | JSON files                                   |
+| Test reports              | HTML, CSV files                              |
+| Logs                      | .log files                                   |
+| Screenshots               | PNG, JPG files                               |
+| Environment settings      | .properties or .env files                    |
++---------------------------+----------------------------------------------+
+
+
+BEST PRACTICES:
+---------------
+1. Always use try-with-resources for automatic resource closing
+2. Specify character encoding (UTF-8) explicitly
+3. Use Path and Files (NIO) for modern file operations
+4. Check file existence before reading
+5. Create directories before writing nested files
+6. Use File.separator or Path for cross-platform compatibility
+7. Handle exceptions appropriately - don't swallow them
+8. Use buffered streams for better performance
+9. Close resources in finally block if not using try-with-resources
+10. Validate file content before processing
+
+
+================================================================================
+                    PRACTICE EXERCISES - FILE HANDLING
+================================================================================
+
+EXERCISE 1: Configuration Manager
+---------------------------------
+Create a ConfigManager class that:
+- Loads properties from multiple files (default, environment-specific)
+- Supports getting values as String, int, boolean, List
+- Provides method to save updated configuration
+- Implements singleton pattern
+
+EXERCISE 2: CSV Data Provider
+-----------------------------
+Create a CSVDataProvider class that:
+- Reads CSV files with headers
+- Returns data as List<Map<String, String>>
+- Supports filtering rows by column value
+- Supports reading specific columns only
+
+EXERCISE 3: Test Report Generator
+---------------------------------
+Create a TestReportGenerator that:
+- Accepts test results (name, status, duration, error)
+- Generates CSV, HTML, and JSON reports
+- Includes summary statistics
+- Supports custom report templates
+
+EXERCISE 4: Log File Analyzer
+-----------------------------
+Create a LogAnalyzer class that:
+- Reads log files line by line
+- Filters by log level (ERROR, WARN, INFO)
+- Extracts timestamps and messages
+- Generates summary report
+
+EXERCISE 5: API Test Data Manager
+---------------------------------
+Create an ApiTestDataManager that:
+- Loads request templates from JSON files
+- Supports placeholder replacement
+- Validates JSON structure
+- Supports environment-specific data
+
+
+================================================================================
+                    SUMMARY - FILE HANDLING
+================================================================================
+
+KEY TAKEAWAYS:
+--------------
+1. Use try-with-resources for automatic resource management
+2. Properties files are ideal for configuration
+3. CSV files are great for test data
+4. JSON files are perfect for API testing
+5. Always specify encoding for text files
+6. Use Path and Files classes for modern file operations
+7. Create directories before writing nested files
+8. Handle exceptions properly - log and recover
+9. Use buffered streams for better performance
+10. Validate file content before processing
+
+
+FILE HANDLING IN AUTOMATION:
+----------------------------
+SELENIUM:
+- Properties files for configuration
+- CSV/JSON for test data
+- Properties for locators
+- HTML/CSV for reports
+- PNG for screenshots
+
+REST ASSURED:
+- Properties for API configuration
+- JSON for request bodies
+- Properties for endpoints
+- JSON/CSV for test data
+- Logs for request/response
+
+
+================================================================================
+                    WHAT'S NEXT?
+================================================================================
+
+We've covered:
+- Topic 10: Inheritance
+- Topic 11: Polymorphism
+- Topic 12: Abstraction
+- Topic 13: Encapsulation
+- Topic 14: Collections Framework
+- Topic 15: Exception Handling
+- Topic 16: File Handling
+
+According to your curriculum, the next topic is:
+- Topic 17: Java 8 Features (Lambda expressions, Functional interfaces, Stream API)
+
+Would you like me to continue with Topic 17: Java 8 Features?
+
+Would you like me to continue with Topic 17: Java 8 Features? This is a very important topic that covers:
+
+    Lambda expressions
+    Functional interfaces
+    Stream API
+    Method references
+    Optional class
+    These features are extensively used in modern Selenium and REST Assured automation!

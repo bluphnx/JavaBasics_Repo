@@ -1,0 +1,2751 @@
+================================================================================
+================================================================================
+                    TOPIC 11: POLYMORPHISM IN JAVA
+================================================================================
+================================================================================
+
+What is Polymorphism?
+---------------------
+Polymorphism means "many forms". It allows objects to be treated as instances
+of their parent class while behaving according to their actual class.
+
+The same method call can produce different behavior depending on the object
+that receives the call.
+
+
+Etymology:
+----------
+Poly = Many
+Morph = Forms
+Polymorphism = Many Forms
+
+
+Real-World Analogy:
+-------------------
+Think of a "draw()" method:
+- If you ask an Artist to draw() → Creates artwork
+- If you ask an Architect to draw() → Creates blueprints  
+- If you ask a Gun to draw() → Pulls from holster
+- If you ask a Curtain to draw() → Opens/closes
+
+Same word "draw", different actions based on WHO is doing it.
+
+
+Types of Polymorphism:
+----------------------
++------------------------+---------------------------+---------------------------+
+| Type                   | Also Known As             | When Resolved             |
++------------------------+---------------------------+---------------------------+
+| Compile-time           | Static Polymorphism       | During compilation        |
+| Polymorphism           | Method Overloading        |                           |
+|                        | Early Binding             |                           |
++------------------------+---------------------------+---------------------------+
+| Runtime                | Dynamic Polymorphism      | During program execution  |
+| Polymorphism           | Method Overriding         |                           |
+|                        | Late Binding              |                           |
++------------------------+---------------------------+---------------------------+
+
+
+Visual Representation:
+----------------------
+
+                    POLYMORPHISM
+                         |
+          +--------------+--------------+
+          |                             |
+    COMPILE-TIME                   RUNTIME
+    (Static)                       (Dynamic)
+          |                             |
+    Method Overloading            Method Overriding
+          |                             |
+    - Same class                  - Parent-Child classes
+    - Different parameters        - Same parameters
+    - Resolved by compiler        - Resolved at runtime
+    - Based on arguments          - Based on object type
+
+
+Why Important for Automation?
+-----------------------------
+1. Write generic test methods that work with different page objects
+2. Create flexible frameworks with interchangeable components
+3. Handle different browsers/devices with same interface
+4. Process different test data types uniformly
+5. Implement strategy patterns for different test approaches
+
+
+================================================================================
+                    1. COMPILE-TIME POLYMORPHISM (METHOD OVERLOADING)
+================================================================================
+
+Method Overloading (Recap):
+---------------------------
+- Same method name, different parameters
+- Resolved at compile time
+- Can differ in: number of parameters, type of parameters, order of parameters
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 1: Method Overloading - Calculator
+--------------------------------------------------------------------------------
+
+class Calculator {
+    
+    // Overloaded add methods
+    
+    // Two integers
+    public int add(int a, int b) {
+        System.out.println("add(int, int) called");
+        return a + b;
+    }
+    
+    // Three integers
+    public int add(int a, int b, int c) {
+        System.out.println("add(int, int, int) called");
+        return a + b + c;
+    }
+    
+    // Two doubles
+    public double add(double a, double b) {
+        System.out.println("add(double, double) called");
+        return a + b;
+    }
+    
+    // Integer and double
+    public double add(int a, double b) {
+        System.out.println("add(int, double) called");
+        return a + b;
+    }
+    
+    // Double and integer (different order)
+    public double add(double a, int b) {
+        System.out.println("add(double, int) called");
+        return a + b;
+    }
+    
+    // Array of integers
+    public int add(int[] numbers) {
+        System.out.println("add(int[]) called");
+        int sum = 0;
+        for (int num : numbers) {
+            sum += num;
+        }
+        return sum;
+    }
+    
+    // Varargs
+    public int add(int first, int... rest) {
+        System.out.println("add(int, int...) called");
+        int sum = first;
+        for (int num : rest) {
+            sum += num;
+        }
+        return sum;
+    }
+}
+
+public class CompileTimePolymorphismDemo {
+    public static void main(String[] args) {
+        
+        System.out.println("=== Compile-Time Polymorphism Demo ===\n");
+        
+        Calculator calc = new Calculator();
+        
+        // Compiler determines which method to call based on arguments
+        
+        System.out.println("Result: " + calc.add(5, 10));
+        System.out.println();
+        
+        System.out.println("Result: " + calc.add(5, 10, 15));
+        System.out.println();
+        
+        System.out.println("Result: " + calc.add(5.5, 10.5));
+        System.out.println();
+        
+        System.out.println("Result: " + calc.add(5, 10.5));
+        System.out.println();
+        
+        System.out.println("Result: " + calc.add(5.5, 10));
+        System.out.println();
+        
+        int[] numbers = {1, 2, 3, 4, 5};
+        System.out.println("Result: " + calc.add(numbers));
+        System.out.println();
+        
+        // Note: Varargs method is called when no exact match
+        System.out.println("Result: " + calc.add(1, 2, 3, 4, 5, 6, 7));
+    }
+}
+
+OUTPUT:
+-------
+=== Compile-Time Polymorphism Demo ===
+
+add(int, int) called
+Result: 15
+
+add(int, int, int) called
+Result: 30
+
+add(double, double) called
+Result: 16.0
+
+add(int, double) called
+Result: 15.5
+
+add(double, int) called
+Result: 15.5
+
+add(int[]) called
+Result: 15
+
+add(int, int...) called
+Result: 28
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 2: Method Overloading in Automation Context
+--------------------------------------------------------------------------------
+
+class WebElementActions {
+    
+    // Click with just locator
+    public void click(String locator) {
+        System.out.println("Clicking element: " + locator);
+        // driver.findElement(By.xpath(locator)).click();
+    }
+    
+    // Click with locator type specified
+    public void click(String locator, String locatorType) {
+        System.out.println("Clicking element [" + locatorType + "]: " + locator);
+        // By by = getByType(locatorType, locator);
+        // driver.findElement(by).click();
+    }
+    
+    // Click with wait
+    public void click(String locator, int waitSeconds) {
+        System.out.println("Waiting " + waitSeconds + "s, then clicking: " + locator);
+        // WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitSeconds));
+        // wait.until(ExpectedConditions.elementToBeClickable(By.xpath(locator))).click();
+    }
+    
+    // Click with locator type and wait
+    public void click(String locator, String locatorType, int waitSeconds) {
+        System.out.println("Waiting " + waitSeconds + "s, then clicking [" + 
+                          locatorType + "]: " + locator);
+    }
+    
+    // ===== Type/SendKeys overloaded methods =====
+    
+    public void type(String locator, String text) {
+        System.out.println("Typing '" + text + "' into: " + locator);
+    }
+    
+    public void type(String locator, String text, boolean clearFirst) {
+        if (clearFirst) {
+            System.out.println("Clearing field: " + locator);
+        }
+        System.out.println("Typing '" + text + "' into: " + locator);
+    }
+    
+    public void type(String locator, String text, int delayBetweenKeys) {
+        System.out.println("Typing '" + text + "' into: " + locator + 
+                          " (delay: " + delayBetweenKeys + "ms per key)");
+    }
+    
+    // ===== Wait overloaded methods =====
+    
+    public void waitForElement(String locator) {
+        System.out.println("Waiting for element (default 10s): " + locator);
+    }
+    
+    public void waitForElement(String locator, int seconds) {
+        System.out.println("Waiting for element (" + seconds + "s): " + locator);
+    }
+    
+    public void waitForElement(String locator, int seconds, String condition) {
+        System.out.println("Waiting for element (" + seconds + "s, " + 
+                          condition + "): " + locator);
+    }
+}
+
+public class AutomationOverloadingDemo {
+    public static void main(String[] args) {
+        
+        System.out.println("=== Automation Method Overloading Demo ===\n");
+        
+        WebElementActions actions = new WebElementActions();
+        
+        System.out.println("--- Click Variations ---");
+        actions.click("//button[@id='submit']");
+        actions.click("submit", "id");
+        actions.click("//button[@id='submit']", 5);
+        actions.click("submit", "id", 10);
+        
+        System.out.println("\n--- Type Variations ---");
+        actions.type("//input[@id='username']", "testuser");
+        actions.type("//input[@id='username']", "testuser", true);
+        actions.type("//input[@id='username']", "testuser", 100);
+        
+        System.out.println("\n--- Wait Variations ---");
+        actions.waitForElement("//div[@class='loader']");
+        actions.waitForElement("//div[@class='loader']", 30);
+        actions.waitForElement("//div[@class='loader']", 30, "invisible");
+    }
+}
+
+OUTPUT:
+-------
+=== Automation Method Overloading Demo ===
+
+--- Click Variations ---
+Clicking element: //button[@id='submit']
+Clicking element [id]: submit
+Waiting 5s, then clicking: //button[@id='submit']
+Waiting 10s, then clicking [id]: submit
+
+--- Type Variations ---
+Typing 'testuser' into: //input[@id='username']
+Clearing field: //input[@id='username']
+Typing 'testuser' into: //input[@id='username']
+Typing 'testuser' into: //input[@id='username'] (delay: 100ms per key)
+
+--- Wait Variations ---
+Waiting for element (default 10s): //div[@class='loader']
+Waiting for element (30s): //div[@class='loader']
+Waiting for element (30s, invisible): //div[@class='loader']
+
+
+================================================================================
+                    2. RUNTIME POLYMORPHISM (METHOD OVERRIDING)
+================================================================================
+
+Runtime Polymorphism:
+---------------------
+- Parent class reference can hold child class object
+- Method call is resolved at runtime based on actual object type
+- Also called dynamic method dispatch
+
+
+Key Concept - Upcasting:
+------------------------
+Parent ref = new Child();    // Upcasting - automatic
+                             // ref is Parent type, but points to Child object
+                             // Method calls go to Child's overridden methods
+
+
+Visual Representation:
+----------------------
+                    MEMORY
+    
+    Stack                          Heap
+    +--------+                     +------------------+
+    | ref    | -----------------> | Child Object     |
+    | (Parent|                     |                  |
+    |  type) |                     | - parent fields  |
+    +--------+                     | - child fields   |
+                                   | - parent methods |
+                                   | - child methods  |
+                                   +------------------+
+    
+    When ref.method() is called:
+    - Compiler checks: Does Parent have method()? Yes → Allowed
+    - Runtime executes: Child's version of method() (if overridden)
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 3: Basic Runtime Polymorphism
+--------------------------------------------------------------------------------
+
+class Animal {
+    protected String name;
+    
+    public Animal(String name) {
+        this.name = name;
+    }
+    
+    public void makeSound() {
+        System.out.println(name + " makes a sound");
+    }
+    
+    public void eat() {
+        System.out.println(name + " is eating");
+    }
+    
+    public void sleep() {
+        System.out.println(name + " is sleeping");
+    }
+}
+
+class Dog extends Animal {
+    
+    public Dog(String name) {
+        super(name);
+    }
+    
+    @Override
+    public void makeSound() {
+        System.out.println(name + " says: Woof! Woof!");
+    }
+    
+    @Override
+    public void eat() {
+        System.out.println(name + " is eating dog food");
+    }
+    
+    // Dog-specific method
+    public void fetch() {
+        System.out.println(name + " is fetching the ball");
+    }
+}
+
+class Cat extends Animal {
+    
+    public Cat(String name) {
+        super(name);
+    }
+    
+    @Override
+    public void makeSound() {
+        System.out.println(name + " says: Meow!");
+    }
+    
+    @Override
+    public void eat() {
+        System.out.println(name + " is eating cat food");
+    }
+    
+    // Cat-specific method
+    public void scratch() {
+        System.out.println(name + " is scratching");
+    }
+}
+
+class Cow extends Animal {
+    
+    public Cow(String name) {
+        super(name);
+    }
+    
+    @Override
+    public void makeSound() {
+        System.out.println(name + " says: Moo!");
+    }
+    
+    // Uses parent's eat() method - no override
+}
+
+public class RuntimePolymorphismDemo {
+    public static void main(String[] args) {
+        
+        System.out.println("=== Runtime Polymorphism Demo ===\n");
+        
+        // Parent reference, Child objects (Upcasting)
+        Animal animal1 = new Dog("Buddy");
+        Animal animal2 = new Cat("Whiskers");
+        Animal animal3 = new Cow("Bessie");
+        Animal animal4 = new Animal("Generic");
+        
+        System.out.println("--- Calling makeSound() ---");
+        System.out.println("(Same method call, different behavior)\n");
+        
+        animal1.makeSound();    // Dog's makeSound()
+        animal2.makeSound();    // Cat's makeSound()
+        animal3.makeSound();    // Cow's makeSound()
+        animal4.makeSound();    // Animal's makeSound()
+        
+        System.out.println("\n--- Calling eat() ---\n");
+        
+        animal1.eat();    // Dog's eat()
+        animal2.eat();    // Cat's eat()
+        animal3.eat();    // Animal's eat() (Cow didn't override)
+        animal4.eat();    // Animal's eat()
+        
+        System.out.println("\n--- Calling sleep() (not overridden) ---\n");
+        
+        animal1.sleep();    // Animal's sleep()
+        animal2.sleep();    // Animal's sleep()
+        
+        System.out.println("\n--- Polymorphism with Array ---\n");
+        
+        Animal[] zoo = {
+            new Dog("Rex"),
+            new Cat("Luna"),
+            new Cow("Daisy"),
+            new Dog("Max"),
+            new Cat("Simba")
+        };
+        
+        System.out.println("All animals making sounds:");
+        for (Animal animal : zoo) {
+            animal.makeSound();    // Each calls its own version
+        }
+        
+        System.out.println("\n--- Cannot call child-specific methods ---");
+        System.out.println("animal1.fetch(); // Would cause compile error");
+        System.out.println("Because 'Animal' type doesn't have fetch() method");
+        
+        // To call child-specific method, need to downcast
+        System.out.println("\n--- Downcasting to access child methods ---");
+        if (animal1 instanceof Dog) {
+            Dog dog = (Dog) animal1;
+            dog.fetch();
+        }
+    }
+}
+
+OUTPUT:
+-------
+=== Runtime Polymorphism Demo ===
+
+--- Calling makeSound() ---
+(Same method call, different behavior)
+
+Buddy says: Woof! Woof!
+Whiskers says: Meow!
+Bessie says: Moo!
+Generic makes a sound
+
+--- Calling eat() ---
+
+Buddy is eating dog food
+Whiskers is eating cat food
+Bessie is eating
+Generic is eating
+
+--- Calling sleep() (not overridden) ---
+
+Buddy is sleeping
+Whiskers is sleeping
+
+--- Polymorphism with Array ---
+
+All animals making sounds:
+Rex says: Woof! Woof!
+Luna says: Meow!
+Daisy says: Moo!
+Max says: Woof! Woof!
+Simba says: Meow!
+
+--- Cannot call child-specific methods ---
+animal1.fetch(); // Would cause compile error
+Because 'Animal' type doesn't have fetch() method
+
+--- Downcasting to access child methods ---
+Buddy is fetching the ball
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 4: Polymorphism - Payment System
+--------------------------------------------------------------------------------
+
+// Base class
+class Payment {
+    protected double amount;
+    protected String transactionId;
+    
+    public Payment(double amount) {
+        this.amount = amount;
+        this.transactionId = "TXN" + System.currentTimeMillis();
+    }
+    
+    public void processPayment() {
+        System.out.println("Processing generic payment of $" + amount);
+    }
+    
+    public void validatePayment() {
+        System.out.println("Validating payment...");
+        if (amount <= 0) {
+            System.out.println("Invalid amount!");
+        } else {
+            System.out.println("Amount validated: $" + amount);
+        }
+    }
+    
+    public void generateReceipt() {
+        System.out.println("Receipt for Transaction: " + transactionId);
+        System.out.println("Amount: $" + amount);
+    }
+}
+
+// Credit Card Payment
+class CreditCardPayment extends Payment {
+    private String cardNumber;
+    private String cardHolderName;
+    private String expiryDate;
+    
+    public CreditCardPayment(double amount, String cardNumber, String cardHolderName) {
+        super(amount);
+        this.cardNumber = maskCardNumber(cardNumber);
+        this.cardHolderName = cardHolderName;
+    }
+    
+    private String maskCardNumber(String number) {
+        return "****-****-****-" + number.substring(number.length() - 4);
+    }
+    
+    @Override
+    public void processPayment() {
+        System.out.println("Processing Credit Card payment...");
+        System.out.println("Card: " + cardNumber);
+        System.out.println("Cardholder: " + cardHolderName);
+        System.out.println("Amount: $" + amount);
+        System.out.println("Contacting card network...");
+        System.out.println("Payment approved!");
+    }
+    
+    @Override
+    public void validatePayment() {
+        super.validatePayment();
+        System.out.println("Validating card details...");
+        System.out.println("Card validation successful");
+    }
+    
+    @Override
+    public void generateReceipt() {
+        super.generateReceipt();
+        System.out.println("Payment Method: Credit Card");
+        System.out.println("Card: " + cardNumber);
+    }
+}
+
+// PayPal Payment
+class PayPalPayment extends Payment {
+    private String email;
+    
+    public PayPalPayment(double amount, String email) {
+        super(amount);
+        this.email = email;
+    }
+    
+    @Override
+    public void processPayment() {
+        System.out.println("Processing PayPal payment...");
+        System.out.println("PayPal Account: " + email);
+        System.out.println("Amount: $" + amount);
+        System.out.println("Redirecting to PayPal...");
+        System.out.println("PayPal payment confirmed!");
+    }
+    
+    @Override
+    public void validatePayment() {
+        super.validatePayment();
+        System.out.println("Validating PayPal account...");
+        System.out.println("Account verified: " + email);
+    }
+    
+    @Override
+    public void generateReceipt() {
+        super.generateReceipt();
+        System.out.println("Payment Method: PayPal");
+        System.out.println("Account: " + email);
+    }
+}
+
+// Bank Transfer Payment
+class BankTransferPayment extends Payment {
+    private String bankName;
+    private String accountNumber;
+    private String routingNumber;
+    
+    public BankTransferPayment(double amount, String bankName, String accountNumber) {
+        super(amount);
+        this.bankName = bankName;
+        this.accountNumber = maskAccountNumber(accountNumber);
+    }
+    
+    private String maskAccountNumber(String number) {
+        return "****" + number.substring(number.length() - 4);
+    }
+    
+    @Override
+    public void processPayment() {
+        System.out.println("Processing Bank Transfer...");
+        System.out.println("Bank: " + bankName);
+        System.out.println("Account: " + accountNumber);
+        System.out.println("Amount: $" + amount);
+        System.out.println("Initiating ACH transfer...");
+        System.out.println("Transfer initiated (2-3 business days)");
+    }
+    
+    @Override
+    public void validatePayment() {
+        super.validatePayment();
+        System.out.println("Validating bank account...");
+        System.out.println("Bank account verified");
+    }
+    
+    @Override
+    public void generateReceipt() {
+        super.generateReceipt();
+        System.out.println("Payment Method: Bank Transfer");
+        System.out.println("Bank: " + bankName);
+        System.out.println("Account: " + accountNumber);
+    }
+}
+
+// Cryptocurrency Payment
+class CryptoPayment extends Payment {
+    private String walletAddress;
+    private String cryptoType;
+    private double cryptoAmount;
+    
+    public CryptoPayment(double amount, String walletAddress, String cryptoType) {
+        super(amount);
+        this.walletAddress = walletAddress;
+        this.cryptoType = cryptoType;
+        this.cryptoAmount = convertToCrypto(amount, cryptoType);
+    }
+    
+    private double convertToCrypto(double usdAmount, String type) {
+        // Simulated conversion rates
+        switch (type.toUpperCase()) {
+            case "BTC": return usdAmount / 45000;
+            case "ETH": return usdAmount / 3000;
+            default: return usdAmount;
+        }
+    }
+    
+    @Override
+    public void processPayment() {
+        System.out.println("Processing Cryptocurrency payment...");
+        System.out.println("Crypto: " + cryptoType);
+        System.out.println("Wallet: " + walletAddress.substring(0, 10) + "...");
+        System.out.println("Amount: " + String.format("%.6f", cryptoAmount) + " " + cryptoType);
+        System.out.println("USD Equivalent: $" + amount);
+        System.out.println("Broadcasting to blockchain...");
+        System.out.println("Transaction submitted!");
+    }
+    
+    @Override
+    public void generateReceipt() {
+        super.generateReceipt();
+        System.out.println("Payment Method: Cryptocurrency");
+        System.out.println("Crypto: " + cryptoType);
+        System.out.println("Amount: " + String.format("%.6f", cryptoAmount) + " " + cryptoType);
+    }
+}
+
+// Payment Processor - demonstrates polymorphism
+class PaymentProcessor {
+    
+    // This method accepts ANY type of Payment
+    public void process(Payment payment) {
+        System.out.println("\n" + "=".repeat(50));
+        System.out.println("PAYMENT PROCESSOR");
+        System.out.println("=".repeat(50));
+        
+        payment.validatePayment();
+        System.out.println();
+        
+        payment.processPayment();
+        System.out.println();
+        
+        payment.generateReceipt();
+        System.out.println("=".repeat(50));
+    }
+    
+    // Process multiple payments
+    public void processAll(Payment[] payments) {
+        System.out.println("\n" + "#".repeat(50));
+        System.out.println("BATCH PAYMENT PROCESSING");
+        System.out.println("#".repeat(50));
+        
+        for (int i = 0; i < payments.length; i++) {
+            System.out.println("\nProcessing Payment " + (i + 1) + " of " + payments.length);
+            process(payments[i]);
+        }
+        
+        System.out.println("\n" + "#".repeat(50));
+        System.out.println("BATCH PROCESSING COMPLETE");
+        System.out.println("#".repeat(50));
+    }
+}
+
+public class PaymentPolymorphismDemo {
+    public static void main(String[] args) {
+        
+        System.out.println("=== Payment System Polymorphism Demo ===");
+        
+        PaymentProcessor processor = new PaymentProcessor();
+        
+        // Create different payment types
+        Payment creditCard = new CreditCardPayment(150.00, "[REDACTED:CREDIT_DEBIT_NUMBER]", "John Doe");
+        Payment paypal = new PayPalPayment(75.50, "john.doe@email.com");
+        Payment bankTransfer = new BankTransferPayment(500.00, "Chase Bank", "[REDACTED:BANK_ACCOUNT_NUMBER]");
+        Payment crypto = new CryptoPayment(1000.00, "0x742d35Cc6634C0532925a3b844Bc9e7595f", "ETH");
+        
+        // Process individual payment
+        processor.process(creditCard);
+        
+        // Process batch - demonstrates polymorphism with array
+        Payment[] allPayments = {creditCard, paypal, bankTransfer, crypto};
+        processor.processAll(allPayments);
+    }
+}
+
+OUTPUT:
+-------
+=== Payment System Polymorphism Demo ===
+
+==================================================
+PAYMENT PROCESSOR
+==================================================
+Validating payment...
+Amount validated: $150.0
+Validating card details...
+Card validation successful
+
+Processing Credit Card payment...
+Card: ****-****-****-0366
+Cardholder: John Doe
+Amount: $150.0
+Contacting card network...
+Payment approved!
+
+Receipt for Transaction: TXN1234567890123
+Amount: $150.0
+Payment Method: Credit Card
+Card: ****-****-****-0366
+==================================================
+
+##################################################
+BATCH PAYMENT PROCESSING
+##################################################
+
+Processing Payment 1 of 4
+
+==================================================
+PAYMENT PROCESSOR
+==================================================
+Validating payment...
+Amount validated: $150.0
+Validating card details...
+Card validation successful
+
+Processing Credit Card payment...
+Card: ****-****-****-0366
+Cardholder: John Doe
+Amount: $150.0
+Contacting card network...
+Payment approved!
+
+Receipt for Transaction: TXN1234567890123
+Amount: $150.0
+Payment Method: Credit Card
+Card: ****-****-****-0366
+==================================================
+
+Processing Payment 2 of 4
+
+==================================================
+PAYMENT PROCESSOR
+==================================================
+Validating payment...
+Amount validated: $75.5
+Validating PayPal account...
+Account verified: john.doe@email.com
+
+Processing PayPal payment...
+PayPal Account: john.doe@email.com
+Amount: $75.5
+Redirecting to PayPal...
+PayPal payment confirmed!
+
+Receipt for Transaction: TXN1234567890124
+Amount: $75.5
+Payment Method: PayPal
+Account: john.doe@email.com
+==================================================
+
+... (continues for other payments)
+
+
+================================================================================
+                    3. POLYMORPHISM IN AUTOMATION TESTING
+================================================================================
+
+--------------------------------------------------------------------------------
+EXAMPLE 5: Browser Driver Polymorphism
+--------------------------------------------------------------------------------
+
+// Base class for all browser drivers
+class BrowserDriver {
+    protected String browserName;
+    protected boolean isHeadless;
+    
+    public BrowserDriver() {
+        this.browserName = "Unknown";
+        this.isHeadless = false;
+    }
+    
+    public void launch() {
+        System.out.println("Launching " + browserName + " browser...");
+    }
+    
+    public void navigateTo(String url) {
+        System.out.println("[" + browserName + "] Navigating to: " + url);
+    }
+    
+    public void maximize() {
+        System.out.println("[" + browserName + "] Maximizing window");
+    }
+    
+    public void close() {
+        System.out.println("[" + browserName + "] Closing browser");
+    }
+    
+    public void quit() {
+        System.out.println("[" + browserName + "] Quitting browser and closing all windows");
+    }
+    
+    public void takeScreenshot(String fileName) {
+        System.out.println("[" + browserName + "] Taking screenshot: " + fileName);
+    }
+    
+    public String getBrowserName() {
+        return browserName;
+    }
+}
+
+// Chrome Driver
+class ChromeBrowser extends BrowserDriver {
+    private String chromeDriverPath;
+    
+    public ChromeBrowser() {
+        this.browserName = "Chrome";
+        this.chromeDriverPath = "/drivers/chromedriver";
+    }
+    
+    public ChromeBrowser(boolean headless) {
+        this();
+        this.isHeadless = headless;
+    }
+    
+    @Override
+    public void launch() {
+        System.out.println("Setting ChromeDriver path: " + chromeDriverPath);
+        if (isHeadless) {
+            System.out.println("Configuring Chrome in headless mode");
+        }
+        System.out.println("Launching Chrome browser...");
+        System.out.println("Chrome launched successfully!");
+    }
+    
+    @Override
+    public void takeScreenshot(String fileName) {
+        System.out.println("[Chrome] Using ChromeDriver screenshot capability");
+        System.out.println("[Chrome] Screenshot saved: " + fileName + ".png");
+    }
+    
+    // Chrome-specific method
+    public void enableDevTools() {
+        System.out.println("[Chrome] Enabling DevTools Protocol");
+    }
+}
+
+// Firefox Driver
+class FirefoxBrowser extends BrowserDriver {
+    private String geckoDriverPath;
+    
+    public FirefoxBrowser() {
+        this.browserName = "Firefox";
+        this.geckoDriverPath = "/drivers/geckodriver";
+    }
+    
+    public FirefoxBrowser(boolean headless) {
+        this();
+        this.isHeadless = headless;
+    }
+    
+    @Override
+    public void launch() {
+        System.out.println("Setting GeckoDriver path: " + geckoDriverPath);
+        if (isHeadless) {
+            System.out.println("Configuring Firefox in headless mode");
+        }
+        System.out.println("Launching Firefox browser...");
+        System.out.println("Firefox launched successfully!");
+    }
+    
+    @Override
+    public void takeScreenshot(String fileName) {
+        System.out.println("[Firefox] Using GeckoDriver screenshot capability");
+        System.out.println("[Firefox] Screenshot saved: " + fileName + ".png");
+    }
+    
+    // Firefox-specific method
+    public void setProfile(String profileName) {
+        System.out.println("[Firefox] Setting profile: " + profileName);
+    }
+}
+
+// Edge Driver
+class EdgeBrowser extends BrowserDriver {
+    private String edgeDriverPath;
+    
+    public EdgeBrowser() {
+        this.browserName = "Edge";
+        this.edgeDriverPath = "/drivers/msedgedriver";
+    }
+    
+    @Override
+    public void launch() {
+        System.out.println("Setting EdgeDriver path: " + edgeDriverPath);
+        System.out.println("Launching Microsoft Edge browser...");
+        System.out.println("Edge launched successfully!");
+    }
+    
+    @Override
+    public void takeScreenshot(String fileName) {
+        System.out.println("[Edge] Using EdgeDriver screenshot capability");
+        System.out.println("[Edge] Screenshot saved: " + fileName + ".png");
+    }
+}
+
+// Safari Driver
+class SafariBrowser extends BrowserDriver {
+    
+    public SafariBrowser() {
+        this.browserName = "Safari";
+    }
+    
+    @Override
+    public void launch() {
+        System.out.println("Safari uses built-in driver");
+        System.out.println("Enabling Safari automation in Develop menu...");
+        System.out.println("Launching Safari browser...");
+        System.out.println("Safari launched successfully!");
+    }
+    
+    @Override
+    public void takeScreenshot(String fileName) {
+        System.out.println("[Safari] Using SafariDriver screenshot capability");
+        System.out.println("[Safari] Screenshot saved: " + fileName + ".png");
+    }
+}
+
+// Browser Factory - creates appropriate browser based on input
+class BrowserFactory {
+    
+    public static BrowserDriver getBrowser(String browserType) {
+        return getBrowser(browserType, false);
+    }
+    
+    public static BrowserDriver getBrowser(String browserType, boolean headless) {
+        switch (browserType.toLowerCase()) {
+            case "chrome":
+                return new ChromeBrowser(headless);
+            case "firefox":
+                return new FirefoxBrowser(headless);
+            case "edge":
+                return new EdgeBrowser();
+            case "safari":
+                return new SafariBrowser();
+            default:
+                System.out.println("Unknown browser, defaulting to Chrome");
+                return new ChromeBrowser();
+        }
+    }
+}
+
+// Test class that uses polymorphism
+class CrossBrowserTest {
+    private BrowserDriver driver;    // Parent type reference
+    
+    public void setDriver(BrowserDriver driver) {
+        this.driver = driver;
+    }
+    
+    public void runTest() {
+        System.out.println("\n" + "-".repeat(50));
+        System.out.println("Running test on: " + driver.getBrowserName());
+        System.out.println("-".repeat(50));
+        
+        driver.launch();
+        driver.maximize();
+        driver.navigateTo("https://example.com");
+        
+        // Perform test actions
+        System.out.println("[Test] Performing test actions...");
+        System.out.println("[Test] Clicking login button");
+        System.out.println("[Test] Entering credentials");
+        System.out.println("[Test] Verifying dashboard");
+        
+        driver.takeScreenshot("test_result");
+        driver.quit();
+        
+        System.out.println("[Test] Test completed on " + driver.getBrowserName());
+    }
+}
+
+public class BrowserPolymorphismDemo {
+    public static void main(String[] args) {
+        
+        System.out.println("=".repeat(60));
+        System.out.println("       CROSS-BROWSER TESTING WITH POLYMORPHISM");
+        System.out.println("=".repeat(60));
+        
+        CrossBrowserTest test = new CrossBrowserTest();
+        
+        // Run same test on different browsers
+        String[] browsers = {"chrome", "firefox", "edge", "safari"};
+        
+        for (String browserName : browsers) {
+            // Factory returns appropriate browser - polymorphism in action!
+            BrowserDriver browser = BrowserFactory.getBrowser(browserName);
+            test.setDriver(browser);
+            test.runTest();
+        }
+        
+        System.out.println("\n" + "=".repeat(60));
+        System.out.println("       ALL BROWSER TESTS COMPLETED");
+        System.out.println("=".repeat(60));
+    }
+}
+
+OUTPUT:
+-------
+============================================================
+       CROSS-BROWSER TESTING WITH POLYMORPHISM
+============================================================
+
+--------------------------------------------------
+Running test on: Chrome
+--------------------------------------------------
+Setting ChromeDriver path: /drivers/chromedriver
+Launching Chrome browser...
+Chrome launched successfully!
+[Chrome] Maximizing window
+[Chrome] Navigating to: https://example.com
+[Test] Performing test actions...
+[Test] Clicking login button
+[Test] Entering credentials
+[Test] Verifying dashboard
+[Chrome] Using ChromeDriver screenshot capability
+[Chrome] Screenshot saved: test_result.png
+[Chrome] Quitting browser and closing all windows
+[Test] Test completed on Chrome
+
+--------------------------------------------------
+Running test on: Firefox
+--------------------------------------------------
+Setting GeckoDriver path: /drivers/geckodriver
+Launching Firefox browser...
+Firefox launched successfully!
+[Firefox] Maximizing window
+[Firefox] Navigating to: https://example.com
+[Test] Performing test actions...
+[Test] Clicking login button
+[Test] Entering credentials
+[Test] Verifying dashboard
+[Firefox] Using GeckoDriver screenshot capability
+[Firefox] Screenshot saved: test_result.png
+[Firefox] Quitting browser and closing all windows
+[Test] Test completed on Firefox
+
+--------------------------------------------------
+Running test on: Edge
+--------------------------------------------------
+Setting EdgeDriver path: /drivers/msedgedriver
+Launching Microsoft Edge browser...
+Edge launched successfully!
+[Edge] Maximizing window
+[Edge] Navigating to: https://example.com
+[Test] Performing test actions...
+[Test] Clicking login button
+[Test] Entering credentials
+[Test] Verifying dashboard
+[Edge] Using EdgeDriver screenshot capability
+[Edge] Screenshot saved: test_result.png
+[Edge] Quitting browser and closing all windows
+[Test] Test completed on Edge
+
+--------------------------------------------------
+Running test on: Safari
+--------------------------------------------------
+Safari uses built-in driver
+Enabling Safari automation in Develop menu...
+Launching Safari browser...
+Safari launched successfully!
+[Safari] Maximizing window
+[Safari] Navigating to: https://example.com
+[Test] Performing test actions...
+[Test] Clicking login button
+[Test] Entering credentials
+[Test] Verifying dashboard
+[Safari] Using SafariDriver screenshot capability
+[Safari] Screenshot saved: test_result.png
+[Safari] Quitting browser and closing all windows
+[Test] Test completed on Safari
+
+============================================================
+       ALL BROWSER TESTS COMPLETED
+============================================================
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 6: Page Object Polymorphism
+--------------------------------------------------------------------------------
+
+// Base Page class
+class BasePage {
+    protected String pageName;
+    protected String pageUrl;
+    
+    public BasePage(String pageName, String pageUrl) {
+        this.pageName = pageName;
+        this.pageUrl = pageUrl;
+    }
+    
+    public void load() {
+        System.out.println("Loading page: " + pageName);
+        System.out.println("URL: " + pageUrl);
+    }
+    
+    public boolean isLoaded() {
+        System.out.println("Checking if " + pageName + " is loaded...");
+        return true;
+    }
+    
+    public void waitForPageLoad() {
+        System.out.println("Waiting for " + pageName + " to load...");
+    }
+    
+    public String getPageTitle() {
+        return pageName;
+    }
+}
+
+// Login Page
+class LoginPagePoly extends BasePage {
+    
+    public LoginPagePoly() {
+        super("Login Page", "https://app.example.com/login");
+    }
+    
+    @Override
+    public void load() {
+        super.load();
+        System.out.println("[LoginPage] Checking for login form...");
+    }
+    
+    @Override
+    public boolean isLoaded() {
+        System.out.println("[LoginPage] Verifying login form elements...");
+        System.out.println("[LoginPage] - Username field present");
+        System.out.println("[LoginPage] - Password field present");
+        System.out.println("[LoginPage] - Login button present");
+        return true;
+    }
+    
+    public void login(String username, String password) {
+        System.out.println("[LoginPage] Entering username: " + username);
+        System.out.println("[LoginPage] Entering password: ****");
+        System.out.println("[LoginPage] Clicking login button");
+    }
+}
+
+// Dashboard Page
+class DashboardPagePoly extends BasePage {
+    
+    public DashboardPagePoly() {
+        super("Dashboard", "https://app.example.com/dashboard");
+    }
+    
+    @Override
+    public void load() {
+        super.load();
+        System.out.println("[Dashboard] Loading dashboard widgets...");
+    }
+    
+    @Override
+    public boolean isLoaded() {
+        System.out.println("[Dashboard] Verifying dashboard elements...");
+        System.out.println("[Dashboard] - Welcome message present");
+        System.out.println("[Dashboard] - Navigation menu present");
+        System.out.println("[Dashboard] - Dashboard widgets loaded");
+        return true;
+    }
+    
+    public void clickMenuItem(String item) {
+        System.out.println("[Dashboard] Clicking menu item: " + item);
+    }
+}
+
+// Products Page
+class ProductsPagePoly extends BasePage {
+    
+    public ProductsPagePoly() {
+        super("Products Page", "https://app.example.com/products");
+    }
+    
+    @Override
+    public void load() {
+        super.load();
+        System.out.println("[Products] Loading product catalog...");
+    }
+    
+    @Override
+    public boolean isLoaded() {
+        System.out.println("[Products] Verifying products page elements...");
+        System.out.println("[Products] - Product grid present");
+        System.out.println("[Products] - Filter sidebar present");
+        System.out.println("[Products] - Search box present");
+        return true;
+    }
+    
+    public void searchProduct(String productName) {
+        System.out.println("[Products] Searching for: " + productName);
+    }
+}
+
+// Checkout Page
+class CheckoutPagePoly extends BasePage {
+    
+    public CheckoutPagePoly() {
+        super("Checkout Page", "https://app.example.com/checkout");
+    }
+    
+    @Override
+    public void load() {
+        super.load();
+        System.out.println("[Checkout] Loading checkout form...");
+    }
+    
+    @Override
+    public boolean isLoaded() {
+        System.out.println("[Checkout] Verifying checkout page elements...");
+        System.out.println("[Checkout] - Cart summary present");
+        System.out.println("[Checkout] - Payment form present");
+        System.out.println("[Checkout] - Place order button present");
+        return true;
+    }
+    
+    public void enterPaymentDetails(String cardNumber) {
+        System.out.println("[Checkout] Entering payment details...");
+    }
+}
+
+// Page Navigator - uses polymorphism
+class PageNavigator {
+    
+    // Generic method that works with any page
+    public void navigateToPage(BasePage page) {
+        System.out.println("\n" + "=".repeat(50));
+        System.out.println("NAVIGATING TO: " + page.getPageTitle());
+        System.out.println("=".repeat(50));
+        
+        page.load();
+        page.waitForPageLoad();
+        
+        if (page.isLoaded()) {
+            System.out.println("✓ Page loaded successfully!");
+        } else {
+            System.out.println("✗ Page failed to load!");
+        }
+    }
+    
+    // Verify multiple pages
+    public void verifyAllPages(BasePage[] pages) {
+        System.out.println("\n" + "#".repeat(50));
+        System.out.println("VERIFYING ALL PAGES");
+        System.out.println("#".repeat(50));
+        
+        int passed = 0;
+        int failed = 0;
+        
+        for (BasePage page : pages) {
+            navigateToPage(page);
+            if (page.isLoaded()) {
+                passed++;
+            } else {
+                failed++;
+            }
+        }
+        
+        System.out.println("\n" + "#".repeat(50));
+        System.out.println("VERIFICATION COMPLETE");
+        System.out.println("Passed: " + passed + ", Failed: " + failed);
+        System.out.println("#".repeat(50));
+    }
+}
+
+public class PageObjectPolymorphismDemo {
+    public static void main(String[] args) {
+        
+        System.out.println("=== Page Object Polymorphism Demo ===\n");
+        
+        PageNavigator navigator = new PageNavigator();
+        
+        // Create different page objects
+        BasePage loginPage = new LoginPagePoly();
+        BasePage dashboard = new DashboardPagePoly();
+        BasePage products = new ProductsPagePoly();
+        BasePage checkout = new CheckoutPagePoly();
+        
+        // Navigate to single page
+        navigator.navigateToPage(loginPage);
+        
+        // Verify all pages - polymorphism in action
+        BasePage[] allPages = {loginPage, dashboard, products, checkout};
+        navigator.verifyAllPages(allPages);
+    }
+}
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 7: Test Data Polymorphism
+--------------------------------------------------------------------------------
+
+// Base test data class
+class TestData {
+    protected String testName;
+    protected String dataSource;
+    
+    public TestData(String testName) {
+        this.testName = testName;
+        this.dataSource = "Unknown";
+    }
+    
+    public void loadData() {
+        System.out.println("Loading test data for: " + testName);
+    }
+    
+    public String getData(String key) {
+        return "default_value";
+    }
+    
+    public void printDataSource() {
+        System.out.println("Data source: " + dataSource);
+    }
+}
+
+// Excel Test Data
+class ExcelTestData extends TestData {
+    private String filePath;
+    private String sheetName;
+    
+    public ExcelTestData(String testName, String filePath, String sheetName) {
+        super(testName);
+        this.filePath = filePath;
+        this.sheetName = sheetName;
+        this.dataSource = "Excel";
+    }
+    
+    @Override
+    public void loadData() {
+        System.out.println("[Excel] Loading data from: " + filePath);
+        System.out.println("[Excel] Sheet: " + sheetName);
+        System.out.println("[Excel] Data loaded successfully!");
+    }
+    
+    @Override
+    public String getData(String key) {
+        System.out.println("[Excel] Reading cell for key: " + key);
+        return "excel_value_for_" + key;
+    }
+}
+
+// JSON Test Data
+class JsonTestData extends TestData {
+    private String jsonFilePath;
+    
+    public JsonTestData(String testName, String jsonFilePath) {
+        super(testName);
+        this.jsonFilePath = jsonFilePath;
+        this.dataSource = "JSON";
+    }
+    
+    @Override
+    public void loadData() {
+        System.out.println("[JSON] Loading data from: " + jsonFilePath);
+        System.out.println("[JSON] Parsing JSON structure...");
+        System.out.println("[JSON] Data loaded successfully!");
+    }
+    
+    @Override
+    public String getData(String key) {
+        System.out.println("[JSON] Reading JSON path: $." + key);
+        return "json_value_for_" + key;
+    }
+}
+
+// Database Test Data
+class DatabaseTestData extends TestData {
+    private String connectionString;
+    private String query;
+    
+    public DatabaseTestData(String testName, String connectionString) {
+        super(testName);
+        this.connectionString = connectionString;
+        this.dataSource = "Database";
+    }
+    
+    @Override
+    public void loadData() {
+        System.out.println("[DB] Connecting to: " + connectionString);
+        System.out.println("[DB] Connection established!");
+        System.out.println("[DB] Data loaded successfully!");
+    }
+    
+    @Override
+    public String getData(String key) {
+        System.out.println("[DB] Executing query for: " + key);
+        return "db_value_for_" + key;
+    }
+}
+
+// Properties File Test Data
+class PropertiesTestData extends TestData {
+    private String propertiesFile;
+    
+    public PropertiesTestData(String testName, String propertiesFile) {
+        super(testName);
+        this.propertiesFile = propertiesFile;
+        this.dataSource = "Properties";
+    }
+    
+    @Override
+    public void loadData() {
+        System.out.println("[Properties] Loading: " + propertiesFile);
+        System.out.println("[Properties] Properties loaded successfully!");
+    }
+    
+    @Override
+    public String getData(String key) {
+        System.out.println("[Properties] Reading property: " + key);
+        return "property_value_for_" + key;
+    }
+}
+
+// Test that uses data polymorphically
+class DataDrivenTest {
+    private TestData testData;    // Parent type reference
+    
+    public DataDrivenTest(TestData testData) {
+        this.testData = testData;
+    }
+    
+    public void runTest() {
+        System.out.println("\n" + "-".repeat(50));
+        System.out.println("Running Data-Driven Test");
+        testData.printDataSource();
+        System.out.println("-".repeat(50));
+        
+        // Load data - calls appropriate subclass method
+        testData.loadData();
+        
+        // Get test data - calls appropriate subclass method
+        String username = testData.getData("username");
+        String password = testData.getData("password");
+        String url = testData.getData("url");
+        
+        System.out.println("\nRetrieved test data:");
+        System.out.println("  Username: " + username);
+        System.out.println("  Password: " + password);
+        System.out.println("  URL: " + url);
+        
+        System.out.println("\nExecuting test with retrieved data...");
+        System.out.println("Test completed!");
+    }
+}
+
+public class TestDataPolymorphismDemo {
+    public static void main(String[] args) {
+        
+        System.out.println("=".repeat(60));
+        System.out.println("       TEST DATA POLYMORPHISM DEMO");
+        System.out.println("=".repeat(60));
+        
+        // Create different data sources
+        TestData excelData = new ExcelTestData("LoginTest", "testdata.xlsx", "Sheet1");
+        TestData jsonData = new JsonTestData("LoginTest", "testdata.json");
+        TestData dbData = new DatabaseTestData("LoginTest", "jdbc:mysql://localhost/testdb");
+        TestData propData = new PropertiesTestData("LoginTest", "config.properties");
+        
+        // Run same test with different data sources
+        TestData[] dataSources = {excelData, jsonData, dbData, propData};
+        
+        for (TestData data : dataSources) {
+            DataDrivenTest test = new DataDrivenTest(data);
+            test.runTest();
+        }
+    }
+}
+
+
+================================================================================
+                    4. UPCASTING AND DOWNCASTING
+================================================================================
+
+Upcasting:
+----------
+- Converting child reference to parent reference
+- Always safe and automatic
+- Syntax: Parent p = new Child();
+
+Downcasting:
+------------
+- Converting parent reference back to child reference
+- Requires explicit cast
+- Can cause ClassCastException if object is not actually that type
+- Always use instanceof before downcasting
+
+
+Visual Representation:
+----------------------
+
+    UPCASTING (Automatic - Safe)
+    
+    Child obj ────────────────> Parent ref
+    (more specific)             (more general)
+    
+    Dog dog = new Dog();
+    Animal animal = dog;    // Upcasting
+    
+    
+    DOWNCASTING (Manual - Risky)
+    
+    Parent ref ────────────────> Child obj
+    (more general)              (more specific)
+    
+    Animal animal = new Dog();
+    Dog dog = (Dog) animal;    // Downcasting - need explicit cast
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 8: Upcasting and Downcasting
+--------------------------------------------------------------------------------
+
+class Vehicle {
+    protected String brand;
+    
+    public Vehicle(String brand) {
+        this.brand = brand;
+    }
+    
+    public void start() {
+        System.out.println(brand + " vehicle starting...");
+    }
+    
+    public void stop() {
+        System.out.println(brand + " vehicle stopping...");
+    }
+}
+
+class Car extends Vehicle {
+    private int doors;
+    
+    public Car(String brand, int doors) {
+        super(brand);
+        this.doors = doors;
+    }
+    
+    @Override
+    public void start() {
+        System.out.println(brand + " car starting with key ignition...");
+    }
+    
+    public void honk() {
+        System.out.println(brand + " car honking: Beep Beep!");
+    }
+    
+    public void openTrunk() {
+        System.out.println(brand + " opening trunk...");
+    }
+}
+
+class Motorcycle extends Vehicle {
+    private int engineCC;
+    
+    public Motorcycle(String brand, int engineCC) {
+        super(brand);
+        this.engineCC = engineCC;
+    }
+    
+    @Override
+    public void start() {
+        System.out.println(brand + " motorcycle starting with kick/button...");
+    }
+    
+    public void wheelie() {
+        System.out.println(brand + " " + engineCC + "cc doing a wheelie!");
+    }
+    
+    public void revEngine() {
+        System.out.println(brand + " revving engine: Vroom Vroom!");
+    }
+}
+
+class Truck extends Vehicle {
+    private double loadCapacity;
+    
+    public Truck(String brand, double loadCapacity) {
+        super(brand);
+        this.loadCapacity = loadCapacity;
+    }
+    
+    @Override
+    public void start() {
+        System.out.println(brand + " truck starting with diesel engine...");
+    }
+    
+    public void loadCargo() {
+        System.out.println(brand + " loading cargo (capacity: " + loadCapacity + " tons)");
+    }
+    
+    public void honkLoud() {
+        System.out.println(brand + " truck horn: HOOOONK!");
+    }
+}
+
+public class CastingDemo {
+    public static void main(String[] args) {
+        
+        System.out.println("=== Upcasting and Downcasting Demo ===\n");
+        
+        // ===== UPCASTING (Automatic) =====
+        System.out.println("--- UPCASTING (Child to Parent) ---\n");
+        
+        Car car = new Car("Toyota", 4);
+        Motorcycle motorcycle = new Motorcycle("Honda", 600);
+        Truck truck = new Truck("Ford", 5.0);
+        
+        // Upcasting - automatic, no cast needed
+        Vehicle vehicle1 = car;           // Car -> Vehicle
+        Vehicle vehicle2 = motorcycle;    // Motorcycle -> Vehicle
+        Vehicle vehicle3 = truck;         // Truck -> Vehicle
+        
+        System.out.println("After upcasting, calling start():");
+        vehicle1.start();    // Calls Car's start() - polymorphism!
+        vehicle2.start();    // Calls Motorcycle's start()
+        vehicle3.start();    // Calls Truck's start()
+        
+        System.out.println("\nNote: Cannot call child-specific methods after upcasting:");
+        System.out.println("vehicle1.honk();     // Compile error - Vehicle has no honk()");
+        System.out.println("vehicle2.wheelie();  // Compile error - Vehicle has no wheelie()");
+        
+        
+        // ===== DOWNCASTING (Manual) =====
+        System.out.println("\n--- DOWNCASTING (Parent to Child) ---\n");
+        
+        // Safe downcasting with instanceof
+        if (vehicle1 instanceof Car) {
+            Car downcastedCar = (Car) vehicle1;
+            System.out.println("Successfully downcasted to Car!");
+            downcastedCar.honk();
+            downcastedCar.openTrunk();
+        }
+        
+        if (vehicle2 instanceof Motorcycle) {
+            Motorcycle downcastedBike = (Motorcycle) vehicle2;
+            System.out.println("\nSuccessfully downcasted to Motorcycle!");
+            downcastedBike.wheelie();
+            downcastedBike.revEngine();
+        }
+        
+        if (vehicle3 instanceof Truck) {
+            Truck downcastedTruck = (Truck) vehicle3;
+            System.out.println("\nSuccessfully downcasted to Truck!");
+            downcastedTruck.loadCargo();
+            downcastedTruck.honkLoud();
+        }
+        
+        
+        // ===== WRONG DOWNCASTING (Would cause ClassCastException) =====
+        System.out.println("\n--- PREVENTING ClassCastException ---\n");
+        
+        Vehicle someVehicle = new Car("BMW", 2);    // Actually a Car
+        
+        // Check before casting
+        System.out.println("Is someVehicle a Car? " + (someVehicle instanceof Car));
+        System.out.println("Is someVehicle a Motorcycle? " + (someVehicle instanceof Motorcycle));
+        System.out.println("Is someVehicle a Truck? " + (someVehicle instanceof Truck));
+        
+        // Safe casting
+        if (someVehicle instanceof Motorcycle) {
+            Motorcycle m = (Motorcycle) someVehicle;
+            m.wheelie();
+        } else {
+            System.out.println("\nCannot cast to Motorcycle - would cause ClassCastException!");
+        }
+        
+        
+        // ===== POLYMORPHIC ARRAY WITH DOWNCASTING =====
+        System.out.println("\n--- PROCESSING MIXED VEHICLES ---\n");
+        
+        Vehicle[] fleet = {
+            new Car("Mercedes", 4),
+            new Motorcycle("Yamaha", 1000),
+            new Truck("Volvo", 10.0),
+            new Car("Audi", 2),
+            new Motorcycle("Ducati", 800)
+        };
+        
+        for (int i = 0; i < fleet.length; i++) {
+            System.out.println("Vehicle " + (i + 1) + ":");
+            fleet[i].start();    // Polymorphic call
+            
+            // Call specific methods based on type
+            if (fleet[i] instanceof Car) {
+                ((Car) fleet[i]).honk();
+            } else if (fleet[i] instanceof Motorcycle) {
+                ((Motorcycle) fleet[i]).revEngine();
+            } else if (fleet[i] instanceof Truck) {
+                ((Truck) fleet[i]).honkLoud();
+            }
+            System.out.println();
+        }
+    }
+}
+
+OUTPUT:
+-------
+=== Upcasting and Downcasting Demo ===
+
+--- UPCASTING (Child to Parent) ---
+
+After upcasting, calling start():
+Toyota car starting with key ignition...
+Honda motorcycle starting with kick/button...
+Ford truck starting with diesel engine...
+
+Note: Cannot call child-specific methods after upcasting:
+vehicle1.honk();     // Compile error - Vehicle has no honk()
+vehicle2.wheelie();  // Compile error - Vehicle has no wheelie()
+
+--- DOWNCASTING (Parent to Child) ---
+
+Successfully downcasted to Car!
+Toyota car honking: Beep Beep!
+Toyota opening trunk...
+
+Successfully downcasted to Motorcycle!
+Honda 600cc doing a wheelie!
+Honda revving engine: Vroom Vroom!
+
+Successfully downcasted to Truck!
+Ford loading cargo (capacity: 5.0 tons)
+Ford truck horn: HOOOONK!
+
+--- PREVENTING ClassCastException ---
+
+Is someVehicle a Car? true
+Is someVehicle a Motorcycle? false
+Is someVehicle a Truck? false
+
+Cannot cast to Motorcycle - would cause ClassCastException!
+
+--- PROCESSING MIXED VEHICLES ---
+
+Vehicle 1:
+Mercedes car starting with key ignition...
+Mercedes car honking: Beep Beep!
+
+Vehicle 2:
+Yamaha motorcycle starting with kick/button...
+Yamaha revving engine: Vroom Vroom!
+
+Vehicle 3:
+Volvo truck starting with diesel engine...
+Volvo truck horn: HOOOONK!
+
+Vehicle 4:
+Audi car starting with key ignition...
+Audi car honking: Beep Beep!
+
+Vehicle 5:
+Ducati motorcycle starting with kick/button...
+Ducati revving engine: Vroom Vroom!
+
+
+================================================================================
+                    5. COVARIANT RETURN TYPES
+================================================================================
+
+What is Covariant Return Type?
+------------------------------
+When overriding a method, the return type can be a subtype of the original
+return type. This is called covariant return type.
+
+Example:
+- Parent method returns: Animal
+- Child method can return: Dog (because Dog IS-A Animal)
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 9: Covariant Return Types
+--------------------------------------------------------------------------------
+
+class Animal {
+    protected String name;
+    
+    public Animal(String name) {
+        this.name = name;
+    }
+    
+    public void speak() {
+        System.out.println(name + " makes a sound");
+    }
+}
+
+class Dog extends Animal {
+    private String breed;
+    
+    public Dog(String name, String breed) {
+        super(name);
+        this.breed = breed;
+    }
+    
+    @Override
+    public void speak() {
+        System.out.println(name + " barks: Woof!");
+    }
+    
+    public void fetch() {
+        System.out.println(name + " fetches the ball!");
+    }
+    
+    public String getBreed() {
+        return breed;
+    }
+}
+
+class Cat extends Animal {
+    private boolean isIndoor;
+    
+    public Cat(String name, boolean isIndoor) {
+        super(name);
+        this.isIndoor = isIndoor;
+    }
+    
+    @Override
+    public void speak() {
+        System.out.println(name + " meows: Meow!");
+    }
+    
+    public void scratch() {
+        System.out.println(name + " scratches!");
+    }
+}
+
+// Animal Shelter - demonstrates covariant return types
+class AnimalShelter {
+    
+    // Returns Animal type
+    public Animal adoptAnimal() {
+        System.out.println("[Shelter] Adopting a generic animal");
+        return new Animal("Generic");
+    }
+}
+
+// Dog Shelter - covariant return type
+class DogShelter extends AnimalShelter {
+    
+    // Covariant return type: Dog instead of Animal
+    @Override
+    public Dog adoptAnimal() {
+        System.out.println("[DogShelter] Adopting a dog");
+        return new Dog("Buddy", "Golden Retriever");
+    }
+    
+    // Additional method
+    public Dog adoptPuppy() {
+        System.out.println("[DogShelter] Adopting a puppy");
+        return new Dog("Puppy", "Labrador");
+    }
+}
+
+// Cat Shelter - covariant return type
+class CatShelter extends AnimalShelter {
+    
+    // Covariant return type: Cat instead of Animal
+    @Override
+    public Cat adoptAnimal() {
+        System.out.println("[CatShelter] Adopting a cat");
+        return new Cat("Whiskers", true);
+    }
+}
+
+public class CovariantReturnDemo {
+    public static void main(String[] args) {
+        
+        System.out.println("=== Covariant Return Types Demo ===\n");
+        
+        // Using parent type reference
+        AnimalShelter shelter1 = new AnimalShelter();
+        AnimalShelter shelter2 = new DogShelter();
+        AnimalShelter shelter3 = new CatShelter();
+        
+        System.out.println("--- Adopting from different shelters ---\n");
+        
+        Animal animal1 = shelter1.adoptAnimal();
+        animal1.speak();
+        
+        System.out.println();
+        
+        Animal animal2 = shelter2.adoptAnimal();    // Returns Dog but stored as Animal
+        animal2.speak();
+        
+        System.out.println();
+        
+        Animal animal3 = shelter3.adoptAnimal();    // Returns Cat but stored as Animal
+        animal3.speak();
+        
+        System.out.println("\n--- Benefit of covariant return types ---\n");
+        
+        // Using child type reference - can access child-specific methods directly
+        DogShelter dogShelter = new DogShelter();
+        Dog dog = dogShelter.adoptAnimal();    // Returns Dog type directly!
+        
+        dog.speak();
+        dog.fetch();    // Can call Dog-specific method without casting!
+        System.out.println("Breed: " + dog.getBreed());
+        
+        System.out.println();
+        
+        CatShelter catShelter = new CatShelter();
+        Cat cat = catShelter.adoptAnimal();    // Returns Cat type directly!
+        
+        cat.speak();
+        cat.scratch();    // Can call Cat-specific method without casting!
+    }
+}
+
+OUTPUT:
+-------
+=== Covariant Return Types Demo ===
+
+--- Adopting from different shelters ---
+
+[Shelter] Adopting a generic animal
+Generic makes a sound
+
+[DogShelter] Adopting a dog
+Buddy barks: Woof!
+
+[CatShelter] Adopting a cat
+Whiskers meows: Meow!
+
+--- Benefit of covariant return types ---
+
+[DogShelter] Adopting a dog
+Buddy barks: Woof!
+Buddy fetches the ball!
+Breed: Golden Retriever
+
+[CatShelter] Adopting a cat
+Whiskers meows: Meow!
+Whiskers scratches!
+
+
+================================================================================
+                    POLYMORPHISM - QUICK REFERENCE
+================================================================================
+
+TYPES OF POLYMORPHISM:
+----------------------
++----------------------+---------------------------+---------------------------+
+| Type                 | Mechanism                 | Binding Time              |
++----------------------+---------------------------+---------------------------+
+| Compile-time         | Method Overloading        | Compile time              |
+| (Static)             | - Same name               | Based on reference type   |
+|                      | - Different parameters    | and arguments             |
++----------------------+---------------------------+---------------------------+
+| Runtime              | Method Overriding         | Runtime                   |
+| (Dynamic)            | - Same name               | Based on actual object    |
+|                      | - Same parameters         | type                      |
++----------------------+---------------------------+---------------------------+
+
+
+UPCASTING VS DOWNCASTING:
+-------------------------
++----------------------+---------------------------+---------------------------+
+| Aspect               | Upcasting                 | Downcasting               |
++----------------------+---------------------------+---------------------------+
+| Direction            | Child → Parent            | Parent → Child            |
+| Syntax               | Parent p = child;         | Child c = (Child) parent; |
+| Cast required        | No (automatic)            | Yes (explicit)            |
+| Safety               | Always safe               | Can throw ClassCastEx     |
+| Check needed         | No                        | Use instanceof            |
++----------------------+---------------------------+---------------------------+
+
+
+================================================================================
+                    POLYMORPHISM - QUICK REFERENCE (Continued)
+================================================================================
+
+KEY POINTS:
+-----------
+1. Parent reference can hold child object (upcasting)
+2. Method called depends on actual object type, not reference type
+3. Compile-time: Which method signature to call (based on arguments)
+4. Runtime: Which method implementation to execute (based on object)
+5. Cannot call child-specific methods using parent reference
+6. Use instanceof before downcasting to avoid ClassCastException
+7. Covariant return types allow returning subtype in overridden method
+
+
+POLYMORPHISM RULES:
+-------------------
++--------------------------------+----------------------------------------------+
+| Rule                           | Example                                      |
++--------------------------------+----------------------------------------------+
+| Parent ref = Child obj         | Animal a = new Dog();  ✓                     |
+| Child ref = Parent obj         | Dog d = new Animal(); ✗ (won't compile)      |
+| Call overridden method         | a.speak(); → Dog's speak() executes          |
+| Call child-only method         | a.fetch(); ✗ (won't compile)                 |
+| Downcast with instanceof       | if (a instanceof Dog) { Dog d = (Dog)a; }    |
++--------------------------------+----------------------------------------------+
+
+
+================================================================================
+================================================================================
+                    NEGATIVE SCENARIOS - POLYMORPHISM
+================================================================================
+================================================================================
+
+
+--------------------------------------------------------------------------------
+ERROR 1: Cannot Assign Parent Object to Child Reference
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE:
+-----------------
+class Animal {
+    public void eat() {
+        System.out.println("Animal eating");
+    }
+}
+
+class Dog extends Animal {
+    public void bark() {
+        System.out.println("Dog barking");
+    }
+}
+
+public class WrongAssignment {
+    public static void main(String[] args) {
+        Animal animal = new Animal();
+        Dog dog = animal;    // ERROR! Cannot assign parent to child
+    }
+}
+
+ERROR MESSAGE:
+--------------
+error: incompatible types: Animal cannot be converted to Dog
+        Dog dog = animal;
+                  ^
+
+EXPLANATION:
+------------
+- Not every Animal is a Dog
+- Animal object doesn't have Dog-specific features
+- Compiler prevents this to avoid runtime issues
+
+FIX:
+----
+class Animal {
+    public void eat() {
+        System.out.println("Animal eating");
+    }
+}
+
+class Dog extends Animal {
+    public void bark() {
+        System.out.println("Dog barking");
+    }
+}
+
+public class CorrectAssignment {
+    public static void main(String[] args) {
+        // Option 1: Create Dog object directly
+        Dog dog1 = new Dog();
+        
+        // Option 2: Create Dog, store in Animal, then downcast
+        Animal animal = new Dog();    // Object is actually a Dog
+        if (animal instanceof Dog) {
+            Dog dog2 = (Dog) animal;  // Safe - object IS a Dog
+            dog2.bark();
+        }
+        
+        // Option 3: If you need Animal functionality, use Animal reference
+        Animal animal2 = new Animal();
+        animal2.eat();
+    }
+}
+
+
+--------------------------------------------------------------------------------
+ERROR 2: Calling Child-Specific Method on Parent Reference
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE:
+-----------------
+class Vehicle {
+    public void start() {
+        System.out.println("Vehicle starting");
+    }
+}
+
+class Car extends Vehicle {
+    @Override
+    public void start() {
+        System.out.println("Car starting with ignition");
+    }
+    
+    public void openSunroof() {
+        System.out.println("Opening sunroof");
+    }
+}
+
+public class MethodCallError {
+    public static void main(String[] args) {
+        Vehicle vehicle = new Car();
+        vehicle.start();        // OK - method exists in Vehicle
+        vehicle.openSunroof();  // ERROR! Vehicle doesn't have openSunroof()
+    }
+}
+
+ERROR MESSAGE:
+--------------
+error: cannot find symbol
+        vehicle.openSunroof();
+               ^
+  symbol:   method openSunroof()
+  location: variable vehicle of type Vehicle
+
+EXPLANATION:
+------------
+- Compiler checks method existence based on REFERENCE TYPE (Vehicle)
+- Vehicle class doesn't have openSunroof() method
+- Even though actual object is Car, compiler doesn't know that
+
+FIX:
+----
+public class MethodCallFixed {
+    public static void main(String[] args) {
+        Vehicle vehicle = new Car();
+        vehicle.start();    // OK - calls Car's start() due to polymorphism
+        
+        // Option 1: Downcast to access child-specific method
+        if (vehicle instanceof Car) {
+            Car car = (Car) vehicle;
+            car.openSunroof();
+        }
+        
+        // Option 2: Use child reference from start
+        Car car2 = new Car();
+        car2.start();
+        car2.openSunroof();    // OK - Car reference can access Car methods
+        
+        // Option 3: Inline downcast (if you're sure about the type)
+        ((Car) vehicle).openSunroof();
+    }
+}
+
+
+--------------------------------------------------------------------------------
+ERROR 3: ClassCastException at Runtime
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE:
+-----------------
+class Animal { }
+class Dog extends Animal { }
+class Cat extends Animal { }
+
+public class ClassCastError {
+    public static void main(String[] args) {
+        Animal animal = new Cat();    // Actual object is Cat
+        Dog dog = (Dog) animal;       // Trying to cast Cat to Dog - RUNTIME ERROR!
+    }
+}
+
+ERROR MESSAGE (Runtime):
+------------------------
+Exception in thread "main" java.lang.ClassCastException: 
+    Cat cannot be cast to Dog
+    at ClassCastError.main(ClassCastError.java:8)
+
+EXPLANATION:
+------------
+- Compiler allows the cast (both Cat and Dog extend Animal)
+- At runtime, JVM checks actual object type
+- Cat IS-NOT-A Dog, so cast fails
+
+FIX:
+----
+class Animal { 
+    public void makeSound() {
+        System.out.println("Some sound");
+    }
+}
+
+class Dog extends Animal { 
+    public void bark() {
+        System.out.println("Woof!");
+    }
+}
+
+class Cat extends Animal { 
+    public void meow() {
+        System.out.println("Meow!");
+    }
+}
+
+public class ClassCastFixed {
+    public static void main(String[] args) {
+        Animal animal = new Cat();
+        
+        // Always check with instanceof before downcasting
+        if (animal instanceof Dog) {
+            Dog dog = (Dog) animal;
+            dog.bark();
+        } else if (animal instanceof Cat) {
+            Cat cat = (Cat) animal;
+            cat.meow();
+        } else {
+            animal.makeSound();
+        }
+        
+        // Better approach - process based on actual type
+        processAnimal(new Dog());
+        processAnimal(new Cat());
+        processAnimal(new Animal());
+    }
+    
+    public static void processAnimal(Animal animal) {
+        animal.makeSound();    // Polymorphic call - always safe
+        
+        if (animal instanceof Dog) {
+            ((Dog) animal).bark();
+        } else if (animal instanceof Cat) {
+            ((Cat) animal).meow();
+        }
+    }
+}
+
+
+--------------------------------------------------------------------------------
+ERROR 4: Overloading Confused with Overriding
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE:
+-----------------
+class Parent {
+    public void display(int x) {
+        System.out.println("Parent: " + x);
+    }
+}
+
+class Child extends Parent {
+    // This is OVERLOADING, not OVERRIDING!
+    // Different parameter type
+    public void display(String x) {
+        System.out.println("Child: " + x);
+    }
+}
+
+public class OverloadVsOverride {
+    public static void main(String[] args) {
+        Parent p = new Child();
+        p.display(10);       // Calls Parent's display(int)
+        p.display("Hello");  // ERROR! Parent doesn't have display(String)
+    }
+}
+
+ERROR MESSAGE:
+--------------
+error: incompatible types: String cannot be converted to int
+        p.display("Hello");
+                  ^
+
+EXPLANATION:
+------------
+- Child's display(String) is a NEW method (overloading)
+- It's NOT overriding Parent's display(int)
+- Parent reference can only see Parent's methods
+
+FIX:
+----
+class Parent {
+    public void display(int x) {
+        System.out.println("Parent int: " + x);
+    }
+    
+    public void display(String x) {
+        System.out.println("Parent String: " + x);
+    }
+}
+
+class Child extends Parent {
+    // TRUE OVERRIDE - same signature
+    @Override
+    public void display(int x) {
+        System.out.println("Child int: " + x);
+    }
+    
+    @Override
+    public void display(String x) {
+        System.out.println("Child String: " + x);
+    }
+}
+
+public class OverloadVsOverrideFixed {
+    public static void main(String[] args) {
+        Parent p = new Child();
+        p.display(10);       // Calls Child's display(int)
+        p.display("Hello");  // Calls Child's display(String)
+    }
+}
+
+OUTPUT:
+-------
+Child int: 10
+Child String: Hello
+
+
+--------------------------------------------------------------------------------
+ERROR 5: Static Methods Don't Exhibit Runtime Polymorphism
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE (Misconception):
+---------------------------------
+class Parent {
+    public static void staticMethod() {
+        System.out.println("Parent static method");
+    }
+    
+    public void instanceMethod() {
+        System.out.println("Parent instance method");
+    }
+}
+
+class Child extends Parent {
+    public static void staticMethod() {
+        System.out.println("Child static method");
+    }
+    
+    @Override
+    public void instanceMethod() {
+        System.out.println("Child instance method");
+    }
+}
+
+public class StaticPolymorphismMisconception {
+    public static void main(String[] args) {
+        Parent p = new Child();
+        
+        p.staticMethod();    // Prints "Parent static method" - NOT polymorphic!
+        p.instanceMethod();  // Prints "Child instance method" - IS polymorphic
+    }
+}
+
+OUTPUT (Unexpected for beginners):
+----------------------------------
+Parent static method
+Child instance method
+
+EXPLANATION:
+------------
+- Static methods are resolved at COMPILE TIME based on reference type
+- Instance methods are resolved at RUNTIME based on object type
+- Static methods are HIDDEN, not overridden
+
+FIX/BEST PRACTICE:
+------------------
+class Parent {
+    public static void staticMethod() {
+        System.out.println("Parent static method");
+    }
+    
+    public void instanceMethod() {
+        System.out.println("Parent instance method");
+    }
+}
+
+class Child extends Parent {
+    public static void staticMethod() {
+        System.out.println("Child static method");
+    }
+    
+    @Override
+    public void instanceMethod() {
+        System.out.println("Child instance method");
+    }
+}
+
+public class StaticMethodBestPractice {
+    public static void main(String[] args) {
+        // Best Practice: Call static methods using class name
+        Parent.staticMethod();    // Clear: Parent's method
+        Child.staticMethod();     // Clear: Child's method
+        
+        // For polymorphism, use instance methods
+        Parent p = new Child();
+        p.instanceMethod();       // Polymorphic: Child's method
+    }
+}
+
+
+--------------------------------------------------------------------------------
+ERROR 6: Covariant Return Type - Wrong Direction
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE:
+-----------------
+class Dog { }
+class Animal { }    // Note: Dog doesn't extend Animal here (mistake)
+
+class Parent {
+    public Dog getAnimal() {
+        return new Dog();
+    }
+}
+
+class Child extends Parent {
+    @Override
+    public Animal getAnimal() {    // ERROR! Animal is not subtype of Dog
+        return new Animal();
+    }
+}
+
+ERROR MESSAGE:
+--------------
+error: getAnimal() in Child cannot override getAnimal() in Parent
+    public Animal getAnimal() {
+                  ^
+  return type Animal is not compatible with Dog
+
+CORRECT UNDERSTANDING:
+----------------------
+class Animal { }
+class Dog extends Animal { }    // Dog IS-A Animal
+
+class Parent {
+    public Animal getAnimal() {    // Returns Animal
+        return new Animal();
+    }
+}
+
+class Child extends Parent {
+    @Override
+    public Dog getAnimal() {       // Returns Dog - OK! Dog IS-A Animal
+        return new Dog();          // Covariant return type
+    }
+}
+
+RULE:
+-----
+Covariant return type must be SAME or MORE SPECIFIC (subtype), not less specific.
+
+Parent returns: Animal
+Child can return: Animal, Dog, Cat (any subtype of Animal)
+Child CANNOT return: Object (supertype of Animal)
+
+
+--------------------------------------------------------------------------------
+ERROR 7: Polymorphic Array - ArrayStoreException
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE:
+-----------------
+class Animal { }
+class Dog extends Animal { }
+class Cat extends Animal { }
+
+public class ArrayStoreError {
+    public static void main(String[] args) {
+        Dog[] dogs = new Dog[3];
+        dogs[0] = new Dog();
+        
+        // Array covariance allows this assignment
+        Animal[] animals = dogs;    // dogs array assigned to Animal[] reference
+        
+        // But storing Cat in Dog array causes runtime error!
+        animals[1] = new Cat();     // RUNTIME ERROR!
+    }
+}
+
+ERROR MESSAGE (Runtime):
+------------------------
+Exception in thread "main" java.lang.ArrayStoreException: Cat
+    at ArrayStoreError.main(ArrayStoreError.java:13)
+
+EXPLANATION:
+------------
+- Java arrays are covariant (Dog[] can be assigned to Animal[])
+- But the actual array is still Dog[]
+- Storing Cat in Dog[] fails at runtime
+
+FIX:
+----
+import java.util.ArrayList;
+import java.util.List;
+
+class Animal { }
+class Dog extends Animal { }
+class Cat extends Animal { }
+
+public class ArrayStoreFixed {
+    public static void main(String[] args) {
+        // Option 1: Create array of the correct base type
+        Animal[] animals = new Animal[3];
+        animals[0] = new Dog();    // OK
+        animals[1] = new Cat();    // OK
+        animals[2] = new Animal(); // OK
+        
+        // Option 2: Keep arrays of specific types separate
+        Dog[] dogs = new Dog[2];
+        dogs[0] = new Dog();
+        dogs[1] = new Dog();
+        
+        Cat[] cats = new Cat[2];
+        cats[0] = new Cat();
+        cats[1] = new Cat();
+        
+        // Option 3: Use generics with Collections (type-safe)
+        List<Animal> animalList = new ArrayList<>();
+        animalList.add(new Dog());
+        animalList.add(new Cat());
+        
+        // This won't compile - generics are invariant (safer)
+        // List<Animal> list = new ArrayList<Dog>();  // Compile error!
+    }
+}
+
+
+--------------------------------------------------------------------------------
+ERROR 8: Null Reference with instanceof
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE:
+-----------------
+class Animal { }
+class Dog extends Animal { }
+
+public class NullInstanceof {
+    public static void main(String[] args) {
+        Animal animal = null;
+        
+        // This doesn't throw NullPointerException
+        if (animal instanceof Dog) {
+            Dog dog = (Dog) animal;
+            System.out.println("It's a dog!");
+        } else {
+            System.out.println("Not a dog or null");
+        }
+        
+        // But this would throw NullPointerException
+        // animal.toString();    // NPE!
+    }
+}
+
+OUTPUT:
+-------
+Not a dog or null
+
+EXPLANATION:
+------------
+- instanceof returns FALSE for null (doesn't throw exception)
+- This is actually SAFE behavior
+- But be aware when processing results
+
+BEST PRACTICE:
+--------------
+class Animal {
+    public void speak() {
+        System.out.println("Animal speaks");
+    }
+}
+
+class Dog extends Animal {
+    @Override
+    public void speak() {
+        System.out.println("Dog barks");
+    }
+    
+    public void fetch() {
+        System.out.println("Dog fetches");
+    }
+}
+
+public class NullSafePolymorphism {
+    public static void main(String[] args) {
+        processAnimal(new Dog());
+        processAnimal(new Animal());
+        processAnimal(null);
+    }
+    
+    public static void processAnimal(Animal animal) {
+        // Check for null first
+        if (animal == null) {
+            System.out.println("Animal is null, cannot process");
+            return;
+        }
+        
+        // Now safe to use
+        animal.speak();    // Polymorphic call
+        
+        // Safe downcast
+        if (animal instanceof Dog) {
+            ((Dog) animal).fetch();
+        }
+    }
+}
+
+OUTPUT:
+-------
+Dog barks
+Dog fetches
+Animal speaks
+Animal is null, cannot process
+
+
+================================================================================
+                    PRACTICE EXERCISES - POLYMORPHISM
+================================================================================
+
+EXERCISE 1: Shape Calculator
+----------------------------
+Create:
+- Shape (base): abstract getArea(), abstract getPerimeter()
+- Circle: radius, implement methods
+- Rectangle: length, width, implement methods
+- Triangle: base, height, sides, implement methods
+- ShapeCalculator: calculates total area of Shape array
+
+EXERCISE 2: Employee Payroll
+----------------------------
+Create:
+- Employee (base): name, id, calculateSalary()
+- FullTimeEmployee: monthlySalary, override calculateSalary()
+- PartTimeEmployee: hourlyRate, hoursWorked, override calculateSalary()
+- Contractor: projectRate, override calculateSalary()
+- PayrollProcessor: processes array of Employee, calculates total payroll
+
+EXERCISE 3: Notification System
+-------------------------------
+Create:
+- Notification (base): message, recipient, send()
+- EmailNotification: emailAddress, subject, override send()
+- SMSNotification: phoneNumber, override send()
+- PushNotification: deviceToken, override send()
+- NotificationService: sends array of Notification polymorphically
+
+
+================================================================================
+                    WHAT'S NEXT?
+================================================================================
+
+We've covered:
+✓ Topic 10: Inheritance
+✓ Topic 11: Polymorphism
+
+Next topic:
+→ Topic 12: Abstraction (Abstract Classes and Interfaces)
+
+Shall I continue with Abstract Classes and Interfaces?
+
+Would you like me to continue with Topic 12: Abstraction (Abstract Classes and Interfaces)? This is a crucial topic that builds on inheritance and polymorphism, and is heavily used in automation frameworks!

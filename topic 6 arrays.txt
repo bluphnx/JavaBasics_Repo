@@ -1,0 +1,3060 @@
+================================================================================
+                    TOPIC 6: ARRAYS IN JAVA
+                    (Single and Multi-dimensional Arrays)
+================================================================================
+
+What is an Array?
+-----------------
+An array is a container that holds a fixed number of values of the same type.
+It stores multiple values in a single variable instead of declaring separate
+variables for each value.
+
+Key Characteristics:
+--------------------
+- Fixed size (cannot change after creation)
+- Stores elements of the same data type
+- Elements are accessed by index (starting from 0)
+- Stored in contiguous memory locations
+
+
+Why Important for Automation?
+-----------------------------
+- Store list of web elements
+- Hold test data (usernames, passwords, URLs)
+- Store expected values for validation
+- Process API response arrays
+- Handle dropdown options
+- Store multiple browser names for cross-browser testing
+
+
+Visual Representation:
+----------------------
+Array: int[] numbers = {10, 20, 30, 40, 50};
+
++-------+-------+-------+-------+-------+
+|  10   |  20   |  30   |  40   |  50   |
++-------+-------+-------+-------+-------+
+   [0]     [1]     [2]     [3]     [4]
+   
+- Index starts from 0
+- Last index = length - 1 = 4
+- Length = 5
+
+
+================================================================================
+                    1. SINGLE DIMENSIONAL ARRAYS
+================================================================================
+
+
+--------------------------------------------------------------------------------
+1.1 DECLARING ARRAYS
+--------------------------------------------------------------------------------
+
+There are multiple ways to declare an array:
+
+Syntax Options:
+---------------
+// Method 1: Declaration only
+dataType[] arrayName;
+
+// Method 2: Declaration with size
+dataType[] arrayName = new dataType[size];
+
+// Method 3: Declaration with initialization
+dataType[] arrayName = {value1, value2, value3};
+
+// Method 4: Declaration and initialization separately
+dataType[] arrayName = new dataType[]{value1, value2, value3};
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 1: Different Ways to Create Arrays
+--------------------------------------------------------------------------------
+
+public class ArrayDeclaration {
+    public static void main(String[] args) {
+        
+        System.out.println("=== Method 1: Declaration Only ===");
+        int[] numbers1;                    // Declared but not initialized
+        numbers1 = new int[5];             // Now initialized with size 5
+        System.out.println("Array created with size: " + numbers1.length);
+        
+        System.out.println("");
+        
+        System.out.println("=== Method 2: Declaration with Size ===");
+        int[] numbers2 = new int[5];       // Created with default values (0)
+        System.out.println("Default values:");
+        for (int i = 0; i < numbers2.length; i++) {
+            System.out.println("numbers2[" + i + "] = " + numbers2[i]);
+        }
+        
+        System.out.println("");
+        
+        System.out.println("=== Method 3: Declaration with Initialization ===");
+        int[] numbers3 = {10, 20, 30, 40, 50};
+        System.out.println("Initialized values:");
+        for (int i = 0; i < numbers3.length; i++) {
+            System.out.println("numbers3[" + i + "] = " + numbers3[i]);
+        }
+        
+        System.out.println("");
+        
+        System.out.println("=== Method 4: Using new with Values ===");
+        int[] numbers4 = new int[]{100, 200, 300};
+        System.out.println("Values:");
+        for (int num : numbers4) {
+            System.out.println(num);
+        }
+    }
+}
+
+OUTPUT:
+-------
+=== Method 1: Declaration Only ===
+Array created with size: 5
+
+=== Method 2: Declaration with Size ===
+Default values:
+numbers2[0] = 0
+numbers2[1] = 0
+numbers2[2] = 0
+numbers2[3] = 0
+numbers2[4] = 0
+
+=== Method 3: Declaration with Initialization ===
+Initialized values:
+numbers3[0] = 10
+numbers3[1] = 20
+numbers3[2] = 30
+numbers3[3] = 40
+numbers3[4] = 50
+
+=== Method 4: Using new with Values ===
+Values:
+100
+200
+300
+
+
+--------------------------------------------------------------------------------
+1.2 DEFAULT VALUES IN ARRAYS
+--------------------------------------------------------------------------------
+
+When you create an array with size but don't assign values,
+Java assigns default values based on data type.
+
++---------------+---------------+
+| Data Type     | Default Value |
++---------------+---------------+
+| int           | 0             |
+| double        | 0.0           |
+| float         | 0.0f          |
+| long          | 0L            |
+| short         | 0             |
+| byte          | 0             |
+| char          | '\u0000'      |
+| boolean       | false         |
+| String/Object | null          |
++---------------+---------------+
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 2: Default Values for Different Types
+--------------------------------------------------------------------------------
+
+public class ArrayDefaultValues {
+    public static void main(String[] args) {
+        
+        // Integer array
+        int[] intArray = new int[3];
+        System.out.println("int default: " + intArray[0]);
+        
+        // Double array
+        double[] doubleArray = new double[3];
+        System.out.println("double default: " + doubleArray[0]);
+        
+        // Boolean array
+        boolean[] boolArray = new boolean[3];
+        System.out.println("boolean default: " + boolArray[0]);
+        
+        // Char array
+        char[] charArray = new char[3];
+        System.out.println("char default: '" + charArray[0] + "' (null character)");
+        
+        // String array
+        String[] stringArray = new String[3];
+        System.out.println("String default: " + stringArray[0]);
+    }
+}
+
+OUTPUT:
+-------
+int default: 0
+double default: 0.0
+boolean default: false
+char default: '' (null character)
+String default: null
+
+
+--------------------------------------------------------------------------------
+1.3 ACCESSING AND MODIFYING ARRAY ELEMENTS
+--------------------------------------------------------------------------------
+
+Syntax:
+-------
+// Access element
+variable = arrayName[index];
+
+// Modify element
+arrayName[index] = newValue;
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 3: Accessing and Modifying Elements
+--------------------------------------------------------------------------------
+
+public class ArrayAccessModify {
+    public static void main(String[] args) {
+        
+        // Create and initialize array
+        String[] browsers = {"Chrome", "Firefox", "Edge", "Safari"};
+        
+        System.out.println("=== Accessing Elements ===");
+        System.out.println("First element: " + browsers[0]);
+        System.out.println("Second element: " + browsers[1]);
+        System.out.println("Last element: " + browsers[browsers.length - 1]);
+        
+        System.out.println("");
+        
+        System.out.println("=== Modifying Elements ===");
+        System.out.println("Before: " + browsers[2]);
+        browsers[2] = "Opera";    // Change Edge to Opera
+        System.out.println("After: " + browsers[2]);
+        
+        System.out.println("");
+        
+        System.out.println("=== All Elements After Modification ===");
+        for (int i = 0; i < browsers.length; i++) {
+            System.out.println("browsers[" + i + "] = " + browsers[i]);
+        }
+    }
+}
+
+OUTPUT:
+-------
+=== Accessing Elements ===
+First element: Chrome
+Second element: Firefox
+Last element: Safari
+
+=== Modifying Elements ===
+Before: Edge
+After: Opera
+
+=== All Elements After Modification ===
+browsers[0] = Chrome
+browsers[1] = Firefox
+browsers[2] = Opera
+browsers[3] = Safari
+
+
+--------------------------------------------------------------------------------
+1.4 ARRAY LENGTH PROPERTY
+--------------------------------------------------------------------------------
+
+The length property returns the number of elements in an array.
+
+Syntax: arrayName.length
+
+Note: length is a property, not a method. No parentheses ().
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 4: Using Array Length
+--------------------------------------------------------------------------------
+
+public class ArrayLength {
+    public static void main(String[] args) {
+        
+        int[] numbers = {10, 20, 30, 40, 50};
+        String[] names = {"Alice", "Bob", "Charlie"};
+        double[] empty = {};
+        
+        System.out.println("numbers array length: " + numbers.length);
+        System.out.println("names array length: " + names.length);
+        System.out.println("empty array length: " + empty.length);
+        
+        System.out.println("");
+        
+        // Using length in loop
+        System.out.println("=== Iterating Using Length ===");
+        for (int i = 0; i < numbers.length; i++) {
+            System.out.println("Index " + i + ": " + numbers[i]);
+        }
+        
+        System.out.println("");
+        
+        // Accessing last element
+        System.out.println("First element: " + numbers[0]);
+        System.out.println("Last element: " + numbers[numbers.length - 1]);
+    }
+}
+
+OUTPUT:
+-------
+numbers array length: 5
+names array length: 3
+empty array length: 0
+
+=== Iterating Using Length ===
+Index 0: 10
+Index 1: 20
+Index 2: 30
+Index 3: 40
+Index 4: 50
+
+First element: 10
+Last element: 50
+
+
+--------------------------------------------------------------------------------
+1.5 ITERATING THROUGH ARRAYS
+--------------------------------------------------------------------------------
+
+There are multiple ways to iterate through arrays:
+
+1. Traditional for loop (with index)
+2. Enhanced for loop (for-each)
+3. While loop
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 5: Different Ways to Iterate Arrays
+--------------------------------------------------------------------------------
+
+public class ArrayIteration {
+    public static void main(String[] args) {
+        
+        String[] fruits = {"Apple", "Banana", "Cherry", "Date", "Elderberry"};
+        
+        // Method 1: Traditional for loop
+        System.out.println("=== Method 1: Traditional for Loop ===");
+        for (int i = 0; i < fruits.length; i++) {
+            System.out.println("Index " + i + ": " + fruits[i]);
+        }
+        
+        System.out.println("");
+        
+        // Method 2: Enhanced for loop (for-each)
+        System.out.println("=== Method 2: Enhanced for Loop ===");
+        for (String fruit : fruits) {
+            System.out.println("Fruit: " + fruit);
+        }
+        
+        System.out.println("");
+        
+        // Method 3: While loop
+        System.out.println("=== Method 3: While Loop ===");
+        int index = 0;
+        while (index < fruits.length) {
+            System.out.println("fruits[" + index + "] = " + fruits[index]);
+            index++;
+        }
+        
+        System.out.println("");
+        
+        // Method 4: Reverse iteration
+        System.out.println("=== Method 4: Reverse Iteration ===");
+        for (int i = fruits.length - 1; i >= 0; i--) {
+            System.out.println("fruits[" + i + "] = " + fruits[i]);
+        }
+    }
+}
+
+OUTPUT:
+-------
+=== Method 1: Traditional for Loop ===
+Index 0: Apple
+Index 1: Banana
+Index 2: Cherry
+Index 3: Date
+Index 4: Elderberry
+
+=== Method 2: Enhanced for Loop ===
+Fruit: Apple
+Fruit: Banana
+Fruit: Cherry
+Fruit: Date
+Fruit: Elderberry
+
+=== Method 3: While Loop ===
+fruits[0] = Apple
+fruits[1] = Banana
+fruits[2] = Cherry
+fruits[3] = Date
+fruits[4] = Elderberry
+
+=== Method 4: Reverse Iteration ===
+fruits[4] = Elderberry
+fruits[3] = Date
+fruits[2] = Cherry
+fruits[1] = Banana
+fruits[0] = Apple
+
+
+--------------------------------------------------------------------------------
+1.6 COMMON ARRAY OPERATIONS
+--------------------------------------------------------------------------------
+
+EXAMPLE 6: Finding Sum, Average, Min, Max
+--------------------------------------------------------------------------------
+
+public class ArrayOperations {
+    public static void main(String[] args) {
+        
+        int[] numbers = {45, 78, 23, 89, 12, 67, 34, 90, 56};
+        
+        // Calculate Sum
+        int sum = 0;
+        for (int num : numbers) {
+            sum += num;
+        }
+        System.out.println("Sum: " + sum);
+        
+        // Calculate Average
+        double average = (double) sum / numbers.length;
+        System.out.println("Average: " + average);
+        
+        // Find Maximum
+        int max = numbers[0];
+        for (int i = 1; i < numbers.length; i++) {
+            if (numbers[i] > max) {
+                max = numbers[i];
+            }
+        }
+        System.out.println("Maximum: " + max);
+        
+        // Find Minimum
+        int min = numbers[0];
+        for (int i = 1; i < numbers.length; i++) {
+            if (numbers[i] < min) {
+                min = numbers[i];
+            }
+        }
+        System.out.println("Minimum: " + min);
+        
+        // Count elements greater than 50
+        int count = 0;
+        for (int num : numbers) {
+            if (num > 50) {
+                count++;
+            }
+        }
+        System.out.println("Numbers greater than 50: " + count);
+    }
+}
+
+OUTPUT:
+-------
+Sum: 494
+Average: 54.888888888888886
+Maximum: 90
+Minimum: 12
+Numbers greater than 50: 5
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 7: Searching in Array
+--------------------------------------------------------------------------------
+
+public class ArraySearch {
+    public static void main(String[] args) {
+        
+        String[] cities = {"New York", "Los Angeles", "Chicago", "Houston", "Phoenix"};
+        
+        // Linear Search
+        System.out.println("=== Linear Search ===");
+        String searchCity = "Chicago";
+        int foundIndex = -1;
+        
+        for (int i = 0; i < cities.length; i++) {
+            if (cities[i].equals(searchCity)) {
+                foundIndex = i;
+                break;
+            }
+        }
+        
+        if (foundIndex != -1) {
+            System.out.println("'" + searchCity + "' found at index: " + foundIndex);
+        } else {
+            System.out.println("'" + searchCity + "' not found");
+        }
+        
+        System.out.println("");
+        
+        // Check if element exists
+        System.out.println("=== Check Element Exists ===");
+        String checkCity = "Miami";
+        boolean exists = false;
+        
+        for (String city : cities) {
+            if (city.equals(checkCity)) {
+                exists = true;
+                break;
+            }
+        }
+        
+        System.out.println("'" + checkCity + "' exists: " + exists);
+        
+        System.out.println("");
+        
+        // Find all occurrences
+        System.out.println("=== Find All Occurrences ===");
+        int[] numbers = {10, 20, 30, 20, 40, 20, 50};
+        int searchNum = 20;
+        
+        System.out.print("'" + searchNum + "' found at indices: ");
+        for (int i = 0; i < numbers.length; i++) {
+            if (numbers[i] == searchNum) {
+                System.out.print(i + " ");
+            }
+        }
+        System.out.println("");
+    }
+}
+
+OUTPUT:
+-------
+=== Linear Search ===
+'Chicago' found at index: 2
+
+=== Check Element Exists ===
+'Miami' exists: false
+
+=== Find All Occurrences ===
+'20' found at indices: 1 3 5
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 8: Copying Arrays
+--------------------------------------------------------------------------------
+
+public class ArrayCopy {
+    public static void main(String[] args) {
+        
+        int[] original = {10, 20, 30, 40, 50};
+        
+        // Method 1: Manual copy using loop
+        System.out.println("=== Method 1: Manual Copy ===");
+        int[] copy1 = new int[original.length];
+        for (int i = 0; i < original.length; i++) {
+            copy1[i] = original[i];
+        }
+        System.out.println("Original: ");
+        printArray(original);
+        System.out.println("Copy: ");
+        printArray(copy1);
+        
+        System.out.println("");
+        
+        // Method 2: Using System.arraycopy()
+        System.out.println("=== Method 2: System.arraycopy() ===");
+        int[] copy2 = new int[original.length];
+        System.arraycopy(original, 0, copy2, 0, original.length);
+        System.out.println("Copy: ");
+        printArray(copy2);
+        
+        System.out.println("");
+        
+        // Method 3: Using clone()
+        System.out.println("=== Method 3: clone() ===");
+        int[] copy3 = original.clone();
+        System.out.println("Copy: ");
+        printArray(copy3);
+        
+        System.out.println("");
+        
+        // Verify copies are independent
+        System.out.println("=== Verify Independence ===");
+        copy1[0] = 999;
+        System.out.println("After modifying copy1[0] to 999:");
+        System.out.println("Original[0]: " + original[0]);
+        System.out.println("Copy1[0]: " + copy1[0]);
+    }
+    
+    // Helper method to print array
+    public static void printArray(int[] arr) {
+        for (int num : arr) {
+            System.out.print(num + " ");
+        }
+        System.out.println("");
+    }
+}
+
+OUTPUT:
+-------
+=== Method 1: Manual Copy ===
+Original: 
+10 20 30 40 50 
+Copy: 
+10 20 30 40 50 
+
+=== Method 2: System.arraycopy() ===
+Copy: 
+10 20 30 40 50 
+
+=== Method 3: clone() ===
+Copy: 
+10 20 30 40 50 
+
+=== Verify Independence ===
+After modifying copy1[0] to 999:
+Original[0]: 10
+Copy1[0]: 999
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 9: Sorting Arrays
+--------------------------------------------------------------------------------
+
+import java.util.Arrays;
+
+public class ArraySorting {
+    public static void main(String[] args) {
+        
+        // Sorting integers
+        System.out.println("=== Sorting Integer Array ===");
+        int[] numbers = {64, 34, 25, 12, 22, 11, 90};
+        
+        System.out.println("Before sorting:");
+        System.out.println(Arrays.toString(numbers));
+        
+        Arrays.sort(numbers);
+        
+        System.out.println("After sorting:");
+        System.out.println(Arrays.toString(numbers));
+        
+        System.out.println("");
+        
+        // Sorting strings
+        System.out.println("=== Sorting String Array ===");
+        String[] names = {"Zebra", "Apple", "Mango", "Banana", "Cherry"};
+        
+        System.out.println("Before sorting:");
+        System.out.println(Arrays.toString(names));
+        
+        Arrays.sort(names);
+        
+        System.out.println("After sorting (alphabetically):");
+        System.out.println(Arrays.toString(names));
+        
+        System.out.println("");
+        
+        // Partial sorting
+        System.out.println("=== Partial Sorting ===");
+        int[] nums = {50, 40, 30, 20, 10, 60, 70};
+        
+        System.out.println("Before: " + Arrays.toString(nums));
+        
+        // Sort only indices 1 to 4 (exclusive of 5)
+        Arrays.sort(nums, 1, 5);
+        
+        System.out.println("After sorting index 1-4: " + Arrays.toString(nums));
+    }
+}
+
+OUTPUT:
+-------
+=== Sorting Integer Array ===
+Before sorting:
+[64, 34, 25, 12, 22, 11, 90]
+After sorting:
+[11, 12, 22, 25, 34, 64, 90]
+
+=== Sorting String Array ===
+Before sorting:
+[Zebra, Apple, Mango, Banana, Cherry]
+After sorting (alphabetically):
+[Apple, Banana, Cherry, Mango, Zebra]
+
+=== Partial Sorting ===
+Before: [50, 40, 30, 20, 10, 60, 70]
+After sorting index 1-4: [50, 10, 20, 30, 40, 60, 70]
+
+
+--------------------------------------------------------------------------------
+1.7 ARRAYS IN AUTOMATION CONTEXT
+--------------------------------------------------------------------------------
+
+EXAMPLE 10: Test Data Arrays
+--------------------------------------------------------------------------------
+
+public class ArraysAutomationTestData {
+    public static void main(String[] args) {
+        
+        // Store test usernames
+        String[] usernames = {"admin", "user1", "guest", "manager", "tester"};
+        
+        // Store test passwords
+        String[] passwords = {"[REDACTED:PASSWORD]", "[REDACTED:PASSWORD]", "[REDACTED:PASSWORD]", "[REDACTED:PASSWORD]", "test789"};
+        
+        // Store expected results
+        boolean[] expectedResults = {true, true, false, true, true};
+        
+        System.out.println("=== Login Test Execution ===");
+        System.out.println("");
+        
+        int passed = 0;
+        int failed = 0;
+        
+        for (int i = 0; i < usernames.length; i++) {
+            System.out.println("Test Case " + (i + 1) + ":");
+            System.out.println("  Username: " + usernames[i]);
+            System.out.println("  Password: " + "*".repeat(passwords[i].length()));
+            System.out.println("  Expected: " + (expectedResults[i] ? "Success" : "Failure"));
+            
+            // Simulating test result (guest user fails)
+            boolean actualResult = !usernames[i].equals("guest");
+            System.out.println("  Actual: " + (actualResult ? "Success" : "Failure"));
+            
+            if (actualResult == expectedResults[i]) {
+                System.out.println("  Status: PASSED");
+                passed++;
+            } else {
+                System.out.println("  Status: FAILED");
+                failed++;
+            }
+            System.out.println("");
+        }
+        
+        System.out.println("=== Test Summary ===");
+        System.out.println("Total: " + usernames.length);
+        System.out.println("Passed: " + passed);
+        System.out.println("Failed: " + failed);
+    }
+}
+
+OUTPUT:
+-------
+=== Login Test Execution ===
+
+Test Case 1:
+  Username: admin
+  Password: ********
+  Expected: Success
+  Actual: Success
+  Status: PASSED
+
+Test Case 2:
+  Username: user1
+  Password: *****
+  Expected: Success
+  Actual: Success
+  Status: PASSED
+
+Test Case 3:
+  Username: guest
+  Password: ********
+  Expected: Failure
+  Actual: Failure
+  Status: PASSED
+
+Test Case 4:
+  Username: manager
+  Password: ******
+  Expected: Success
+  Actual: Success
+  Status: PASSED
+
+Test Case 5:
+  Username: tester
+  Password: *******
+  Expected: Success
+  Actual: Success
+  Status: PASSED
+
+=== Test Summary ===
+Total: 5
+Passed: 5
+Failed: 0
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 11: Browser and URL Arrays for Cross-Browser Testing
+--------------------------------------------------------------------------------
+
+public class ArraysCrossBrowserTesting {
+    public static void main(String[] args) {
+        
+        // Browsers to test
+        String[] browsers = {"Chrome", "Firefox", "Edge"};
+        
+        // URLs to test
+        String[] urls = {
+            "https://www.google.com",
+            "https://www.github.com",
+            "https://www.selenium.dev"
+        };
+        
+        // Expected titles
+        String[] expectedTitles = {"Google", "GitHub", "Selenium"};
+        
+        System.out.println("=== Cross-Browser Testing Report ===");
+        System.out.println("");
+        
+        int testNumber = 0;
+        
+        for (String browser : browsers) {
+            System.out.println("Browser: " + browser);
+            System.out.println("-".repeat(40));
+            
+            for (int i = 0; i < urls.length; i++) {
+                testNumber++;
+                System.out.println("  Test #" + testNumber);
+                System.out.println("  URL: " + urls[i]);
+                System.out.println("  Expected Title Contains: " + expectedTitles[i]);
+                System.out.println("  Status: PASSED");
+                System.out.println("");
+            }
+        }
+        
+        System.out.println("=== Summary ===");
+        System.out.println("Total Tests Executed: " + testNumber);
+        System.out.println("Browsers Tested: " + browsers.length);
+        System.out.println("URLs Tested: " + urls.length);
+    }
+}
+
+OUTPUT:
+-------
+=== Cross-Browser Testing Report ===
+
+Browser: Chrome
+----------------------------------------
+  Test #1
+  URL: https://www.google.com
+  Expected Title Contains: Google
+  Status: PASSED
+
+  Test #2
+  URL: https://www.github.com
+  Expected Title Contains: GitHub
+  Status: PASSED
+
+  Test #3
+  URL: https://www.selenium.dev
+  Expected Title Contains: Selenium
+  Status: PASSED
+
+Browser: Firefox
+----------------------------------------
+  Test #4
+  URL: https://www.google.com
+  Expected Title Contains: Google
+  Status: PASSED
+
+  Test #5
+  URL: https://www.github.com
+  Expected Title Contains: GitHub
+  Status: PASSED
+
+  Test #6
+  URL: https://www.selenium.dev
+  Expected Title Contains: Selenium
+  Status: PASSED
+
+Browser: Edge
+----------------------------------------
+  Test #7
+  URL: https://www.google.com
+  Expected Title Contains: Google
+  Status: PASSED
+
+  Test #8
+  URL: https://www.github.com
+  Expected Title Contains: GitHub
+  Status: PASSED
+
+  Test #9
+  URL: https://www.selenium.dev
+  Expected Title Contains: Selenium
+  Status: PASSED
+
+=== Summary ===
+Total Tests Executed: 9
+Browsers Tested: 3
+URLs Tested: 3
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 12: Verifying Dropdown Options
+--------------------------------------------------------------------------------
+
+public class ArraysDropdownVerification {
+    public static void main(String[] args) {
+        
+        // Expected dropdown options
+        String[] expectedOptions = {"Select Country", "USA", "Canada", "UK", "Australia", "India"};
+        
+        // Simulated actual options from web page
+        String[] actualOptions = {"Select Country", "USA", "Canada", "UK", "Australia", "India"};
+        
+        System.out.println("=== Dropdown Verification ===");
+        System.out.println("");
+        
+        // Verify count
+        System.out.println("Expected option count: " + expectedOptions.length);
+        System.out.println("Actual option count: " + actualOptions.length);
+        
+        boolean countMatch = (expectedOptions.length == actualOptions.length);
+        System.out.println("Count Match: " + (countMatch ? "PASSED" : "FAILED"));
+        
+        System.out.println("");
+        
+        // Verify each option
+        System.out.println("=== Verifying Each Option ===");
+        boolean allMatch = true;
+        
+        for (int i = 0; i < expectedOptions.length; i++) {
+            boolean match = expectedOptions[i].equals(actualOptions[i]);
+            System.out.println("Option " + i + ": Expected='" + expectedOptions[i] + 
+                             "', Actual='" + actualOptions[i] + "' - " + 
+                             (match ? "MATCH" : "MISMATCH"));
+            if (!match) {
+                allMatch = false;
+            }
+        }
+        
+        System.out.println("");
+        System.out.println("=== Final Result ===");
+        System.out.println("All Options Match: " + (allMatch ? "PASSED" : "FAILED"));
+    }
+}
+
+OUTPUT:
+-------
+=== Dropdown Verification ===
+
+Expected option count: 6
+Actual option count: 6
+Count Match: PASSED
+
+=== Verifying Each Option ===
+Option 0: Expected='Select Country', Actual='Select Country' - MATCH
+Option 1: Expected='USA', Actual='USA' - MATCH
+Option 2: Expected='Canada', Actual='Canada' - MATCH
+Option 3: Expected='UK', Actual='UK' - MATCH
+Option 4: Expected='Australia', Actual='Australia' - MATCH
+Option 5: Expected='India', Actual='India' - MATCH
+
+=== Final Result ===
+All Options Match: PASSED
+
+
+================================================================================
+                    2. MULTI-DIMENSIONAL ARRAYS
+================================================================================
+
+Multi-dimensional arrays are arrays of arrays.
+The most common is the 2D array (like a table with rows and columns).
+
+
+Visual Representation of 2D Array:
+----------------------------------
+int[][] matrix = {
+    {1, 2, 3},
+    {4, 5, 6},
+    {7, 8, 9}
+};
+
+         Column 0   Column 1   Column 2
+        +----------+----------+----------+
+Row 0   |    1     |    2     |    3     |
+        +----------+----------+----------+
+Row 1   |    4     |    5     |    6     |
+        +----------+----------+----------+
+Row 2   |    7     |    8     |    9     |
+        +----------+----------+----------+
+
+Access: matrix[row][column]
+- matrix[0][0] = 1
+- matrix[1][2] = 6
+- matrix[2][1] = 8
+
+
+--------------------------------------------------------------------------------
+2.1 DECLARING 2D ARRAYS
+--------------------------------------------------------------------------------
+
+Syntax Options:
+---------------
+// Method 1: Declaration with size
+dataType[][] arrayName = new dataType[rows][columns];
+
+// Method 2: Declaration with initialization
+dataType[][] arrayName = {
+    {val1, val2, val3},
+    {val4, val5, val6},
+    {val7, val8, val9}
+};
+
+// Method 3: Declaration only, then initialize
+dataType[][] arrayName;
+arrayName = new dataType[rows][columns];
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 13: Creating 2D Arrays
+--------------------------------------------------------------------------------
+
+public class TwoDArrayCreation {
+    public static void main(String[] args) {
+        
+        // Method 1: With size (default values)
+        System.out.println("=== Method 1: With Size ===");
+        int[][] matrix1 = new int[3][4];    // 3 rows, 4 columns
+        System.out.println("Rows: " + matrix1.length);
+        System.out.println("Columns: " + matrix1[0].length);
+        System.out.println("Default values:");
+        for (int i = 0; i < matrix1.length; i++) {
+            for (int j = 0; j < matrix1[i].length; j++) {
+                System.out.print(matrix1[i][j] + " ");
+            }
+            System.out.println("");
+        }
+        
+        System.out.println("");
+        
+        // Method 2: With initialization
+        System.out.println("=== Method 2: With Initialization ===");
+        int[][] matrix2 = {
+            {1, 2, 3},
+            {4, 5, 6},
+            {7, 8, 9}
+        };
+        System.out.println("Values:");
+        for (int i = 0; i < matrix2.length; i++) {
+            for (int j = 0; j < matrix2[i].length; j++) {
+                System.out.print(matrix2[i][j] + " ");
+            }
+            System.out.println("");
+        }
+        
+        System.out.println("");
+        
+        // Method 3: String 2D array
+        System.out.println("=== String 2D Array ===");
+        String[][] data = {
+            {"Name", "Age", "City"},
+            {"John", "25", "NYC"},
+            {"Jane", "30", "LA"}
+        };
+        for (String[] row : data) {
+            for (String cell : row) {
+                System.out.print(cell + "\t");
+            }
+            System.out.println("");
+        }
+    }
+}
+
+OUTPUT:
+-------
+=== Method 1: With Size ===
+Rows: 3
+Columns: 4
+Default values:
+0 0 0 0 
+0 0 0 0 
+0 0 0 0 
+
+=== Method 2: With Initialization ===
+Values:
+1 2 3 
+4 5 6 
+7 8 9 
+
+=== String 2D Array ===
+Name	Age	City	
+John	25	NYC	
+Jane	30	LA	
+
+
+--------------------------------------------------------------------------------
+2.2 ACCESSING AND MODIFYING 2D ARRAY ELEMENTS
+--------------------------------------------------------------------------------
+
+Syntax:
+-------
+// Access
+value = array[rowIndex][columnIndex];
+
+// Modify
+array[rowIndex][columnIndex] = newValue;
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 14: Accessing and Modifying 2D Array Elements
+--------------------------------------------------------------------------------
+
+public class TwoDArrayAccessModify {
+    public static void main(String[] args) {
+        
+        int[][] matrix = {
+            {10, 20, 30},
+            {40, 50, 60},
+            {70, 80, 90}
+        };
+        
+        System.out.println("=== Accessing Elements ===");
+        System.out.println("Element at [0][0]: " + matrix[0][0]);
+        System.out.println("Element at [1][1]: " + matrix[1][1]);
+        System.out.println("Element at [2][2]: " + matrix[2][2]);
+        System.out.println("Element at [0][2]: " + matrix[0][2]);
+        System.out.println("Element at [2][0]: " + matrix[2][0]);
+        
+        System.out.println("");
+        
+        System.out.println("=== Modifying Elements ===");
+        System.out.println("Before: matrix[1][1] = " + matrix[1][1]);
+        matrix[1][1] = 999;
+        System.out.println("After: matrix[1][1] = " + matrix[1][1]);
+        
+        System.out.println("");
+        
+        System.out.println("=== Matrix After Modification ===");
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix[i].length; j++) {
+                System.out.print(matrix[i][j] + "\t");
+            }
+            System.out.println("");
+        }
+        
+        System.out.println("");
+        
+        System.out.println("=== Accessing Entire Row ===");
+        int[] secondRow = matrix[1];
+        System.out.print("Second row: ");
+        for (int val : secondRow) {
+            System.out.print(val + " ");
+        }
+        System.out.println("");
+    }
+}
+
+OUTPUT:
+-------
+=== Accessing Elements ===
+Element at [0][0]: 10
+Element at [1][1]: 50
+Element at [2][2]: 90
+Element at [0][2]: 30
+Element at [2][0]: 70
+
+=== Modifying Elements ===
+Before: matrix[1][1] = 50
+After: matrix[1][1] = 999
+
+=== Matrix After Modification ===
+10	20	30	
+40	999	60	
+70	80	90	
+
+=== Accessing Entire Row ===
+Second row: 40 999 60
+
+
+--------------------------------------------------------------------------------
+2.3 ITERATING THROUGH 2D ARRAYS
+--------------------------------------------------------------------------------
+
+EXAMPLE 15: Different Ways to Iterate 2D Arrays
+--------------------------------------------------------------------------------
+
+public class TwoDArrayIteration {
+    public static void main(String[] args) {
+        
+        String[][] table = {
+            {"ID", "Name", "Score"},
+            {"101", "Alice", "85"},
+            {"102", "Bob", "90"},
+            {"103", "Charlie", "78"}
+        };
+        
+        // Method 1: Traditional nested for loops
+        System.out.println("=== Method 1: Traditional For Loops ===");
+        for (int i = 0; i < table.length; i++) {
+            for (int j = 0; j < table[i].length; j++) {
+                System.out.print(table[i][j] + "\t");
+            }
+            System.out.println("");
+        }
+        
+        System.out.println("");
+        
+        // Method 2: Enhanced for loops
+        System.out.println("=== Method 2: Enhanced For Loops ===");
+        for (String[] row : table) {
+            for (String cell : row) {
+                System.out.print(cell + "\t");
+            }
+            System.out.println("");
+        }
+        
+        System.out.println("");
+        
+        // Method 3: Mixed approach
+        System.out.println("=== Method 3: With Row Numbers ===");
+        int rowNum = 0;
+        for (String[] row : table) {
+            System.out.print("Row " + rowNum + ": ");
+            for (String cell : row) {
+                System.out.print(cell + "\t");
+            }
+            System.out.println("");
+            rowNum++;
+        }
+    }
+}
+
+OUTPUT:
+-------
+=== Method 1: Traditional For Loops ===
+ID	Name	Score	
+101	Alice	85	
+102	Bob	90	
+103	Charlie	78	
+
+=== Method 2: Enhanced For Loops ===
+ID	Name	Score	
+101	Alice	85	
+102	Bob	90	
+103	Charlie	78	
+
+=== Method 3: With Row Numbers ===
+Row 0: ID	Name	Score	
+Row 1: 101	Alice	85	
+Row 2: 102	Bob	90	
+Row 3: 103	Charlie	78	
+
+
+--------------------------------------------------------------------------------
+2.4 JAGGED ARRAYS (Irregular Arrays)
+--------------------------------------------------------------------------------
+
+Jagged arrays are 2D arrays where each row can have different number of columns.
+
+Visual Representation:
+----------------------
+int[][] jagged = {
+    {1, 2},
+    {3, 4, 5, 6},
+    {7, 8, 9}
+};
+
+Row 0: [1] [2]
+Row 1: [3] [4] [5] [6]
+Row 2: [7] [8] [9]
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 16: Jagged Arrays
+--------------------------------------------------------------------------------
+
+public class JaggedArray {
+    public static void main(String[] args) {
+        
+        // Method 1: Direct initialization
+        System.out.println("=== Method 1: Direct Initialization ===");
+        int[][] jagged1 = {
+            {1, 2},
+            {3, 4, 5, 6},
+            {7, 8, 9}
+        };
+        
+        for (int i = 0; i < jagged1.length; i++) {
+            System.out.print("Row " + i + " (length=" + jagged1[i].length + "): ");
+            for (int j = 0; j < jagged1[i].length; j++) {
+                System.out.print(jagged1[i][j] + " ");
+            }
+            System.out.println("");
+        }
+        
+        System.out.println("");
+        
+        // Method 2: Create rows separately
+        System.out.println("=== Method 2: Create Rows Separately ===");
+        int[][] jagged2 = new int[3][];    // 3 rows, columns undefined
+        jagged2[0] = new int[2];           // Row 0 has 2 columns
+        jagged2[1] = new int[4];           // Row 1 has 4 columns
+        jagged2[2] = new int[3];           // Row 2 has 3 columns
+        
+        // Fill with values
+        int value = 1;
+        for (int i = 0; i < jagged2.length; i++) {
+            for (int j = 0; j < jagged2[i].length; j++) {
+                jagged2[i][j] = value++;
+            }
+        }
+        
+        // Print
+        for (int i = 0; i < jagged2.length; i++) {
+            System.out.print("Row " + i + ": ");
+            for (int j = 0; j < jagged2[i].length; j++) {
+                System.out.print(jagged2[i][j] + " ");
+            }
+            System.out.println("");
+        }
+    }
+}
+
+OUTPUT:
+-------
+=== Method 1: Direct Initialization ===
+Row 0 (length=2): 1 2 
+Row 1 (length=4): 3 4 5 6 
+Row 2 (length=3): 7 8 9 
+
+=== Method 2: Create Rows Separately ===
+Row 0: 1 2 
+Row 1: 3 4 5 6 
+Row 2: 7 8 9
+
+
+--------------------------------------------------------------------------------
+2.5 MULTI-DIMENSIONAL ARRAYS IN AUTOMATION CONTEXT
+--------------------------------------------------------------------------------
+
+EXAMPLE 17: Test Data Table
+--------------------------------------------------------------------------------
+
+public class TestDataTable {
+    public static void main(String[] args) {
+        
+        // Test data: Username, Password, Expected Result
+        String[][] testData = {
+            {"admin", "admin123", "success"},
+            {"user1", "password1", "success"},
+            {"[REDACTED:PASSWORD]", "", "failure"},
+            {"", "password", "failure"},
+            {"invalid", "wrong", "failure"}
+        };
+        
+        System.out.println("=== Data-Driven Test Execution ===");
+        System.out.println("");
+        
+        int passed = 0;
+        int failed = 0;
+        
+        for (int i = 0; i < testData.length; i++) {
+            String username = testData[i][0];
+            String password = testData[i][1];
+            String expectedResult = testData[i][2];
+            
+            System.out.println("Test Case " + (i + 1) + ":");
+            System.out.println("  Username: " + (username.isEmpty() ? "[empty]" : username));
+            System.out.println("  Password: " + (password.isEmpty() ? "[empty]" : "****"));
+            System.out.println("  Expected: " + expectedResult);
+            
+            // Simulate actual result
+            String actualResult;
+            if (username.isEmpty() || password.isEmpty()) {
+                actualResult = "failure";
+            } else if (username.equals("invalid")) {
+                actualResult = "failure";
+            } else {
+                actualResult = "success";
+            }
+            
+            System.out.println("  Actual: " + actualResult);
+            
+            if (actualResult.equals(expectedResult)) {
+                System.out.println("  Status: PASSED");
+                passed++;
+            } else {
+                System.out.println("  Status: FAILED");
+                failed++;
+            }
+            System.out.println("");
+        }
+        
+        System.out.println("=== Summary ===");
+        System.out.println("Total: " + testData.length);
+        System.out.println("Passed: " + passed);
+        System.out.println("Failed: " + failed);
+    }
+}
+
+OUTPUT:
+-------
+=== Data-Driven Test Execution ===
+
+Test Case 1:
+  Username: admin
+  Password: ****
+  Expected: success
+  Actual: success
+  Status: PASSED
+
+Test Case 2:
+  Username: user1
+  Password: ****
+  Expected: success
+  Actual: success
+  Status: PASSED
+
+Test Case 3:
+  Username: guest
+  Password: [empty]
+  Expected: failure
+  Actual: failure
+  Status: PASSED
+
+Test Case 4:
+  Username: [empty]
+  Password: ****
+  Expected: failure
+  Actual: failure
+  Status: PASSED
+
+Test Case 5:
+  Username: invalid
+  Password: ****
+  Expected: failure
+  Actual: failure
+  Status: PASSED
+
+=== Summary ===
+Total: 5
+Passed: 5
+Failed: 0
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 18: Table Verification
+--------------------------------------------------------------------------------
+
+public class TableVerification {
+    public static void main(String[] args) {
+        
+        // Expected table data from requirements
+        String[][] expectedTable = {
+            {"Product", "Price", "Quantity"},
+            {"Laptop", "999.99", "10"},
+            {"Mouse", "29.99", "50"},
+            {"Keyboard", "79.99", "30"}
+        };
+        
+        // Actual table data from web page (simulated)
+        String[][] actualTable = {
+            {"Product", "Price", "Quantity"},
+            {"Laptop", "999.99", "10"},
+            {"Mouse", "29.99", "50"},
+            {"Keyboard", "79.99", "30"}
+        };
+        
+        System.out.println("=== Table Verification ===");
+        System.out.println("");
+        
+        // Verify row count
+        System.out.println("Row Count Check:");
+        System.out.println("  Expected rows: " + expectedTable.length);
+        System.out.println("  Actual rows: " + actualTable.length);
+        System.out.println("  Status: " + 
+            (expectedTable.length == actualTable.length ? "PASSED" : "FAILED"));
+        
+        System.out.println("");
+        
+        // Verify each cell
+        System.out.println("Cell-by-Cell Verification:");
+        boolean allMatch = true;
+        
+        for (int i = 0; i < expectedTable.length; i++) {
+            for (int j = 0; j < expectedTable[i].length; j++) {
+                String expected = expectedTable[i][j];
+                String actual = actualTable[i][j];
+                boolean match = expected.equals(actual);
+                
+                if (!match) {
+                    System.out.println("  MISMATCH at [" + i + "][" + j + "]:");
+                    System.out.println("    Expected: " + expected);
+                    System.out.println("    Actual: " + actual);
+                    allMatch = false;
+                }
+            }
+        }
+        
+        if (allMatch) {
+            System.out.println("  All cells match!");
+        }
+        
+        System.out.println("");
+        System.out.println("=== Final Result ===");
+        System.out.println("Table Verification: " + (allMatch ? "PASSED" : "FAILED"));
+    }
+}
+
+OUTPUT:
+-------
+=== Table Verification ===
+
+Row Count Check:
+  Expected rows: 4
+  Actual rows: 4
+  Status: PASSED
+
+Cell-by-Cell Verification:
+  All cells match!
+
+=== Final Result ===
+Table Verification: PASSED
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 19: API Response Processing (JSON-like Data)
+--------------------------------------------------------------------------------
+
+public class APIResponseProcessing {
+    public static void main(String[] args) {
+        
+        // Simulated API response - list of users
+        String[][] apiResponse = {
+            {"1", "John Doe", "john@email.com", "active"},
+            {"2", "Jane Smith", "jane@email.com", "active"},
+            {"3", "Bob Wilson", "bob@email.com", "inactive"},
+            {"4", "Alice Brown", "alice@email.com", "active"}
+        };
+        
+        String[] headers = {"ID", "Name", "Email", "Status"};
+        
+        System.out.println("=== API Response Processing ===");
+        System.out.println("");
+        
+        // Print formatted table
+        System.out.println("--- User Data ---");
+        System.out.printf("%-5s %-15s %-20s %-10s%n", 
+            headers[0], headers[1], headers[2], headers[3]);
+        System.out.println("-".repeat(55));
+        
+        for (String[] user : apiResponse) {
+            System.out.printf("%-5s %-15s %-20s %-10s%n", 
+                user[0], user[1], user[2], user[3]);
+        }
+        
+        System.out.println("");
+        
+        // Filter active users
+        System.out.println("--- Active Users Only ---");
+        int activeCount = 0;
+        for (String[] user : apiResponse) {
+            if (user[3].equals("active")) {
+                System.out.println("  " + user[1] + " (" + user[2] + ")");
+                activeCount++;
+            }
+        }
+        System.out.println("Total active users: " + activeCount);
+        
+        System.out.println("");
+        
+        // Search for specific user
+        System.out.println("--- Search User by Email ---");
+        String searchEmail = "jane@email.com";
+        boolean found = false;
+        
+        for (String[] user : apiResponse) {
+            if (user[2].equals(searchEmail)) {
+                System.out.println("User found:");
+                System.out.println("  ID: " + user[0]);
+                System.out.println("  Name: " + user[1]);
+                System.out.println("  Email: " + user[2]);
+                System.out.println("  Status: " + user[3]);
+                found = true;
+                break;
+            }
+        }
+        
+        if (!found) {
+            System.out.println("User not found");
+        }
+    }
+}
+
+OUTPUT:
+-------
+=== API Response Processing ===
+
+--- User Data ---
+ID    Name            Email                Status    
+-------------------------------------------------------
+1     John Doe        john@email.com       active    
+2     Jane Smith      jane@email.com       active    
+3     Bob Wilson      bob@email.com        inactive  
+4     Alice Brown     alice@email.com      active    
+
+--- Active Users Only ---
+  John Doe (john@email.com)
+  Jane Smith (jane@email.com)
+  Alice Brown (alice@email.com)
+Total active users: 3
+
+--- Search User by Email ---
+User found:
+  ID: 2
+  Name: Jane Smith
+  Email: jane@email.com
+  Status: active
+
+
+--------------------------------------------------------------------------------
+2.6 THREE-DIMENSIONAL ARRAYS
+--------------------------------------------------------------------------------
+
+3D arrays are arrays of 2D arrays. Less commonly used but useful for
+specific scenarios like representing 3D data.
+
+Visual Representation:
+----------------------
+int[][][] cube = new int[2][3][4];
+- 2 layers
+- Each layer has 3 rows
+- Each row has 4 columns
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 20: Three-Dimensional Array
+--------------------------------------------------------------------------------
+
+public class ThreeDArray {
+    public static void main(String[] args) {
+        
+        // 3D array: 2 layers, 3 rows, 4 columns
+        int[][][] cube = {
+            {
+                {1, 2, 3, 4},
+                {5, 6, 7, 8},
+                {9, 10, 11, 12}
+            },
+            {
+                {13, 14, 15, 16},
+                {17, 18, 19, 20},
+                {21, 22, 23, 24}
+            }
+        };
+        
+        System.out.println("=== 3D Array ===");
+        System.out.println("Layers: " + cube.length);
+        System.out.println("Rows per layer: " + cube[0].length);
+        System.out.println("Columns per row: " + cube[0][0].length);
+        
+        System.out.println("");
+        
+        // Print all elements
+        for (int layer = 0; layer < cube.length; layer++) {
+            System.out.println("Layer " + layer + ":");
+            for (int row = 0; row < cube[layer].length; row++) {
+                System.out.print("  Row " + row + ": ");
+                for (int col = 0; col < cube[layer][row].length; col++) {
+                    System.out.print(cube[layer][row][col] + " ");
+                }
+                System.out.println("");
+            }
+            System.out.println("");
+        }
+        
+        // Access specific element
+        System.out.println("Element at [1][2][3]: " + cube[1][2][3]);
+    }
+}
+
+OUTPUT:
+-------
+=== 3D Array ===
+Layers: 2
+Rows per layer: 3
+Columns per row: 4
+
+Layer 0:
+  Row 0: 1 2 3 4 
+  Row 1: 5 6 7 8 
+  Row 2: 9 10 11 12 
+
+Layer 1:
+  Row 0: 13 14 15 16 
+  Row 1: 17 18 19 20 
+  Row 2: 21 22 23 24 
+
+Element at [1][2][3]: 24
+
+
+================================================================================
+                    3. ARRAYS CLASS UTILITY METHODS
+================================================================================
+
+Java provides java.util.Arrays class with useful methods for array operations.
+
+Common Methods:
+---------------
++---------------------------+----------------------------------------+
+| Method                    | Description                            |
++---------------------------+----------------------------------------+
+| Arrays.toString()         | Convert array to string                |
+| Arrays.sort()             | Sort array                             |
+| Arrays.binarySearch()     | Search in sorted array                 |
+| Arrays.equals()           | Compare two arrays                     |
+| Arrays.fill()             | Fill array with a value                |
+| Arrays.copyOf()           | Copy array                             |
+| Arrays.deepToString()     | Convert multi-dimensional to string    |
+| Arrays.deepEquals()       | Compare multi-dimensional arrays       |
++---------------------------+----------------------------------------+
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 21: Arrays Utility Methods
+--------------------------------------------------------------------------------
+
+import java.util.Arrays;
+
+public class ArraysUtilityMethods {
+    public static void main(String[] args) {
+        
+        // toString() - Convert to string
+        System.out.println("=== Arrays.toString() ===");
+        int[] numbers = {5, 2, 8, 1, 9};
+        System.out.println("Array: " + Arrays.toString(numbers));
+        
+        System.out.println("");
+        
+        // sort() - Sort array
+        System.out.println("=== Arrays.sort() ===");
+        System.out.println("Before sort: " + Arrays.toString(numbers));
+        Arrays.sort(numbers);
+        System.out.println("After sort: " + Arrays.toString(numbers));
+        
+        System.out.println("");
+        
+        // binarySearch() - Search in sorted array
+        System.out.println("=== Arrays.binarySearch() ===");
+        int index = Arrays.binarySearch(numbers, 8);
+        System.out.println("Index of 8: " + index);
+        
+        System.out.println("");
+        
+        // equals() - Compare arrays
+        System.out.println("=== Arrays.equals() ===");
+        int[] arr1 = {1, 2, 3};
+        int[] arr2 = {1, 2, 3};
+        int[] arr3 = {1, 2, 4};
+        System.out.println("arr1 equals arr2: " + Arrays.equals(arr1, arr2));
+        System.out.println("arr1 equals arr3: " + Arrays.equals(arr1, arr3));
+        
+        System.out.println("");
+        
+        // fill() - Fill array with value
+        System.out.println("=== Arrays.fill() ===");
+        int[] filled = new int[5];
+        System.out.println("Before fill: " + Arrays.toString(filled));
+        Arrays.fill(filled, 7);
+        System.out.println("After fill with 7: " + Arrays.toString(filled));
+        
+        System.out.println("");
+        
+        // copyOf() - Copy array
+        System.out.println("=== Arrays.copyOf() ===");
+        int[] original = {10, 20, 30};
+        int[] copy = Arrays.copyOf(original, 5);    // New size 5
+        System.out.println("Original: " + Arrays.toString(original));
+        System.out.println("Copy (size 5): " + Arrays.toString(copy));
+        
+        System.out.println("");
+        
+        // deepToString() - For multi-dimensional arrays
+        System.out.println("=== Arrays.deepToString() ===");
+        int[][] matrix = {{1, 2}, {3, 4}, {5, 6}};
+        System.out.println("2D Array: " + Arrays.deepToString(matrix));
+        
+        System.out.println("");
+        
+        // deepEquals() - Compare multi-dimensional arrays
+        System.out.println("=== Arrays.deepEquals() ===");
+        int[][] m1 = {{1, 2}, {3, 4}};
+        int[][] m2 = {{1, 2}, {3, 4}};
+        int[][] m3 = {{1, 2}, {3, 5}};
+        System.out.println("m1 deepEquals m2: " + Arrays.deepEquals(m1, m2));
+        System.out.println("m1 deepEquals m3: " + Arrays.deepEquals(m1, m3));
+    }
+}
+
+OUTPUT:
+-------
+=== Arrays.toString() ===
+Array: [5, 2, 8, 1, 9]
+
+=== Arrays.sort() ===
+Before sort: [5, 2, 8, 1, 9]
+After sort: [1, 2, 5, 8, 9]
+
+=== Arrays.binarySearch() ===
+Index of 8: 3
+
+=== Arrays.equals() ===
+arr1 equals arr2: true
+arr1 equals arr3: false
+
+=== Arrays.fill() ===
+Before fill: [0, 0, 0, 0, 0]
+After fill with 7: [7, 7, 7, 7, 7]
+
+=== Arrays.copyOf() ===
+Original: [10, 20, 30]
+Copy (size 5): [10, 20, 30, 0, 0]
+
+=== Arrays.deepToString() ===
+2D Array: [[1, 2], [3, 4], [5, 6]]
+
+=== Arrays.deepEquals() ===
+m1 deepEquals m2: true
+m1 deepEquals m3: false
+
+
+================================================================================
+                    COMPLETE AUTOMATION EXAMPLE
+================================================================================
+
+import java.util.Arrays;
+
+public class CompleteArrayAutomation {
+    public static void main(String[] args) {
+        
+        System.out.println("============================================");
+        System.out.println("      AUTOMATION TEST DATA MANAGEMENT       ");
+        System.out.println("============================================");
+        
+        // Test Configuration Arrays
+        String[] browsers = {"Chrome", "Firefox", "Edge"};
+        String[] environments = {"DEV", "QA", "STAGING"};
+        
+        // Test Data - 2D Array
+        String[][] loginTestData = {
+            {"admin", "admin123", "valid"},
+            {"user1", "password1", "valid"},
+            {"[REDACTED:PASSWORD]", "", "invalid"},
+            {"", "password", "invalid"},
+            {"hacker", "injection", "invalid"}
+        };
+        
+        // Expected Menu Items
+        String[] expectedMenuItems = {"Home", "Products", "Services", "About", "Contact"};
+        String[] actualMenuItems = {"Home", "Products", "Services", "About", "Contact"};
+        
+        // Test execution counters
+        int totalTests = 0;
+        int passedTests = 0;
+        int failedTests = 0;
+        
+        System.out.println("\n--- Test Configuration ---");
+        System.out.println("Browsers: " + Arrays.toString(browsers));
+        System.out.println("Environments: " + Arrays.toString(environments));
+        
+        // Test 1: Menu Verification
+        System.out.println("\n" + "=".repeat(44));
+        System.out.println("TEST 1: Menu Items Verification");
+        System.out.println("=".repeat(44));
+        
+        totalTests++;
+        boolean menuMatch = Arrays.equals(expectedMenuItems, actualMenuItems);
+        System.out.println("Expected: " + Arrays.toString(expectedMenuItems));
+        System.out.println("Actual: " + Arrays.toString(actualMenuItems));
+        System.out.println("Result: " + (menuMatch ? "PASSED" : "FAILED"));
+        
+        if (menuMatch) passedTests++;
+        else failedTests++;
+        
+        // Test 2: Login Tests
+        System.out.println("\n" + "=".repeat(44));
+        System.out.println("TEST 2: Login Functionality");
+        System.out.println("=".repeat(44));
+        
+        for (int i = 0; i < loginTestData.length; i++) {
+            totalTests++;
+            
+            String username = loginTestData[i][0];
+            String password = loginTestData[i][1];
+            String expected = loginTestData[i][2];
+            
+            // Determine actual result
+            String actual;
+            if (username.isEmpty() || password.isEmpty()) {
+                actual = "invalid";
+            } else if (username.equals("hacker")) {
+                actual = "invalid";
+            } else {
+                actual = "valid";
+            }
+            
+            boolean passed = expected.equals(actual);
+            
+            System.out.println("\nTest 2." + (i + 1) + ":");
+            System.out.println("  Input: username='" + 
+                (username.isEmpty() ? "[empty]" : username) + "', password='" + 
+                (password.isEmpty() ? "[empty]" : "****") + "'");
+            System.out.println("  Expected: " + expected);
+            System.out.println("  Actual: " + actual);
+            System.out.println("  Status: " + (passed ? "PASSED" : "FAILED"));
+            
+            if (passed) passedTests++;
+            else failedTests++;
+        }
+        
+        // Test 3: Cross-Browser URL Testing
+        System.out.println("\n" + "=".repeat(44));
+        System.out.println("TEST 3: Cross-Browser Testing");
+        System.out.println("=".repeat(44));
+        
+        String[] testUrls = {"https://google.com", "https://github.com"};
+        
+        for (String browser : browsers) {
+            System.out.println("\nBrowser: " + browser);
+            System.out.println("-".repeat(30));
+            
+            for (String url : testUrls) {
+                totalTests++;
+                
+                // Simulating all tests pass
+                boolean passed = true;
+                
+                System.out.println("  URL: " + url);
+                System.out.println("  Status: " + (passed ? "PASSED" : "FAILED"));
+                
+                if (passed) passedTests++;
+                else failedTests++;
+            }
+        }
+        
+        // Test Summary
+        System.out.println("\n" + "=".repeat(44));
+        System.out.println("              TEST SUMMARY                  ");
+        System.out.println("=".repeat(44));
+        
+        System.out.println("Total Tests: " + totalTests);
+        System.out.println("Passed: " + passedTests);
+        System.out.println("Failed: " + failedTests);
+        
+        double passRate = (double) passedTests / totalTests * 100;
+        System.out.println("Pass Rate: " + String.format("%.2f", passRate) + "%");
+        
+        // Visual representation
+        System.out.println("\nResults Bar:");
+        System.out.print("[");
+        for (int i = 0; i < passedTests; i++) System.out.print("+");
+        for (int i = 0; i < failedTests; i++) System.out.print("-");
+        System.out.println("]");
+        System.out.println("+ = Passed, - = Failed");
+        
+        System.out.println("\n" + "=".repeat(44));
+        System.out.println("         EXECUTION COMPLETED                ");
+        System.out.println("=".repeat(44));
+    }
+}
+
+OUTPUT:
+-------
+============================================
+      AUTOMATION TEST DATA MANAGEMENT       
+============================================
+
+--- Test Configuration ---
+Browsers: [Chrome, Firefox, Edge]
+Environments: [DEV, QA, STAGING]
+
+============================================
+TEST 1: Menu Items Verification
+============================================
+Expected: [Home, Products, Services, About, Contact]
+Actual: [Home, Products, Services, About, Contact]
+Result: PASSED
+
+============================================
+TEST 2: Login Functionality
+============================================
+
+Test 2.1:
+  Input: username='admin', password='****'
+  Expected: valid
+  Actual: valid
+  Status: PASSED
+
+Test 2.2:
+  Input: username='user1', password='****'
+  Expected: valid
+  Actual: valid
+  Status: PASSED
+
+Test 2.3:
+  Input: username='guest', password='[empty]'
+  Expected: invalid
+  Actual: invalid
+  Status: PASSED
+
+Test 2.4:
+  Input: username='[empty]', password='****'
+  Expected: invalid
+  Actual: invalid
+  Status: PASSED
+
+Test 2.5:
+  Input: username='hacker', password='[REDACTED:PASSWORD]'
+  Expected: invalid
+  Actual: invalid
+  Status: PASSED
+
+============================================
+TEST 3: Cross-Browser Testing
+============================================
+
+Browser: Chrome
+------------------------------
+  URL: https://google.com
+  Status: PASSED
+  URL: https://github.com
+  Status: PASSED
+
+Browser: Firefox
+------------------------------
+  URL: https://google.com
+  Status: PASSED
+  URL: https://github.com
+  Status: PASSED
+
+Browser: Edge
+------------------------------
+  URL: https://google.com
+  Status: PASSED
+  URL: https://github.com
+  Status: PASSED
+
+============================================
+              TEST SUMMARY                  
+============================================
+Total Tests: 12
+Passed: 12
+Failed: 0
+Pass Rate: 100.00%
+
+Results Bar:
+[++++++++++++]
++ = Passed, - = Failed
+
+============================================
+         EXECUTION COMPLETED                
+============================================
+
+
+================================================================================
+================================================================================
+                    NEGATIVE SCENARIOS - ARRAYS
+================================================================================
+================================================================================
+
+
+--------------------------------------------------------------------------------
+ERROR 1: ArrayIndexOutOfBoundsException
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE:
+-----------------
+public class ArrayIndexOutOfBounds {
+    public static void main(String[] args) {
+        
+        int[] numbers = {10, 20, 30, 40, 50};
+        
+        // Array has indices 0-4, but accessing index 5
+        System.out.println(numbers[5]);    // Error!
+    }
+}
+
+ERROR MESSAGE:
+--------------
+Exception in thread "main" java.lang.ArrayIndexOutOfBoundsException: 
+Index 5 out of bounds for length 5
+
+EXPLANATION:
+------------
+Array has 5 elements with indices 0, 1, 2, 3, 4
+Index 5 does not exist
+
+FIX:
+----
+public class ArrayIndexOutOfBoundsFixed {
+    public static void main(String[] args) {
+        
+        int[] numbers = {10, 20, 30, 40, 50};
+        
+        // Option 1: Use correct index
+        System.out.println(numbers[4]);    // Last element
+        
+        // Option 2: Use length - 1 for last element
+        System.out.println(numbers[numbers.length - 1]);
+        
+        // Option 3: Check before accessing
+        int index = 5;
+        if (index >= 0 && index < numbers.length) {
+            System.out.println(numbers[index]);
+        } else {
+            System.out.println("Invalid index: " + index);
+        }
+    }
+}
+
+
+--------------------------------------------------------------------------------
+ERROR 2: Negative Array Index
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE:
+-----------------
+public class NegativeArrayIndex {
+    public static void main(String[] args) {
+        
+        int[] numbers = {10, 20, 30};
+        
+        // Negative index
+        System.out.println(numbers[-1]);    // Error!
+    }
+}
+
+ERROR MESSAGE:
+--------------
+Exception in thread "main" java.lang.ArrayIndexOutOfBoundsException: 
+Index -1 out of bounds for length 3
+
+FIX:
+----
+public class NegativeArrayIndexFixed {
+    public static void main(String[] args) {
+        
+        int[] numbers = {10, 20, 30};
+        
+        // Java does not support negative indexing like Python
+        // To get last element, use length - 1
+        System.out.println("Last element: " + numbers[numbers.length - 1]);
+        System.out.println("Second last: " + numbers[numbers.length - 2]);
+    }
+}
+
+
+--------------------------------------------------------------------------------
+ERROR 3: NullPointerException with Arrays
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE:
+-----------------
+public class NullArrayAccess {
+    public static void main(String[] args) {
+        
+        String[] names = null;
+        
+        // Accessing null array
+        System.out.println(names.length);    // Error!
+        System.out.println(names[0]);        // Error!
+    }
+}
+
+ERROR MESSAGE:
+--------------
+Exception in thread "main" java.lang.NullPointerException
+
+FIX:
+----
+public class NullArrayAccessFixed {
+    public static void main(String[] args) {
+        
+        String[] names = null;
+        
+        // Check for null before accessing
+        if (names != null) {
+            System.out.println("Length: " + names.length);
+            if (names.length > 0) {
+                System.out.println("First element: " + names[0]);
+            }
+        } else {
+            System.out.println("Array is null");
+        }
+        
+        // Or initialize the array
+        names = new String[]{"Alice", "Bob"};
+        System.out.println("Now length is: " + names.length);
+    }
+}
+
+
+--------------------------------------------------------------------------------
+ERROR 4: Null Elements in Array
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE:
+-----------------
+public class NullElementInArray {
+    public static void main(String[] args) {
+        
+        String[] names = new String[3];
+        names[0] = "Alice";
+        // names[1] and names[2] are null
+        
+        // Calling method on null element
+        System.out.println(names[1].length());    // Error!
+    }
+}
+
+ERROR MESSAGE:
+--------------
+Exception in thread "main" java.lang.NullPointerException
+
+FIX:
+----
+public class NullElementInArrayFixed {
+    public static void main(String[] args) {
+        
+        String[] names = new String[3];
+        names[0] = "Alice";
+        
+        // Check each element before using
+        for (int i = 0; i < names.length; i++) {
+            if (names[i] != null) {
+                System.out.println("names[" + i + "] length: " + names[i].length());
+            } else {
+                System.out.println("names[" + i + "] is null");
+            }
+        }
+    }
+}
+
+OUTPUT:
+-------
+names[0] length: 5
+names[1] is null
+names[2] is null
+
+
+--------------------------------------------------------------------------------
+ERROR 5: Off-by-One Error in Loop
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE:
+-----------------
+public class OffByOneLoop {
+    public static void main(String[] args) {
+        
+        int[] numbers = {10, 20, 30, 40, 50};
+        
+        // Using <= instead of <
+        for (int i = 0; i <= numbers.length; i++) {
+            System.out.println(numbers[i]);    // Error on last iteration!
+        }
+    }
+}
+
+ERROR MESSAGE:
+--------------
+10
+20
+30
+40
+50
+Exception in thread "main" java.lang.ArrayIndexOutOfBoundsException: 
+Index 5 out of bounds for length 5
+
+FIX:
+----
+public class OffByOneLoopFixed {
+    public static void main(String[] args) {
+        
+        int[] numbers = {10, 20, 30, 40, 50};
+        
+        // Use < instead of <=
+        for (int i = 0; i < numbers.length; i++) {
+            System.out.println(numbers[i]);
+        }
+        
+        // Or use enhanced for loop
+        for (int num : numbers) {
+            System.out.println(num);
+        }
+    }
+}
+
+
+--------------------------------------------------------------------------------
+ERROR 6: Array Size Cannot Be Negative
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE:
+-----------------
+public class NegativeArraySize {
+    public static void main(String[] args) {
+        
+        int[] numbers = new int[-5];    // Negative size!
+    }
+}
+
+ERROR MESSAGE:
+--------------
+Exception in thread "main" java.lang.NegativeArraySizeException
+
+FIX:
+----
+public class NegativeArraySizeFixed {
+    public static void main(String[] args) {
+        
+        int size = -5;
+        
+        // Validate size before creating array
+        if (size > 0) {
+            int[] numbers = new int[size];
+            System.out.println("Array created with size: " + numbers.length);
+        } else {
+            System.out.println("Invalid size: " + size);
+            System.out.println("Size must be positive");
+        }
+    }
+}
+
+
+--------------------------------------------------------------------------------
+ERROR 7: Cannot Change Array Size After Creation
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE:
+-----------------
+public class ChangeArraySize {
+    public static void main(String[] args) {
+        
+        int[] numbers = new int[3];
+        numbers[0] = 10;
+        numbers[1] = 20;
+        numbers[2] = 30;
+        
+        // Cannot add more elements - array size is fixed
+        numbers[3] = 40;    // Error!
+    }
+}
+
+ERROR MESSAGE:
+--------------
+Exception in thread "main" java.lang.ArrayIndexOutOfBoundsException: 
+Index 3 out of bounds for length 3
+
+FIX:
+----
+import java.util.Arrays;
+
+public class ChangeArraySizeFixed {
+    public static void main(String[] args) {
+        
+        int[] numbers = new int[3];
+        numbers[0] = 10;
+        numbers[1] = 20;
+        numbers[2] = 30;
+        
+        System.out.println("Original: " + Arrays.toString(numbers));
+        
+        // Option 1: Create larger array and copy
+        int[] larger = new int[5];
+        System.arraycopy(numbers, 0, larger, 0, numbers.length);
+        larger[3] = 40;
+        larger[4] = 50;
+        System.out.println("Larger: " + Arrays.toString(larger));
+        
+        // Option 2: Use Arrays.copyOf
+        int[] expanded = Arrays.copyOf(numbers, 5);
+        expanded[3] = 40;
+        expanded[4] = 50;
+        System.out.println("Expanded: " + Arrays.toString(expanded));
+        
+        // Note: For dynamic sizing, use ArrayList instead (covered later)
+    }
+}
+
+
+--------------------------------------------------------------------------------
+ERROR 8: Comparing Arrays with ==
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE:
+-----------------
+public class ArrayComparisonWrong {
+    public static void main(String[] args) {
+        
+        int[] arr1 = {1, 2, 3};
+        int[] arr2 = {1, 2, 3};
+        
+        // Using == to compare arrays
+        if (arr1 == arr2) {
+            System.out.println("Arrays are equal");
+        } else {
+            System.out.println("Arrays are not equal");    // This prints!
+        }
+    }
+}
+
+OUTPUT:
+-------
+Arrays are not equal
+
+EXPLANATION:
+------------
+== compares object references (memory addresses), not content.
+arr1 and arr2 are different objects in memory.
+
+FIX:
+----
+import java.util.Arrays;
+
+public class ArrayComparisonCorrect {
+    public static void main(String[] args) {
+        
+        int[] arr1 = {1, 2, 3};
+        int[] arr2 = {1, 2, 3};
+        
+        // Use Arrays.equals() for content comparison
+        if (Arrays.equals(arr1, arr2)) {
+            System.out.println("Arrays are equal");
+        } else {
+            System.out.println("Arrays are not equal");
+        }
+        
+        // For 2D arrays, use Arrays.deepEquals()
+        int[][] matrix1 = {{1, 2}, {3, 4}};
+        int[][] matrix2 = {{1, 2}, {3, 4}};
+        
+        System.out.println("2D Arrays equal: " + Arrays.deepEquals(matrix1, matrix2));
+    }
+}
+
+OUTPUT:
+-------
+Arrays are equal
+2D Arrays equal: true
+
+
+--------------------------------------------------------------------------------
+ERROR 9: Array Assignment Creates Reference, Not Copy
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE:
+-----------------
+import java.util.Arrays;
+
+public class ArrayReferenceIssue {
+    public static void main(String[] args) {
+        
+        int[] original = {1, 2, 3, 4, 5};
+        int[] copy = original;    // This is NOT a copy!
+        
+        System.out.println("Before modification:");
+        System.out.println("Original: " + Arrays.toString(original));
+        System.out.println("Copy: " + Arrays.toString(copy));
+        
+        // Modifying 'copy'
+        copy[0] = 999;
+        
+        System.out.println("\nAfter modifying copy[0] to 999:");
+        System.out.println("Original: " + Arrays.toString(original));    // Also changed!
+        System.out.println("Copy: " + Arrays.toString(copy));
+    }
+}
+
+OUTPUT:
+-------
+Before modification:
+Original: [1, 2, 3, 4, 5]
+Copy: [1, 2, 3, 4, 5]
+
+After modifying copy[0] to 999:
+Original: [999, 2, 3, 4, 5]
+Copy: [999, 2, 3, 4, 5]
+
+EXPLANATION:
+------------
+Both variables point to the same array in memory.
+Modifying one affects the other.
+
+FIX:
+----
+import java.util.Arrays;
+
+public class ArrayReferenceFixed {
+    public static void main(String[] args) {
+        
+        int[] original = {1, 2, 3, 4, 5};
+        
+        // Create actual copy using clone()
+        int[] copy1 = original.clone();
+        
+        // Or using Arrays.copyOf()
+        int[] copy2 = Arrays.copyOf(original, original.length);
+        
+        // Modify copy
+        copy1[0] = 999;
+        
+        System.out.println("Original: " + Arrays.toString(original));    // Unchanged
+        System.out.println("Copy1: " + Arrays.toString(copy1));
+        System.out.println("Copy2: " + Arrays.toString(copy2));
+    }
+}
+
+OUTPUT:
+-------
+Original: [1, 2, 3, 4, 5]
+Copy1: [999, 2, 3, 4, 5]
+Copy2: [1, 2, 3, 4, 5]
+
+
+--------------------------------------------------------------------------------
+ERROR 10: Modifying Array in Enhanced For Loop
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE:
+-----------------
+public class ModifyInEnhancedFor {
+    public static void main(String[] args) {
+        
+        int[] numbers = {1, 2, 3, 4, 5};
+        
+        // This does NOT modify the original array
+        for (int num : numbers) {
+            num = num * 2;    // Modifies local copy only
+        }
+        
+        System.out.println("After 'modification':");
+        for (int num : numbers) {
+            System.out.print(num + " ");    // Still original values!
+        }
+    }
+}
+
+--------------------------------------------------------------------------------
+ERROR 10: Modifying Array in Enhanced For Loop (CONTINUED)
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE:
+-----------------
+public class ModifyInEnhancedFor {
+    public static void main(String[] args) {
+        
+        int[] numbers = {1, 2, 3, 4, 5};
+        
+        // This does NOT modify the original array
+        for (int num : numbers) {
+            num = num * 2;    // Modifies local copy only
+        }
+        
+        System.out.println("After 'modification':");
+        for (int num : numbers) {
+            System.out.print(num + " ");    // Still original values!
+        }
+    }
+}
+
+OUTPUT:
+-------
+After 'modification':
+1 2 3 4 5 
+
+EXPLANATION:
+------------
+Enhanced for loop creates a copy of each element.
+Modifying the copy does not affect the original array.
+
+FIX:
+----
+public class ModifyInEnhancedForFixed {
+    public static void main(String[] args) {
+        
+        int[] numbers = {1, 2, 3, 4, 5};
+        
+        // Use traditional for loop to modify array elements
+        for (int i = 0; i < numbers.length; i++) {
+            numbers[i] = numbers[i] * 2;
+        }
+        
+        System.out.println("After modification:");
+        for (int num : numbers) {
+            System.out.print(num + " ");
+        }
+    }
+}
+
+OUTPUT:
+-------
+After modification:
+2 4 6 8 10 
+
+
+--------------------------------------------------------------------------------
+ERROR 11: ArrayStoreException (Wrong Type in Object Array)
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE:
+-----------------
+public class ArrayStoreException {
+    public static void main(String[] args) {
+        
+        Object[] objects = new String[3];
+        objects[0] = "Hello";
+        objects[1] = "World";
+        objects[2] = 123;    // Error! Integer in String array
+    }
+}
+
+ERROR MESSAGE:
+--------------
+Exception in thread "main" java.lang.ArrayStoreException: java.lang.Integer
+
+EXPLANATION:
+------------
+Even though the variable type is Object[], the actual array is String[].
+You cannot store Integer in a String array.
+
+FIX:
+----
+public class ArrayStoreExceptionFixed {
+    public static void main(String[] args) {
+        
+        // Option 1: Use correct type
+        String[] strings = new String[3];
+        strings[0] = "Hello";
+        strings[1] = "World";
+        strings[2] = "123";    // Store as String
+        
+        // Option 2: Use Object array if you need mixed types
+        Object[] objects = new Object[3];
+        objects[0] = "Hello";
+        objects[1] = "World";
+        objects[2] = 123;    // Now this works
+        
+        for (Object obj : objects) {
+            System.out.println(obj + " - Type: " + obj.getClass().getSimpleName());
+        }
+    }
+}
+
+OUTPUT:
+-------
+Hello - Type: String
+World - Type: String
+123 - Type: Integer
+
+
+--------------------------------------------------------------------------------
+ERROR 12: Using Wrong Length in 2D Array
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE:
+-----------------
+public class WrongLength2D {
+    public static void main(String[] args) {
+        
+        int[][] matrix = {
+            {1, 2, 3},
+            {4, 5, 6},
+            {7, 8, 9}
+        };
+        
+        // Using matrix.length for both row and column
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix.length; j++) {    // Wrong! Should be matrix[i].length
+                System.out.print(matrix[i][j] + " ");
+            }
+            System.out.println("");
+        }
+    }
+}
+
+OUTPUT (Works here but fails with non-square matrix):
+-----------------------------------------------------
+1 2 3 
+4 5 6 
+7 8 9 
+
+PROBLEMATIC WITH NON-SQUARE MATRIX:
+-----------------------------------
+public class WrongLength2DFails {
+    public static void main(String[] args) {
+        
+        int[][] matrix = {
+            {1, 2, 3, 4},    // 4 columns
+            {5, 6, 7, 8},
+            {9, 10, 11, 12}
+        };
+        
+        // matrix.length = 3 (rows)
+        // matrix[i].length = 4 (columns)
+        
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix.length; j++) {    // Only iterates 3 columns!
+                System.out.print(matrix[i][j] + " ");
+            }
+            System.out.println("");
+        }
+    }
+}
+
+OUTPUT (Missing last column):
+-----------------------------
+1 2 3 
+5 6 7 
+9 10 11 
+
+FIX:
+----
+public class WrongLength2DFixed {
+    public static void main(String[] args) {
+        
+        int[][] matrix = {
+            {1, 2, 3, 4},
+            {5, 6, 7, 8},
+            {9, 10, 11, 12}
+        };
+        
+        // Use matrix[i].length for column count
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix[i].length; j++) {    // Correct!
+                System.out.print(matrix[i][j] + " ");
+            }
+            System.out.println("");
+        }
+    }
+}
+
+OUTPUT:
+-------
+1 2 3 4 
+5 6 7 8 
+9 10 11 12 
+
+
+--------------------------------------------------------------------------------
+ERROR 13: Uninitialized Array Declaration
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE:
+-----------------
+public class UninitializedArray {
+    public static void main(String[] args) {
+        
+        int[] numbers;
+        
+        // Using array without initialization
+        System.out.println(numbers.length);    // Error!
+        System.out.println(numbers[0]);        // Error!
+    }
+}
+
+ERROR MESSAGE:
+--------------
+error: variable numbers might not have been initialized
+        System.out.println(numbers.length);
+                           ^
+
+FIX:
+----
+public class UninitializedArrayFixed {
+    public static void main(String[] args) {
+        
+        // Option 1: Initialize with size
+        int[] numbers1 = new int[5];
+        System.out.println("Length: " + numbers1.length);
+        
+        // Option 2: Initialize with values
+        int[] numbers2 = {10, 20, 30};
+        System.out.println("First element: " + numbers2[0]);
+        
+        // Option 3: Declare and initialize separately
+        int[] numbers3;
+        numbers3 = new int[]{1, 2, 3};
+        System.out.println("Array: " + java.util.Arrays.toString(numbers3));
+    }
+}
+
+
+--------------------------------------------------------------------------------
+ERROR 14: BinarySearch on Unsorted Array
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE:
+-----------------
+import java.util.Arrays;
+
+public class BinarySearchUnsorted {
+    public static void main(String[] args) {
+        
+        int[] numbers = {50, 20, 80, 10, 40};    // Unsorted!
+        
+        // Binary search requires sorted array
+        int index = Arrays.binarySearch(numbers, 20);
+        System.out.println("Index of 20: " + index);    // Unpredictable result!
+    }
+}
+
+OUTPUT (Unpredictable):
+-----------------------
+Index of 20: -4    // Wrong! 20 is at index 1
+
+EXPLANATION:
+------------
+Arrays.binarySearch() assumes the array is sorted.
+On unsorted array, it gives unpredictable results.
+
+FIX:
+----
+import java.util.Arrays;
+
+public class BinarySearchSorted {
+    public static void main(String[] args) {
+        
+        int[] numbers = {50, 20, 80, 10, 40};
+        
+        // Sort first, then search
+        Arrays.sort(numbers);
+        System.out.println("Sorted array: " + Arrays.toString(numbers));
+        
+        int index = Arrays.binarySearch(numbers, 20);
+        System.out.println("Index of 20: " + index);
+        
+        // Or use linear search for unsorted arrays
+        int[] unsorted = {50, 20, 80, 10, 40};
+        int searchValue = 20;
+        int foundIndex = -1;
+        
+        for (int i = 0; i < unsorted.length; i++) {
+            if (unsorted[i] == searchValue) {
+                foundIndex = i;
+                break;
+            }
+        }
+        System.out.println("Linear search - Index of 20: " + foundIndex);
+    }
+}
+
+OUTPUT:
+-------
+Sorted array: [10, 20, 40, 50, 80]
+Index of 20: 1
+Linear search - Index of 20: 1
+
+
+--------------------------------------------------------------------------------
+ERROR 15: 2D Array Row Not Initialized (Jagged Array Issue)
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE:
+-----------------
+public class JaggedArrayNull {
+    public static void main(String[] args) {
+        
+        int[][] matrix = new int[3][];    // Rows declared, columns not
+        
+        // Row 0 is null
+        System.out.println(matrix[0].length);    // Error!
+    }
+}
+
+ERROR MESSAGE:
+--------------
+Exception in thread "main" java.lang.NullPointerException
+
+EXPLANATION:
+------------
+When you declare int[3][], you create 3 row references, all null.
+Each row must be initialized separately.
+
+FIX:
+----
+public class JaggedArrayNullFixed {
+    public static void main(String[] args) {
+        
+        int[][] matrix = new int[3][];
+        
+        // Initialize each row
+        matrix[0] = new int[2];
+        matrix[1] = new int[4];
+        matrix[2] = new int[3];
+        
+        // Or check before accessing
+        for (int i = 0; i < matrix.length; i++) {
+            if (matrix[i] != null) {
+                System.out.println("Row " + i + " length: " + matrix[i].length);
+            } else {
+                System.out.println("Row " + i + " is null");
+            }
+        }
+    }
+}
+
+OUTPUT:
+-------
+Row 0 length: 2
+Row 1 length: 4
+Row 2 length: 3
+
+
+--------------------------------------------------------------------------------
+ERROR 16: Printing Array Directly (Without Arrays.toString)
+--------------------------------------------------------------------------------
+
+PROBLEMATIC CODE:
+-----------------
+public class PrintArrayDirectly {
+    public static void main(String[] args) {
+        
+        int[] numbers = {10, 20, 30, 40, 50};
+        
+        // Printing array directly
+        System.out.println(numbers);
+    }
+}
+
+OUTPUT (Not what you expect):
+-----------------------------
+[I@6d06d69c
+
+EXPLANATION:
+------------
+Printing array directly shows type code and hash code.
+[I means array of int, followed by memory reference.
+
+FIX:
+----
+import java.util.Arrays;
+
+public class PrintArrayCorrectly {
+    public static void main(String[] args) {
+        
+        int[] numbers = {10, 20, 30, 40, 50};
+        
+        // Method 1: Using Arrays.toString()
+        System.out.println("Method 1: " + Arrays.toString(numbers));
+        
+        // Method 2: Using loop
+        System.out.print("Method 2: [");
+        for (int i = 0; i < numbers.length; i++) {
+            System.out.print(numbers[i]);
+            if (i < numbers.length - 1) {
+                System.out.print(", ");
+            }
+        }
+        System.out.println("]");
+        
+        // Method 3: Enhanced for loop
+        System.out.print("Method 3: ");
+        for (int num : numbers) {
+            System.out.print(num + " ");
+        }
+        System.out.println("");
+        
+        // For 2D arrays, use Arrays.deepToString()
+        int[][] matrix = {{1, 2}, {3, 4}};
+        System.out.println("2D Array: " + Arrays.deepToString(matrix));
+    }
+}
+
+OUTPUT:
+-------
+Method 1: [10, 20, 30, 40, 50]
+Method 2: [10, 20, 30, 40, 50]
+Method 3: 10 20 30 40 50 
+2D Array: [[1, 2], [3, 4]]
+
+
+================================================================================
+                    QUICK REFERENCE SUMMARY
+================================================================================
+
+ARRAY DECLARATION METHODS:
+--------------------------
++---------------------------------------------+--------------------------------+
+| Method                                      | Example                        |
++---------------------------------------------+--------------------------------+
+| Declaration only                            | int[] arr;                     |
+| Declaration with size                       | int[] arr = new int[5];        |
+| Declaration with values                     | int[] arr = {1, 2, 3};         |
+| Declaration with new and values             | int[] arr = new int[]{1,2,3};  |
+| 2D array with size                          | int[][] arr = new int[3][4];   |
+| 2D array with values                        | int[][] arr = {{1,2}, {3,4}};  |
+| Jagged array                                | int[][] arr = new int[3][];    |
++---------------------------------------------+--------------------------------+
+
+
+ARRAY PROPERTIES AND METHODS:
+-----------------------------
++-------------------------+------------------------------------------+
+| Property/Method         | Description                              |
++-------------------------+------------------------------------------+
+| array.length            | Returns number of elements               |
+| array[index]            | Access element at index                  |
+| array[index] = value    | Modify element at index                  |
+| Arrays.toString()       | Convert 1D array to string               |
+| Arrays.deepToString()   | Convert multi-dimensional to string      |
+| Arrays.sort()           | Sort array in ascending order            |
+| Arrays.binarySearch()   | Search in sorted array                   |
+| Arrays.equals()         | Compare two 1D arrays                    |
+| Arrays.deepEquals()     | Compare multi-dimensional arrays         |
+| Arrays.fill()           | Fill array with a value                  |
+| Arrays.copyOf()         | Create copy of array                     |
+| array.clone()           | Create copy of array                     |
++-------------------------+------------------------------------------+
+
+
+NEGATIVE SCENARIOS SUMMARY:
+---------------------------
++----+----------------------------------------+----------------------------------------+
+| #  | Error                                  | Fix                                    |
++----+----------------------------------------+----------------------------------------+
+| 1  | ArrayIndexOutOfBoundsException         | Use index 0 to length-1                |
+| 2  | Negative array index                   | Use length-1 for last element          |
+| 3  | NullPointerException (null array)      | Check if array != null                 |
+| 4  | Null elements in array                 | Check each element != null             |
+| 5  | Off-by-one error in loop               | Use < not <= with length               |
+| 6  | Negative array size                    | Validate size > 0                      |
+| 7  | Cannot resize array                    | Use Arrays.copyOf() or ArrayList       |
+| 8  | Comparing arrays with ==               | Use Arrays.equals()                    |
+| 9  | Array assignment creates reference     | Use clone() or Arrays.copyOf()         |
+| 10 | Modify in enhanced for loop            | Use traditional for loop               |
+| 11 | ArrayStoreException                    | Use correct array type                 |
+| 12 | Wrong length in 2D array               | Use matrix[i].length for columns       |
+| 13 | Uninitialized array                    | Initialize before use                  |
+| 14 | BinarySearch on unsorted array         | Sort array first                       |
+| 15 | Null row in jagged array               | Initialize each row                    |
+| 16 | Printing array directly                | Use Arrays.toString()                  |
++----+----------------------------------------+----------------------------------------+
+
+
+AUTOMATION USE CASES:
+---------------------
++----------------------------------------+----------------------------------------+
+| Use Case                               | Array Type                             |
++----------------------------------------+----------------------------------------+
+| Store test data                        | String[] or String[][]                 |
+| Browser list for cross-browser testing | String[]                               |
+| URL list for testing                   | String[]                               |
+| Expected dropdown options              | String[]                               |
+| Table data verification                | String[][]                             |
+| API response data                      | String[][] or Object[][]               |
+| Test results storage                   | boolean[] or String[]                  |
+| Element locators                       | String[]                               |
++----------------------------------------+----------------------------------------+
+
+
+================================================================================
+                    END OF TOPIC 6: ARRAYS
+================================================================================
+
+This completes Topic 6: Arrays.
+
+Let me know when you are ready for the next topic. The next topics in sequence would be:
+
+    Topic 7: Strings and String Methods
+    Topic 8: Methods/Functions
+    Topic 9: Object-Oriented Programming (Classes and Objects)
+
+Which topic would you like to learn next?

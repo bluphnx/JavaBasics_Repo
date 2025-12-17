@@ -1,0 +1,177 @@
+// ============================================================================
+// TOPIC 2 - CODE EXAMPLES
+// ============================================================================
+
+// ----------------------------------------------------------------------------
+// Example 1: Integer Types
+// ----------------------------------------------------------------------------
+public class IntegerTypes {
+    public static void main(String[] args) {
+        
+        byte smallNumber = 100;
+        short mediumNumber = 5000;
+        int regularNumber = 100000;
+        long bigNumber = 9999999999L;  // Note: L at the end
+        
+        System.out.println("byte: " + smallNumber);
+        System.out.println("short: " + mediumNumber);
+        System.out.println("int: " + regularNumber);
+        System.out.println("long: " + bigNumber);
+    }
+}
+// Output:
+// byte: 100
+// short: 5000
+// int: 100000
+// long: 9999999999
+
+
+// ----------------------------------------------------------------------------
+// Example 2: Decimal Types
+// ----------------------------------------------------------------------------
+public class DecimalTypes {
+    public static void main(String[] args) {
+        
+        float price = 99.99f;          // Note: f at the end
+        double accountBalance = 15000.50;
+        
+        System.out.println("Price: " + price);
+        System.out.println("Balance: " + accountBalance);
+    }
+}
+// Output:
+// Price: 99.99
+// Balance: 15000.5
+
+
+// ----------------------------------------------------------------------------
+// Example 3: Character Type
+// ----------------------------------------------------------------------------
+public class CharType {
+    public static void main(String[] args) {
+        
+        char grade = 'A';
+        char symbol = '@';
+        
+        System.out.println("Grade: " + grade);
+        System.out.println("Symbol: " + symbol);
+    }
+}
+// Output:
+// Grade: A
+// Symbol: @
+
+
+// ----------------------------------------------------------------------------
+// Example 4: Boolean Type
+// ----------------------------------------------------------------------------
+public class BooleanType {
+    public static void main(String[] args) {
+        
+        boolean isLoggedIn = true;
+        boolean isTestPassed = false;
+        
+        System.out.println("Is Logged In: " + isLoggedIn);
+        System.out.println("Is Test Passed: " + isTestPassed);
+    }
+}
+// Output:
+// Is Logged In: true
+// Is Test Passed: false
+
+
+// ----------------------------------------------------------------------------
+// Example 5: String Type
+// ----------------------------------------------------------------------------
+public class StringType {
+    public static void main(String[] args) {
+        
+        String name = "John";
+        String url = "https://google.com";
+        String testCaseName = "Verify Login Functionality";
+        
+        System.out.println("Name: " + name);
+        System.out.println("URL: " + url);
+        System.out.println("Test Case: " + testCaseName);
+    }
+}
+// Output:
+// Name: John
+// URL: https://google.com
+// Test Case: Verify Login Functionality
+
+
+// ----------------------------------------------------------------------------
+// Example 6: Complete Automation Context Example
+// ----------------------------------------------------------------------------
+public class AutomationVariables {
+    public static void main(String[] args) {
+        
+        // Test Configuration
+        String browserName = "Chrome";
+        String baseUrl = "https://example.com";
+        int implicitWait = 10;
+        
+        // Test Data
+        String username = "testuser@email.com";
+        String password = [REDACTED:PASSWORD]3";
+        
+        // Test Results
+        boolean isTestPassed = true;
+        int totalTests = 50;
+        int passedTests = 45;
+        int failedTests = 5;
+        double passPercentage = 90.0;
+        
+        // Print all
+        System.out.println("=== Test Configuration ===");
+        System.out.println("Browser: " + browserName);
+        System.out.println("URL: " + baseUrl);
+        System.out.println("Wait Time: " + implicitWait + " seconds");
+        
+        System.out.println("\n=== Test Results ===");
+        System.out.println("Total Tests: " + totalTests);
+        System.out.println("Passed: " + passedTests);
+        System.out.println("Failed: " + failedTests);
+        System.out.println("Pass %: " + passPercentage + "%");
+    }
+}
+// Output:
+// === Test Configuration ===
+// Browser: Chrome
+// URL: https://example.com
+// Wait Time: 10 seconds
+//
+// === Test Results ===
+// Total Tests: 50
+// Passed: 45
+// Failed: 5
+// Pass %: 90.0%
+
+
+// ============================================================================
+// TOPIC 2 SUMMARY
+// ============================================================================
+// Data Type    Used For              Example
+// ---------    --------              -------
+// int          Whole numbers         int count = 10;
+// long         Large numbers         long id = 999999L;
+// double       Decimals              double price = 99.99;
+// char         Single character      char grade = 'A';
+// boolean      True/False            boolean isValid = true;
+// String       Text                  String name = "Test";
+// ============================================================================
+
+
+// ============================================================================
+// PRACTICE EXERCISE - ANSWERS
+// ============================================================================
+// Data                      Data Type
+// ----                      ---------
+// User's age                int
+// Website URL               String
+// Is button clickable?      boolean
+// Product price (99.99)     double
+// Grade (A, B, C)           char
+// Number of test cases      int
+// ============================================================================

@@ -1,0 +1,60 @@
+Let me plan out a structured curriculum that covers Java basics essential for automation testing:
+
+1. **Java Basics**
+   - What is Java
+   - JDK, JRE, JVM
+   - First Java Program
+   - Variables and Data Types
+
+2. **Operators and Control Flow**
+   - Operators
+   - If-else statements
+   - Switch statements
+
+3. **Loops**
+   - For loop
+   - While loop
+   - Do-while loop
+   - Enhanced for loop
+
+4. **Arrays**
+   - Single dimensional arrays
+   - Multi-dimensional arrays
+
+5. **Strings**
+   - String class
+   - String methods
+   - StringBuilder, StringBuffer
+
+6. **Methods/Functions**
+   - Creating methods
+   - Parameters and return types
+   - Method overloading
+
+7. **Object-Oriented Programming (OOP)**
+   - Classes and Objects
+   - Constructors
+   - Encapsulation
+   - Inheritance
+   - Polymorphism
+   - Abstraction (Abstract classes and Interfaces)
+
+8. **Collections Framework**
+   - List (ArrayList, LinkedList)
+   - Set (HashSet, TreeSet)
+   - Map (HashMap, TreeMap)
+   - Iterator
+9. **Exception Handling**
+   - Try-catch-finally
+   - Throw and throws
+   - Custom exceptions
+
+10. **File Handling**
+    - Reading files
+    - Writing files
+    - Properties files (important for automation)
+
+11. **Java 8 Features (important for modern automation)**
+    - Lambda expressions
+    - Functional interfaces
+    - Stream API
